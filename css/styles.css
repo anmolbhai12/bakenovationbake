@@ -441,6 +441,22 @@ h4 {
     accent-color: var(--color-gold);
 }
 
+.file-input-luxury {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed var(--color-gold);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+}
+
+.file-input-luxury:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .price-display {
     display: flex;
     justify-content: space-between;

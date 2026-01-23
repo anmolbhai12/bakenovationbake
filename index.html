@@ -74,7 +74,7 @@
                     <!-- Item 1 -->
                     <div class="collection-item reveal-on-scroll">
                         <div class="item-image">
-                            <img src="assets/cake-chocolate.png" alt="Midnight Silk"
+                            <img src="assets/chocolate_cake.png" alt="Midnight Silk"
                                 onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
                                 <h3>Midnight Silk</h3>
@@ -85,7 +85,7 @@
                     <!-- Item 2 -->
                     <div class="collection-item reveal-on-scroll">
                         <div class="item-image">
-                            <img src="assets/cake-redvelvet.png" alt="Crimson Velvet"
+                            <img src="assets/red_velvet.png" alt="Crimson Velvet"
                                 onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
                                 <h3>Crimson Velvet</h3>
@@ -96,10 +96,11 @@
                     <!-- Item 3 -->
                     <div class="collection-item reveal-on-scroll">
                         <div class="item-image">
-                            <img src="assets/cake-gold.png" alt="Gilded Era" onerror="this.src='assets/hero-cake.png'">
+                            <img src="assets/vanilla_cake.png" alt="Gilded Era"
+                                onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
                                 <h3>Gilded Era</h3>
-                                <p>Vanilla bean with 24k gold accents.</p>
+                                <p>Vanilla bean with fresh floral accents.</p>
                             </div>
                         </div>
                     </div>
@@ -124,7 +125,7 @@
                                 <div class="shape-options">
                                     <button class="shape-btn active" data-shape="round">Round</button>
                                     <button class="shape-btn" data-shape="square">Square</button>
-                                    <button class="shape-btn" data-shape="tower">Tower</button>
+                                    <button class="shape-btn" data-shape="heart">Heart</button>
                                 </div>
                             </div>
 
@@ -133,9 +134,15 @@
                                 <select class="luxury-select" id="flavor-select">
                                     <option value="vanilla">Madagascan Vanilla</option>
                                     <option value="chocolate">Belgian Dark Chocolate</option>
+                                    <option value="red_velvet">Red Velvet</option>
                                     <option value="lemon">Amalfi Lemon</option>
                                     <option value="hazelnut">Piedmont Hazelnut</option>
                                 </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Upload Design Reference</label>
+                                <input type="file" id="upload-reference" accept="image/*" class="file-input-luxury">
                             </div>
 
                             <div class="control-group">
@@ -144,12 +151,7 @@
                                 <span id="tier-display">2 Tiers</span>
                             </div>
 
-                            <div class="price-display">
-                                <span>Estimated Investment:</span>
-                                <h3 id="price-tag" class="text-gold">$450.00</h3>
-                            </div>
-
-                            <button class="btn-luxury w-100">Request Consultation</button>
+                            <button class="btn-luxury w-100" id="order-btn">Request Quote & Order</button>
                         </div>
 
                         <!-- Preview Area -->

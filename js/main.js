@@ -55,9 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const shapeBtns = document.querySelectorAll('.shape-btn');
     const tierRange = document.getElementById('tier-range');
     const tierDisplay = document.getElementById('tier-display');
-    const priceTag = document.getElementById('price-tag');
     const flavorSelect = document.getElementById('flavor-select');
     const previewCake = document.getElementById('preview-cake');
+    const orderBtn = document.getElementById('order-btn');
+    const fileInput = document.getElementById('upload-reference');
 
     let currentConfig = {
         shape: 'round',
@@ -65,33 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tiers: 2
     };
 
-    const basePrices = {
-        round: 100,
-        square: 150,
-        tower: 300
+    // Shape Images Config (simulating dynamic switch)
+    const cakeAssets = {
+        round: 'assets/vanilla_cake.png',
+        square: 'assets/square_cake.png',
+        heart: 'assets/heart_cake.png'
     };
-
-    const tierMultiplier = 75; // Per tier cost
-    const flavorPremium = {
-        vanilla: 0,
-        chocolate: 20,
-        lemon: 30,
-        hazelnut: 50
-    };
-
-    function updatePrice() {
-        const base = basePrices[currentConfig.shape];
-        const tierCost = currentConfig.tiers * tierMultiplier;
-        const flavorCost = flavorPremium[currentConfig.flavor];
-
-        const total = base + tierCost + flavorCost;
-
-        // Animate price change
-        priceTag.innerText = `$${total.toFixed(2)}`;
-
-        // Simple scale animation on update
-        gsap.fromTo(priceTag, { scale: 1.2, color: '#fff' }, { scale: 1, color: '#c5a059', duration: 0.3 });
-    }
 
     // Shape Selection
     shapeBtns.forEach(btn => {
@@ -101,27 +81,28 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add active class
             btn.classList.add('active');
 
-            currentConfig.shape = btn.dataset.shape;
+            const shape = btn.dataset.shape;
+            currentConfig.shape = shape;
 
-            // Update preview image (simulation)
-            // ideally we would swap images, but here we might just animate/filter for effect since we have limited assets
+            // Animate and Switch Image
             gsap.to(previewCake, {
+                opacity: 0,
                 scale: 0.9,
-                opacity: 0.5,
-                duration: 0.2,
-                yoyo: true,
-                repeat: 1,
-                onRepeat: () => {
-                    // Slight rotation or effect to simulate change
-                    if (currentConfig.shape === 'square') {
-                        previewCake.style.borderRadius = '0px';
-                    } else {
-                        previewCake.style.borderRadius = '10px';
+                duration: 0.3,
+                onComplete: () => {
+                    // Update source based on shape choice
+                    if (cakeAssets[shape]) {
+                        previewCake.src = cakeAssets[shape];
                     }
+
+                    gsap.to(previewCake, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.5,
+                        ease: 'back.out(1.7)'
+                    });
                 }
             });
-
-            updatePrice();
         });
     });
 
@@ -131,21 +112,42 @@ document.addEventListener('DOMContentLoaded', () => {
         currentConfig.tiers = parseInt(val);
         tierDisplay.innerText = `${val} Tier${val > 1 ? 's' : ''}`;
 
-        // Simulating tier height growth
-        const scale = 0.8 + (val * 0.1); // 0.9 to 1.3
+        // Simulating tier height growth using scale
+        const scale = 0.8 + (val * 0.1);
         gsap.to(previewCake, { scale: scale, duration: 0.3 });
-
-        updatePrice();
     });
 
     // Flavor Selection
     flavorSelect.addEventListener('change', (e) => {
         currentConfig.flavor = e.target.value;
-        updatePrice();
+        // Optional: Could change cake color/tint filter here
     });
 
-    // Initial calculation
-    updatePrice();
+    // Order Button - Email Logic
+    orderBtn.addEventListener('click', () => {
+        const subject = `New Cake Order Request - ${new Date().toLocaleDateString()}`;
+
+        // Check if file was uploaded (we can't attach it directly to mailto but we can mention it)
+        const hasFile = fileInput.files.length > 0 ? "Yes (Please attach in follow-up email)" : "No";
+        const fileName = hasFile === "Yes" ? ` (File: ${fileInput.files[0].name})` : "";
+
+        const body = `
+Hello Chef Harmeet,
+
+I would like to request a quote for a custom cake.
+
+Shape: ${currentConfig.shape.toUpperCase()}
+Flavor: ${currentConfig.flavor.toUpperCase()}
+Tiers: ${currentConfig.tiers}
+Design Reference Uploaded: ${hasFile} ${fileName}
+
+Please let me know the estimated cost and availability.
+        `.trim();
+
+        const mailtoLink = `mailto:anmolji04013.com@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        window.location.href = mailtoLink;
+    });
 
 });
 
