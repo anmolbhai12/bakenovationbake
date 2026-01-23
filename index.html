@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakenovation | Couture Cakes by Chef Harmeet</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Fixed Background -->
+    <div class="bg-fixed"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-panel">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="assets/logo.jpg" alt="Bakenovation Logo">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#atelier">The Atelier</a></li>
+                <li><a href="#about">The Visionary</a></li>
+            </ul>
+            <a href="#atelier" class="btn-luxury btn-sm">Order Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="d-block reveal-text">Artistry in</span>
+                <span class="d-block reveal-text text-gold">Every Slice</span>
+            </h1>
+            <p class="hero-subtitle reveal-text">Bespoke couture cakes designed for life's most exquisite moments.</p>
+            <div class="hero-actions reveal-text">
+                <a href="#atelier" class="btn-luxury">Design Your Cake</a>
+                <a href="#collection" class="btn-text">View Gallery &darr;</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="assets/hero-cake.png" alt="Luxury Wedding Cake" class="floating-cake">
+        </div>
+    </header>
+
+    <!-- Content to flesh out layout -->
+    <main>
+
+        <!-- Collection Section -->
+        <section id="collection" class="section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <h2 class="text-gold">The Collection</h2>
+                    <p class="section-subtitle">Curated designs for the discerning palate.</p>
+                </div>
+
+                <div class="collection-grid">
+                    <!-- Item 1 -->
+                    <div class="collection-item reveal-on-scroll">
+                        <div class="item-image">
+                            <img src="assets/cake-chocolate.png" alt="Midnight Silk"
+                                onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Midnight Silk</h3>
+                                <p>Dark chocolate ganache with gold leaf.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="collection-item reveal-on-scroll">
+                        <div class="item-image">
+                            <img src="assets/cake-redvelvet.png" alt="Crimson Velvet"
+                                onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Crimson Velvet</h3>
+                                <p>Red velvet sponge with cream cheese frosting.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="collection-item reveal-on-scroll">
+                        <div class="item-image">
+                            <img src="assets/cake-gold.png" alt="Gilded Era" onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Gilded Era</h3>
+                                <p>Vanilla bean with 24k gold accents.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Atelier (Customizer) -->
+        <section id="atelier" class="section">
+            <div class="container">
+                <div class="glass-panel customizer-wrapper reveal-on-scroll">
+                    <div class="customizer-header">
+                        <h2 class="text-gold">The Atelier</h2>
+                        <p>Craft your bespoke masterpiece.</p>
+                    </div>
+
+                    <div class="customizer-interface">
+                        <!-- Controls -->
+                        <div class="customizer-controls">
+                            <div class="control-group">
+                                <label>Select Shape</label>
+                                <div class="shape-options">
+                                    <button class="shape-btn active" data-shape="round">Round</button>
+                                    <button class="shape-btn" data-shape="square">Square</button>
+                                    <button class="shape-btn" data-shape="tower">Tower</button>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Flavor Profile</label>
+                                <select class="luxury-select" id="flavor-select">
+                                    <option value="vanilla">Madagascan Vanilla</option>
+                                    <option value="chocolate">Belgian Dark Chocolate</option>
+                                    <option value="lemon">Amalfi Lemon</option>
+                                    <option value="hazelnut">Piedmont Hazelnut</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label>Tiers</label>
+                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range">
+                                <span id="tier-display">2 Tiers</span>
+                            </div>
+
+                            <div class="price-display">
+                                <span>Estimated Investment:</span>
+                                <h3 id="price-tag" class="text-gold">$450.00</h3>
+                            </div>
+
+                            <button class="btn-luxury w-100">Request Consultation</button>
+                        </div>
+
+                        <!-- Preview Area -->
+                        <div class="customizer-preview">
+                            <div class="cake-preview-stage">
+                                <img id="preview-cake" src="assets/cake-gold.png" alt="Cake Preview">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About / Contact (The Visionary) -->
+        <section id="about" class="section">
+            <div class="container text-center reveal-on-scroll">
+                <h2 class="text-gold">The Visionary</h2>
+                <p class="about-text">
+                    Chef Harmeet brings a touch of avant-garde fashion to the world of patisserie.
+                    Every creation is a labor of love, precision, and artistry.
+                </p>
+                <div class="contact-actions">
+                    <a href="mailto:hello@bakenovation.com" class="btn-luxury">Contact Studio</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
