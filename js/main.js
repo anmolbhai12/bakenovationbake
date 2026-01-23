@@ -170,42 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Direct Order Logic (Bypassing Atelier)
-    if (detailOrderBtn) {
-        detailOrderBtn.addEventListener('click', function () {
-            // Close detail modal
-            if (detailModal) detailModal.classList.remove('active');
 
-            // Get Data of the cake we are ordering
-            const flavor = this.dataset.flavor || 'vanilla';
-            const designName = detailTitle.innerText; // The name of the cake (e.g. "Midnight Silk")
-
-            // 1. Set Hidden Inputs
-            const modalFlavor = document.getElementById('modal-flavor');
-            const modalDesign = document.getElementById('modal-ordered-design');
-
-            if (modalFlavor) modalFlavor.value = flavor;
-            if (modalDesign) modalDesign.value = designName;
-
-            // 2. Update Visual Label in Modal
-            const designLabel = document.getElementById('modal-design-label');
-            const selectedCakeName = document.getElementById('selected-cake-name');
-            if (designLabel && selectedCakeName) {
-                selectedCakeName.innerText = designName;
-                designLabel.classList.add('visible');
-            }
-
-            // 3. Open Order Modal directly
-            const orderModal = document.getElementById('order-modal');
-            if (orderModal) {
-                orderModal.classList.add('active');
-                gsap.fromTo(orderModal.querySelector('.modal-content'),
-                    { y: -50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.4 }
-                );
-            }
-        });
-    }
 
     // Reset logic when opening modal via normal "Atelier" button
     if (triggerModalBtn) {
