@@ -123,31 +123,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Optional: Could change cake color/tint filter here
     });
 
-    // Order Button - Email Logic
-    orderBtn.addEventListener('click', () => {
-        const subject = `New Cake Order Request - ${new Date().toLocaleDateString()}`;
+    // --- MODAL LOGIC & DATA TRANSFER ---
+    const triggerModalBtn = document.getElementById('trigger-modal-btn');
+    const modal = document.getElementById('order-modal');
+    const modalClose = document.querySelector('.modal-close');
 
-        // Check if file was uploaded (we can't attach it directly to mailto but we can mention it)
-        const hasFile = fileInput.files.length > 0 ? "Yes (Please attach in follow-up email)" : "No";
-        const fileName = hasFile === "Yes" ? ` (File: ${fileInput.files[0].name})` : "";
+    // Hidden inputs in the modal form
+    const modalShape = document.getElementById('modal-shape');
+    const modalFlavor = document.getElementById('modal-flavor');
+    const modalTiers = document.getElementById('modal-tiers');
 
-        const body = `
-Hello Chef Harmeet,
+    if (triggerModalBtn) {
+        triggerModalBtn.addEventListener('click', () => {
+            // Transfer current config to hidden form inputs
+            if (modalShape) modalShape.value = currentConfig.shape;
+            if (modalFlavor) modalFlavor.value = currentConfig.flavor;
+            if (modalTiers) modalTiers.value = currentConfig.tiers;
 
-I would like to request a quote for a custom cake.
+            // Show Modal
+            if (modal) {
+                modal.classList.add('active');
+                gsap.fromTo('.modal-content', { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 });
+            }
+        });
+    }
 
-Shape: ${currentConfig.shape.toUpperCase()}
-Flavor: ${currentConfig.flavor.toUpperCase()}
-Tiers: ${currentConfig.tiers}
-Design Reference Uploaded: ${hasFile} ${fileName}
+    if (modalClose) {
+        modalClose.addEventListener('click', () => {
+            if (modal) modal.classList.remove('active');
+        });
+    }
 
-Please let me know the estimated cost and availability.
-        `.trim();
-
-        const mailtoLink = `mailto:anmolji04013.com@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-        window.location.href = mailtoLink;
-    });
+    // Close on click outside
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
 
 });
 

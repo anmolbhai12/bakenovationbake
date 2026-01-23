@@ -119,15 +119,8 @@
 
                     <div class="customizer-interface">
                         <!-- Controls -->
-                        <!-- FormSubmit.co Integration -->
-                        <form class="customizer-controls" action="https://formsubmit.co/japindersinghbhasin@gmail.com"
-                            method="POST" enctype="multipart/form-data">
-                            <!-- Configuration -->
-                            <input type="hidden" name="_captcha" value="false">
-                            <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="shape" id="shape-input" value="round">
-
+                        <!-- Controls -->
+                        <div class="customizer-controls">
                             <div class="control-group">
                                 <label>Select Shape</label>
                                 <div class="shape-options">
@@ -139,7 +132,7 @@
 
                             <div class="control-group">
                                 <label>Flavor Profile</label>
-                                <select class="luxury-select" id="flavor-select" name="flavor">
+                                <select class="luxury-select" id="flavor-select">
                                     <option value="vanilla">Madagascan Vanilla</option>
                                     <option value="chocolate">Belgian Dark Chocolate</option>
                                     <option value="red_velvet">Red Velvet</option>
@@ -150,19 +143,19 @@
 
                             <div class="control-group">
                                 <label>Upload Design Reference</label>
-                                <input type="file" id="upload-reference" name="attachment" accept="image/*"
-                                    class="file-input-luxury">
+                                <p style="color: var(--color-text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
+                                    (You will confirm this in the next step)</p>
                             </div>
 
                             <div class="control-group">
                                 <label>Tiers</label>
-                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range"
-                                    name="tiers">
+                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range">
                                 <span id="tier-display">2 Tiers</span>
                             </div>
 
-                            <button type="submit" class="btn-luxury w-100" id="order-btn">Request Quote & Order</button>
-                        </form>
+                            <button type="button" class="btn-luxury w-100" id="trigger-modal-btn">Proceed to
+                                Checkout</button>
+                        </div>
 
                         <!-- Preview Area -->
                         <div class="customizer-preview">
@@ -191,6 +184,107 @@
 
     </main>
 
+
+    <!-- Order Details Modal -->
+    <div id="order-modal" class="modal-overlay">
+        <div class="glass-panel modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="customizer-header">
+                <h2 class="text-gold">Final Details</h2>
+                <p>Where should we deliver your masterpiece?</p>
+            </div>
+
+            <form action="https://formsubmit.co/japindersinghbhasin@gmail.com" method="POST"
+                enctype="multipart/form-data">
+                <!-- Configuration -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
+                <input type="hidden" name="_template" value="table">
+                <!-- Hidden inputs to transfer data -->
+                <input type="hidden" name="shape" id="modal-shape">
+                <input type="hidden" name="flavor" id="modal-flavor">
+                <input type="hidden" name="tiers" id="modal-tiers">
+                <!-- File upload needs to be here to be sent -->
+
+                <div class="control-group">
+                    <label>Design Reference (Moved from Atelier)</label>
+                    <input type="file" id="modal-upload" name="attachment" accept="image/*" class="file-input-luxury">
+                </div>
+
+                <div class="control-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required class="luxury-input" placeholder="Your Name">
+                </div>
+
+                <div class="control-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required class="luxury-input" placeholder="name@example.com">
+                </div>
+
+                <div class="control-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required class="luxury-input" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <div class="control-group">
+                    <label>Delivery Address</label>
+                    <textarea name="address" required class="luxury-input" rows="3"
+                        placeholder="Street, City, Zip Code"></textarea>
+                </div>
+
+                <button type="submit" class="btn-luxury w-100">Confirm & Send Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="order-modal" class="modal-overlay">
+        <div class="glass-panel modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="customizer-header">
+                <h2 class="text-gold">Final Details</h2>
+                <p>Where should we deliver your masterpiece?</p>
+            </div>
+
+            <form action="https://formsubmit.co/japindersinghbhasin@gmail.com" method="POST"
+                enctype="multipart/form-data">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="shape" id="modal-shape">
+                <input type="hidden" name="flavor" id="modal-flavor">
+                <input type="hidden" name="tiers" id="modal-tiers">
+
+                <div class="control-group">
+                    <label>Design Reference (Moved from Atelier)</label>
+                    <input type="file" id="modal-upload" name="attachment" accept="image/*" class="file-input-luxury">
+                </div>
+
+                <div class="control-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required class="luxury-input" placeholder="Your Name">
+                </div>
+
+                <div class="control-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required class="luxury-input" placeholder="name@example.com">
+                </div>
+
+                <div class="control-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required class="luxury-input" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <div class="control-group">
+                    <label>Delivery Address</label>
+                    <textarea name="address" required class="luxury-input" rows="3"
+                        placeholder="Street, City, Zip Code"></textarea>
+                </div>
+
+                <button type="submit" class="btn-luxury w-100">Confirm & Send Order</button>
+            </form>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
 </body>

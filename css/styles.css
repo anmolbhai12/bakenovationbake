@@ -484,6 +484,67 @@ h4 {
     text-align: center;
 }
 
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: #1a0b1f;
+    /* Solid background to block content behind */
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    border: 1px solid var(--color-gold);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.luxury-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.luxury-input:focus {
+    border-color: var(--color-gold);
+    outline: none;
+}
+
 /* Responsive Adjustments for Features */
 @media (max-width: 900px) {
     .customizer-interface {
