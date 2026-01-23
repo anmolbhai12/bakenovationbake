@@ -119,19 +119,27 @@
 
                     <div class="customizer-interface">
                         <!-- Controls -->
-                        <div class="customizer-controls">
+                        <!-- FormSubmit.co Integration -->
+                        <form class="customizer-controls" action="https://formsubmit.co/japindersinghbhasin@gmail.com"
+                            method="POST" enctype="multipart/form-data">
+                            <!-- Configuration -->
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="shape" id="shape-input" value="round">
+
                             <div class="control-group">
                                 <label>Select Shape</label>
                                 <div class="shape-options">
-                                    <button class="shape-btn active" data-shape="round">Round</button>
-                                    <button class="shape-btn" data-shape="square">Square</button>
-                                    <button class="shape-btn" data-shape="heart">Heart</button>
+                                    <button type="button" class="shape-btn active" data-shape="round">Round</button>
+                                    <button type="button" class="shape-btn" data-shape="square">Square</button>
+                                    <button type="button" class="shape-btn" data-shape="heart">Heart</button>
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <label>Flavor Profile</label>
-                                <select class="luxury-select" id="flavor-select">
+                                <select class="luxury-select" id="flavor-select" name="flavor">
                                     <option value="vanilla">Madagascan Vanilla</option>
                                     <option value="chocolate">Belgian Dark Chocolate</option>
                                     <option value="red_velvet">Red Velvet</option>
@@ -142,22 +150,24 @@
 
                             <div class="control-group">
                                 <label>Upload Design Reference</label>
-                                <input type="file" id="upload-reference" accept="image/*" class="file-input-luxury">
+                                <input type="file" id="upload-reference" name="attachment" accept="image/*"
+                                    class="file-input-luxury">
                             </div>
 
                             <div class="control-group">
                                 <label>Tiers</label>
-                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range">
+                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range"
+                                    name="tiers">
                                 <span id="tier-display">2 Tiers</span>
                             </div>
 
-                            <button class="btn-luxury w-100" id="order-btn">Request Quote & Order</button>
-                        </div>
+                            <button type="submit" class="btn-luxury w-100" id="order-btn">Request Quote & Order</button>
+                        </form>
 
                         <!-- Preview Area -->
                         <div class="customizer-preview">
                             <div class="cake-preview-stage">
-                                <img id="preview-cake" src="assets/cake-gold.png" alt="Cake Preview">
+                                <img id="preview-cake" src="assets/vanilla_cake.png" alt="Cake Preview">
                             </div>
                         </div>
                     </div>
