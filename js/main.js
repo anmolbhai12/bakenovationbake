@@ -225,17 +225,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailTitle = document.getElementById('detail-title');
     const detailDesc = document.getElementById('detail-desc');
     const detailImg = document.getElementById('detail-img');
+    const detailServings = document.getElementById('detail-servings');
+    const detailWeight = document.getElementById('detail-weight');
     const detailIngredients = document.getElementById('detail-ingredients');
     const detailOrderBtn = document.getElementById('detail-order-btn');
 
-    // MOCK DATA FOR INGREDIENTS
-    const ingredientMap = {
-        'Midnight Silk': ['70% Belgian Dark Chocolate', 'Edible 24k Gold Leaf', 'Madagascan Vanilla Bean', 'Dark Cocoa Butter'],
-        'Crimson Velvet': ['Review-Winning Cream Cheese', 'Dutch Processed Cocoa', 'Buttermilk Sponge', 'Fresh Raspberries'],
-        'Gilded Era': ['White Chocolate Ganache', 'Edible Flowers', 'Almond Flour', 'Tahitian Vanilla'],
-        'Royal Wedding': ['Fondant Icing', 'Sugar Paste Flowers', 'Fruit Cake Base', 'Marzipan Layer'],
-        'Abstract Art': ['Tempered Chocolate Shards', 'Blue Spirulina', 'Gold Dust', 'Lemon Curd Filling'],
-        'Rustic Charm': ['Fresh Seasonal Berries', 'Vanilla Buttercream', 'Lemon Zest', 'Organic Flour']
+    // DATA FOR CAKE DETAILS
+    const cakeDetails = {
+        'Midnight Silk': {
+            ingredients: ['70% Belgian Dark Chocolate', 'Edible 24k Gold Leaf', 'Madagascan Vanilla Bean', 'Dark Cocoa Butter'],
+            servings: '20-25 pax',
+            weight: '3.5 kg',
+            flavor: 'chocolate'
+        },
+        'Crimson Velvet': {
+            ingredients: ['Review-Winning Cream Cheese', 'Dutch Processed Cocoa', 'Buttermilk Sponge', 'Fresh Raspberries'],
+            servings: '15-18 pax',
+            weight: '2.8 kg',
+            flavor: 'red_velvet'
+        },
+        'Gilded Era': {
+            ingredients: ['White Chocolate Ganache', 'Edible Flowers', 'Almond Flour', 'Tahitian Vanilla'],
+            servings: '30-40 pax (Double Tier)',
+            weight: '5.0 kg',
+            flavor: 'vanilla'
+        },
+        'Royal Wedding': {
+            ingredients: ['Fondant Icing', 'Sugar Paste Flowers', 'Fruit Cake Base', 'Marzipan Layer'],
+            servings: '100+ pax',
+            weight: '12.0 kg',
+            flavor: 'vanilla'
+        },
+        'Abstract Art': {
+            ingredients: ['Tempered Chocolate Shards', 'Blue Spirulina', 'Gold Dust', 'Lemon Curd Filling'],
+            servings: '25-30 pax',
+            weight: '4.2 kg',
+            flavor: 'lemon'
+        },
+        'Rustic Charm': {
+            ingredients: ['Fresh Seasonal Berries', 'Vanilla Buttercream', 'Lemon Zest', 'Organic Flour'],
+            servings: '12-15 pax',
+            weight: '2.5 kg',
+            flavor: 'vanilla'
+        }
     };
 
     const collectionItems = document.querySelectorAll('.collection-item');
@@ -245,23 +277,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = item.querySelector('h3').innerText;
             const desc = item.querySelector('p').innerText;
             const imgSrc = item.querySelector('img').src;
+            const data = cakeDetails[title] || {
+                ingredients: ['Premium Flour', 'Fresh Eggs'],
+                servings: 'Custom',
+                weight: 'Varies',
+                flavor: 'vanilla'
+            };
 
             // Populate Modal
             if (detailTitle) detailTitle.innerText = title;
             if (detailDesc) detailDesc.innerText = desc;
             if (detailImg) detailImg.src = imgSrc;
+            if (detailServings) detailServings.innerText = data.servings;
+            if (detailWeight) detailWeight.innerText = data.weight;
 
             // Populate Ingredients
             if (detailIngredients) {
                 detailIngredients.innerHTML = '';
-                const ingredients = ingredientMap[title] || ['Premium Flour', 'Fresh Eggs', 'Imported Butter', 'Natural Extracts'];
-                ingredients.forEach(ing => {
+                data.ingredients.forEach(ing => {
                     const li = document.createElement('li');
                     li.innerText = `• ${ing}`;
                     li.style.marginBottom = '0.3rem';
                     detailIngredients.appendChild(li);
                 });
             }
+
+            // Store selected flavor for direct order
+            if (detailOrderBtn) detailOrderBtn.dataset.flavor = data.flavor;
 
             // Open Modal
             if (detailModal) {
@@ -287,11 +329,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Redirect "Customize This Design" to Atelier
+    // Direct Order Logic (Bypassing Atelier)
     if (detailOrderBtn) {
-        detailOrderBtn.addEventListener('click', () => {
+        detailOrderBtn.addEventListener('click', function () {
+            // Close detail modal
             if (detailModal) detailModal.classList.remove('active');
-            document.querySelector('#atelier').scrollIntoView({ behavior: 'smooth' });
+
+            // Pre-fill Order Modal
+            const flavor = this.dataset.flavor || 'vanilla';
+            const modalFlavor = document.getElementById('modal-flavor');
+            if (modalFlavor) modalFlavor.value = flavor;
+
+            // Open Order Modal directly
+            const orderModal = document.getElementById('order-modal');
+            if (orderModal) {
+                orderModal.classList.add('active');
+                gsap.fromTo(orderModal.querySelector('.modal-content'),
+                    { y: -50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4 }
+                );
+            }
         });
     }
 

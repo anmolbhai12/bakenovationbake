@@ -351,7 +351,15 @@
                     style="width: 100%; border-radius: 8px; border: 1px solid var(--color-gold);">
             </div>
             <div class="detail-info" style="flex: 1; min-width: 300px;">
-                <h2 id="detail-title" class="text-gold" style="margin-bottom: 1rem;">Cake Name</h2>
+                <h2 id="detail-title" class="text-gold" style="margin-bottom: 0.5rem;">Cake Name</h2>
+
+                <div
+                    style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-gold);">
+                    <span><strong style="color: white;">Servings:</strong> <span
+                            id="detail-servings">12-15</span></span>
+                    <span><strong style="color: white;">Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
+                </div>
+
                 <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Description goes
                     here.</p>
 
@@ -361,7 +369,7 @@
                     <!-- Populated by JS -->
                 </ul>
 
-                <button class="btn-luxury" id="detail-order-btn">Customize This Design</button>
+                <button class="btn-luxury w-100" id="detail-order-btn">Order This Design Now</button>
             </div>
         </div>
     </div>
