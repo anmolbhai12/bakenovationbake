@@ -70,7 +70,7 @@
                     <p class="section-subtitle">Curated designs for the discerning palate.</p>
                 </div>
 
-                <div class="collection-grid">
+                <div class="collection-grid" id="collection-grid">
                     <!-- Item 1 -->
                     <div class="collection-item reveal-on-scroll">
                         <div class="item-image">
@@ -104,6 +104,41 @@
                             </div>
                         </div>
                     </div>
+                    <!-- HIDDEN ITEMS -->
+                    <div class="collection-item hidden-item" style="display:none;">
+                        <div class="item-image">
+                            <img src="assets/wedding_cake.png" alt="Royal Wedding"
+                                onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Royal Wedding</h3>
+                                <p>4-tier masterpiece with sugar flowers.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collection-item hidden-item" style="display:none;">
+                        <div class="item-image">
+                            <img src="assets/hero-cake.png" alt="Abstract Art"
+                                onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Abstract Art</h3>
+                                <p>Modern geometric design in gold and blue.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collection-item hidden-item" style="display:none;">
+                        <div class="item-image">
+                            <img src="assets/chocolate_cake.png" alt="Rustic Charm"
+                                onerror="this.src='assets/hero-cake.png'">
+                            <div class="item-overlay">
+                                <h3>Rustic Charm</h3>
+                                <p>Semi-naked cake with fresh berries.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button id="view-more-btn" class="btn-luxury">View More Designs</button>
                 </div>
             </div>
         </section>
@@ -277,12 +312,57 @@
 
                 <div class="control-group">
                     <label>Delivery Address</label>
-                    <textarea name="address" required class="luxury-input" rows="3"
+                    <textarea name="address" required class="luxury-input" rows="2"
                         placeholder="Street, City, Zip Code"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label>Additional Notes / Inscription</label>
+                    <textarea name="message" class="luxury-input" rows="2"
+                        placeholder="Any specific requests?"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label>Payment Method</label>
+                    <div class="payment-options">
+                        <label class="radio-label">
+                            <input type="radio" name="payment" value="cash" checked>
+                            <span>Cash on Delivery</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="payment" value="online">
+                            <span>Pay Online (Net Banking/Cards)</span>
+                        </label>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-luxury w-100">Confirm & Send Order</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Cake Detail Modal -->
+    <div id="cake-detail-modal" class="modal-overlay">
+        <div class="glass-panel modal-content"
+            style="max-width: 800px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap;">
+            <button class="modal-close detail-close">&times;</button>
+            <div class="detail-image" style="flex: 1; min-width: 300px;">
+                <img id="detail-img" src="" alt="Cake Detail"
+                    style="width: 100%; border-radius: 8px; border: 1px solid var(--color-gold);">
+            </div>
+            <div class="detail-info" style="flex: 1; min-width: 300px;">
+                <h2 id="detail-title" class="text-gold" style="margin-bottom: 1rem;">Cake Name</h2>
+                <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Description goes
+                    here.</p>
+
+                <h4 class="text-gold" style="font-size: 1rem; margin-bottom: 0.5rem;">Premium Ingredients</h4>
+                <ul id="detail-ingredients"
+                    style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
+                    <!-- Populated by JS -->
+                </ul>
+
+                <button class="btn-luxury" id="detail-order-btn">Customize This Design</button>
+            </div>
         </div>
     </div>
 
