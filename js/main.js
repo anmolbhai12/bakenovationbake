@@ -290,28 +290,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // Scroll to result
             aiResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // SIMULATE AI GENERATION (Mock Logic)
+            // SIMULATE AI GENERATION (Mock Logic with "God of AI" Intelligence)
             setTimeout(() => {
-                // simple keyword matching for demo
-                let selectedImage = 'assets/wedding_cake.png'; // default
+                // Advanced Keyword Matching Layer (God of AI Logic)
+                let selectedImage = 'assets/wedding_cake.png'; // Fallback / Base Luxury
                 const p = prompt.toLowerCase();
-                if (p.includes('chocolate') || p.includes('dark')) selectedImage = 'assets/chocolate_cake.png';
-                else if (p.includes('red') || p.includes('velvet')) selectedImage = 'assets/red_velvet.png';
-                else if (p.includes('vanilla') || p.includes('white')) selectedImage = 'assets/vanilla_cake.png';
-                else if (p.includes('blue') || p.includes('modern')) selectedImage = 'assets/hero-cake.png';
 
-                // Update Image
+                if (p.includes('birthday') || p.includes('colorful') || p.includes('sprinkles') || p.includes('playful')) {
+                    selectedImage = 'assets/red_velvet.png';
+                } else if (p.includes('wedding') || p.includes('white') || p.includes('floral') || p.includes('tier')) {
+                    selectedImage = 'assets/wedding_cake.png';
+                } else if (p.includes('chocolate') || p.includes('dark') || p.includes('gold leaf') || p.includes('ganache')) {
+                    selectedImage = 'assets/chocolate_cake.png';
+                } else if (p.includes('modern') || p.includes('blue') || p.includes('geometric') || p.includes('sapphire')) {
+                    selectedImage = 'assets/hero-cake.png';
+                } else if (p.includes('vanilla') || p.includes('simple') || p.includes('bean')) {
+                    selectedImage = 'assets/vanilla_cake.png';
+                }
+
+                console.log(`AI Processing complete. Style identified. Serving: ${selectedImage}`);
                 aiGeneratedImage.src = selectedImage;
-
-                // Hide Loading
                 aiLoading.style.display = 'none';
 
-                // Reset Button
                 btnText.style.display = 'inline';
                 spinner.style.display = 'none';
                 aiGenerateBtn.disabled = false;
 
-            }, 2500); // 2.5s delay
+            }, 3000); // Increased "thinking" time
         });
     }
 
@@ -349,4 +354,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-
