@@ -143,36 +143,97 @@
             </div>
         </section>
 
-        <!-- The Atelier (AI Design Studio) -->
+        <!-- The Atelier (Sweet Snap AI Replica) -->
         <section id="atelier" class="section">
             <div class="container">
                 <div class="glass-panel text-center">
                     <div class="customizer-header">
                         <h2 class="text-gold">The Atelier: AI Studio</h2>
-                        <p class="section-subtitle">Dream it. Describe it. See it.</p>
+                        <p class="section-subtitle">Design your bespoke cake in seconds.</p>
                     </div>
 
-                    <div class="ai-studio-interface">
-                        <div class="ai-input-area">
-                            <textarea id="ai-prompt" class="luxury-input" rows="3"
-                                placeholder="Describe your masterpiece (e.g., 'A highly realistic, premium custom-designed cake, ultra-detailed texture, smooth fondant finish, rich buttercream layers...')..."></textarea>
-                            <button id="ai-generate-btn" class="btn-luxury">
-                                <span class="btn-text">Generate Magic</span>
+                    <div class="sweet-snap-container">
+                        <!-- Left Column: Controls -->
+                        <div class="snap-controls">
+
+                            <!-- 1. Cake Type -->
+                            <div class="control-group">
+                                <label class="snap-label">Occasion</label>
+                                <div class="snap-chips-wrapper">
+                                    <button class="snap-chip active" data-type="wedding">Wedding</button>
+                                    <button class="snap-chip" data-type="birthday">Birthday</button>
+                                    <button class="snap-chip" data-type="custom">Custom</button>
+                                </div>
+                            </div>
+
+                            <!-- 2. Aesthetic / Style -->
+                            <div class="control-group">
+                                <label class="snap-label">Aesthetic</label>
+                                <div class="snap-chips-wrapper">
+                                    <button class="snap-chip" data-style="modern">Modern</button>
+                                    <button class="snap-chip" data-style="rustic">Rustic</button>
+                                    <button class="snap-chip active" data-style="luxury">Luxury</button>
+                                    <button class="snap-chip" data-style="minimalist">Minimalist</button>
+                                </div>
+                            </div>
+
+                            <!-- 3. Shape & Details -->
+                            <div class="control-group">
+                                <label class="snap-label">Shape & Size</label>
+                                <div class="snap-chips-wrapper">
+                                    <button class="snap-chip" data-shape="round">Round</button>
+                                    <button class="snap-chip" data-shape="square">Square</button>
+                                    <button class="snap-chip" data-shape="heart">Heart</button>
+                                    <span class="divider">|</span>
+                                    <button class="snap-chip" data-tiers="1">1 Tier</button>
+                                    <button class="snap-chip active" data-tiers="2">2 Tiers</button>
+                                    <button class="snap-chip" data-tiers="3">3 Tiers</button>
+                                </div>
+                            </div>
+
+                            <!-- 4. Color Palette -->
+                            <div class="control-group">
+                                <label class="snap-label">Color Palette</label>
+                                <div class="snap-colors-grid">
+                                    <button class="snap-color active" style="background: #ffffff;"
+                                        data-color="white"></button>
+                                    <button class="snap-color" style="background: #f5f5dc;" data-color="cream"></button>
+                                    <button class="snap-color" style="background: #ffb6c1;" data-color="pink"></button>
+                                    <button class="snap-color" style="background: #e6e6fa;"
+                                        data-color="lavender"></button>
+                                    <button class="snap-color" style="background: #87ceeb;" data-color="blue"></button>
+                                    <button class="snap-color" style="background: #98fb98;" data-color="mint"></button>
+                                    <button class="snap-color" style="background: #d4af37;" data-color="gold"></button>
+                                    <button class="snap-color" style="background: #1a0b1f;" data-color="dark"></button>
+                                </div>
+                            </div>
+
+                            <!-- 5. Prompt Input -->
+                            <div class="control-group">
+                                <label class="snap-label">Specific Details</label>
+                                <textarea id="ai-prompt" class="snap-input" rows="2"
+                                    placeholder="E.g., with cascading sugar flowers and gold leaf details..."></textarea>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button id="ai-generate-btn" class="btn-snap-primary">
+                                <span class="btn-text">Generate Design</span>
                                 <span class="spinner" style="display: none;">✨</span>
                             </button>
                         </div>
 
-                        <div class="ai-result-area" id="ai-result-container" style="display: none;">
-                            <div class="generated-image-frame">
-                                <img id="ai-generated-image" src="" alt="AI Generated Cake Design">
-                                <div class="ai-actions">
-                                    <button id="ai-order-btn" class="btn-luxury btn-sm">Order This Design</button>
-                                    <button id="ai-retry-btn" class="btn-text" style="color:white;">Try Again</button>
+                        <!-- Right Column: Preview -->
+                        <div class="snap-preview">
+                            <div class="snap-result-frame">
+                                <img id="ai-generated-image" src="assets/wedding_cake.png"
+                                    alt="AI Generated Cake Design">
+                                <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
+                                    <div class="loader-snap"></div>
+                                    <p>Crafting your design...</p>
                                 </div>
                             </div>
-                            <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
-                                <div class="loader"></div>
-                                <p>Dreaming up your design...</p>
+                            <div class="snap-actions">
+                                <button id="ai-order-btn" class="btn-snap-secondary">Order This Design</button>
                             </div>
                         </div>
                     </div>

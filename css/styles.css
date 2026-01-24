@@ -755,3 +755,220 @@ h4 {
         transform: rotate(360deg);
     }
 }
+
+/* --- SWEET SNAP AI REPLICA STYLES (Scoped to Atelier) --- */
+.sweet-snap-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+    text-align: left;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fdfbf7;
+    /* Cream background */
+    padding: 3rem;
+    border-radius: 16px;
+    color: #333;
+    /* Dark text for readability on cream */
+}
+
+/* Left Column */
+.snap-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.snap-label {
+    display: block;
+    font-family: var(--font-heading);
+    color: #4a4a4a;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.snap-chips-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.snap-chip {
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2rem;
+    /* Pill shape */
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.snap-chip:hover {
+    border-color: #d4af37;
+    color: #d4af37;
+}
+
+.snap-chip.active {
+    background: #1a0b1f;
+    /* Dark contrast */
+    color: #fff;
+    border-color: #1a0b1f;
+}
+
+.divider {
+    color: #ccc;
+    font-weight: 300;
+    margin: 0 0.5rem;
+}
+
+/* Colors Grid */
+.snap-colors-grid {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.snap-color {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.snap-color:hover {
+    transform: scale(1.1);
+}
+
+.snap-color.active {
+    border-color: #1a0b1f;
+    /* Selection ring */
+    transform: scale(1.1);
+}
+
+/* Input */
+.snap-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    resize: none;
+}
+
+.snap-input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Buttons */
+.btn-snap-primary {
+    width: 100%;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #d4af37, #f3d489);
+    border: none;
+    border-radius: 12px;
+    color: #1a0b1f;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-snap-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn-snap-secondary {
+    width: 100%;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #1a0b1f;
+    color: #1a0b1f;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-snap-secondary:hover {
+    background: #1a0b1f;
+    color: #fff;
+}
+
+/* Right Column */
+.snap-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.snap-result-frame {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e0e0e0;
+}
+
+.snap-result-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Loader Override */
+.loader-snap {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader-snap::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-bottom-color: #d4af37;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .sweet-snap-container {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+}

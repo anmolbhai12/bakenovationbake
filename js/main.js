@@ -320,29 +320,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (aiRetryBtn) {
-        aiRetryBtn.addEventListener('click', () => {
-            aiPrompt.focus();
-            aiResultContainer.style.display = 'none';
-        });
-    }
-
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
-            const prompt = aiPrompt.value.trim();
+            // Construct prompt again for validity
+            const userDetails = aiPromptInput.value.trim();
+            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette, ${snapState.shape} shape, ${snapState.tiers} tier(s). ${userDetails}`;
 
             // Open Modal
             if (orderModal) {
                 orderModal.classList.add('active');
 
                 // Pre-fill details
-                // We use the 'ordered_design' and 'message' fields logic
                 const designInput = document.getElementById('modal-ordered-design');
                 const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                if (designInput) designInput.value = `AI Custom Design`;
+                if (designInput) designInput.value = `Sweet Snap AI Design`;
                 if (messageInput) {
-                    messageInput.value = `[AI GENERATED REQUEST]\nPrompt: "${prompt}"\n(Please refer to the AI Design concept)`;
+                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
                 }
 
                 gsap.fromTo(orderModal.querySelector('.modal-content'),
