@@ -259,90 +259,161 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- AI DESIGN STUDIO LOGIC ---
+    // --- AI DESIGN STUDIO LOGIC (SWEET SNAP REPLICA) ---
     const aiGenerateBtn = document.getElementById('ai-generate-btn');
     const aiPrompt = document.getElementById('ai-prompt');
-    const aiResultContainer = document.getElementById('ai-result-container');
     const aiLoading = document.getElementById('ai-loading');
     const aiGeneratedImage = document.getElementById('ai-generated-image');
     const aiOrderBtn = document.getElementById('ai-order-btn');
-    const aiRetryBtn = document.getElementById('ai-retry-btn');
 
+    // State Management for Sweet Snap
+    const snapState = {
+        type: 'wedding',
+        style: 'luxury',
+        shape: 'round',
+        tiers: '2',
+        color: 'white'
+    };
+
+    // 1. Handle Chip Selections (Occasion, Aesthetic, Shape)
+    const snapChips = document.querySelectorAll('.snap-chip');
+    snapChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            // Determine group based on data attribute
+            const group = chip.parentElement;
+
+            // Remove active from siblings in the same group
+            group.querySelectorAll('.snap-chip').forEach(c => c.classList.remove('active'));
+
+            // Activate clicked chip
+            chip.classList.add('active');
+
+            // Update State
+            if (chip.dataset.type) snapState.type = chip.dataset.type;
+            if (chip.dataset.style) snapState.style = chip.dataset.style;
+            if (chip.dataset.shape) snapState.shape = chip.dataset.shape;
+            if (chip.dataset.tiers) snapState.tiers = chip.dataset.tiers;
+        });
+    });
+
+    // 2. Handle Color Selection
+    const snapColors = document.querySelectorAll('.snap-color');
+    snapColors.forEach(color => {
+        color.addEventListener('click', () => {
+            // Remove active from all colors
+            snapColors.forEach(c => c.classList.remove('active'));
+
+            // Activate clicked
+            color.classList.add('active');
+
+            // Update State
+            if (color.dataset.color) snapState.color = color.dataset.color;
+        });
+    });
+
+    // 3. Generate Logic
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            const prompt = aiPrompt.value.trim();
-            if (!prompt) {
-                alert("Please describe your dream cake first!");
-                return;
-            }
-
             // UI Loading State
             const btnText = aiGenerateBtn.querySelector('.btn-text');
             const spinner = aiGenerateBtn.querySelector('.spinner');
-            btnText.style.display = 'none';
-            spinner.style.display = 'block';
+            if (btnText) btnText.style.display = 'none';
+            if (spinner) spinner.style.display = 'block';
             aiGenerateBtn.disabled = true;
 
-            // Show Result container (simulating start)
-            aiResultContainer.style.display = 'block';
-            aiLoading.style.display = 'flex';
+            // Show Loading Overlay
+            if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Scroll to result
-            aiResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Construct Smart Prompt
+            const userDetails = aiPrompt.value.trim();
+            // Combine explicit state with user text for the "God of AI" logic
+            const combinedPrompt = `${snapState.type} ${snapState.style} ${snapState.color} ${userDetails}`.toLowerCase();
+
+            console.log("Generating with prompt:", combinedPrompt);
 
             // SIMULATE AI GENERATION (Mock Logic with "God of AI" Intelligence)
             setTimeout(() => {
-                // Advanced Keyword Matching Layer (God of AI Logic)
-                let selectedImage = 'assets/wedding_cake.png'; // Fallback / Base Luxury
-                const p = prompt.toLowerCase();
+                let selectedImage = 'assets/wedding_cake.png'; // Default
 
-                if (p.includes('birthday') || p.includes('colorful') || p.includes('sprinkles') || p.includes('playful')) {
+                // Logic Flow: Color/Style > Type > Details
+
+                // 1. Color/Style Overrides
+                if (combinedPrompt.includes('pink') || combinedPrompt.includes('birthday') || combinedPrompt.includes('sprinkles')) {
                     selectedImage = 'assets/red_velvet.png';
-                } else if (p.includes('wedding') || p.includes('white') || p.includes('floral') || p.includes('tier')) {
-                    selectedImage = 'assets/wedding_cake.png';
-                } else if (p.includes('chocolate') || p.includes('dark') || p.includes('gold leaf') || p.includes('ganache')) {
+                }
+                else if (combinedPrompt.includes('chocolate') || combinedPrompt.includes('dark') || combinedPrompt.includes('black')) {
                     selectedImage = 'assets/chocolate_cake.png';
-                } else if (p.includes('modern') || p.includes('blue') || p.includes('geometric') || p.includes('sapphire')) {
-                    selectedImage = 'assets/hero-cake.png';
-                } else if (p.includes('vanilla') || p.includes('simple') || p.includes('bean')) {
+                }
+                else if (combinedPrompt.includes('blue') || combinedPrompt.includes('modern') || combinedPrompt.includes('geometric')) {
+                    selectedImage = 'assets/hero-cake.png'; // Using hero cake as the "Modern/Blue" placeholder
+                }
+                else if (combinedPrompt.includes('rustic') || combinedPrompt.includes('naked') || combinedPrompt.includes('berry')) {
+                    selectedImage = 'assets/chocolate_cake.png'; // Reusing chocolate for rustic if it makes sense, or need a rustic asset
+                }
+                else if (combinedPrompt.includes('vanilla') || combinedPrompt.includes('simple') || combinedPrompt.includes('minimalist')) {
                     selectedImage = 'assets/vanilla_cake.png';
                 }
+                // Default fallback is wedding_cake (white/luxury)
 
-                console.log(`AI Processing complete. Style identified. Serving: ${selectedImage}`);
-                aiGeneratedImage.src = selectedImage;
-                aiLoading.style.display = 'none';
+                // Update Image
+                if (aiGeneratedImage) {
+                    aiGeneratedImage.src = selectedImage;
+                    // Reset animation
+                    gsap.fromTo(aiGeneratedImage, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5 });
+                }
 
-                btnText.style.display = 'inline';
-                spinner.style.display = 'none';
+                // Reset UI
+                if (aiLoading) aiLoading.style.display = 'none';
+                if (btnText) btnText.style.display = 'inline';
+                if (spinner) spinner.style.display = 'none';
                 aiGenerateBtn.disabled = false;
 
-            }, 3000); // Increased "thinking" time
+            }, 2500); // 2.5s delay for realism
         });
     }
 
+    // 4. Order Button Logic
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
             // Construct prompt again for validity
-            const userDetails = aiPromptInput.value.trim();
+            const userDetails = aiPrompt.value.trim();
             const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette, ${snapState.shape} shape, ${snapState.tiers} tier(s). ${userDetails}`;
 
             // Open Modal
-            if (orderModal) {
-                orderModal.classList.add('active');
+            if (typeof simpleModal !== 'undefined') {
+                // If using the simple modal logic defined above
+                const orderModal = document.getElementById('order-modal');
+                if (orderModal) {
+                    orderModal.classList.add('active');
 
-                // Pre-fill details
-                const designInput = document.getElementById('modal-ordered-design');
-                const messageInput = orderModal.querySelector('textarea[name="message"]');
+                    // Pre-fill details
+                    const designInput = document.getElementById('modal-ordered-design');
+                    const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                if (designInput) designInput.value = `Sweet Snap AI Design`;
-                if (messageInput) {
-                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
+                    if (designInput) designInput.value = `Sweet Snap AI Design`;
+                    if (messageInput) {
+                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
+                    }
+
+                    gsap.fromTo(orderModal.querySelector('.modal-content'),
+                        { y: -50, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4 }
+                    );
                 }
+            } else {
+                // Fallback to checking element directly if variable scope issue
+                const orderModal = document.getElementById('order-modal');
+                if (orderModal) {
+                    orderModal.classList.add('active');
+                    // Pre-fill details
+                    const designInput = document.getElementById('modal-ordered-design');
+                    const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                gsap.fromTo(orderModal.querySelector('.modal-content'),
-                    { y: -50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.4 }
-                );
+                    if (designInput) designInput.value = `Sweet Snap AI Design`;
+                    if (messageInput) {
+                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
+                    }
+                }
             }
         });
     }
