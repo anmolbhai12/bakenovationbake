@@ -270,12 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const snapState = {
         type: 'wedding',
         style: 'luxury',
-        shape: 'round',
-        tiers: '2',
         color: 'white'
     };
 
-    // 1. Handle Chip Selections (Occasion, Aesthetic, Shape)
+    // 1. Handle Chip Selections (Occasion, Aesthetic)
     const snapChips = document.querySelectorAll('.snap-chip');
     snapChips.forEach(chip => {
         chip.addEventListener('click', () => {
@@ -291,8 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update State
             if (chip.dataset.type) snapState.type = chip.dataset.type;
             if (chip.dataset.style) snapState.style = chip.dataset.style;
-            if (chip.dataset.shape) snapState.shape = chip.dataset.shape;
-            if (chip.dataset.tiers) snapState.tiers = chip.dataset.tiers;
         });
     });
 
@@ -324,14 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show Loading Overlay
             if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Construct High-Quality Prompt for Pollinations AI
+            // Construct Efficient Prompt for Pollinations AI (Speed Optimized)
             const userDetails = aiPrompt.value.trim();
-            const basePrompt = `A hyper-realistic ${snapState.style} ${snapState.color} ${snapState.shape} cake for a ${snapState.type}, ${snapState.tiers} tiers`;
-            const detailedPrompt = `${basePrompt}${userDetails ? ', ' + userDetails : ''}. Professional food photography, 8k resolution, luxury aesthetic, soft studio lighting, ultra-detailed fondant textures, elegant presentation, cinematic lighting, sharp focus.`;
+            const basePrompt = `A ${snapState.style} ${snapState.color} cake for a ${snapState.type}`;
+            const detailedPrompt = `${basePrompt}, ${userDetails ? userDetails + ', ' : ''}high-quality food photography, studio lighting, detailed, 4k`;
 
             const encodedPrompt = encodeURIComponent(detailedPrompt);
             const seed = Math.floor(Math.random() * 1000000); // Unique seed for every generation
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1080&height=1350&nologo=true`;
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=768&height=768&nologo=true`;
 
             console.log("Generating AI Image with prompt:", detailedPrompt);
 
@@ -372,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
             const userDetails = aiPrompt.value.trim();
-            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette, ${snapState.shape} shape, ${snapState.tiers} tier(s). ${userDetails}`;
+            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
             const orderModal = document.getElementById('order-modal');
             if (orderModal) {
