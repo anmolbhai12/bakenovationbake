@@ -51,89 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- CUSTOMIZER LOGIC ---
-    const shapeBtns = document.querySelectorAll('.shape-btn');
-    const tierRange = document.getElementById('tier-range');
-    const tierDisplay = document.getElementById('tier-display');
-    const flavorSelect = document.getElementById('flavor-select');
-    const previewCake = document.getElementById('preview-cake');
-    const orderBtn = document.getElementById('order-btn');
-    const fileInput = document.getElementById('upload-reference');
-
-    let currentConfig = {
-        shape: 'round',
-        flavor: 'vanilla',
-        tiers: 2
-    };
-
-    // Shape Images Config (simulating dynamic switch)
-    const cakeAssets = {
-        round: 'assets/vanilla_cake.png',
-        square: 'assets/square_cake.png',
-        heart: 'assets/heart_cake.png'
-    };
-
-    // Shape Selection
-    shapeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class
-            shapeBtns.forEach(b => b.classList.remove('active'));
-            // Add active class
-            btn.classList.add('active');
-
-            const shape = btn.dataset.shape;
-            currentConfig.shape = shape;
-
-            // Animate and Switch Image
-            gsap.to(previewCake, {
-                opacity: 0,
-                scale: 0.9,
-                duration: 0.3,
-                onComplete: () => {
-                    // Update source based on shape choice
-                    if (cakeAssets[shape]) {
-                        previewCake.src = cakeAssets[shape];
-                    }
-
-                    gsap.to(previewCake, {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.5,
-                        ease: 'back.out(1.7)'
-                    });
-                }
-            });
-        });
-    });
-
-    // Tier Selection
-    tierRange.addEventListener('input', (e) => {
-        const val = e.target.value;
-        currentConfig.tiers = parseInt(val);
-        tierDisplay.innerText = `${val} Tier${val > 1 ? 's' : ''}`;
-
-        // Simulating tier height growth using scale
-        const scale = 0.8 + (val * 0.1);
-        gsap.to(previewCake, { scale: scale, duration: 0.3 });
-    });
-
-    // Flavor Selection
-    flavorSelect.addEventListener('change', (e) => {
-        currentConfig.flavor = e.target.value;
-        // Optional: Could change cake color/tint filter here
-    });
-
     // --- MODAL LOGIC & DATA TRANSFER ---
-    const triggerModalBtn = document.getElementById('trigger-modal-btn');
     const modal = document.getElementById('order-modal');
     const modalClose = document.querySelector('.modal-close');
     let orderForm = null;
     if (modal) orderForm = modal.querySelector('form');
-
-    // Hidden inputs in the modal form
-    const modalShape = document.getElementById('modal-shape');
-    const modalFlavor = document.getElementById('modal-flavor');
-    const modalTiers = document.getElementById('modal-tiers');
 
     // Handle Form Submission with Custom Redirects
     if (orderForm) {
@@ -167,31 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.innerText = originalText;
                     btn.disabled = false;
                 });
-        });
-    }
-
-
-
-    // Reset logic when opening modal via normal "Atelier" button
-    if (triggerModalBtn) {
-        triggerModalBtn.addEventListener('click', () => {
-            // Reset the "Ordering: [Design Name]" label because this is a custom order
-            const designLabel = document.getElementById('modal-design-label');
-            const modalDesign = document.getElementById('modal-ordered-design');
-
-            if (designLabel) designLabel.classList.remove('visible');
-            if (modalDesign) modalDesign.value = "Custom Design (from Atelier)"; // Generic name
-
-            // Transfer current config to hidden form inputs
-            if (modalShape) modalShape.value = currentConfig.shape;
-            if (modalFlavor) modalFlavor.value = currentConfig.flavor;
-            if (modalTiers) modalTiers.value = currentConfig.tiers;
-
-            // Show Modal
-            if (modal) {
-                modal.classList.add('active');
-                gsap.fromTo('.modal-content', { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 });
-            }
         });
     }
 
@@ -354,6 +251,95 @@ document.addEventListener('DOMContentLoaded', () => {
             const orderModal = document.getElementById('order-modal');
             if (orderModal) {
                 orderModal.classList.add('active');
+                gsap.fromTo(orderModal.querySelector('.modal-content'),
+                    { y: -50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4 }
+                );
+            }
+        });
+    }
+
+    // --- AI DESIGN STUDIO LOGIC ---
+    const aiGenerateBtn = document.getElementById('ai-generate-btn');
+    const aiPrompt = document.getElementById('ai-prompt');
+    const aiResultContainer = document.getElementById('ai-result-container');
+    const aiLoading = document.getElementById('ai-loading');
+    const aiGeneratedImage = document.getElementById('ai-generated-image');
+    const aiOrderBtn = document.getElementById('ai-order-btn');
+    const aiRetryBtn = document.getElementById('ai-retry-btn');
+
+    if (aiGenerateBtn) {
+        aiGenerateBtn.addEventListener('click', () => {
+            const prompt = aiPrompt.value.trim();
+            if (!prompt) {
+                alert("Please describe your dream cake first!");
+                return;
+            }
+
+            // UI Loading State
+            const btnText = aiGenerateBtn.querySelector('.btn-text');
+            const spinner = aiGenerateBtn.querySelector('.spinner');
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            aiGenerateBtn.disabled = true;
+
+            // Show Result container (simulating start)
+            aiResultContainer.style.display = 'block';
+            aiLoading.style.display = 'flex';
+
+            // Scroll to result
+            aiResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // SIMULATE AI GENERATION (Mock Logic)
+            setTimeout(() => {
+                // simple keyword matching for demo
+                let selectedImage = 'assets/wedding_cake.png'; // default
+                const p = prompt.toLowerCase();
+                if (p.includes('chocolate') || p.includes('dark')) selectedImage = 'assets/chocolate_cake.png';
+                else if (p.includes('red') || p.includes('velvet')) selectedImage = 'assets/red_velvet.png';
+                else if (p.includes('vanilla') || p.includes('white')) selectedImage = 'assets/vanilla_cake.png';
+                else if (p.includes('blue') || p.includes('modern')) selectedImage = 'assets/hero-cake.png';
+
+                // Update Image
+                aiGeneratedImage.src = selectedImage;
+
+                // Hide Loading
+                aiLoading.style.display = 'none';
+
+                // Reset Button
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                aiGenerateBtn.disabled = false;
+
+            }, 2500); // 2.5s delay
+        });
+    }
+
+    if (aiRetryBtn) {
+        aiRetryBtn.addEventListener('click', () => {
+            aiPrompt.focus();
+            aiResultContainer.style.display = 'none';
+        });
+    }
+
+    if (aiOrderBtn) {
+        aiOrderBtn.addEventListener('click', () => {
+            const prompt = aiPrompt.value.trim();
+
+            // Open Modal
+            if (orderModal) {
+                orderModal.classList.add('active');
+
+                // Pre-fill details
+                // We use the 'ordered_design' and 'message' fields logic
+                const designInput = document.getElementById('modal-ordered-design');
+                const messageInput = orderModal.querySelector('textarea[name="message"]');
+
+                if (designInput) designInput.value = `AI Custom Design`;
+                if (messageInput) {
+                    messageInput.value = `[AI GENERATED REQUEST]\nPrompt: "${prompt}"\n(Please refer to the AI Design concept)`;
+                }
+
                 gsap.fromTo(orderModal.querySelector('.modal-content'),
                     { y: -50, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.4 }

@@ -143,59 +143,36 @@
             </div>
         </section>
 
-        <!-- The Atelier (Customizer) -->
+        <!-- The Atelier (AI Design Studio) -->
         <section id="atelier" class="section">
             <div class="container">
-                <div class="glass-panel customizer-wrapper reveal-on-scroll">
+                <div class="glass-panel text-center reveal-on-scroll">
                     <div class="customizer-header">
                         <h2 class="text-gold">The Atelier</h2>
-                        <p>Craft your bespoke masterpiece.</p>
+                        <p class="section-subtitle">Dream it. Describe it. See it.</p>
                     </div>
 
-                    <div class="customizer-interface">
-                        <!-- Controls -->
-                        <!-- Controls -->
-                        <div class="customizer-controls">
-                            <div class="control-group">
-                                <label>Select Shape</label>
-                                <div class="shape-options">
-                                    <button type="button" class="shape-btn active" data-shape="round">Round</button>
-                                    <button type="button" class="shape-btn" data-shape="square">Square</button>
-                                    <button type="button" class="shape-btn" data-shape="heart">Heart</button>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label>Flavor Profile</label>
-                                <select class="luxury-select" id="flavor-select">
-                                    <option value="vanilla">Madagascan Vanilla</option>
-                                    <option value="chocolate">Belgian Dark Chocolate</option>
-                                    <option value="red_velvet">Red Velvet</option>
-                                    <option value="lemon">Amalfi Lemon</option>
-                                    <option value="hazelnut">Piedmont Hazelnut</option>
-                                </select>
-                            </div>
-
-                            <div class="control-group">
-                                <label>Upload Design Reference</label>
-                                <p style="color: var(--color-text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
-                                    (You will confirm this in the next step)</p>
-                            </div>
-
-                            <div class="control-group">
-                                <label>Tiers</label>
-                                <input type="range" class="luxury-range" min="1" max="5" value="2" id="tier-range">
-                                <span id="tier-display">2 Tiers</span>
-                            </div>
-
-                            <button type="button" class="btn-luxury w-100" id="trigger-modal-btn">Proceed to
-                                Checkout</button>
+                    <div class="ai-studio-interface">
+                        <div class="ai-input-area">
+                            <textarea id="ai-prompt" class="luxury-input" rows="3"
+                                placeholder="Describe your dream cake (e.g., 'A three-tier marble cake with cascading gold leaves and sapphire blue flowers')..."></textarea>
+                            <button id="ai-generate-btn" class="btn-luxury">
+                                <span class="btn-text">Generate Magic</span>
+                                <span class="spinner" style="display: none;">✨</span>
+                            </button>
                         </div>
 
-                        <!-- Preview Area -->
-                        <div class="customizer-preview">
-                            <div class="cake-preview-stage">
-                                <img id="preview-cake" src="assets/vanilla_cake.png" alt="Cake Preview">
+                        <div class="ai-result-area" id="ai-result-container" style="display: none;">
+                            <div class="generated-image-frame">
+                                <img id="ai-generated-image" src="" alt="AI Generated Cake Design">
+                                <div class="ai-actions">
+                                    <button id="ai-order-btn" class="btn-luxury btn-sm">Order This Design</button>
+                                    <button id="ai-retry-btn" class="btn-text" style="color:white;">Try Again</button>
+                                </div>
+                            </div>
+                            <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
+                                <div class="loader"></div>
+                                <p>Dreaming up your design...</p>
                             </div>
                         </div>
                     </div>
@@ -220,57 +197,7 @@
     </main>
 
 
-    <!-- Order Details Modal -->
-    <div id="order-modal" class="modal-overlay">
-        <div class="glass-panel modal-content">
-            <button class="modal-close">&times;</button>
-            <div class="customizer-header">
-                <h2 class="text-gold">Final Details</h2>
-                <p>Where should we deliver your masterpiece?</p>
-            </div>
 
-            <form action="https://formsubmit.co/japindersinghbhasin@gmail.com" method="POST"
-                enctype="multipart/form-data">
-                <!-- Configuration -->
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
-                <input type="hidden" name="_template" value="table">
-                <!-- Hidden inputs to transfer data -->
-                <input type="hidden" name="shape" id="modal-shape">
-                <input type="hidden" name="flavor" id="modal-flavor">
-                <input type="hidden" name="tiers" id="modal-tiers">
-                <!-- File upload needs to be here to be sent -->
-
-                <div class="control-group">
-                    <label>Design Reference (Moved from Atelier)</label>
-                    <input type="file" id="modal-upload" name="attachment" accept="image/*" class="file-input-luxury">
-                </div>
-
-                <div class="control-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" required class="luxury-input" placeholder="Your Name">
-                </div>
-
-                <div class="control-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required class="luxury-input" placeholder="name@example.com">
-                </div>
-
-                <div class="control-group">
-                    <label>Phone Number</label>
-                    <input type="tel" name="phone" required class="luxury-input" placeholder="+1 (555) 000-0000">
-                </div>
-
-                <div class="control-group">
-                    <label>Delivery Address</label>
-                    <textarea name="address" required class="luxury-input" rows="3"
-                        placeholder="Street, City, Zip Code"></textarea>
-                </div>
-
-                <button type="submit" class="btn-luxury w-100">Confirm & Send Order</button>
-            </form>
-        </div>
-    </div>
 
     <!-- Order Details Modal -->
     <div id="order-modal" class="modal-overlay">
