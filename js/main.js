@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Generate Logic
+    // 3. Real AI Generation Logic
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
             // UI Loading State
@@ -324,97 +324,107 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show Loading Overlay
             if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Construct Smart Prompt
+            // Construct High-Quality Prompt for Pollinations AI
             const userDetails = aiPrompt.value.trim();
-            // Combine explicit state with user text for the "God of AI" logic
-            const combinedPrompt = `${snapState.type} ${snapState.style} ${snapState.color} ${userDetails}`.toLowerCase();
+            const basePrompt = `A hyper-realistic ${snapState.style} ${snapState.color} ${snapState.shape} cake for a ${snapState.type}, ${snapState.tiers} tiers`;
+            const detailedPrompt = `${basePrompt}${userDetails ? ', ' + userDetails : ''}. Professional food photography, 8k resolution, luxury aesthetic, soft studio lighting, ultra-detailed fondant textures, elegant presentation, cinematic lighting, sharp focus.`;
 
-            console.log("Generating with prompt:", combinedPrompt);
+            const encodedPrompt = encodeURIComponent(detailedPrompt);
+            const seed = Math.floor(Math.random() * 1000000); // Unique seed for every generation
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1080&height=1350&nologo=true`;
 
-            // SIMULATE AI GENERATION (Mock Logic with "God of AI" Intelligence)
-            setTimeout(() => {
-                let selectedImage = 'assets/wedding_cake.png'; // Default
+            console.log("Generating AI Image with prompt:", detailedPrompt);
 
-                // Logic Flow: Color/Style > Type > Details
+            // Fetch and display
+            if (aiGeneratedImage) {
+                // Pre-load the image to ensure spinner stays until it's ready
+                const tempImage = new Image();
+                tempImage.onload = () => {
+                    aiGeneratedImage.src = imageUrl;
 
-                // 1. Color/Style Overrides
-                if (combinedPrompt.includes('pink') || combinedPrompt.includes('birthday') || combinedPrompt.includes('sprinkles')) {
-                    selectedImage = 'assets/red_velvet.png';
-                }
-                else if (combinedPrompt.includes('chocolate') || combinedPrompt.includes('dark') || combinedPrompt.includes('black')) {
-                    selectedImage = 'assets/chocolate_cake.png';
-                }
-                else if (combinedPrompt.includes('blue') || combinedPrompt.includes('modern') || combinedPrompt.includes('geometric')) {
-                    selectedImage = 'assets/hero-cake.png'; // Using hero cake as the "Modern/Blue" placeholder
-                }
-                else if (combinedPrompt.includes('rustic') || combinedPrompt.includes('naked') || combinedPrompt.includes('berry')) {
-                    selectedImage = 'assets/chocolate_cake.png'; // Reusing chocolate for rustic if it makes sense, or need a rustic asset
-                }
-                else if (combinedPrompt.includes('vanilla') || combinedPrompt.includes('simple') || combinedPrompt.includes('minimalist')) {
-                    selectedImage = 'assets/vanilla_cake.png';
-                }
-                // Default fallback is wedding_cake (white/luxury)
+                    // Add to Recent Generations Gallery
+                    addToGallery(imageUrl, detailedPrompt);
 
-                // Update Image
-                if (aiGeneratedImage) {
-                    aiGeneratedImage.src = selectedImage;
-                    // Reset animation
-                    gsap.fromTo(aiGeneratedImage, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5 });
-                }
+                    // Reveal with animation
+                    gsap.fromTo(aiGeneratedImage, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" });
 
-                // Reset UI
-                if (aiLoading) aiLoading.style.display = 'none';
-                if (btnText) btnText.style.display = 'inline';
-                if (spinner) spinner.style.display = 'none';
-                aiGenerateBtn.disabled = false;
+                    // Reset UI
+                    if (aiLoading) aiLoading.style.display = 'none';
+                    if (btnText) btnText.style.display = 'inline';
+                    if (spinner) spinner.style.display = 'none';
+                    aiGenerateBtn.disabled = false;
+                };
 
-            }, 2500); // 2.5s delay for realism
+                tempImage.onerror = () => {
+                    alert("The AI is currently busy. Please try again in a moment.");
+                    if (aiLoading) aiLoading.style.display = 'none';
+                    if (btnText) btnText.style.display = 'inline';
+                    if (spinner) spinner.style.display = 'none';
+                    aiGenerateBtn.disabled = false;
+                };
+
+                tempImage.src = imageUrl;
+            }
         });
     }
 
-    // 4. Order Button Logic
+    // 4. Order Button Logic (Connects to the modal)
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
-            // Construct prompt again for validity
             const userDetails = aiPrompt.value.trim();
             const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette, ${snapState.shape} shape, ${snapState.tiers} tier(s). ${userDetails}`;
 
-            // Open Modal
-            if (typeof simpleModal !== 'undefined') {
-                // If using the simple modal logic defined above
-                const orderModal = document.getElementById('order-modal');
-                if (orderModal) {
-                    orderModal.classList.add('active');
+            const orderModal = document.getElementById('order-modal');
+            if (orderModal) {
+                orderModal.classList.add('active');
 
-                    // Pre-fill details
-                    const designInput = document.getElementById('modal-ordered-design');
-                    const messageInput = orderModal.querySelector('textarea[name="message"]');
+                const designInput = document.getElementById('modal-ordered-design');
+                const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                    if (designInput) designInput.value = `Sweet Snap AI Design`;
-                    if (messageInput) {
-                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
-                    }
-
-                    gsap.fromTo(orderModal.querySelector('.modal-content'),
-                        { y: -50, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 0.4 }
-                    );
+                if (designInput) designInput.value = `Bespoke AI Created Design`;
+                if (messageInput) {
+                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
                 }
-            } else {
-                // Fallback to checking element directly if variable scope issue
-                const orderModal = document.getElementById('order-modal');
-                if (orderModal) {
-                    orderModal.classList.add('active');
-                    // Pre-fill details
-                    const designInput = document.getElementById('modal-ordered-design');
-                    const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                    if (designInput) designInput.value = `Sweet Snap AI Design`;
-                    if (messageInput) {
-                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Please refer to generated concept)`;
-                    }
-                }
+                gsap.fromTo(orderModal.querySelector('.modal-content'),
+                    { y: -50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4 }
+                );
             }
+        });
+    }
+
+    // --- GALLERY LOGIC ---
+    function addToGallery(url, prompt) {
+        const galleryContainer = document.getElementById('recent-generations-grid');
+        if (!galleryContainer) return;
+
+        // Create item
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.style.opacity = '0';
+        item.innerHTML = `
+            <img src="${url}" alt="AI Concept">
+            <div class="gallery-overlay">
+                <button class="btn-sm btn-luxury use-this-btn">Use This</button>
+            </div>
+        `;
+
+        // Add to start
+        galleryContainer.prepend(item);
+
+        // Animate appearance
+        gsap.to(item, { opacity: 1, duration: 0.5 });
+
+        // Use this button logic
+        const useBtn = item.querySelector('.use-this-btn');
+        useBtn.addEventListener('click', () => {
+            if (aiGeneratedImage) {
+                aiGeneratedImage.src = url;
+                gsap.fromTo(aiGeneratedImage, { scale: 0.95, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.3 });
+            }
+            // Scroll back up to preview
+            document.querySelector('.snap-result-frame').scrollIntoView({ behavior: 'smooth' });
         });
     }
 
