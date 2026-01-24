@@ -757,6 +757,7 @@ h4 {
 }
 
 /* --- SWEET SNAP AI REPLICA STYLES (Scoped to Atelier) --- */
+/* --- SWEET SNAP AI REPLICA STYLES (Scoped to Atelier) --- */
 .sweet-snap-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -766,12 +767,16 @@ h4 {
     max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
-    background: #fdfbf7;
-    /* Cream background */
+    background: rgba(26, 11, 31, 0.6);
+    /* Semi-transparent dark background */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    /* Gold border */
     padding: 3rem;
     border-radius: 16px;
-    color: #333;
-    /* Dark text for readability on cream */
+    color: #f5f5f5;
+    /* Light text */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Left Column */
@@ -784,7 +789,8 @@ h4 {
 .snap-label {
     display: block;
     font-family: var(--font-heading);
-    color: #4a4a4a;
+    color: var(--color-gold);
+    /* Gold text */
     margin-bottom: 0.8rem;
     font-size: 1rem;
     font-weight: 600;
@@ -800,28 +806,31 @@ h4 {
 }
 
 .snap-chip {
-    background: transparent;
-    border: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 0.6rem 1.2rem;
     border-radius: 2rem;
     /* Pill shape */
     font-size: 0.9rem;
-    color: #666;
+    color: #e0e0e0;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: var(--font-body);
 }
 
 .snap-chip:hover {
-    border-color: #d4af37;
-    color: #d4af37;
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+    background: rgba(197, 160, 89, 0.1);
 }
 
 .snap-chip.active {
-    background: #1a0b1f;
-    /* Dark contrast */
-    color: #fff;
-    border-color: #1a0b1f;
+    background: var(--color-gold);
+    /* Gold background */
+    color: #1a0b1f;
+    /* Dark text */
+    border-color: var(--color-gold);
+    font-weight: 600;
 }
 
 .divider {
@@ -861,12 +870,12 @@ h4 {
 .snap-input {
     width: 100%;
     padding: 1rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    background: #fff;
+    background: rgba(0, 0, 0, 0.2);
     font-family: var(--font-body);
     font-size: 1rem;
-    color: #333;
+    color: #f5f5f5;
     outline: none;
     resize: none;
 }
