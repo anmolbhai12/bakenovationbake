@@ -84,16 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpInput = document.getElementById('otp-input');
     const userNavArea = document.getElementById('user-nav-area');
 
-    // EmailJS Config (Updating with real IDs)
-    const EMAILJS_CONFIG = {
-        SERVICE_ID: 'service_b9j54kq',
-        TEMPLATE_ID: 'template_p4xra7a',
-        PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
-    };
-
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-    }
+    // Web3Forms Config (Free, No Limits!)
+    const WEB3FORMS_ACCESS_KEY = '65fb9739-feaa-475a-b348-cf316157ad35'; // Get free key from https://web3forms.com
 
     let users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
     let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
@@ -201,39 +193,39 @@ document.addEventListener('DOMContentLoaded', () => {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             currentSignupData = { name, email, pass };
 
-            // Send Email via EmailJS
+            // Send Email via Web3Forms (Free & Simple!)
             const submitBtn = signupForm.querySelector('button');
             submitBtn.innerText = "Sending OTP...";
             submitBtn.disabled = true;
 
-            const templateParams = {
-                to_name: name,
-                to_email: email,
-                otp_code: generatedOTP
-            };
+            // Prepare email data for Web3Forms
+            const formData = new FormData();
+            formData.append('access_key', WEB3FORMS_ACCESS_KEY);
+            formData.append('subject', 'Your Bakenovation Verification Code');
+            formData.append('from_name', 'Bakenovation');
+            formData.append('to_email', email);
+            formData.append('message', `Hello ${name},\n\nYour verification code for Bakenovation is:\n\n${generatedOTP}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this code, please ignore this email.\n\nBest regards,\nBakenovation Team`);
 
-            emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams)
-                .then(() => {
-                    signupView.style.display = 'none';
-                    otpView.style.display = 'block';
-                    alert(`Verification code sent to ${email}`);
+            // Send via Web3Forms API
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        signupView.style.display = 'none';
+                        otpView.style.display = 'block';
+                        alert(`Verification code sent to ${email}`);
+                    } else {
+                        throw new Error(data.message || 'Failed to send email');
+                    }
                 })
                 .catch(err => {
-                    console.error("EmailJS Error:", err);
+                    console.error("Web3Forms Error:", err);
 
-                    // Enhanced error reporting
-                    let errorMsg = "Failed to send verification email. ";
-                    if (err.status) {
-                        errorMsg += `Error ${err.status}: `;
-                    }
-                    if (err.text) {
-                        errorMsg += err.text;
-                    } else {
-                        errorMsg += err.message || "Unknown error";
-                    }
-
-                    // Show detailed error to user
-                    alert(errorMsg + "\n\nFor demo purposes, the OTP code is: " + generatedOTP);
+                    // Show error but allow user to proceed for testing
+                    alert(`Failed to send verification email: ${err.message}\n\nFor demo purposes, the OTP code is: ${generatedOTP}`);
 
                     // Still allow user to proceed for testing
                     signupView.style.display = 'none';
