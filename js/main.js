@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // EmailJS Config (Updating with real IDs)
     const EMAILJS_CONFIG = {
         SERVICE_ID: 'service_b9j54kq',
-        TEMPLATE_ID: 'template_qzjb5kk',
+        TEMPLATE_ID: 'template_p4xra7a',
         PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
