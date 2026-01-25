@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const EMAILJS_CONFIG = {
         SERVICE_ID: 'service_b9j54kq',
         TEMPLATE_ID: 'template_6pdcom7',
-        PUBLIC_KEY: 'YOUR_PUBLIC_KEY'       // Still need this one!
+        PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
     if (typeof emailjs !== 'undefined') {
