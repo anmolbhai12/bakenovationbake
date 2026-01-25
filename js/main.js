@@ -576,30 +576,41 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show Loading Overlay
             if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Construct Ultra-Fast Prompt for Pollinations AI
+            // Construct Ultra-Fast, Highly Accurate Prompt for Pollinations AI
             const userDetails = aiPrompt.value.trim();
-            const basePrompt = `${snapState.style} ${snapState.color} ${snapState.type} cake`;
-            const fastPrompt = `${basePrompt}, ${userDetails ? userDetails + ', ' : ''}aesthetic, professional food photography, vibrant`;
+
+            // PRIORITY: User Details > Aesthetic > Color > Type
+            const promptParts = [
+                userDetails,
+                `${snapState.style} aesthetic`,
+                `${snapState.color} theme`,
+                `${snapState.type} cake`
+            ].filter(Boolean);
+
+            const fastPrompt = `${promptParts.join(', ')}, professional food photography, 8k resolution, ultra-realistic, luxurious detailing, soft studio lighting, vibrant colors, white background`;
 
             const encodedPrompt = encodeURIComponent(fastPrompt);
-            const seed = Math.floor(Math.random() * 1000000);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512&nologo=true`;
+            const seed = Math.floor(Math.random() * 10000000); // Larger seed range
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 
-            console.log("Generating AI Image with prompt:", fastPrompt);
+            console.log("Generating AI Image with optimized prompt:", fastPrompt);
 
             // Fetch and display
             if (aiGeneratedImage) {
-                // Pre-load the image to ensure spinner stays until it's ready
+                // Pre-load the image
                 const tempImage = new Image();
                 tempImage.onload = () => {
                     aiGeneratedImage.src = imageUrl;
                     snapState.currentImageUrl = imageUrl;
 
-                    // Add to Recent Generations Gallery
-                    addToGallery(imageUrl, detailedPrompt);
+                    // Add to Recent Generations Gallery (Fixed variable name)
+                    addToGallery(imageUrl, fastPrompt);
 
-                    // Reveal with animation
-                    gsap.fromTo(aiGeneratedImage, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" });
+                    // Reveal with snappy animation
+                    gsap.fromTo(aiGeneratedImage,
+                        { opacity: 0, scale: 0.98, filter: "blur(10px)" },
+                        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
+                    );
 
                     // Reset UI
                     if (aiLoading) aiLoading.style.display = 'none';
