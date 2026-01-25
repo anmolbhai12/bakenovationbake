@@ -68,13 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(this);
 
-            // Collect data from relocated fields on main page
-            const mainName = document.getElementById('main-name');
-            const mainAddress = document.getElementById('main-address');
+            // Collect standalone image upload from the Atelier section
             const mainUpload = document.getElementById('main-upload');
-
-            if (mainName) formData.set('name', mainName.value);
-            if (mainAddress) formData.set('address', mainAddress.value);
             if (mainUpload && mainUpload.files.length > 0) {
                 formData.set('attachment', mainUpload.files[0]);
             }
