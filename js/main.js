@@ -57,21 +57,48 @@ document.addEventListener('DOMContentLoaded', () => {
     let orderForm = null;
     if (modal) orderForm = modal.querySelector('form');
 
+    // --- GATED ORDERING LOGIC ---
+    function checkLoginAndProceed(callback) {
+        if (activeUser) {
+            callback();
+        } else {
+            // Save intent
+            window.pendingAction = callback;
+            authModal.classList.add('active');
+            alert("Please login or create an account to proceed with your order.");
+        }
+    }
+
     // --- USER AUTHENTICATION LOGIC ---
     const authModal = document.getElementById('auth-modal');
     const authClose = document.querySelector('.auth-close');
     const loginTrigger = document.getElementById('login-trigger');
     const loginView = document.getElementById('login-view');
     const signupView = document.getElementById('signup-view');
+    const otpView = document.getElementById('otp-view');
     const showSignup = document.getElementById('show-signup');
     const showLogin = document.getElementById('show-login');
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
+    const otpForm = document.getElementById('otp-form');
+    const otpInput = document.getElementById('otp-input');
     const userNavArea = document.getElementById('user-nav-area');
 
-    // Users storage
+    // EmailJS Placeholder Config (User can update these)
+    const EMAILJS_CONFIG = {
+        SERVICE_ID: 'service_bakenovation', // Placeholder
+        TEMPLATE_ID: 'template_otp_verify', // Placeholder
+        PUBLIC_KEY: 'YOUR_PUBLIC_KEY'       // Placeholder
+    };
+
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+    }
+
     let users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
     let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
+    let currentSignupData = null;
+    let generatedOTP = null;
 
     function updateAuthUI() {
         if (!userNavArea) return;
@@ -91,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Add menu toggling
             const profileToggle = document.getElementById('profile-toggle');
             const accountMenu = document.getElementById('account-menu');
             if (profileToggle && accountMenu) {
@@ -102,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Logout logic
             const logoutBtn = document.getElementById('logout-btn');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
@@ -115,8 +140,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto-fill order details
             const orderNameInput = document.querySelector('input[name="name"]');
             const orderEmailInput = document.querySelector('input[name="email"]');
-            if (orderNameInput && !orderNameInput.value) orderNameInput.value = activeUser.name;
-            if (orderEmailInput && !orderEmailInput.value) orderEmailInput.value = activeUser.email;
+            if (orderNameInput) orderNameInput.value = activeUser.name;
+            if (orderEmailInput) orderEmailInput.value = activeUser.email;
+
+            // Execute pending action if any
+            if (window.pendingAction) {
+                const action = window.pendingAction;
+                window.pendingAction = null;
+                action();
+            }
 
         } else {
             userNavArea.innerHTML = `<button id="login-trigger" class="btn-text" style="color: var(--color-gold);">Login</button>`;
@@ -129,17 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Close menus on click outside
-    document.addEventListener('click', () => {
-        const accountMenu = document.getElementById('account-menu');
-        if (accountMenu) accountMenu.style.display = 'none';
-    });
-
     if (showSignup) {
         showSignup.addEventListener('click', (e) => {
             e.preventDefault();
             loginView.style.display = 'none';
             signupView.style.display = 'block';
+            otpView.style.display = 'none';
         });
     }
 
@@ -148,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             signupView.style.display = 'none';
             loginView.style.display = 'block';
+            otpView.style.display = 'none';
         });
     }
 
@@ -169,16 +197,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const newUser = { name, email, pass };
-            users.push(newUser);
-            localStorage.setItem('bakenovation_users', JSON.stringify(users));
+            // Generate OTP
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            currentSignupData = { name, email, pass };
 
-            activeUser = newUser;
-            localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
+            // Send Email via EmailJS
+            const submitBtn = signupForm.querySelector('button');
+            submitBtn.innerText = "Sending OTP...";
+            submitBtn.disabled = true;
 
-            authModal.classList.remove('active');
-            updateAuthUI();
-            alert(`Welcome to the Atelier, ${name}!`);
+            const templateParams = {
+                to_name: name,
+                to_email: email,
+                otp_code: generatedOTP
+            };
+
+            emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams)
+                .then(() => {
+                    signupView.style.display = 'none';
+                    otpView.style.display = 'block';
+                    alert(`Verification code sent to ${email}`);
+                })
+                .catch(err => {
+                    console.error("EmailJS Error:", err);
+                    alert("Verification failed to send. For demo purposes, the code is: " + generatedOTP);
+                    signupView.style.display = 'none';
+                    otpView.style.display = 'block';
+                })
+                .finally(() => {
+                    submitBtn.innerText = "Send Verification Code";
+                    submitBtn.disabled = false;
+                });
+        });
+    }
+
+    if (otpForm) {
+        otpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (otpInput.value === generatedOTP) {
+                users.push(currentSignupData);
+                localStorage.setItem('bakenovation_users', JSON.stringify(users));
+
+                activeUser = currentSignupData;
+                localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
+
+                authModal.classList.remove('active');
+                updateAuthUI();
+                alert(`Email verified! Welcome, ${activeUser.name}!`);
+            } else {
+                alert("Invalid verification code. Please try again.");
+            }
         });
     }
 
@@ -325,29 +393,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Checkout button opens the existing order modal but pre-fills it with cart info
+    // Checkout button logic (GATED)
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) {
                 alert('Your cart is empty!');
                 return;
             }
-            if (cartDrawer) cartDrawer.classList.remove('active');
-            if (modal) modal.classList.add('active');
 
-            // Format cart into hidden field or message
-            const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
-            const imageRefs = cart.map(item => `${item.name}:\n${item.image}`).join('\n\n');
+            checkLoginAndProceed(() => {
+                if (cartDrawer) cartDrawer.classList.remove('active');
+                if (modal) modal.classList.add('active');
 
-            const messageInput = modal.querySelector('textarea[name="message"]');
-            const imageRefsInput = document.getElementById('modal-image-references');
+                const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
+                const imageRefs = cart.map(item => `${item.name}:\n${item.image}`).join('\n\n');
 
-            if (messageInput) {
-                messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\n[IMAGE REFERENCES]\n${imageRefs}\n\nClient Name: ${document.getElementById('main-name')?.value || 'Not provided'}`;
-            }
-            if (imageRefsInput) {
-                imageRefsInput.value = imageRefs;
-            }
+                const messageInput = modal.querySelector('textarea[name="message"]');
+                const imageRefsInput = document.getElementById('modal-image-references');
+
+                if (messageInput) {
+                    messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\n[IMAGE REFERENCES]\n${imageRefs}\n\nClient Name: ${activeUser?.name || 'User'}`;
+                }
+                if (imageRefsInput) {
+                    imageRefsInput.value = imageRefs;
+                }
+            });
         });
     }
 
@@ -632,48 +702,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Studio Add to Cart Logic
+    // Studio Add to Cart Logic (GATED)
     const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
     if (detailAddToCartBtn) {
         detailAddToCartBtn.addEventListener('click', function () {
-            if (detailModal) detailModal.classList.remove('active');
+            checkLoginAndProceed(() => {
+                if (detailModal) detailModal.classList.remove('active');
 
-            // Ensure we use a full URL even for local assets
-            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-            const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+                const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
 
-            addToCart({
-                name: detailTitle.innerText,
-                image: absoluteImgSrc,
-                details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
-                price: parseInt(detailWeight.innerText) * 1000 || 2500
+                addToCart({
+                    name: detailTitle.innerText,
+                    image: absoluteImgSrc,
+                    details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
+                    price: parseInt(detailWeight.innerText) * 1000 || 2500
+                });
             });
         });
     }
 
-    // 4. Order Button Logic (Connects to the modal)
+    // 4. Order Button Logic (GATED)
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
-            const userDetails = aiPrompt.value.trim();
-            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
+            checkLoginAndProceed(() => {
+                const userDetails = aiPrompt.value.trim();
+                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
-            const orderModal = document.getElementById('order-modal');
-            if (orderModal) {
-                orderModal.classList.add('active');
+                const orderModal = document.getElementById('order-modal');
+                if (orderModal) {
+                    orderModal.classList.add('active');
 
-                const designInput = document.getElementById('modal-ordered-design');
-                const messageInput = orderModal.querySelector('textarea[name="message"]');
+                    const designInput = document.getElementById('modal-ordered-design');
+                    const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                if (designInput) designInput.value = `Bespoke AI Created Design`;
-                if (messageInput) {
-                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
+                    if (designInput) designInput.value = `Bespoke AI Created Design`;
+                    if (messageInput) {
+                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
+                    }
+
+                    gsap.fromTo(orderModal.querySelector('.modal-content'),
+                        { y: -50, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4 }
+                    );
                 }
-
-                gsap.fromTo(orderModal.querySelector('.modal-content'),
-                    { y: -50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.4 }
-                );
-            }
+            });
         });
     }
 
