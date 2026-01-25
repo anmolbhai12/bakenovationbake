@@ -322,6 +322,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function syncToGoogleSheet(name, email, dob) {
         if (!GOOGLE_SHEET_URL) return;
 
+        console.log("Syncing to Google Sheets:", { name, email, dob });
+
         fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
             mode: 'no-cors', // Important for Google Apps Script
