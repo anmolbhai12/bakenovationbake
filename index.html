@@ -230,10 +230,41 @@
                         <h3 class="text-gold">Recent Concepts</h3>
                         <p class="section-subtitle">Your session history of AI designs.</p>
                     </div>
-                    <div class="recent-generations-grid" id="recent-generations-grid">
-                        <!-- Populated by JS -->
+                </div>
+
+                <!-- Relocated Fields: Name, Address, and New Upload -->
+                <div class="order-quick-details"
+                    style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left;">
+                    <div class="section-header text-center">
+                        <h3 class="text-gold">Bring Your Vision to Life</h3>
+                        <p class="section-subtitle">Provide your details and an optional reference image to customize
+                            your order.</p>
+                    </div>
+
+                    <div class="order-info-grid">
+                        <div class="control-group">
+                            <label class="snap-label">Full Name</label>
+                            <input type="text" id="main-name" name="name" required class="luxury-input"
+                                placeholder="Your Name">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Upload Your Own Design (Optional)</label>
+                            <div class="luxury-file-upload">
+                                <input type="file" id="main-upload" name="attachment" accept="image/*"
+                                    class="file-input-luxury">
+                                <p class="file-hint">Have a reference image? Upload it here.</p>
+                            </div>
+                        </div>
+
+                        <div class="control-group full-width">
+                            <label class="snap-label">Delivery Address</label>
+                            <textarea id="main-address" name="address" required class="luxury-input" rows="2"
+                                placeholder="Street, City, Zip Code"></textarea>
+                        </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -323,7 +354,16 @@
                 <!-- New: Hidden input for direct order design name -->
                 <input type="hidden" name="ordered_design" id="modal-ordered-design">
 
-                <!-- Relocated Name, Email, Phone, Address to main page -->
+                <!-- Relocated Name and Address to main page, keeping Email and Phone here for context -->
+                <div class="control-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required class="luxury-input" placeholder="name@example.com">
+                </div>
+
+                <div class="control-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required class="luxury-input" placeholder="+1 (555) 000-0000">
+                </div>
 
                 <div class="control-group">
                     <label>Additional Notes / Inscription</label>
