@@ -57,6 +57,152 @@ document.addEventListener('DOMContentLoaded', () => {
     let orderForm = null;
     if (modal) orderForm = modal.querySelector('form');
 
+    // --- USER AUTHENTICATION LOGIC ---
+    const authModal = document.getElementById('auth-modal');
+    const authClose = document.querySelector('.auth-close');
+    const loginTrigger = document.getElementById('login-trigger');
+    const loginView = document.getElementById('login-view');
+    const signupView = document.getElementById('signup-view');
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const userNavArea = document.getElementById('user-nav-area');
+
+    // Users storage
+    let users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
+    let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
+
+    function updateAuthUI() {
+        if (!userNavArea) return;
+
+        if (activeUser) {
+            const firstName = activeUser.name.split(' ')[0];
+            const initial = firstName.charAt(0).toUpperCase();
+            userNavArea.innerHTML = `
+                <div class="user-nav-area">
+                    <div class="user-profile-nav" id="profile-toggle">
+                        <div class="user-avatar-circle">${initial}</div>
+                        <span class="user-name-abbr">${firstName}</span>
+                    </div>
+                    <div class="account-menu-dropdown" id="account-menu">
+                        <div class="account-menu-item" id="logout-btn">Logout</div>
+                    </div>
+                </div>
+            `;
+
+            // Add menu toggling
+            const profileToggle = document.getElementById('profile-toggle');
+            const accountMenu = document.getElementById('account-menu');
+            if (profileToggle && accountMenu) {
+                profileToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isVisible = accountMenu.style.display === 'block';
+                    accountMenu.style.display = isVisible ? 'none' : 'block';
+                });
+            }
+
+            // Logout logic
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    activeUser = null;
+                    localStorage.removeItem('bakenovation_activeUser');
+                    updateAuthUI();
+                });
+            }
+
+            // Auto-fill order details
+            const orderNameInput = document.querySelector('input[name="name"]');
+            const orderEmailInput = document.querySelector('input[name="email"]');
+            if (orderNameInput && !orderNameInput.value) orderNameInput.value = activeUser.name;
+            if (orderEmailInput && !orderEmailInput.value) orderEmailInput.value = activeUser.email;
+
+        } else {
+            userNavArea.innerHTML = `<button id="login-trigger" class="btn-text" style="color: var(--color-gold);">Login</button>`;
+            const newLoginTrigger = document.getElementById('login-trigger');
+            if (newLoginTrigger) {
+                newLoginTrigger.addEventListener('click', () => {
+                    authModal.classList.add('active');
+                });
+            }
+        }
+    }
+
+    // Close menus on click outside
+    document.addEventListener('click', () => {
+        const accountMenu = document.getElementById('account-menu');
+        if (accountMenu) accountMenu.style.display = 'none';
+    });
+
+    if (showSignup) {
+        showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginView.style.display = 'none';
+            signupView.style.display = 'block';
+        });
+    }
+
+    if (showLogin) {
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupView.style.display = 'none';
+            loginView.style.display = 'block';
+        });
+    }
+
+    if (authClose) {
+        authClose.addEventListener('click', () => {
+            authModal.classList.remove('active');
+        });
+    }
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-pass').value;
+
+            if (users.find(u => u.email === email)) {
+                alert('Account already exists with this email.');
+                return;
+            }
+
+            const newUser = { name, email, pass };
+            users.push(newUser);
+            localStorage.setItem('bakenovation_users', JSON.stringify(users));
+
+            activeUser = newUser;
+            localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
+
+            authModal.classList.remove('active');
+            updateAuthUI();
+            alert(`Welcome to the Atelier, ${name}!`);
+        });
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            const user = users.find(u => u.email === email && u.pass === pass);
+            if (user) {
+                activeUser = user;
+                localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
+                authModal.classList.remove('active');
+                updateAuthUI();
+            } else {
+                alert('Invalid email or password.');
+            }
+        });
+    }
+
+    updateAuthUI();
+
+
     // Handle Form Submission with Custom Redirects
     if (orderForm) {
         orderForm.addEventListener('submit', function (e) {
