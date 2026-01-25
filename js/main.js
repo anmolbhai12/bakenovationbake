@@ -193,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
+            const dob = document.getElementById('signup-dob').value;
             const pass = document.getElementById('signup-pass').value;
 
             if (users.find(u => u.email === email)) {
@@ -200,11 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            currentSignupData = { name, email, pass };
+            currentSignupData = { name, email, pass, dob };
             // Store data globally for resend
-            window.lastSignupData = { name, email };
+            window.lastSignupData = { name, email, dob };
 
-            sendOTP(name, email);
+            sendOTP(name, email, dob);
         });
     }
 
