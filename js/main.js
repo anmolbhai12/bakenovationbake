@@ -191,9 +191,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Format cart into hidden field or message
             const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
+            const imageRefs = cart.map(item => `${item.name}: ${item.image}`).join('\n');
+
             const messageInput = modal.querySelector('textarea[name="message"]');
+            const imageRefsInput = document.getElementById('modal-image-references');
+
             if (messageInput) {
                 messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\nClient Name: ${document.getElementById('main-name')?.value || 'Not provided'}`;
+            }
+            if (imageRefsInput) {
+                imageRefsInput.value = imageRefs;
             }
         });
     }
