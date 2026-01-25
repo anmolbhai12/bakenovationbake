@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Google Sheets Sync URL
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbuwxwngJfhplgAUDkaQVf7gX7FOCDRMjBN_Vb8ghJliptWPwcEeWQb0ZNnxyIL1aFaFq/exec';
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
