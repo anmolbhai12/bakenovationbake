@@ -191,13 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Format cart into hidden field or message
             const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
-            const imageRefs = cart.map(item => `${item.name}: ${item.image}`).join('\n');
+            const imageRefs = cart.map(item => `${item.name}:\n${item.image}`).join('\n\n');
 
             const messageInput = modal.querySelector('textarea[name="message"]');
             const imageRefsInput = document.getElementById('modal-image-references');
 
             if (messageInput) {
-                messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\nClient Name: ${document.getElementById('main-name')?.value || 'Not provided'}`;
+                messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\n[IMAGE REFERENCES]\n${imageRefs}\n\nClient Name: ${document.getElementById('main-name')?.value || 'Not provided'}`;
             }
             if (imageRefsInput) {
                 imageRefsInput.value = imageRefs;
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             addToCart({
                 name: 'Bespoke AI Design',
-                image: aiGeneratedImage.src,
+                image: snapState.currentImageUrl,
                 details: smartPrompt,
                 price: 4500 // Prestige tier for AI designs
             });
@@ -379,7 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const snapState = {
         type: 'wedding',
         style: 'luxury',
-        color: 'white'
+        color: 'white',
+        currentImageUrl: 'assets/wedding_cake.png'
     };
 
     // 1. Handle Chip Selections (Occasion, Aesthetic)
@@ -446,6 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tempImage = new Image();
                 tempImage.onload = () => {
                     aiGeneratedImage.src = imageUrl;
+                    snapState.currentImageUrl = imageUrl;
 
                     // Add to Recent Generations Gallery
                     addToGallery(imageUrl, detailedPrompt);
@@ -479,9 +481,13 @@ document.addEventListener('DOMContentLoaded', () => {
         detailAddToCartBtn.addEventListener('click', function () {
             if (detailModal) detailModal.classList.remove('active');
 
+            // Ensure we use a full URL even for local assets
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+            const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+
             addToCart({
                 name: detailTitle.innerText,
-                image: detailImg.src,
+                image: absoluteImgSrc,
                 details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
                 price: parseInt(detailWeight.innerText) * 1000 || 2500
             });
