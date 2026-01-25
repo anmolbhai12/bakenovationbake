@@ -237,6 +237,53 @@
             </div>
         </section>
 
+        <!-- Order Information Section (Relocated Fields) -->
+        <section id="order-info" class="section">
+            <div class="container">
+                <div class="glass-panel">
+                    <div class="section-header text-center" style="margin-bottom: 3rem;">
+                        <h2 class="text-gold">Ordering Intelligence</h2>
+                        <p class="section-subtitle">Provide your details to bring your vision to life.</p>
+                    </div>
+
+                    <div class="order-info-grid">
+                        <div class="control-group">
+                            <label class="snap-label">Full Name</label>
+                            <input type="text" id="main-name" name="name" required class="luxury-input"
+                                placeholder="Your Name">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Email Address</label>
+                            <input type="email" id="main-email" name="email" required class="luxury-input"
+                                placeholder="name@example.com">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Phone Number</label>
+                            <input type="tel" id="main-phone" name="phone" required class="luxury-input"
+                                placeholder="+1 (555) 000-0000">
+                        </div>
+
+                        <div class="control-group full-width">
+                            <label class="snap-label">Delivery Address</label>
+                            <textarea id="main-address" name="address" required class="luxury-input" rows="2"
+                                placeholder="Street, City, Zip Code"></textarea>
+                        </div>
+
+                        <div class="control-group full-width">
+                            <label class="snap-label">Upload Your Own Design (Optional)</label>
+                            <div class="luxury-file-upload">
+                                <input type="file" id="main-upload" name="attachment" accept="image/*"
+                                    class="file-input-luxury">
+                                <p class="file-hint">Have a reference image? Upload it here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- About / Contact (The Visionary) -->
         <section id="about" class="section">
             <div class="container text-center reveal-on-scroll">
@@ -276,36 +323,18 @@
                 <!-- New: Hidden input for direct order design name -->
                 <input type="hidden" name="ordered_design" id="modal-ordered-design">
 
-                <div class="control-group">
-                    <label>Design Reference (Moved from Atelier)</label>
-                    <input type="file" id="modal-upload" name="attachment" accept="image/*" class="file-input-luxury">
-                </div>
-
-                <div class="control-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" required class="luxury-input" placeholder="Your Name">
-                </div>
-
-                <div class="control-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required class="luxury-input" placeholder="name@example.com">
-                </div>
-
-                <div class="control-group">
-                    <label>Phone Number</label>
-                    <input type="tel" name="phone" required class="luxury-input" placeholder="+1 (555) 000-0000">
-                </div>
-
-                <div class="control-group">
-                    <label>Delivery Address</label>
-                    <textarea name="address" required class="luxury-input" rows="2"
-                        placeholder="Street, City, Zip Code"></textarea>
-                </div>
+                <!-- Relocated Name, Email, Phone, Address to main page -->
 
                 <div class="control-group">
                     <label>Additional Notes / Inscription</label>
                     <textarea name="message" class="luxury-input" rows="2"
                         placeholder="Any specific requests?"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label>Extra Description</label>
+                    <textarea name="extra_description" id="modal-extra-desc" class="luxury-input" rows="3"
+                        placeholder="Describe any further customization or details here..."></textarea>
                 </div>
 
                 <div class="control-group">

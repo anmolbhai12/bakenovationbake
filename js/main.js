@@ -67,6 +67,22 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             const formData = new FormData(this);
+
+            // Collect data from relocated fields on main page
+            const mainName = document.getElementById('main-name');
+            const mainEmail = document.getElementById('main-email');
+            const mainPhone = document.getElementById('main-phone');
+            const mainAddress = document.getElementById('main-address');
+            const mainUpload = document.getElementById('main-upload');
+
+            if (mainName) formData.set('name', mainName.value);
+            if (mainEmail) formData.set('email', mainEmail.value);
+            if (mainPhone) formData.set('phone', mainPhone.value);
+            if (mainAddress) formData.set('address', mainAddress.value);
+            if (mainUpload && mainUpload.files.length > 0) {
+                formData.set('attachment', mainUpload.files[0]);
+            }
+
             const paymentMethod = formData.get('payment'); // 'cash' or 'online'
 
             // Send to FormSubmit via AJAX

@@ -606,6 +606,39 @@ h4 {
     height: 1.2rem;
 }
 
+/* Order Info Section Grid */
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.order-info-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.luxury-file-upload {
+    position: relative;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(197, 160, 89, 0.5);
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.luxury-file-upload:hover {
+    background: rgba(197, 160, 89, 0.05);
+    border-color: var(--color-gold);
+}
+
+.file-hint {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
 /* Responsive Adjustments for Features */
 @media (max-width: 900px) {
     .customizer-interface {
