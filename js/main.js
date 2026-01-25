@@ -84,11 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpInput = document.getElementById('otp-input');
     const userNavArea = document.getElementById('user-nav-area');
 
-    // EmailJS Placeholder Config (User can update these)
+    // EmailJS Config (Updating with real IDs)
     const EMAILJS_CONFIG = {
-        SERVICE_ID: 'service_bakenovation', // Placeholder
-        TEMPLATE_ID: 'template_otp_verify', // Placeholder
-        PUBLIC_KEY: 'YOUR_PUBLIC_KEY'       // Placeholder
+        SERVICE_ID: 'service_b9j54kq',
+        TEMPLATE_ID: 'template_6pdcom7',
+        PUBLIC_KEY: 'YOUR_PUBLIC_KEY'       // Still need this one!
     };
 
     if (typeof emailjs !== 'undefined') {
