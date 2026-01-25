@@ -220,7 +220,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(err => {
                     console.error("EmailJS Error:", err);
-                    alert("Verification failed to send. For demo purposes, the code is: " + generatedOTP);
+
+                    // Enhanced error reporting
+                    let errorMsg = "Failed to send verification email. ";
+                    if (err.status) {
+                        errorMsg += `Error ${err.status}: `;
+                    }
+                    if (err.text) {
+                        errorMsg += err.text;
+                    } else {
+                        errorMsg += err.message || "Unknown error";
+                    }
+
+                    // Show detailed error to user
+                    alert(errorMsg + "\n\nFor demo purposes, the OTP code is: " + generatedOTP);
+
+                    // Still allow user to proceed for testing
                     signupView.style.display = 'none';
                     otpView.style.display = 'block';
                 })
