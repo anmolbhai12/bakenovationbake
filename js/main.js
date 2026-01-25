@@ -347,6 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 activeUser = user;
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
+
+                // Record the login in the spreadsheet
+                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob || "Existing User");
+
                 authModal.classList.remove('active');
                 updateAuthUI();
             } else {
