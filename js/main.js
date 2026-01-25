@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
+    // Google Sheets Sync URL
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzP_ZSjhVDwTAActqZXU2d9ippaPl-b3XFcnsc0hRnjbBp2ygFbGwLAicoQX8Surxg4/exec';
+
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
     }
@@ -302,6 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeUser = currentSignupData;
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
 
+                // Sync data to Google Sheets (Silent background task)
+                syncToGoogleSheet(activeUser.name, activeUser.email);
+
                 authModal.classList.remove('active');
                 updateAuthUI();
                 alert(`Email verified! Welcome, ${activeUser.name}!`);
@@ -309,6 +315,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Invalid verification code. Please try again.");
             }
         });
+    }
+
+    // --- GOOGLE SHEETS SYNC FUNCTION ---
+    function syncToGoogleSheet(name, email) {
+        if (!GOOGLE_SHEET_URL) return;
+
+        fetch(GOOGLE_SHEET_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Important for Google Apps Script
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
+        })
+            .then(() => console.log("Data synced to Google Sheets successfully"))
+            .catch(err => console.error("Google Sheets Sync Error:", err));
     }
 
     if (loginForm) {
