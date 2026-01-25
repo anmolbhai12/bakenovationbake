@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // EmailJS Config (Restored)
     const EMAILJS_CONFIG = {
         SERVICE_ID: 'service_b9j54kq',
-        TEMPLATE_ID: 'template_p4xra7a',
+        TEMPLATE_ID: 'template_d8tgysc',
         PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
