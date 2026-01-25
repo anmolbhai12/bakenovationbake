@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
                 .then(response => {
+                    // Clear cart after successful order
+                    localStorage.removeItem('bakenovation_cart');
                     if (paymentMethod === 'online') {
                         window.location.href = 'payment.html';
                     } else {
@@ -98,6 +100,106 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+
+    // --- SHOPPING CART LOGIC ---
+    let cart = JSON.parse(localStorage.getItem('bakenovation_cart')) || [];
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartToggle = document.getElementById('cart-toggle');
+    const cartClose = document.getElementById('cart-close');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCountBadge = document.getElementById('cart-count');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    function updateCartUI() {
+        if (!cartItemsContainer) return;
+
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Your cart is currently empty.</p>';
+        } else {
+            cart.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <img src="${item.image}" class="cart-item-img" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4 class="cart-item-title">${item.name}</h4>
+                        <p class="cart-item-details">${item.details || ''}</p>
+                        <button class="remove-item" data-index="${index}">Remove</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemEl);
+                // Simple price estimation logic (if not provided)
+                total += item.price || 2500;
+            });
+        }
+
+        if (cartCountBadge) cartCountBadge.innerText = cart.length;
+        if (cartTotalPrice) cartTotalPrice.innerText = `₹${total}`;
+
+        // Add remove listeners
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = e.target.dataset.index;
+                cart.splice(index, 1);
+                localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
+                updateCartUI();
+            });
+        });
+    }
+
+    function addToCart(item) {
+        cart.push(item);
+        localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
+        updateCartUI();
+
+        // Open drawer to show success
+        if (cartDrawer) cartDrawer.classList.add('active');
+    }
+
+    if (cartToggle) {
+        cartToggle.addEventListener('click', () => {
+            if (cartDrawer) cartDrawer.classList.add('active');
+        });
+    }
+
+    if (cartClose) {
+        cartClose.addEventListener('click', () => {
+            if (cartDrawer) cartDrawer.classList.remove('active');
+        });
+    }
+
+    // Close cart on outside click
+    if (cartDrawer) {
+        cartDrawer.addEventListener('click', (e) => {
+            if (e.target === cartDrawer) cartDrawer.classList.remove('active');
+        });
+    }
+
+    // Checkout button opens the existing order modal but pre-fills it with cart info
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            if (cartDrawer) cartDrawer.classList.remove('active');
+            if (modal) modal.classList.add('active');
+
+            // Format cart into hidden field or message
+            const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
+            const messageInput = modal.querySelector('textarea[name="message"]');
+            if (messageInput) {
+                messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\nClient Name: ${document.getElementById('main-name')?.value || 'Not provided'}`;
+            }
+        });
+    }
+
+    // Initial UI load
+    updateCartUI();
 
     if (modalClose) {
         modalClose.addEventListener('click', () => {
@@ -243,26 +345,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Direct Order Logic (Bypassing Atelier)
-    if (detailOrderBtn) {
-        detailOrderBtn.addEventListener('click', function () {
-            // Close detail modal
-            if (detailModal) detailModal.classList.remove('active');
+    // AI Add to Cart Button Logic
+    const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
+    if (aiAddToCartBtn) {
+        aiAddToCartBtn.addEventListener('click', () => {
+            const userDetails = aiPrompt.value.trim();
+            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
-            // Pre-fill Order Modal
-            const flavor = this.dataset.flavor || 'vanilla';
-            const modalFlavor = document.getElementById('modal-flavor');
-            if (modalFlavor) modalFlavor.value = flavor;
-
-            // Open Order Modal directly
-            const orderModal = document.getElementById('order-modal');
-            if (orderModal) {
-                orderModal.classList.add('active');
-                gsap.fromTo(orderModal.querySelector('.modal-content'),
-                    { y: -50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.4 }
-                );
-            }
+            addToCart({
+                name: 'Bespoke AI Design',
+                image: aiGeneratedImage.src,
+                details: smartPrompt,
+                price: 4500 // Prestige tier for AI designs
+            });
         });
     }
 
@@ -368,6 +463,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 tempImage.src = imageUrl;
             }
+        });
+    }
+
+    // Studio Add to Cart Logic
+    const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
+    if (detailAddToCartBtn) {
+        detailAddToCartBtn.addEventListener('click', function () {
+            if (detailModal) detailModal.classList.remove('active');
+
+            addToCart({
+                name: detailTitle.innerText,
+                image: detailImg.src,
+                details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
+                price: parseInt(detailWeight.innerText) * 1000 || 2500
+            });
         });
     }
 

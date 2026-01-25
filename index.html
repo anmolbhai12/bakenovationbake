@@ -31,13 +31,21 @@
             <a href="#" class="logo">
                 <img src="assets/logo.jpg" alt="Bakenovation Logo">
             </a>
-            <ul class="nav-links">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#collection">Collection</a></li>
-                <li><a href="#atelier">The Atelier</a></li>
-                <li><a href="#about">The Visionary</a></li>
-            </ul>
-            <a href="#atelier" class="btn-luxury btn-sm">Order Now</a>
+            <div class="nav-right" style="display: flex; align-items: center; gap: 1.5rem;">
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#collection">Collection</a></li>
+                    <li><a href="#atelier">The Atelier</a></li>
+                    <li><a href="#about">The Visionary</a></li>
+                </ul>
+                <div class="cart-icon-wrapper" id="cart-toggle">
+                    <svg class="cart-svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor"
+                            d="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18M7.27,18L5.7,14.54L2,5H7V11H15V5H22V7H17V13H7M2,3H5L5.68,5H22V3H2Z" />
+                    </svg>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -50,7 +58,7 @@
             </h1>
             <p class="hero-subtitle reveal-text">Bespoke couture cakes designed for life's most exquisite moments.</p>
             <div class="hero-actions reveal-text">
-                <a href="#atelier" class="btn-luxury">Design Your Cake</a>
+                <a href="#atelier" class="btn-luxury">Start Designing</a>
                 <a href="#collection" class="btn-text">View Gallery &darr;</a>
             </div>
         </div>
@@ -220,7 +228,7 @@
                                 </div>
                             </div>
                             <div class="snap-actions">
-                                <button id="ai-order-btn" class="btn-snap-secondary">Order This Design</button>
+                                <button id="ai-add-to-cart-btn" class="btn-snap-secondary">Add Design to Cart</button>
                             </div>
                         </div>
                     </div>
@@ -342,7 +350,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-luxury w-100">Confirm & Send Order</button>
+                <button type="submit" class="btn-luxury w-100">Finalize & Send Cart Order</button>
             </form>
         </div>
     </div>
@@ -375,12 +383,34 @@
                     <!-- Populated by JS -->
                 </ul>
 
-                <button class="btn-luxury w-100" id="detail-order-btn">Order This Design Now</button>
+                <button class="btn-luxury w-100" id="detail-add-to-cart-btn">Add This Design to Cart</button>
             </div>
         </div>
     </div>
 
-    <script src="js/main.js?v=3"></script>
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-drawer-content glass-panel">
+            <button class="cart-close" id="cart-close">&times;</button>
+            <h2 class="text-gold" style="margin-bottom: 2rem;">Your Atelier Cart</h2>
+
+            <div id="cart-items" class="cart-items-list">
+                <!-- Items populated by JS -->
+                <p class="empty-cart-msg">Your cart is currently empty.</p>
+            </div>
+
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total Estimate:</span>
+                    <span id="cart-total-price">₹0</span>
+                </div>
+                <button id="checkout-btn" class="btn-luxury w-100" style="margin-top: 1rem;">Proceed to
+                    Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js?v=4"></script>
 </body>
 
 </html>
