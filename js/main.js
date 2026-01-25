@@ -576,16 +576,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show Loading Overlay
             if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Construct Efficient Prompt for Pollinations AI (Speed Optimized)
+            // Construct Ultra-Fast Prompt for Pollinations AI
             const userDetails = aiPrompt.value.trim();
-            const basePrompt = `A ${snapState.style} ${snapState.color} cake for a ${snapState.type}`;
-            const detailedPrompt = `${basePrompt}, ${userDetails ? userDetails + ', ' : ''}high-quality food photography, studio lighting, detailed, 4k`;
+            const basePrompt = `${snapState.style} ${snapState.color} ${snapState.type} cake`;
+            const fastPrompt = `${basePrompt}, ${userDetails ? userDetails + ', ' : ''}aesthetic, professional food photography, vibrant`;
 
-            const encodedPrompt = encodeURIComponent(detailedPrompt);
-            const seed = Math.floor(Math.random() * 1000000); // Unique seed for every generation
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=768&height=768&nologo=true`;
+            const encodedPrompt = encodeURIComponent(fastPrompt);
+            const seed = Math.floor(Math.random() * 1000000);
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512&nologo=true`;
 
-            console.log("Generating AI Image with prompt:", detailedPrompt);
+            console.log("Generating AI Image with prompt:", fastPrompt);
 
             // Fetch and display
             if (aiGeneratedImage) {
