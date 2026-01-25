@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- REUSABLE OTP SENDING FUNCTION ---
-    function sendOTP(name, email) {
+    function sendOTP(name, email, dob) {
         generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
         const submitBtn = signupForm.querySelector('button');
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (resendCooldownActive) return;
 
             if (window.lastSignupData) {
-                sendOTP(window.lastSignupData.name, window.lastSignupData.email);
+                sendOTP(window.lastSignupData.name, window.lastSignupData.email, window.lastSignupData.dob);
             } else {
                 alert("Error: Missing signup data. Please try signing up again.");
                 signupView.style.display = 'block';
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
 
                 // Sync data to Google Sheets (Silent background task)
-                syncToGoogleSheet(activeUser.name, activeUser.email);
+                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob);
 
                 authModal.classList.remove('active');
                 updateAuthUI();
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GOOGLE SHEETS SYNC FUNCTION ---
-    function syncToGoogleSheet(name, email) {
+    function syncToGoogleSheet(name, email, dob) {
         if (!GOOGLE_SHEET_URL) return;
 
         fetch(GOOGLE_SHEET_URL, {
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email })
+            body: JSON.stringify({ name, email, dob })
         })
             .then(() => console.log("Data synced to Google Sheets successfully"))
             .catch(err => console.error("Google Sheets Sync Error:", err));
