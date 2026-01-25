@@ -197,47 +197,98 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Generate OTP
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             currentSignupData = { name, email, pass };
+            // Store data globally for resend
+            window.lastSignupData = { name, email };
 
-            // Send Email via EmailJS
-            const submitBtn = signupForm.querySelector('button');
-            submitBtn.innerText = "Sending OTP...";
+            sendOTP(name, email);
+        });
+    }
+
+    // --- REUSABLE OTP SENDING FUNCTION ---
+    function sendOTP(name, email) {
+        generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const submitBtn = signupForm.querySelector('button');
+        const originalBtnText = submitBtn ? submitBtn.innerText : "Send Code";
+        if (submitBtn) {
+            submitBtn.innerText = "Sending Code...";
             submitBtn.disabled = true;
+        }
 
-            const templateParams = {
-                user_name: name,
-                user_email: email,
-                otp_code: generatedOTP,
-                to_email: email  // Important for the "To Email" field in dashboard
-            };
+        const templateParams = {
+            user_name: name,
+            user_email: email,
+            otp_code: generatedOTP,
+            to_email: email
+        };
 
-            emailjs.send(
-                EMAILJS_CONFIG.SERVICE_ID,
-                EMAILJS_CONFIG.TEMPLATE_ID,
-                templateParams
-            )
-                .then(() => {
-                    signupView.style.display = 'none';
-                    otpView.style.display = 'block';
-                    alert(`Verification code sent to ${email}`);
-                })
-                .catch(err => {
-                    console.error("EmailJS Error:", err);
+        emailjs.send(
+            EMAILJS_CONFIG.SERVICE_ID,
+            EMAILJS_CONFIG.TEMPLATE_ID,
+            templateParams
+        )
+            .then(() => {
+                signupView.style.display = 'none';
+                otpView.style.display = 'block';
+                alert(`Verification code sent to ${email}`);
+                startResendCooldown();
+            })
+            .catch(err => {
+                console.error("EmailJS Error:", err);
+                let detail = err.text || err.message || "Check template variables";
+                alert(`Failed to send email: ${detail}\n\nFor demo, OTP is: ${generatedOTP}`);
 
-                    // Detailed error message for the 422 issue
-                    let detail = err.text || err.message || "Check template variables";
-                    alert(`Failed to send email: ${detail}\n\nFor demo, OTP is: ${generatedOTP}`);
-
-                    // Fallback for testing
-                    signupView.style.display = 'none';
-                    otpView.style.display = 'block';
-                })
-                .finally(() => {
-                    submitBtn.innerText = "Send Verification Code";
+                signupView.style.display = 'none';
+                otpView.style.display = 'block';
+                startResendCooldown();
+            })
+            .finally(() => {
+                if (submitBtn) {
+                    submitBtn.innerText = originalBtnText;
                     submitBtn.disabled = false;
-                });
+                }
+            });
+    }
+
+    // --- RESEND OTP LOGIC ---
+    const resendBtn = document.getElementById('resend-otp');
+    let resendCooldownActive = false;
+
+    function startResendCooldown() {
+        if (!resendBtn) return;
+
+        resendCooldownActive = true;
+        resendBtn.style.pointerEvents = 'none';
+        resendBtn.style.opacity = '0.5';
+
+        let seconds = 60;
+        const interval = setInterval(() => {
+            seconds--;
+            resendBtn.innerText = `Resend Code (${seconds}s)`;
+
+            if (seconds <= 0) {
+                clearInterval(interval);
+                resendCooldownActive = false;
+                resendBtn.style.pointerEvents = 'auto';
+                resendBtn.style.opacity = '1';
+                resendBtn.innerText = "Resend Code";
+            }
+        }, 1000);
+    }
+
+    if (resendBtn) {
+        resendBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (resendCooldownActive) return;
+
+            if (window.lastSignupData) {
+                sendOTP(window.lastSignupData.name, window.lastSignupData.email);
+            } else {
+                alert("Error: Missing signup data. Please try signing up again.");
+                signupView.style.display = 'block';
+                otpView.style.display = 'none';
+            }
         });
     }
 
