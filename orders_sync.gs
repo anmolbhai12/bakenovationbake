@@ -8,28 +8,46 @@ const SPREADSHEET_ID = '1sOmMpurKA-BAqEaMZK0DjltkM7XHfZLlhpCfEUAaMQI'; // Your O
 const SHEET_NAME = 'Orders'; 
 
 function doGet(e) {
-  return response({ status: 'success', message: 'Order Gateway Active' });
+  return handleRequest(e);
 }
 
 function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
     
-    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn() || 1).getValues()[0];
+    // 1. Collect all parameters (from GET or POST)
+    let data = e.parameter || {};
+    
+    // Fallback if it was a JSON POST body
+    if (e.postData && e.postData.contents) {
+      try {
+        const body = JSON.parse(e.postData.contents);
+        data = Object.assign(data, body);
+      } catch (f) { /* ignore parse errors */ }
+    }
+    
+    if (Object.keys(data).length === 0) {
+       return response({ status: 'error', message: 'No data received' });
+    }
+
+    // 2. Manage Headers
+    const headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
     const newRow = [];
     
-    // Add Timestamp
-    if (headers.indexOf('Timestamp') === -1) {
+    // Add Timestamp if not present
+    if (headers[0] === "" || headers.indexOf('Timestamp') === -1) {
       sheet.getRange(1, 1).setValue('Timestamp');
       headers[0] = 'Timestamp';
     }
     
-    const timestampIdx = headers.indexOf('Timestamp');
-    newRow[timestampIdx] = new Date();
+    newRow[headers.indexOf('Timestamp')] = new Date();
     
-    // Map data to headers
+    // 3. Map values to correct columns
     for (let key in data) {
       let idx = headers.indexOf(key);
       if (idx === -1) {
@@ -41,12 +59,14 @@ function doPost(e) {
     }
     
     sheet.appendRow(newRow);
-    
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return response({ status: 'success' });
       
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return response({ status: 'error', message: error.toString() });
   }
+}
+
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }

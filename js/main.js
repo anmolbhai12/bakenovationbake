@@ -489,19 +489,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalUrl = targetUrl || USER_SHEET_URL;
         if (!finalUrl) return;
 
-        console.log("Legendary Sync Triggered for:", data.type || 'Unknown');
+        // Add a timestamp to bypass any caching
+        data.timestamp = new Date().toISOString();
 
-        fetch(finalUrl, {
-            method: 'POST',
+        console.log("--- LEGENDARY SYNC START ---");
+        console.table(data);
+
+        // USE GET WITH QUERY PARAMETERS (Most reliable cross-origin method for Apps Script)
+        const params = new URLSearchParams(data);
+
+        fetch(`${finalUrl}?${params.toString()}`, {
             mode: 'no-cors',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            keepalive: true
         })
-            .then(() => console.log("--- GOAT SYNC SUCCESS ---"))
-            .catch(err => console.error("Sheet Sync Error:", err));
+            .then(() => console.log("--- GOAT SYNC DISPATCHED ---"))
+            .catch(err => console.error("Legendary Sync Error:", err));
     }
 
     if (loginForm) {
