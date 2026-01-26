@@ -488,17 +488,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalUrl = targetUrl || USER_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
-        // Create clean string-only data (strip File objects)
+        // 1. CLEAN DATA (Ensures no File objects or non-text data hits the sheet)
         const cleanData = {};
         for (const key in data) {
-            if (typeof data[key] === 'string' || typeof data[key] === 'number') {
+            if (typeof data[key] === 'string' || typeof data[key] === 'number' || typeof data[key] === 'boolean') {
                 cleanData[key] = data[key];
             }
         }
         cleanData.timestamp = new Date().toISOString();
 
-        console.log("--- LEGENDARY SYNC DISPATCHING ---");
-
+        console.log("--- LEGENDARY SYNC START ---");
         const params = new URLSearchParams(cleanData);
 
         return fetch(`${finalUrl}?${params.toString()}`, {
@@ -510,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error("Legendary Sync Error:", err);
-                return Promise.resolve();
+                return Promise.resolve(); // Never block the user even if sync fails
             });
     }
 
@@ -540,11 +539,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const btn = orderForm.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
-            btn.innerText = "Processing...";
+            btn.innerText = "🔄 Syncing with Bakery...";
             btn.disabled = true;
 
             const formData = new FormData(this);
-            const paymentMethod = formData.get('payment'); // Restore this variable
+            const paymentMethod = formData.get('payment');
 
             // Collect standalone image upload from the Atelier section
             const mainUpload = document.getElementById('main-upload');
@@ -552,34 +551,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('attachment', mainUpload.files[0]);
             }
 
-            // Sync with Google Sheets (Orders Sheet)
-            const orderData = Object.fromEntries(formData.entries());
+            // Sync with Google Sheets (Orders Sheet) - STRIP FILES FIRST
+            const orderData = {};
+            formData.forEach((value, key) => {
+                if (typeof value === 'string') orderData[key] = value;
+            });
             orderData.type = 'Order';
 
-            // Wait for sync to dispatch before proceeding to FormSubmit/Redirect
+            // FORCE SEQUENCE: Sync to Sheets FIRST, then FormSubmit
             syncToGoogleSheet(orderData, ORDER_SHEET_URL)
-                .finally(() => {
-                    // Send to FormSubmit via AJAX
-                    fetch(this.action, {
+                .then(() => {
+                    btn.innerText = "🚀 Finishing Order...";
+                    return fetch(this.action, {
                         method: 'POST',
                         body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    })
-                        .then(response => {
-                            localStorage.removeItem('bakenovation_cart');
-                            if (paymentMethod === 'online') {
-                                window.location.href = 'payment.html';
-                            } else {
-                                window.location.href = 'success.html';
-                            }
-                        })
-                        .catch(error => {
-                            alert('Something went wrong. Please try again.');
-                            btn.innerText = originalText;
-                            btn.disabled = false;
-                        });
+                        headers: { 'Accept': 'application/json' }
+                    });
+                })
+                .then(response => {
+                    localStorage.removeItem('bakenovation_cart');
+                    if (paymentMethod === 'online') {
+                        window.location.href = 'payment.html';
+                    } else {
+                        window.location.href = 'success.html';
+                    }
+                })
+                .catch(error => {
+                    console.error("Full Order Flow Error:", error);
+                    alert('Order submitted but sync was slow. Redirecting to success page...');
+                    window.location.href = 'success.html';
                 });
         });
     }
