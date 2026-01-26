@@ -483,40 +483,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GOOGLE SHEETS SYNC FUNCTION ---
+    // --- GOOGLE SHEETS SYNC FUNCTION (POWER-SYNC V3) ---
     function syncToGoogleSheet(data, targetUrl = null) {
         const finalUrl = targetUrl || USER_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
-        // 1. CLEAN DATA 
-        const cleanData = {};
-        for (const key in data) {
-            if (typeof data[key] === 'string' || typeof data[key] === 'number' || typeof data[key] === 'boolean') {
-                cleanData[key] = data[key];
+        return new Promise((resolve) => {
+            console.log("--- POWER-SYNC DISPATCHING ---");
+            const iframeName = 'sync_frame_' + Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.name = iframeName;
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.target = iframeName;
+            form.action = finalUrl;
+            form.method = 'POST';
+            form.style.display = 'none';
+
+            data.timestamp = new Date().toISOString();
+            for (const key in data) {
+                if (typeof data[key] === 'string' || typeof data[key] === 'number') {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key];
+                    form.appendChild(input);
+                }
             }
-        }
-        cleanData.timestamp = new Date().toISOString();
-        const params = new URLSearchParams(cleanData);
-        const finalGetUrl = `${finalUrl}?${params.toString()}`;
 
-        console.log("--- LEGENDARY DUAL-DISPATCH START ---");
+            document.body.appendChild(form);
+            form.submit();
 
-        // DUAL DISPATCH TECHNIQUE:
-        // A. Primary: Fetch with keepalive
-        const fetchPromise = fetch(finalGetUrl, {
-            mode: 'no-cors',
-            keepalive: true
-        });
-
-        // B. Redundant: Tracking Pixel (Impossible for browser to cancel)
-        const img = new Image();
-        img.src = finalGetUrl;
-
-        // Wait a small amount to let the pixel fire
-        return new Promise(resolve => {
-            fetchPromise.finally(() => {
-                setTimeout(resolve, 1500); // 1.5s Forced delay for Google to register
-            });
+            setTimeout(() => {
+                if (document.body.contains(form)) document.body.removeChild(form);
+                if (document.body.contains(iframe)) document.body.removeChild(iframe);
+                console.log("--- POWER-SYNC DISPATCHED ---");
+                resolve();
+            }, 2500);
         });
     }
 
