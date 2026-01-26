@@ -9,7 +9,15 @@ const ULTRAMSG_TOKEN = 'aephty6m2y29lovb';
 
 function doPost(e) {
   try {
-    const params = JSON.parse(e.postData.contents);
+    let params;
+    // Handle both JSON string and pre-parsed objects
+    if (e.postData.type === 'application/json') {
+      params = JSON.parse(e.postData.contents);
+    } else {
+      // Fallback for text/plain or other types from fetch()
+      params = JSON.parse(e.postData.contents);
+    }
+    
     const { phone, message } = params;
 
     if (!phone || !message) {
@@ -28,7 +36,8 @@ function doPost(e) {
     const options = {
       method: 'post',
       contentType: 'application/x-www-form-urlencoded', 
-      payload: payload
+      payload: payload,
+      muteHttpExceptions: true // Capture errors instead of crashing
     };
 
     const response = UrlFetchApp.fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, options);

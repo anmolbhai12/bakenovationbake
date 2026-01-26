@@ -336,10 +336,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(() => console.log("Automated WhatsApp request sent."))
                     .catch(err => console.error("WhatsApp Automation Error:", err));
 
-                // 2. Update UI for Automation (No forced manual redirect)
-                let otpMsg = `A verification code has been sent <strong>automatically</strong> to your WhatsApp: <strong>${target}</strong>.<br><br>`;
-                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Please check your messages and enter the code below.</p>`;
-                otpMsg += `<p style="font-size: 0.8rem; opacity: 0.7;">Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Click here to open manually</a></p>`;
+                // 2. Immediate Success UI (The code is being sent in the background)
+                let otpMsg = `<div style="padding: 1rem 0;">
+                    <p style="margin-bottom: 0.5rem; font-weight: 500;">Verify your identity</p>
+                    <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.4;">
+                        A verification code has been sent <strong>automatically</strong> to <strong>${target}</strong> via WhatsApp.
+                    </p>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
+                        Please check your phone. It may take a few seconds to arrive.
+                    </p>
+                    <p style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.4;">
+                        Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Open WhatsApp Manually</a>
+                    </p>
+                </div>`;
 
                 showOTPView("Verify WhatsApp", otpMsg, true);
             } else {
