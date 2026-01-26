@@ -1,73 +1,49 @@
-/**
- * Google Sheets Sync - WhatsApp Logins
- * Paste this into a Google Apps Script project (script.google.com)
- * Deploy as a Web App with access 'Anyone'
- */
+// --- THE SELF-HEALING LEGEND SCRIPT (WHATSAPP LOGINS) ---
+const SPREADSHEET_ID = '1PYdM-e_UqY2FEse4pCj2cOUNqeOEprNjjpE1GPCCJpU'; 
 
-const SPREADSHEET_ID = '1PYdM-e_UqY2FEse4pCj2cOUNqeOEprNjjpE1GPCCJpU'; // Your WhatsApp Login Sheet ID
-const SHEET_NAME = 'WhatsApp_Logins'; 
-
-function doGet(e) {
-  return handleRequest(e);
-}
-
-function doPost(e) {
-  return handleRequest(e);
-}
+function doGet(e) { return handleRequest(e); }
+function doPost(e) { return handleRequest(e); }
 
 function handleRequest(e) {
   try {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+    // SELF-HEALING: Use the FIRST tab in the sheet
+    const sheet = ss.getSheets()[0]; 
     
-    // 1. Collect all parameters (from GET or POST)
     let data = e.parameter || {};
-    
-    // Fallback if it was a JSON POST body
     if (e.postData && e.postData.contents) {
-      try {
-        const body = JSON.parse(e.postData.contents);
-        data = Object.assign(data, body);
-      } catch (f) { /* ignore parse errors */ }
-    }
-    
-    if (Object.keys(data).length === 0) {
-       return response({ status: 'error', message: 'No data received' });
+      try { data = Object.assign(data, JSON.parse(e.postData.contents)); } catch (f) {}
     }
 
-    // 2. Manage Headers
-    const headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
-    const newRow = [];
-    
-    // Ensure Timestamp
-    if (headers[0] === "" || headers.indexOf('Timestamp') === -1) {
-      sheet.getRange(1, 1).setValue('Timestamp');
-      headers[0] = 'Timestamp';
+    if (Object.keys(data).length === 0) return response("error: no data");
+
+    // DYNAMIC HEADERS
+    let headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
+    if (headers[0] === "" || headers.indexOf('timestamp') === -1) {
+       sheet.getRange(1, 1).setValue('timestamp');
+       headers[0] = 'timestamp';
     }
-    
-    const timestampIdx = headers.indexOf('Timestamp');
-    newRow[timestampIdx] = new Date();
-    
-    // 3. Map dynamic data
+
+    const newRow = new Array(headers.length).fill("");
     for (let key in data) {
-      let idx = headers.indexOf(key);
-      if (idx === -1) {
-        idx = headers.length;
+      let colIdx = headers.indexOf(key);
+      if (colIdx === -1) {
+        colIdx = headers.length;
         headers.push(key);
-        sheet.getRange(1, idx + 1).setValue(key);
+        sheet.getRange(1, colIdx + 1).setValue(key);
       }
-      newRow[idx] = data[key];
+      newRow[colIdx] = data[key];
     }
     
     sheet.appendRow(newRow);
-    return response({ status: 'success' });
-      
+    return response("success");
+    
   } catch (error) {
-    return response({ status: 'error', message: error.toString() });
+    return response("error: " + error.toString());
   }
 }
 
-function response(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+function response(text) {
+  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.TEXT);
 }
+

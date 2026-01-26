@@ -1,72 +1,53 @@
-/**
- * Google Sheets Sync - Orders Spreadsheet
- * Paste this into a Google Apps Script project (script.google.com)
- * Deploy as a Web App with access 'Anyone'
- */
+// --- THE SELF-HEALING LEGEND SCRIPT (ORDERS) ---
+const SPREADSHEET_ID = '1sOmMpurKA-BAqEaMZK0DjltkM7XHfZLlhpCfEUAaMQI'; 
 
-const SPREADSHEET_ID = '1sOmMpurKA-BAqEaMZK0DjltkM7XHfZLlhpCfEUAaMQI'; // Your Order Spreadsheet ID
-const SHEET_NAME = 'Orders'; 
-
-function doGet(e) {
-  return handleRequest(e);
-}
-
-function doPost(e) {
-  return handleRequest(e);
-}
+function doGet(e) { return handleRequest(e); }
+function doPost(e) { return handleRequest(e); }
 
 function handleRequest(e) {
   try {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+    // SELF-HEALING: Use the FIRST tab in the sheet, regardless of its name
+    const sheet = ss.getSheets()[0]; 
     
-    // 1. Collect all parameters (from GET or POST)
     let data = e.parameter || {};
-    
-    // Fallback if it was a JSON POST body
     if (e.postData && e.postData.contents) {
-      try {
-        const body = JSON.parse(e.postData.contents);
-        data = Object.assign(data, body);
-      } catch (f) { /* ignore parse errors */ }
-    }
-    
-    if (Object.keys(data).length === 0) {
-       return response({ status: 'error', message: 'No data received' });
+      try { data = Object.assign(data, JSON.parse(e.postData.contents)); } catch (f) {}
     }
 
-    // 2. Manage Headers
-    const headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
-    const newRow = [];
+    if (Object.keys(data).length === 0) return response("error: no data");
+
+    // DYNAMIC HEADERS: Map data keys to spreadsheet columns
+    let headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
     
-    // Add Timestamp if not present
-    if (headers[0] === "" || headers.indexOf('Timestamp') === -1) {
-      sheet.getRange(1, 1).setValue('Timestamp');
-      headers[0] = 'Timestamp';
+    // Ensure Timestamp is first
+    if (headers[0] === "" || headers.indexOf('timestamp') === -1) {
+       sheet.getRange(1, 1).setValue('timestamp');
+       headers[0] = 'timestamp';
     }
+
+    const newRow = new Array(headers.length).fill("");
     
-    newRow[headers.indexOf('Timestamp')] = new Date();
-    
-    // 3. Map values to correct columns
     for (let key in data) {
-      let idx = headers.indexOf(key);
-      if (idx === -1) {
-        idx = headers.length;
+      let colIdx = headers.indexOf(key);
+      if (colIdx === -1) {
+        // Create NEW column for NEW data type automatically
+        colIdx = headers.length;
         headers.push(key);
-        sheet.getRange(1, idx + 1).setValue(key);
+        sheet.getRange(1, colIdx + 1).setValue(key);
       }
-      newRow[idx] = data[key];
+      newRow[colIdx] = data[key];
     }
     
     sheet.appendRow(newRow);
-    return response({ status: 'success' });
-      
+    return response("success");
+    
   } catch (error) {
-    return response({ status: 'error', message: error.toString() });
+    return response("error: " + error.toString());
   }
 }
 
-function response(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+function response(text) {
+  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.TEXT);
 }
+

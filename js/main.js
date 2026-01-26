@@ -488,10 +488,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalUrl = targetUrl || USER_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
-        // Add a timestamp to bypass any caching
-        data.timestamp = new Date().toISOString();
+        // Create clean string-only data (strip File objects)
+        const cleanData = {};
+        for (const key in data) {
+            if (typeof data[key] === 'string' || typeof data[key] === 'number') {
+                cleanData[key] = data[key];
+            }
+        }
+        cleanData.timestamp = new Date().toISOString();
 
         console.log("--- LEGENDARY SYNC DISPATCHING ---");
+
+        const params = new URLSearchParams(cleanData);
 
         return fetch(`${finalUrl}?${params.toString()}`, {
             mode: 'no-cors',
@@ -536,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             const formData = new FormData(this);
+            const paymentMethod = formData.get('payment'); // Restore this variable
 
             // Collect standalone image upload from the Atelier section
             const mainUpload = document.getElementById('main-upload');
