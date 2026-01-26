@@ -428,33 +428,13 @@
                     <p>Login to your Bakenovation account</p>
                 </div>
                 <form id="login-form" class="auth-form">
-                    <div id="login-email-fields">
-                        <div class="control-group">
-                            <label>Email Address</label>
-                            <input type="email" id="login-email" required class="luxury-input"
-                                placeholder="name@example.com">
-                        </div>
-                        <div class="control-group">
-                            <label>Password</label>
-                            <input type="password" id="login-pass" required class="luxury-input" placeholder="••••••••">
-                        </div>
+                    <div class="control-group">
+                        <label>Email Address or WhatsApp Number</label>
+                        <input type="text" id="login-identifier" required class="luxury-input"
+                            placeholder="name@example.com or +91...">
                     </div>
 
-                    <div id="login-whatsapp-fields" style="display: none;">
-                        <div class="control-group">
-                            <label>WhatsApp Number</label>
-                            <input type="tel" id="login-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Login to Atelier</button>
-
-                    <div style="margin-top: 1rem; text-align: center;">
-                        <button type="button" id="toggle-login-method" class="btn-text"
-                            style="color: var(--color-gold); font-size: 0.85rem;">
-                            Login with WhatsApp instead
-                        </button>
-                    </div>
+                    <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Send Verification Code</button>
 
                     <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up here</a></p>
                 </form>

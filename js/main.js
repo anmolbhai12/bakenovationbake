@@ -103,30 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSignupData = null;
     let generatedOTP = null;
     let currentLoginMethod = 'email'; // 'email' or 'whatsapp'
+    let currentLoginIdentifier = '';
 
-    // --- LOGIN METHOD TOGGLE ---
-    const toggleLoginMethod = document.getElementById('toggle-login-method');
-    const loginEmailFields = document.getElementById('login-email-fields');
-    const loginWhatsappFields = document.getElementById('login-whatsapp-fields');
     const loginSubmitBtn = document.getElementById('login-submit-btn');
-
-    if (toggleLoginMethod) {
-        toggleLoginMethod.addEventListener('click', () => {
-            if (currentLoginMethod === 'email') {
-                currentLoginMethod = 'whatsapp';
-                loginEmailFields.style.display = 'none';
-                loginWhatsappFields.style.display = 'block';
-                toggleLoginMethod.innerText = 'Login with Email instead';
-                loginSubmitBtn.innerText = 'Send WhatsApp Login Code';
-            } else {
-                currentLoginMethod = 'email';
-                loginEmailFields.style.display = 'block';
-                loginWhatsappFields.style.display = 'none';
-                toggleLoginMethod.innerText = 'Login with WhatsApp instead';
-                loginSubmitBtn.innerText = 'Login to Atelier';
-            }
-        });
-    }
+    const loginIdentifierInput = document.getElementById('login-identifier');
 
     function updateAuthUI() {
         if (!userNavArea) return;
@@ -332,10 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (window.lastSignupData) {
                 sendOTP(window.lastSignupData.name, window.lastSignupData.email, window.lastSignupData.dob, 'email');
-            } else if (currentLoginMethod === 'whatsapp') {
-                const whatsapp = document.getElementById('login-whatsapp').value;
-                const user = users.find(u => u.whatsapp === whatsapp);
-                sendOTP(user ? user.name : 'User', whatsapp, null, 'whatsapp');
+            } else if (currentLoginIdentifier) {
+                const user = users.find(u => u.email === currentLoginIdentifier || u.whatsapp === currentLoginIdentifier);
+                sendOTP(user ? user.name : 'User', currentLoginIdentifier, null, currentLoginMethod);
             } else {
                 alert("Error: Missing data. Please try again.");
                 signupView.style.display = 'block';
@@ -353,9 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('bakenovation_users', JSON.stringify(users));
                     activeUser = currentSignupData;
                     currentSignupData = null;
-                } else if (currentLoginMethod === 'whatsapp') {
-                    const whatsapp = document.getElementById('login-whatsapp').value;
-                    activeUser = users.find(u => u.whatsapp === whatsapp);
+                } else if (currentLoginIdentifier) {
+                    activeUser = users.find(u => u.email === currentLoginIdentifier || u.whatsapp === currentLoginIdentifier);
                 }
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
@@ -392,29 +370,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            if (currentLoginMethod === 'whatsapp') {
-                const whatsapp = document.getElementById('login-whatsapp').value;
-                const user = users.find(u => u.whatsapp === whatsapp);
-                if (user) {
-                    sendOTP(user.name, whatsapp, null, 'whatsapp');
-                } else {
-                    alert('No account found with this WhatsApp number.');
-                }
-                return;
-            }
+            const identifier = loginIdentifierInput.value.trim();
+            currentLoginIdentifier = identifier;
 
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
+            // Simple regex to check if it's an email
+            const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+            currentLoginMethod = isEmail ? 'email' : 'whatsapp';
 
-            const user = users.find(u => u.email === email && u.pass === pass);
+            const user = users.find(u =>
+                isEmail ? u.email === identifier : u.whatsapp === identifier
+            );
+
             if (user) {
-                activeUser = user;
-                localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
-                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob || "Existing User");
-                authModal.classList.remove('active');
-                updateAuthUI();
+                sendOTP(user.name, identifier, null, currentLoginMethod);
             } else {
-                alert('Invalid email or password.');
+                alert(`No account found with this ${isEmail ? 'email' : 'WhatsApp number'}. Please sign up first.`);
             }
         });
     }
