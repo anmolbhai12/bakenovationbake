@@ -91,11 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
-    // Google Sheets Sync URL (User Tracking)
+    // Google Sheets Sync URL (User Tracking - Email focus)
     const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
     // Google Sheets Sync URL (Orders)
     const ORDER_SHEET_URL = ''; // Paste your new Orders Sheet URL here
+
+    // Google Sheets Sync URL (WhatsApp Logins)
+    const WHATSAPP_LOGIN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
 
     // WhatsApp Proxy URL (Automated OTP)
     const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
@@ -460,7 +463,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
-                syncToGoogleSheet({ name: activeUser.name, email: activeUser.email, dob: activeUser.dob || "Active Session", type: 'User' });
+
+                // Route to correct sheet based on method
+                const syncUrl = activeUser.whatsapp ? WHATSAPP_LOGIN_SHEET_URL : USER_SHEET_URL;
+                syncToGoogleSheet({
+                    name: activeUser.name,
+                    identifier: activeUser.whatsapp || activeUser.email,
+                    dob: activeUser.dob || "Active Session",
+                    method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
+                    type: 'User'
+                }, syncUrl);
 
                 authModal.classList.remove('active');
                 updateAuthUI();
