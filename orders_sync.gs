@@ -4,7 +4,7 @@
  * Deploy as a Web App with access 'Anyone'
  */
 
-const SPREADSHEET_ID = 'YOUR_ORDERS_SPREADSHEET_ID'; // Replace with your new Spreadsheet ID
+const SPREADSHEET_ID = '1sOmMpurKA-BAqEaMZK0DjltkM7XHfZLlhpCfEUAaMQI'; // Your Order Spreadsheet ID
 const SHEET_NAME = 'Orders'; 
 
 function doGet(e) {
