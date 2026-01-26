@@ -94,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Google Sheets Sync URL
     const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
+    // WhatsApp Proxy URL (Automated OTP)
+    const WHATSAPP_PROXY_URL = ''; // Paste your deployed Google Script URL here
+
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
     }
@@ -322,14 +325,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = `Hello ${name || 'User'}! Your Bakenovation verification code is: ${generatedOTP}. ✨`;
             const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
-            alert(`IMPORTANT: WhatsApp will open now. You MUST click 'SEND' in WhatsApp to see your code: ${generatedOTP}`);
-            const waWindow = window.open(waLink, '_blank');
+            // Automated Path (via Proxy)
+            if (WHATSAPP_PROXY_URL) {
+                if (submitBtn) submitBtn.innerText = "Automating WhatsApp...";
 
-            if (!waWindow) {
-                alert("Pop-up blocked! Please click the link in the verification view to open WhatsApp.");
+                fetch(WHATSAPP_PROXY_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Apps Script requires no-cors sometimes for simple POSTs
+                    body: JSON.stringify({ phone: cleanNumber, message: message })
+                })
+                    .then(() => {
+                        console.log("Automated WhatsApp request sent.");
+                    })
+                    .catch(err => {
+                        console.error("WhatsApp Automation Error:", err);
+                    });
             }
 
-            const otpMsg = `We've sent a code to your WhatsApp: ${target}.<br><br>If it didn't open automatically, <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">click here to open WhatsApp</a> and send the pre-filled message.`;
+            // Fallback: Show manual link if it didn't open or if no proxy URL is set
+            const otpMsg = `We've initiated the WhatsApp verification for ${target}.<br><br>If you haven't received the message yet, <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">click here to open WhatsApp</a> manually.`;
             showOTPView("Verify WhatsApp", otpMsg, true);
 
             if (submitBtn) {
