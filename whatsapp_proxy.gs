@@ -4,8 +4,8 @@
  * Deploy as a Web App with access 'Anyone' (even anonymous)
  */
 
-const ULTRAMSG_INSTANCE = 'YOUR_INSTANCE_ID'; // Replace with your Instance ID
-const ULTRAMSG_TOKEN = 'YOUR_TOKEN';        // Replace with your Token
+const ULTRAMSG_INSTANCE = 'instance160005'; 
+const ULTRAMSG_TOKEN = 'aephty6m2y29lovb';        
 
 function doPost(e) {
   try {
@@ -27,7 +27,7 @@ function doPost(e) {
 
     const options = {
       method: 'post',
-      contentType: 'application/x-www-form-urlencoded', // Ultramsg prefers this for simple chat
+      contentType: 'application/x-www-form-urlencoded', 
       payload: payload
     };
 
