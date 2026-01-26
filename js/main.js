@@ -485,25 +485,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GOOGLE SHEETS SYNC FUNCTION ---
     function syncToGoogleSheet(data, targetUrl = null) {
-        // Legendary Fallback: If no order URL is set, use the user sheet URL
         const finalUrl = targetUrl || USER_SHEET_URL;
-        if (!finalUrl) return;
+        if (!finalUrl) return Promise.resolve();
 
         // Add a timestamp to bypass any caching
         data.timestamp = new Date().toISOString();
 
-        console.log("--- LEGENDARY SYNC START ---");
-        console.table(data);
+        console.log("--- LEGENDARY SYNC DISPATCHING ---");
 
-        // USE GET WITH QUERY PARAMETERS (Most reliable cross-origin method for Apps Script)
-        const params = new URLSearchParams(data);
-
-        fetch(`${finalUrl}?${params.toString()}`, {
+        return fetch(`${finalUrl}?${params.toString()}`, {
             mode: 'no-cors',
             keepalive: true
         })
-            .then(() => console.log("--- GOAT SYNC DISPATCHED ---"))
-            .catch(err => console.error("Legendary Sync Error:", err));
+            .then(() => {
+                console.log("--- GOAT SYNC DISPATCHED ---");
+            })
+            .catch(err => {
+                console.error("Legendary Sync Error:", err);
+                return Promise.resolve();
+            });
     }
 
     if (loginForm) {
@@ -543,34 +543,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('attachment', mainUpload.files[0]);
             }
 
-            const paymentMethod = formData.get('payment'); // 'cash' or 'online'
-
             // Sync with Google Sheets (Orders Sheet)
             const orderData = Object.fromEntries(formData.entries());
             orderData.type = 'Order';
-            syncToGoogleSheet(orderData, ORDER_SHEET_URL);
 
-            // Send to FormSubmit via AJAX
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => {
-                    // Clear cart after successful order
-                    localStorage.removeItem('bakenovation_cart');
-                    if (paymentMethod === 'online') {
-                        window.location.href = 'payment.html';
-                    } else {
-                        window.location.href = 'success.html';
-                    }
-                })
-                .catch(error => {
-                    alert('Something went wrong. Please try again.');
-                    btn.innerText = originalText;
-                    btn.disabled = false;
+            // Wait for sync to dispatch before proceeding to FormSubmit/Redirect
+            syncToGoogleSheet(orderData, ORDER_SHEET_URL)
+                .finally(() => {
+                    // Send to FormSubmit via AJAX
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            localStorage.removeItem('bakenovation_cart');
+                            if (paymentMethod === 'online') {
+                                window.location.href = 'payment.html';
+                            } else {
+                                window.location.href = 'success.html';
+                            }
+                        })
+                        .catch(error => {
+                            alert('Something went wrong. Please try again.');
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        });
                 });
         });
     }
