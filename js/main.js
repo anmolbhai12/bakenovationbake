@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Simple logic: if 10 digits, assume India (+91)
             if (cleanNumber.length === 10) cleanNumber = '91' + cleanNumber;
 
-            const message = `Hello ${name || 'User'}! Your Bakenovation verification code is: ${generatedOTP}. ✨`;
+            const message = `*Bakenovation - Verification Code*\n\nHello ${name || 'User'}! ✨\n\nYour security code is: *${generatedOTP}*\n\nThis code is valid for 10 minutes. Please do not share it with anyone.\n\nThank you for choosing Bakenovation!`;
             const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
             // Automated Path (via Proxy)
