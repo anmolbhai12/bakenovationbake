@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalUrl = targetUrl || USER_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
-        // 1. CLEAN DATA (Ensures no File objects or non-text data hits the sheet)
+        // 1. CLEAN DATA 
         const cleanData = {};
         for (const key in data) {
             if (typeof data[key] === 'string' || typeof data[key] === 'number' || typeof data[key] === 'boolean') {
@@ -496,21 +496,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         cleanData.timestamp = new Date().toISOString();
-
-        console.log("--- LEGENDARY SYNC START ---");
         const params = new URLSearchParams(cleanData);
+        const finalGetUrl = `${finalUrl}?${params.toString()}`;
 
-        return fetch(`${finalUrl}?${params.toString()}`, {
+        console.log("--- LEGENDARY DUAL-DISPATCH START ---");
+
+        // DUAL DISPATCH TECHNIQUE:
+        // A. Primary: Fetch with keepalive
+        const fetchPromise = fetch(finalGetUrl, {
             mode: 'no-cors',
             keepalive: true
-        })
-            .then(() => {
-                console.log("--- GOAT SYNC DISPATCHED ---");
-            })
-            .catch(err => {
-                console.error("Legendary Sync Error:", err);
-                return Promise.resolve(); // Never block the user even if sync fails
+        });
+
+        // B. Redundant: Tracking Pixel (Impossible for browser to cancel)
+        const img = new Image();
+        img.src = finalGetUrl;
+
+        // Wait a small amount to let the pixel fire
+        return new Promise(resolve => {
+            fetchPromise.finally(() => {
+                setTimeout(resolve, 1500); // 1.5s Forced delay for Google to register
             });
+        });
     }
 
     if (loginForm) {

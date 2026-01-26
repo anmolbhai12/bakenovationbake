@@ -25,6 +25,8 @@ function handleRequest(e) {
     }
 
     const newRow = new Array(headers.length).fill("");
+    newRow[headers.indexOf('timestamp')] = new Date();
+
     for (let key in data) {
       let colIdx = headers.indexOf(key);
       if (colIdx === -1) {
