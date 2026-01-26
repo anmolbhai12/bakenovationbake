@@ -319,31 +319,37 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (method === 'whatsapp') {
             // WhatsApp Link Approach - Improved formatting
             let cleanNumber = target.replace(/\D/g, '');
-            // Simple logic: if 10 digits, assume India (+91)
             if (cleanNumber.length === 10) cleanNumber = '91' + cleanNumber;
 
             const message = `*Bakenovation - Verification Code*\n\nHello ${name || 'User'}! ✨\n\nYour security code is: *${generatedOTP}*\n\nThis code is valid for 10 minutes. Please do not share it with anyone.\n\nThank you for choosing Bakenovation!`;
             const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
-            // Automated Path (via Proxy)
+            // 1. Attempt Automated Path (via Proxy)
             if (WHATSAPP_PROXY_URL) {
                 if (submitBtn) submitBtn.innerText = "Automating WhatsApp...";
 
                 fetch(WHATSAPP_PROXY_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Apps Script requires no-cors sometimes for simple POSTs
+                    mode: 'no-cors',
                     body: JSON.stringify({ phone: cleanNumber, message: message })
                 })
-                    .then(() => {
-                        console.log("Automated WhatsApp request sent.");
-                    })
-                    .catch(err => {
-                        console.error("WhatsApp Automation Error:", err);
-                    });
+                    .then(() => console.log("Automated WhatsApp request sent."))
+                    .catch(err => console.error("WhatsApp Automation Error:", err));
             }
 
-            // Fallback: Show manual link if it didn't open or if no proxy URL is set
-            const otpMsg = `We've initiated the WhatsApp verification for ${target}.<br><br>If you haven't received the message yet, <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">click here to open WhatsApp</a> manually.`;
+            // 2. Immediate Manual Redirect (attempt to open WhatsApp in new tab)
+            const waWindow = window.open(waLink, '_blank');
+
+            // 3. Update UI with Fallback
+            let otpMsg = `We've initiated verification for WhatsApp: <strong>${target}</strong>.<br><br>`;
+            if (!waWindow) {
+                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Browser blocked the pop-up. Please use the button below:</p>`;
+            } else {
+                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">WhatsApp should have opened in a new tab. Send the pre-filled message to see your code.</p>`;
+            }
+
+            otpMsg += `<a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp Manually</a>`;
+
             showOTPView("Verify WhatsApp", otpMsg, true);
 
             if (submitBtn) {
