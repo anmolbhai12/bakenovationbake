@@ -91,8 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
         PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
     };
 
-    // Google Sheets Sync URL
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
+    // Google Sheets Sync URL (User Tracking)
+    const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
+
+    // Google Sheets Sync URL (Orders)
+    const ORDER_SHEET_URL = ''; // Paste your new Orders Sheet URL here
 
     // WhatsApp Proxy URL (Automated OTP)
     const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
@@ -465,12 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GOOGLE SHEETS SYNC FUNCTION ---
-    function syncToGoogleSheet(data) {
-        if (!GOOGLE_SHEET_URL) return;
+    function syncToGoogleSheet(data, targetUrl = USER_SHEET_URL) {
+        if (!targetUrl) return;
 
         console.log("Syncing to Google Sheets:", data);
 
-        fetch(GOOGLE_SHEET_URL, {
+        fetch(targetUrl, {
             method: 'POST',
             mode: 'no-cors',
             cache: 'no-cache',
@@ -479,8 +482,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify(data)
         })
-            .then(() => console.log("Data synced to Google Sheets successfully"))
-            .catch(err => console.error("Google Sheets Sync Error:", err));
+            .then(() => console.log("Data synced successfully"))
+            .catch(err => console.error("Sheet Sync Error:", err));
     }
 
     if (loginForm) {
@@ -522,10 +525,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const paymentMethod = formData.get('payment'); // 'cash' or 'online'
 
-            // Sync with Google Sheets
+            // Sync with Google Sheets (Orders Sheet)
             const orderData = Object.fromEntries(formData.entries());
             orderData.type = 'Order';
-            syncToGoogleSheet(orderData);
+            syncToGoogleSheet(orderData, ORDER_SHEET_URL);
 
             // Send to FormSubmit via AJAX
             fetch(this.action, {
