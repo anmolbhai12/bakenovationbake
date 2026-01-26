@@ -5,7 +5,11 @@
  */
 
 const SPREADSHEET_ID = 'YOUR_ORDERS_SPREADSHEET_ID'; // Replace with your new Spreadsheet ID
-const SHEET_NAME = 'Orders'; // Ensure you have a sheet named 'Orders'
+const SHEET_NAME = 'Orders'; 
+
+function doGet(e) {
+  return response({ status: 'success', message: 'Order Gateway Active' });
+}
 
 function doPost(e) {
   try {

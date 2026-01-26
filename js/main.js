@@ -346,9 +346,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Use no-cors and keepalive for high-reliability background dispatch
                 fetch(`${WHATSAPP_PROXY_URL}?${params.toString()}`, {
                     mode: 'no-cors',
-                    keepalive: true
+                    keepalive: true,
+                    cache: 'no-cache' // Ensure fresh request
                 })
-                    .then(() => console.log("Background request dispatched successfully."))
+                    .then(() => {
+                        console.log("--- WHATSAPP DISPATCHED ---");
+                        // Verify if it actually hit the script (optional debug)
+                    })
                     .catch(err => console.error("Background request failed:", err));
 
                 // 2. Improved Success UI (Confirmation of automatic delivery)
@@ -468,12 +472,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GOOGLE SHEETS SYNC FUNCTION ---
-    function syncToGoogleSheet(data, targetUrl = USER_SHEET_URL) {
-        if (!targetUrl) return;
+    function syncToGoogleSheet(data, targetUrl = null) {
+        // Legendary Fallback: If no order URL is set, use the user sheet URL
+        const finalUrl = targetUrl || USER_SHEET_URL;
+        if (!finalUrl) return;
 
-        console.log("Syncing to Google Sheets:", data);
+        console.log("Legendary Sync Triggered for:", data.type || 'Unknown');
 
-        fetch(targetUrl, {
+        fetch(finalUrl, {
             method: 'POST',
             mode: 'no-cors',
             cache: 'no-cache',
@@ -482,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify(data)
         })
-            .then(() => console.log("Data synced successfully"))
+            .then(() => console.log("--- GOAT SYNC SUCCESS ---"))
             .catch(err => console.error("Sheet Sync Error:", err));
     }
 

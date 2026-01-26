@@ -24,10 +24,22 @@ function handleRequest(e) {
       return response({ status: 'error', message: 'Missing parameters' });
     }
 
-    // Direct URL-based trigger for Ultramsg (Most reliable method)
-    const url = `https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat?token=${ULTRAMSG_TOKEN}&to=${phone}&body=${encodeURIComponent(message)}`;
+    // Direct API call to Ultramsg (Ensuring POST for their API)
+    const url = `https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`;
+    const payload = {
+      token: ULTRAMSG_TOKEN,
+      to: phone,
+      body: message
+    };
     
-    const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    const options = {
+      method: 'post',
+      contentType: 'application/x-www-form-urlencoded',
+      payload: payload,
+      muteHttpExceptions: true
+    };
+    
+    const res = UrlFetchApp.fetch(url, options);
     const result = JSON.parse(res.getContentText());
 
     return response({ status: 'success', data: result });
