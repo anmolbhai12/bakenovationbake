@@ -7,26 +7,33 @@
 const ULTRAMSG_INSTANCE = 'instance160005'; 
 const ULTRAMSG_TOKEN = 'aephty6m2y29lovb';        
 
+function doGet(e) {
+  return handleRequest(e);
+}
+
 function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
   try {
-    let params;
-    // Handle both JSON string and pre-parsed objects
-    if (e.postData.type === 'application/json') {
-      params = JSON.parse(e.postData.contents);
-    } else {
-      // Fallback for text/plain or other types from fetch()
-      params = JSON.parse(e.postData.contents);
-    }
+    let phone, message;
     
-    const { phone, message } = params;
+    // 1. Parse parameters from GET (query string) or POST (body)
+    if (e.parameter && e.parameter.phone) {
+      phone = e.parameter.phone;
+      message = e.parameter.message;
+    } else if (e.postData) {
+      const body = JSON.parse(e.postData.contents);
+      phone = body.phone;
+      message = body.message;
+    }
 
     if (!phone || !message) {
-      return ContentService.createTextOutput(JSON.stringify({
-        status: 'error',
-        message: 'Missing phone or message'
-      })).setMimeType(ContentService.MimeType.JSON);
+      return response({ status: 'error', message: 'Missing phone or message parameters' });
     }
 
+    // 2. Prepare payload for Ultramsg
     const payload = {
       token: ULTRAMSG_TOKEN,
       to: phone,
@@ -37,21 +44,21 @@ function doPost(e) {
       method: 'post',
       contentType: 'application/x-www-form-urlencoded', 
       payload: payload,
-      muteHttpExceptions: true // Capture errors instead of crashing
+      muteHttpExceptions: true
     };
 
-    const response = UrlFetchApp.fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, options);
-    const result = JSON.parse(response.getContentText());
+    // 3. Call Ultramsg API
+    const res = UrlFetchApp.fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, options);
+    const result = JSON.parse(res.getContentText());
 
-    return ContentService.createTextOutput(JSON.stringify({
-      status: 'success',
-      data: result
-    })).setMimeType(ContentService.MimeType.JSON);
+    return response({ status: 'success', data: result });
 
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: 'error',
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+    return response({ status: 'error', message: error.toString() });
   }
+}
+
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }

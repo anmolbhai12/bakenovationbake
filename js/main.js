@@ -324,33 +324,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = `*Bakenovation - Verification Code*\n\nHello ${name || 'User'}! ✨\n\nYour security code is: *${generatedOTP}*\n\nThis code is valid for 10 minutes. Please do not share it with anyone.\n\nThank you for choosing Bakenovation!`;
             const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
-            // 1. Attempt Automated Path (via Proxy)
+            // 1. Attempt Automated Background Delivery (via Proxy)
             if (WHATSAPP_PROXY_URL) {
-                if (submitBtn) submitBtn.innerText = "Sending code...";
+                if (submitBtn) submitBtn.innerText = "Processing...";
 
-                fetch(WHATSAPP_PROXY_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ phone: cleanNumber, message: message })
-                })
-                    .then(() => console.log("Automated WhatsApp request sent."))
-                    .catch(err => console.error("WhatsApp Automation Error:", err));
+                // USE GET FOR MAXIMUM RELIABILITY WITH APPS SCRIPT
+                const params = new URLSearchParams({
+                    phone: cleanNumber,
+                    message: message
+                });
+
+                fetch(`${WHATSAPP_PROXY_URL}?${params.toString()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("Automation Response:", data);
+                    })
+                    .catch(err => {
+                        console.error("Automation Connection error:", err);
+                    });
 
                 // 2. Immediate Success UI (The code is being sent in the background)
                 let otpMsg = `<div style="padding: 1rem 0;">
-                    <p style="margin-bottom: 0.5rem; font-weight: 500;">Verify your identity</p>
+                    <p style="margin-bottom: 0.5rem; font-weight: 500;">Sent Automatically</p>
                     <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.4;">
-                        A verification code has been sent <strong>automatically</strong> to <strong>${target}</strong> via WhatsApp.
+                        A verification code has been sent to <strong>${target}</strong>.
                     </p>
-                    <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
-                        Please check your phone. It may take a few seconds to arrive.
+                    <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
+                        Please check your phone. It may take a minute to arrive.
                     </p>
                     <p style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.4;">
-                        Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Open WhatsApp Manually</a>
+                        Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Try Manual Link</a>
                     </p>
                 </div>`;
 
-                showOTPView("Verify WhatsApp", otpMsg, true);
+                showOTPView("Verify Identity", otpMsg, true);
             } else {
                 // 3. Forced Manual Redirect (Only if no proxy configured)
                 const waWindow = window.open(waLink, '_blank');
@@ -363,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 otpMsg += `<a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp Manually</a>`;
 
-                showOTPView("Verify WhatsApp", otpMsg, true);
+                showOTPView("Verify Identity", otpMsg, true);
             }
 
             if (submitBtn) {
