@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
-                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob || "Active Session");
+                syncToGoogleSheet({ name: activeUser.name, email: activeUser.email, dob: activeUser.dob || "Active Session", type: 'User' });
 
                 authModal.classList.remove('active');
                 updateAuthUI();
@@ -408,10 +408,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GOOGLE SHEETS SYNC FUNCTION ---
-    function syncToGoogleSheet(name, email, dob) {
+    function syncToGoogleSheet(data) {
         if (!GOOGLE_SHEET_URL) return;
 
-        console.log("Syncing to Google Sheets:", { name, email, dob });
+        console.log("Syncing to Google Sheets:", data);
 
         fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, dob })
+            body: JSON.stringify(data)
         })
             .then(() => console.log("Data synced to Google Sheets successfully"))
             .catch(err => console.error("Google Sheets Sync Error:", err));
@@ -464,6 +464,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const paymentMethod = formData.get('payment'); // 'cash' or 'online'
+
+            // Sync with Google Sheets
+            const orderData = Object.fromEntries(formData.entries());
+            orderData.type = 'Order';
+            syncToGoogleSheet(orderData);
 
             // Send to FormSubmit via AJAX
             fetch(this.action, {
@@ -880,19 +885,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Studio Add to Cart Logic (GATED)
     const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
     if (detailAddToCartBtn) {
-        detailAddToCartBtn.addEventListener('click', function () {
+        detailAddToCartBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+            const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+
+            addToCart({
+                name: detailTitle.innerText,
+                image: absoluteImgSrc,
+                details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
+                price: parseInt(detailWeight.innerText.replace(/\D/g, '')) * 1000 || 2500
+            });
+        });
+    }
+
+    const detailDirectOrderBtn = document.getElementById('detail-direct-order-btn');
+    if (detailDirectOrderBtn) {
+        detailDirectOrderBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
             checkLoginAndProceed(() => {
                 if (detailModal) detailModal.classList.remove('active');
+                if (modal) modal.classList.add('active');
 
-                const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-                const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+                const designName = detailTitle.innerText;
+                const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
 
-                addToCart({
-                    name: detailTitle.innerText,
-                    image: absoluteImgSrc,
-                    details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
-                    price: parseInt(detailWeight.innerText) * 1000 || 2500
-                });
+                const designInput = document.getElementById('modal-ordered-design');
+                const messageInput = modal.querySelector('textarea[name="message"]');
+
+                if (designInput) designInput.value = designName;
+                if (messageInput) {
+                    messageInput.value = designDetails;
+                }
+
+                gsap.fromTo(modal.querySelector('.modal-content'),
+                    { y: -50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4 }
+                );
             });
         });
     }

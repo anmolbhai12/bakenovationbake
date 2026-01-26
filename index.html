@@ -245,6 +245,7 @@
                         <h3 class="text-gold">Recent Concepts</h3>
                         <p class="section-subtitle">Your session history of AI designs.</p>
                     </div>
+                    <div id="recent-generations-grid" class="recent-generations-grid"></div>
                 </div>
 
                 <div class="order-quick-details"
@@ -391,7 +392,11 @@
                     <!-- Populated by JS -->
                 </ul>
 
-                <button class="btn-luxury w-100" id="detail-add-to-cart-btn">Add This Design to Cart</button>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn-luxury" id="detail-add-to-cart-btn" style="flex: 1;">Add to Cart</button>
+                    <button class="btn-luxury" id="detail-direct-order-btn"
+                        style="flex: 1; background: var(--color-gold); color: var(--color-bg);">Order Now</button>
+                </div>
             </div>
         </div>
     </div>
