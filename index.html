@@ -428,16 +428,34 @@
                     <p>Login to your Bakenovation account</p>
                 </div>
                 <form id="login-form" class="auth-form">
-                    <div class="control-group">
-                        <label>Email Address</label>
-                        <input type="email" id="login-email" required class="luxury-input"
-                            placeholder="name@example.com">
+                    <div id="login-email-fields">
+                        <div class="control-group">
+                            <label>Email Address</label>
+                            <input type="email" id="login-email" required class="luxury-input"
+                                placeholder="name@example.com">
+                        </div>
+                        <div class="control-group">
+                            <label>Password</label>
+                            <input type="password" id="login-pass" required class="luxury-input" placeholder="••••••••">
+                        </div>
                     </div>
-                    <div class="control-group">
-                        <label>Password</label>
-                        <input type="password" id="login-pass" required class="luxury-input" placeholder="••••••••">
+
+                    <div id="login-whatsapp-fields" style="display: none;">
+                        <div class="control-group">
+                            <label>WhatsApp Number</label>
+                            <input type="tel" id="login-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
+                        </div>
                     </div>
-                    <button type="submit" class="btn-luxury w-100">Login to Atelier</button>
+
+                    <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Login to Atelier</button>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button type="button" id="toggle-login-method" class="btn-text"
+                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            Login with WhatsApp instead
+                        </button>
+                    </div>
+
                     <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up here</a></p>
                 </form>
             </div>
@@ -458,6 +476,11 @@
                             placeholder="name@example.com">
                     </div>
                     <div class="control-group">
+                        <label>WhatsApp Number</label>
+                        <input type="tel" id="signup-whatsapp" required class="luxury-input"
+                            placeholder="+91 00000 00000">
+                    </div>
+                    <div class="control-group">
                         <label>Birth Date</label>
                         <input type="date" id="signup-dob" required class="luxury-input">
                     </div>
@@ -472,8 +495,8 @@
 
             <div id="otp-view" style="display: none;">
                 <div class="customizer-header">
-                    <h2 class="text-gold">Verify Email</h2>
-                    <p>We've sent a code to your Gmail</p>
+                    <h2 class="text-gold" id="otp-title">Verify Email</h2>
+                    <p id="otp-message">We've sent a code to your Gmail</p>
                 </div>
                 <form id="otp-form" class="auth-form">
                     <div class="control-group">

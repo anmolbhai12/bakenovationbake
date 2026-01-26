@@ -102,6 +102,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
     let currentSignupData = null;
     let generatedOTP = null;
+    let currentLoginMethod = 'email'; // 'email' or 'whatsapp'
+
+    // --- LOGIN METHOD TOGGLE ---
+    const toggleLoginMethod = document.getElementById('toggle-login-method');
+    const loginEmailFields = document.getElementById('login-email-fields');
+    const loginWhatsappFields = document.getElementById('login-whatsapp-fields');
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+
+    if (toggleLoginMethod) {
+        toggleLoginMethod.addEventListener('click', () => {
+            if (currentLoginMethod === 'email') {
+                currentLoginMethod = 'whatsapp';
+                loginEmailFields.style.display = 'none';
+                loginWhatsappFields.style.display = 'block';
+                toggleLoginMethod.innerText = 'Login with Email instead';
+                loginSubmitBtn.innerText = 'Send WhatsApp Login Code';
+            } else {
+                currentLoginMethod = 'email';
+                loginEmailFields.style.display = 'block';
+                loginWhatsappFields.style.display = 'none';
+                toggleLoginMethod.innerText = 'Login with WhatsApp instead';
+                loginSubmitBtn.innerText = 'Login to Atelier';
+            }
+        });
+    }
 
     function updateAuthUI() {
         if (!userNavArea) return;
@@ -143,8 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto-fill order details
             const orderNameInput = document.querySelector('input[name="name"]');
             const orderEmailInput = document.querySelector('input[name="email"]');
+            const orderPhoneInput = document.querySelector('input[name="phone"]');
             if (orderNameInput) orderNameInput.value = activeUser.name;
             if (orderEmailInput) orderEmailInput.value = activeUser.email;
+            if (orderPhoneInput) orderPhoneInput.value = activeUser.whatsapp || activeUser.phone || '';
 
             // Execute pending action if any
             if (window.pendingAction) {
@@ -193,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
+            const whatsapp = document.getElementById('signup-whatsapp').value;
             const dob = document.getElementById('signup-dob').value;
             const pass = document.getElementById('signup-pass').value;
 
@@ -201,58 +229,74 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            currentSignupData = { name, email, pass, dob };
-            // Store data globally for resend
-            window.lastSignupData = { name, email, dob };
+            currentSignupData = { name, email, whatsapp, pass, dob };
+            window.lastSignupData = currentSignupData;
 
-            sendOTP(name, email, dob);
+            sendOTP(name, email, dob, 'email');
         });
     }
 
     // --- REUSABLE OTP SENDING FUNCTION ---
-    function sendOTP(name, email, dob) {
+    function sendOTP(name, target, extra, method = 'email') {
         generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpTitle = document.getElementById('otp-title');
+        const otpMessage = document.getElementById('otp-message');
 
-        const submitBtn = signupForm.querySelector('button');
+        const submitBtn = method === 'email' ? signupForm.querySelector('button') : loginSubmitBtn;
         const originalBtnText = submitBtn ? submitBtn.innerText : "Send Code";
+
         if (submitBtn) {
             submitBtn.innerText = "Sending Code...";
             submitBtn.disabled = true;
         }
 
-        const templateParams = {
-            user_name: name,
-            user_email: email,
-            otp_code: generatedOTP,
-            to_email: email
-        };
+        if (method === 'email') {
+            const templateParams = {
+                user_name: name,
+                user_email: target,
+                otp_code: generatedOTP,
+                to_email: target
+            };
 
-        emailjs.send(
-            EMAILJS_CONFIG.SERVICE_ID,
-            EMAILJS_CONFIG.TEMPLATE_ID,
-            templateParams
-        )
-            .then(() => {
-                signupView.style.display = 'none';
-                otpView.style.display = 'block';
-                alert(`Verification code sent to ${email}`);
-                startResendCooldown();
-            })
-            .catch(err => {
-                console.error("EmailJS Error:", err);
-                let detail = err.text || err.message || "Check template variables";
-                alert(`Failed to send email: ${detail}\n\nFor demo, OTP is: ${generatedOTP}`);
+            emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams)
+                .then(() => {
+                    showOTPView("Verify Email", `We've sent a code to ${target}`);
+                })
+                .catch(err => {
+                    console.error("EmailJS Error:", err);
+                    alert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
+                    showOTPView("Verify Email", `We've sent a code to ${target}`);
+                })
+                .finally(() => {
+                    if (submitBtn) {
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                });
+        } else if (method === 'whatsapp') {
+            // WhatsApp Link Approach
+            const message = `Hello ${name || 'User'}! Your Bakenovation verification code is: ${generatedOTP}. ✨`;
+            const waLink = `https://wa.me/${target.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
 
-                signupView.style.display = 'none';
-                otpView.style.display = 'block';
-                startResendCooldown();
-            })
-            .finally(() => {
-                if (submitBtn) {
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false;
-                }
-            });
+            alert(`Opening WhatsApp to send your verification code: ${generatedOTP}`);
+            window.open(waLink, '_blank');
+
+            showOTPView("Verify WhatsApp", `We've sent a code to your WhatsApp: ${target}`);
+
+            if (submitBtn) {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+    }
+
+    function showOTPView(title, message) {
+        signupView.style.display = 'none';
+        loginView.style.display = 'none';
+        otpView.style.display = 'block';
+        if (document.getElementById('otp-title')) document.getElementById('otp-title').innerText = title;
+        if (document.getElementById('otp-message')) document.getElementById('otp-message').innerText = message;
+        startResendCooldown();
     }
 
     // --- RESEND OTP LOGIC ---
@@ -287,9 +331,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (resendCooldownActive) return;
 
             if (window.lastSignupData) {
-                sendOTP(window.lastSignupData.name, window.lastSignupData.email, window.lastSignupData.dob);
+                sendOTP(window.lastSignupData.name, window.lastSignupData.email, window.lastSignupData.dob, 'email');
+            } else if (currentLoginMethod === 'whatsapp') {
+                const whatsapp = document.getElementById('login-whatsapp').value;
+                const user = users.find(u => u.whatsapp === whatsapp);
+                sendOTP(user ? user.name : 'User', whatsapp, null, 'whatsapp');
             } else {
-                alert("Error: Missing signup data. Please try signing up again.");
+                alert("Error: Missing data. Please try again.");
                 signupView.style.display = 'block';
                 otpView.style.display = 'none';
             }
@@ -300,18 +348,22 @@ document.addEventListener('DOMContentLoaded', () => {
         otpForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (otpInput.value === generatedOTP) {
-                users.push(currentSignupData);
-                localStorage.setItem('bakenovation_users', JSON.stringify(users));
+                if (currentSignupData) {
+                    users.push(currentSignupData);
+                    localStorage.setItem('bakenovation_users', JSON.stringify(users));
+                    activeUser = currentSignupData;
+                    currentSignupData = null;
+                } else if (currentLoginMethod === 'whatsapp') {
+                    const whatsapp = document.getElementById('login-whatsapp').value;
+                    activeUser = users.find(u => u.whatsapp === whatsapp);
+                }
 
-                activeUser = currentSignupData;
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
-
-                // Sync data to Google Sheets (Silent background task)
-                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob);
+                syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob || "WhatsApp Login");
 
                 authModal.classList.remove('active');
                 updateAuthUI();
-                alert(`Email verified! Welcome, ${activeUser.name}!`);
+                alert(`Verified! Welcome, ${activeUser.name}!`);
             } else {
                 alert("Invalid verification code. Please try again.");
             }
@@ -326,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
-            mode: 'no-cors', // Important for Google Apps Script
+            mode: 'no-cors',
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json'
@@ -340,6 +392,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            if (currentLoginMethod === 'whatsapp') {
+                const whatsapp = document.getElementById('login-whatsapp').value;
+                const user = users.find(u => u.whatsapp === whatsapp);
+                if (user) {
+                    sendOTP(user.name, whatsapp, null, 'whatsapp');
+                } else {
+                    alert('No account found with this WhatsApp number.');
+                }
+                return;
+            }
+
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
 
@@ -347,10 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 activeUser = user;
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
-
-                // Record the login in the spreadsheet
                 syncToGoogleSheet(activeUser.name, activeUser.email, activeUser.dob || "Existing User");
-
                 authModal.classList.remove('active');
                 updateAuthUI();
             } else {
