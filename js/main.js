@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 1. Attempt Automated Path (via Proxy)
             if (WHATSAPP_PROXY_URL) {
-                if (submitBtn) submitBtn.innerText = "Automating WhatsApp...";
+                if (submitBtn) submitBtn.innerText = "Sending code...";
 
                 fetch(WHATSAPP_PROXY_URL, {
                     method: 'POST',
@@ -335,22 +335,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                     .then(() => console.log("Automated WhatsApp request sent."))
                     .catch(err => console.error("WhatsApp Automation Error:", err));
-            }
 
-            // 2. Immediate Manual Redirect (attempt to open WhatsApp in new tab)
-            const waWindow = window.open(waLink, '_blank');
+                // 2. Update UI for Automation (No forced manual redirect)
+                let otpMsg = `A verification code has been sent <strong>automatically</strong> to your WhatsApp: <strong>${target}</strong>.<br><br>`;
+                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Please check your messages and enter the code below.</p>`;
+                otpMsg += `<p style="font-size: 0.8rem; opacity: 0.7;">Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Click here to open manually</a></p>`;
 
-            // 3. Update UI with Fallback
-            let otpMsg = `We've initiated verification for WhatsApp: <strong>${target}</strong>.<br><br>`;
-            if (!waWindow) {
-                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Browser blocked the pop-up. Please use the button below:</p>`;
+                showOTPView("Verify WhatsApp", otpMsg, true);
             } else {
-                otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">WhatsApp should have opened in a new tab. Send the pre-filled message to see your code.</p>`;
+                // 3. Forced Manual Redirect (Only if no proxy configured)
+                const waWindow = window.open(waLink, '_blank');
+                let otpMsg = `We've initiated verification for WhatsApp: <strong>${target}</strong>.<br><br>`;
+                if (!waWindow) {
+                    otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Browser blocked the pop-up. Please use the button below:</p>`;
+                } else {
+                    otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">WhatsApp should have opened in a new tab. Send the pre-filled message to see your code.</p>`;
+                }
+
+                otpMsg += `<a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp Manually</a>`;
+
+                showOTPView("Verify WhatsApp", otpMsg, true);
             }
-
-            otpMsg += `<a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp Manually</a>`;
-
-            showOTPView("Verify WhatsApp", otpMsg, true);
 
             if (submitBtn) {
                 submitBtn.innerText = originalBtnText;
