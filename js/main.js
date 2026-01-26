@@ -317,40 +317,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
         } else if (method === 'whatsapp') {
-            // WhatsApp Link Approach - Improved formatting
+            // Advanced Phone Sanitization for Ultramsg/WhatsApp
             let cleanNumber = target.replace(/\D/g, '');
+
+            // Remove leading '0'
+            if (cleanNumber.startsWith('0')) cleanNumber = cleanNumber.substring(1);
+
+            // If it's a 10-digit number, prepend 91
             if (cleanNumber.length === 10) cleanNumber = '91' + cleanNumber;
 
             const message = `*Bakenovation - Verification Code*\n\nHello ${name || 'User'}! ✨\n\nYour security code is: *${generatedOTP}*\n\nThis code is valid for 10 minutes. Please do not share it with anyone.\n\nThank you for choosing Bakenovation!`;
             const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
+            console.log("--- WHATSAPP DEBUG ---");
+            console.log("Target Number:", target);
+            console.log("Sanitized Number:", cleanNumber);
+            console.log("Proxy URL:", WHATSAPP_PROXY_URL);
+
             // 1. Attempt Automated Background Delivery (via Proxy)
             if (WHATSAPP_PROXY_URL) {
                 if (submitBtn) submitBtn.innerText = "Processing...";
 
-                // USE GET FOR MAXIMUM RELIABILITY WITH APPS SCRIPT
-                const params = new URLSearchParams({
-                    phone: cleanNumber,
-                    message: message
-                });
+                const params = new URLSearchParams({ phone: cleanNumber, message: message });
 
-                fetch(`${WHATSAPP_PROXY_URL}?${params.toString()}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log("Automation Response:", data);
-                    })
-                    .catch(err => {
-                        console.error("Automation Connection error:", err);
-                    });
+                // Use no-cors and keepalive for high-reliability background dispatch
+                fetch(`${WHATSAPP_PROXY_URL}?${params.toString()}`, {
+                    mode: 'no-cors',
+                    keepalive: true
+                })
+                    .then(() => console.log("Background request dispatched successfully."))
+                    .catch(err => console.error("Background request failed:", err));
 
-                // 2. Immediate Success UI (The code is being sent in the background)
+                // 2. Improved Success UI (Confirmation of automatic delivery)
+                let displayNum = cleanNumber.length >= 10 ? `+${cleanNumber.startsWith('91') ? '91 ' : ''}${cleanNumber.slice(-10)}` : target;
                 let otpMsg = `<div style="padding: 1rem 0;">
                     <p style="margin-bottom: 0.5rem; font-weight: 500;">Sent Automatically</p>
                     <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.4;">
-                        A verification code has been sent to <strong>${target}</strong>.
+                        A verification code has been sent to <strong>${displayNum}</strong> via WhatsApp.
                     </p>
                     <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
-                        Please check your phone. It may take a minute to arrive.
+                        Please check your phone. It may take a few seconds to arrive.
                     </p>
                     <p style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.4;">
                         Didn't receive it? <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">Try Manual Link</a>
@@ -359,17 +365,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 showOTPView("Verify Identity", otpMsg, true);
             } else {
-                // 3. Forced Manual Redirect (Only if no proxy configured)
-                const waWindow = window.open(waLink, '_blank');
-                let otpMsg = `We've initiated verification for WhatsApp: <strong>${target}</strong>.<br><br>`;
-                if (!waWindow) {
-                    otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">Browser blocked the pop-up. Please use the button below:</p>`;
-                } else {
-                    otpMsg += `<p style="margin-bottom: 1rem; font-size: 0.9rem;">WhatsApp should have opened in a new tab. Send the pre-filled message to see your code.</p>`;
-                }
-
-                otpMsg += `<a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp Manually</a>`;
-
+                // 3. Fallback to Manual Redirect
+                window.open(waLink, '_blank');
+                let otpMsg = `<div style="padding: 1rem 0;">
+                    <p style="margin-bottom: 1rem; font-weight: 500;">Manual Verification</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Click below and <strong>SEND</strong> the code to see it.</p>
+                    <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none;">Open WhatsApp</a>
+                </div>`;
                 showOTPView("Verify Identity", otpMsg, true);
             }
 

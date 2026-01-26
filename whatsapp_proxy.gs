@@ -17,38 +17,17 @@ function doPost(e) {
 
 function handleRequest(e) {
   try {
-    let phone, message;
-    
-    // 1. Parse parameters from GET (query string) or POST (body)
-    if (e.parameter && e.parameter.phone) {
-      phone = e.parameter.phone;
-      message = e.parameter.message;
-    } else if (e.postData) {
-      const body = JSON.parse(e.postData.contents);
-      phone = body.phone;
-      message = body.message;
-    }
+    let phone = e.parameter.phone || (e.postData ? JSON.parse(e.postData.contents).phone : null);
+    let message = e.parameter.message || (e.postData ? JSON.parse(e.postData.contents).message : null);
 
     if (!phone || !message) {
-      return response({ status: 'error', message: 'Missing phone or message parameters' });
+      return response({ status: 'error', message: 'Missing parameters' });
     }
 
-    // 2. Prepare payload for Ultramsg
-    const payload = {
-      token: ULTRAMSG_TOKEN,
-      to: phone,
-      body: message
-    };
-
-    const options = {
-      method: 'post',
-      contentType: 'application/x-www-form-urlencoded', 
-      payload: payload,
-      muteHttpExceptions: true
-    };
-
-    // 3. Call Ultramsg API
-    const res = UrlFetchApp.fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, options);
+    // Direct URL-based trigger for Ultramsg (Most reliable method)
+    const url = `https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat?token=${ULTRAMSG_TOKEN}&to=${phone}&body=${encodeURIComponent(message)}`;
+    
+    const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
     const result = JSON.parse(res.getContentText());
 
     return response({ status: 'success', data: result });
