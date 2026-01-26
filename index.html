@@ -425,16 +425,26 @@
             <div id="login-view">
                 <div class="customizer-header">
                     <h2 class="text-gold">Welcome Back</h2>
-                    <p>Login to your Bakenovation account</p>
+                    <p id="login-method-text">Login via Email OTP</p>
                 </div>
                 <form id="login-form" class="auth-form">
-                    <div class="control-group">
-                        <label>Email Address or WhatsApp Number</label>
-                        <input type="text" id="login-identifier" required class="luxury-input"
-                            placeholder="name@example.com or +91...">
+                    <div id="login-email-group" class="control-group">
+                        <label>Email Address</label>
+                        <input type="email" id="login-email" class="luxury-input" placeholder="name@example.com">
+                    </div>
+                    <div id="login-whatsapp-group" class="control-group" style="display: none;">
+                        <label>WhatsApp Number</label>
+                        <input type="tel" id="login-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
                     </div>
 
                     <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Send Verification Code</button>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button type="button" id="toggle-login-method" class="btn-text"
+                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            Login with WhatsApp instead
+                        </button>
+                    </div>
 
                     <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up here</a></p>
                 </form>
@@ -443,23 +453,38 @@
             <div id="signup-view" style="display: none;">
                 <div class="customizer-header">
                     <h2 class="text-gold">Join the Atelier</h2>
-                    <p>Create your couture cake account</p>
+                    <p id="signup-method-text">Sign up via Email OTP</p>
                 </div>
                 <form id="signup-form" class="auth-form">
                     <div class="control-group">
                         <label>Full Name</label>
                         <input type="text" id="signup-name" required class="luxury-input" placeholder="Your Name">
                     </div>
-                    <div class="control-group">
-                        <label>Email Address or WhatsApp Number</label>
-                        <input type="text" id="signup-identifier" required class="luxury-input"
-                            placeholder="name@example.com or +91...">
+
+                    <div id="signup-email-group" class="control-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signup-email" class="luxury-input" placeholder="name@example.com">
                     </div>
+                    <div id="signup-whatsapp-group" class="control-group" style="display: none;">
+                        <label>WhatsApp Number</label>
+                        <input type="tel" id="signup-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
+                    </div>
+
                     <div class="control-group">
                         <label>Birth Date</label>
                         <input type="date" id="signup-dob" required class="luxury-input">
                     </div>
-                    <button type="submit" class="btn-luxury w-100">Send Verification Code</button>
+
+                    <button type="submit" class="btn-luxury w-100" id="signup-submit-btn">Send Verification
+                        Code</button>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button type="button" id="toggle-signup-method" class="btn-text"
+                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            Sign up with WhatsApp instead
+                        </button>
+                    </div>
+
                     <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login here</a></p>
                 </form>
             </div>
