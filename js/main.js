@@ -95,10 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
     // Google Sheets Sync URL (Orders)
-    const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONwbhA1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
+    const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONwbhA1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
 
     // Google Sheets Sync URL (WhatsApp Logins)
-    const WHATSAPP_LOGIN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
+    const WHATSAPP_LOGIN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
 
     // WhatsApp Proxy URL (Automated OTP)
     const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
@@ -569,6 +569,8 @@ document.addEventListener('DOMContentLoaded', () => {
             syncToGoogleSheet(orderData, ORDER_SHEET_URL)
                 .then(() => {
                     btn.innerText = "🚀 Finishing Order...";
+                    // Debug Confirmation
+                    console.log("Sheet Sync Response Received");
                     return fetch(this.action, {
                         method: 'POST',
                         body: formData,
@@ -577,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(response => {
                     localStorage.removeItem('bakenovation_cart');
+                    alert("Order Confirmed & Recorded! Redirecting...");
                     if (paymentMethod === 'online') {
                         window.location.href = 'payment.html';
                     } else {
@@ -585,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(error => {
                     console.error("Full Order Flow Error:", error);
-                    alert('Order submitted but sync was slow. Redirecting to success page...');
+                    alert('CRITICAL: Sync slow or blocked. Redirecting manually.');
                     window.location.href = 'success.html';
                 });
         });

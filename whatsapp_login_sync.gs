@@ -19,22 +19,33 @@ function handleRequest(e) {
 
     // DYNAMIC HEADERS
     let headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
-    if (headers[0] === "" || headers.indexOf('timestamp') === -1) {
-       sheet.getRange(1, 1).setValue('timestamp');
-       headers[0] = 'timestamp';
+    
+    if (headers.length === 1 && headers[0] === "") {
+      headers = ['timestamp'];
+      sheet.getRange(1, 1).setValue('timestamp');
+    }
+
+    let timestampCol = headers.indexOf('timestamp');
+    if (timestampCol === -1) {
+       timestampCol = headers.length;
+       headers.push('timestamp');
+       sheet.getRange(1, timestampCol + 1).setValue('timestamp');
     }
 
     const newRow = new Array(headers.length).fill("");
-    newRow[headers.indexOf('timestamp')] = new Date();
+    newRow[timestampCol] = new Date();
 
     for (let key in data) {
+      if (key === 'timestamp') continue;
       let colIdx = headers.indexOf(key);
       if (colIdx === -1) {
         colIdx = headers.length;
         headers.push(key);
         sheet.getRange(1, colIdx + 1).setValue(key);
+        newRow.push(data[key]);
+      } else {
+        newRow[colIdx] = data[key];
       }
-      newRow[colIdx] = data[key];
     }
     
     sheet.appendRow(newRow);

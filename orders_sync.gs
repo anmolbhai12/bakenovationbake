@@ -17,27 +17,37 @@ function handleRequest(e) {
 
     if (Object.keys(data).length === 0) return response("error: no data");
 
-    // DYNAMIC HEADERS: Map data keys to spreadsheet columns
+    // 2. Manage Headers (Dynamic & Zero-Fail)
     let headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0];
     
-    // Ensure Timestamp is first
-    if (headers[0] === "" || headers.indexOf('timestamp') === -1) {
-       sheet.getRange(1, 1).setValue('timestamp');
-       headers[0] = 'timestamp';
+    // If sheet is totally blank, start properly
+    if (headers.length === 1 && headers[0] === "") {
+      headers = ['timestamp'];
+      sheet.getRange(1, 1).setValue('timestamp');
+    }
+
+    let timestampCol = headers.indexOf('timestamp');
+    if (timestampCol === -1) {
+       timestampCol = headers.length;
+       headers.push('timestamp');
+       sheet.getRange(1, timestampCol + 1).setValue('timestamp');
     }
 
     const newRow = new Array(headers.length).fill("");
-    newRow[headers.indexOf('timestamp')] = new Date();
+    newRow[timestampCol] = new Date();
     
+    // 3. Map all other data
     for (let key in data) {
+      if (key === 'timestamp') continue;
       let colIdx = headers.indexOf(key);
       if (colIdx === -1) {
-        // Create NEW column for NEW data type automatically
         colIdx = headers.length;
         headers.push(key);
         sheet.getRange(1, colIdx + 1).setValue(key);
+        newRow.push(data[key]);
+      } else {
+        newRow[colIdx] = data[key];
       }
-      newRow[colIdx] = data[key];
     }
     
     sheet.appendRow(newRow);
