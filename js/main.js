@@ -466,17 +466,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Route to correct sheet based on method
                 const syncUrl = activeUser.whatsapp ? WHATSAPP_LOGIN_SHEET_URL : USER_SHEET_URL;
+
+                // FORCE SEQUENCE: Sync FIRST, then notify User
                 syncToGoogleSheet({
                     name: activeUser.name,
                     identifier: activeUser.whatsapp || activeUser.email,
                     dob: activeUser.dob || "Active Session",
                     method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
                     type: 'User'
-                }, syncUrl);
-
-                authModal.classList.remove('active');
-                updateAuthUI();
-                alert(`Verified! Welcome, ${activeUser.name}!`);
+                }, syncUrl)
+                    .then(() => {
+                        authModal.classList.remove('active');
+                        updateAuthUI();
+                        alert(`Verified! Welcome, ${activeUser.name}!`);
+                    })
+                    .catch(err => {
+                        console.error("Login sync slow:", err);
+                        authModal.classList.remove('active');
+                        updateAuthUI();
+                        alert(`Welcome back, ${activeUser.name}!`);
+                    });
             } else {
                 alert("Invalid verification code. Please try again.");
             }
