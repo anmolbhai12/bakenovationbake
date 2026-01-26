@@ -199,20 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const whatsapp = document.getElementById('signup-whatsapp').value;
+            const identifier = document.getElementById('signup-identifier').value.trim();
             const dob = document.getElementById('signup-dob').value;
-            const pass = document.getElementById('signup-pass').value;
 
-            if (users.find(u => u.email === email)) {
-                alert('Account already exists with this email.');
+            // Simple regex to check if it's an email
+            const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+            const method = isEmail ? 'email' : 'whatsapp';
+
+            if (users.find(u => u.email === identifier || u.whatsapp === identifier)) {
+                alert(`Account already exists with this ${isEmail ? 'email' : 'WhatsApp number'}.`);
                 return;
             }
 
-            currentSignupData = { name, email, whatsapp, pass, dob };
+            currentSignupData = {
+                name,
+                email: isEmail ? identifier : '',
+                whatsapp: isEmail ? '' : identifier,
+                dob
+            };
             window.lastSignupData = currentSignupData;
 
-            sendOTP(name, email, dob, 'email');
+            sendOTP(name, identifier, dob, method);
         });
     }
 
