@@ -314,14 +314,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
         } else if (method === 'whatsapp') {
-            // WhatsApp Link Approach
+            // WhatsApp Link Approach - Improved formatting
+            let cleanNumber = target.replace(/\D/g, '');
+            // Simple logic: if 10 digits, assume India (+91)
+            if (cleanNumber.length === 10) cleanNumber = '91' + cleanNumber;
+
             const message = `Hello ${name || 'User'}! Your Bakenovation verification code is: ${generatedOTP}. ✨`;
-            const waLink = `https://wa.me/${target.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+            const waLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
-            alert(`Opening WhatsApp to send your verification code: ${generatedOTP}`);
-            window.open(waLink, '_blank');
+            alert(`IMPORTANT: WhatsApp will open now. You MUST click 'SEND' in WhatsApp to see your code: ${generatedOTP}`);
+            const waWindow = window.open(waLink, '_blank');
 
-            showOTPView("Verify WhatsApp", `We've sent a code to your WhatsApp: ${target}`);
+            if (!waWindow) {
+                alert("Pop-up blocked! Please click the link in the verification view to open WhatsApp.");
+            }
+
+            const otpMsg = `We've sent a code to your WhatsApp: ${target}.<br><br>If it didn't open automatically, <a href="${waLink}" target="_blank" style="color: var(--color-gold); text-decoration: underline;">click here to open WhatsApp</a> and send the pre-filled message.`;
+            showOTPView("Verify WhatsApp", otpMsg, true);
 
             if (submitBtn) {
                 submitBtn.innerText = originalBtnText;
@@ -330,12 +339,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showOTPView(title, message) {
+    function showOTPView(title, message, isHTML = false) {
         signupView.style.display = 'none';
         loginView.style.display = 'none';
         otpView.style.display = 'block';
         if (document.getElementById('otp-title')) document.getElementById('otp-title').innerText = title;
-        if (document.getElementById('otp-message')) document.getElementById('otp-message').innerText = message;
+
+        const msgEl = document.getElementById('otp-message');
+        if (msgEl) {
+            if (isHTML) msgEl.innerHTML = message;
+            else msgEl.innerText = message;
+        }
         startResendCooldown();
     }
 
