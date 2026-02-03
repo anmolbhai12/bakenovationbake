@@ -375,14 +375,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             // API returned error - fallback to manual
                             console.error("❌ Ultramsg API Error:", data.message);
+                            console.log("Error details:", data.details);
                             console.log("Falling back to manual WhatsApp link...");
 
                             let displayNum = cleanNumber.length >= 10 ? `+${cleanNumber.startsWith('91') ? '91 ' : ''}${cleanNumber.slice(-10)}` : target;
+                            let errorDetails = data.hint ? `<p style="font-size: 0.8rem; color: #e67e22; margin-bottom: 1rem;">💡 ${data.hint}</p>` : '';
                             let otpMsg = `<div style="padding: 1rem 0;">
                                 <p style="margin-bottom: 0.5rem; font-weight: 500; color: #f39c12;">⚠️ Automatic Send Failed</p>
-                                <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                                <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
                                     ${data.message || 'WhatsApp API is currently unavailable'}
                                 </p>
+                                ${errorDetails}
                                 <p style="font-size: 0.9rem; margin-bottom: 1rem;">Please click below to send the code manually:</p>
                                 <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; background: var(--color-gold); color: #000; border-radius: 8px; font-weight: 600;">Open WhatsApp</a>
                                 <p style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.6;">

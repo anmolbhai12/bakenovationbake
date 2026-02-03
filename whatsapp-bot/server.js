@@ -197,19 +197,20 @@ app.use((err, req, res, next) => {
     console.error('Server error:', err);
     res.status(500).json({
         status: 'error',
-        message: 'Internal server error'
+        message: err.message || 'Internal server error',
+        stack: err.stack // Help us debug during development
     });
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`\n✅ Server running on port ${PORT}`);
+const serverIP = process.env.IP || '0.0.0.0';
+app.listen(PORT, serverIP, () => {
+    console.log(`\n✅ Server running at http://${serverIP}:${PORT}`);
     console.log(`📡 API Endpoints:`);
     console.log(`   - GET  /         - Health check`);
     console.log(`   - GET  /status   - Bot status & QR code`);
     console.log(`   - POST /send-otp - Send OTP message`);
     console.log(`   - GET  /send-otp - Send OTP message (GET)`);
-    console.log(`\n🔗 Local URL: http://localhost:${PORT}`);
     console.log(`\n⏳ Waiting for WhatsApp connection...\n`);
 });
 
