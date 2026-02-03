@@ -95,13 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
     // Google Sheets Sync URL (Orders)
-    const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONbHw1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
+    const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONwbhA1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
 
     // Google Sheets Sync URL (WhatsApp Logins)
     const WHATSAPP_LOGIN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
 
     // WhatsApp Proxy URL (Automated OTP)
-    const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbox9FPueY9hoYfPVVnsQHSFVapYcm1SCoOUJyFnL5yJ10tqtsU8sHoWPwZe0smaZAwc/exec'; // Deployed Google Script URL
+    const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwx9FPueY9hoYfPVVnsQHSFVapYcm1SCoOUJyFnL5yJ10tqtsU8sHoWPwZe0smaZAwc/exec'; // Deployed Google Script URL
 
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
