@@ -430,6 +430,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const backToAuthBtn = document.getElementById('back-to-auth');
+    if (backToAuthBtn) {
+        backToAuthBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            otpView.style.display = 'none';
+            if (currentSignupData || window.lastSignupData) {
+                signupView.style.display = 'block';
+            } else {
+                loginView.style.display = 'block';
+            }
+            // Clear temporary data to allow re-entry
+            currentSignupData = null;
+            generatedOTP = null;
+        });
+    }
+
     if (otpForm) {
         otpForm.addEventListener('submit', (e) => {
             e.preventDefault();
