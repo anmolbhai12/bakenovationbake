@@ -246,7 +246,7 @@ h4 {
 }
 
 .btn-login-custom {
-    background: #ffffff !important;
+    background: transparent !important;
     color: var(--color-gold) !important;
     border: 1px solid var(--color-gold) !important;
     padding: 0.6rem 1.8rem !important;
@@ -964,9 +964,9 @@ h4 {
 .btn-snap-secondary {
     width: 100%;
     padding: 1rem;
-    background: #fff;
-    border: 1px solid #1a0b1f;
-    color: #1a0b1f;
+    background: transparent;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
@@ -974,8 +974,8 @@ h4 {
 }
 
 .btn-snap-secondary:hover {
-    background: #1a0b1f;
-    color: #fff;
+    background: var(--color-gold);
+    color: #1a0b1f;
 }
 
 /* Right Column */
