@@ -88,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const EMAIL_PROXY_URL = 'https://script.google.com/macros/s/AKfycbyFQwPQeSuRo3Et4QQ5jOO-00YUSIKM7yHHNYBkAEPkrdzx6_NL25C6vuIgK4KMXYizOg/exec';
 
 
-    // Google Sheets Sync URL (User Tracking - Email focus)
-    const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
+    // Google Sheets Sync URL (Email Signups)
+    const EMAIL_SIGNUP_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
 
     // Google Sheets Sync URL (Orders)
     const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONwbhA1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
 
-    // Google Sheets Sync URL (WhatsApp Logins)
-    const WHATSAPP_LOGIN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
+    // Google Sheets Sync URL (WhatsApp Signups)
+    const WHATSAPP_SIGNUP_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
 
     // WhatsApp Proxy URL (Automated OTP)
     const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
@@ -458,11 +458,13 @@ document.addEventListener('DOMContentLoaded', () => {
         otpForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (otpInput.value === generatedOTP) {
-                if (currentSignupData) {
+                const isSignup = !!currentSignupData;
+
+                if (isSignup) {
                     users.push(currentSignupData);
                     localStorage.setItem('bakenovation_users', JSON.stringify(users));
                     activeUser = currentSignupData;
-                    currentSignupData = null;
+                    // Note: currentSignupData is kept until sync starts to ensure we have the context
                 } else {
                     const identifier = currentLoginMethod === 'email' ? document.getElementById('login-email').value.trim() : document.getElementById('login-whatsapp').value.trim();
                     activeUser = users.find(u => u.email === identifier || u.whatsapp === identifier);
@@ -470,28 +472,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
 
-                // Route to correct sheet based on method
-                const syncUrl = activeUser.whatsapp ? WHATSAPP_LOGIN_SHEET_URL : USER_SHEET_URL;
+                // ONLY SYNC TO SHEETS IF NEW SIGNUP
+                if (isSignup) {
+                    const syncUrl = activeUser.whatsapp ? WHATSAPP_SIGNUP_SHEET_URL : EMAIL_SIGNUP_SHEET_URL;
 
-                // FORCE SEQUENCE: Sync FIRST, then notify User
-                syncToGoogleSheet({
-                    name: activeUser.name,
-                    identifier: activeUser.whatsapp || activeUser.email,
-                    dob: activeUser.dob || "Active Session",
-                    method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
-                    type: 'User'
-                }, syncUrl)
-                    .then(() => {
-                        authModal.classList.remove('active');
-                        updateAuthUI();
-                        alert(`Verified! Welcome, ${activeUser.name}!`);
-                    })
-                    .catch(err => {
-                        console.error("Login sync slow:", err);
-                        authModal.classList.remove('active');
-                        updateAuthUI();
-                        alert(`Welcome back, ${activeUser.name}!`);
-                    });
+                    syncToGoogleSheet({
+                        name: activeUser.name,
+                        identifier: activeUser.whatsapp || activeUser.email,
+                        dob: activeUser.dob || "New Member",
+                        method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
+                        type: 'Signup'
+                    }, syncUrl)
+                        .then(() => {
+                            currentSignupData = null; // Clear now
+                            authModal.classList.remove('active');
+                            updateAuthUI();
+                            alert(`Verified! Welcome to the Atelier, ${activeUser.name}!`);
+                        })
+                        .catch(err => {
+                            console.error("Signup sync error:", err);
+                            currentSignupData = null;
+                            authModal.classList.remove('active');
+                            updateAuthUI();
+                            alert(`Welcome, ${activeUser.name}!`);
+                        });
+                } else {
+                    // Just login, no spreadsheet sync
+                    authModal.classList.remove('active');
+                    updateAuthUI();
+                    alert(`Welcome back, ${activeUser.name}!`);
+                }
             } else {
                 alert("Invalid verification code. Please try again.");
             }
@@ -500,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GOOGLE SHEETS SYNC FUNCTION (POWER-SYNC V3) ---
     function syncToGoogleSheet(data, targetUrl = null) {
-        const finalUrl = targetUrl || USER_SHEET_URL;
+        const finalUrl = targetUrl || EMAIL_SIGNUP_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
         return new Promise((resolve) => {
