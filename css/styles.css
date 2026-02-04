@@ -246,14 +246,13 @@ h4 {
 }
 
 .btn-login-custom {
-    /* Force transparent background - Aggressive Reset */
+    /* Force transparent background - AGGRESSIVE RESET */
     background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
     box-shadow: none !important;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 
     color: var(--color-gold) !important;
     border: 1px solid var(--color-gold) !important;
@@ -973,13 +972,13 @@ h4 {
     width: 100%;
     padding: 1rem;
 
-    /* Force transparent background - Aggressive Reset */
+    /* Aggressive Reset */
     background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
     box-shadow: none !important;
-    -webkit-appearance: none;
-    appearance: none;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 
     border: 1px solid var(--color-gold);
     color: var(--color-gold);
@@ -990,7 +989,7 @@ h4 {
 }
 
 .btn-snap-secondary:hover {
-    background: var(--color-gold) !important;
+    background: var(--color-gold);
     color: #1a0b1f;
 }
 
