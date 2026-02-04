@@ -84,12 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpInput = document.getElementById('otp-input');
     const userNavArea = document.getElementById('user-nav-area');
 
-    // EmailJS Config (Restored)
-    const EMAILJS_CONFIG = {
-        SERVICE_ID: 'service_b9j54kq',
-        TEMPLATE_ID: 'template_d8tgysc',
-        PUBLIC_KEY: 'AIEL1kTN3XIXDF236'
-    };
+    // Email OTP Proxy URL (Custom GAS Solution)
+    const EMAIL_PROXY_URL = 'https://script.google.com/macros/s/AKfycbyFQwPQeSuRo3Et4QQ5jOO-00YUSIKM7yHHNYBkAEPkrdzx6_NL25C6vuIgK4KMXYizOg/exec';
+
 
     // Google Sheets Sync URL (User Tracking - Email focus)
     const USER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
@@ -103,9 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // WhatsApp Proxy URL (Automated OTP)
     const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
 
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-    }
+
 
     let users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
     let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
@@ -307,12 +302,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 to_email: target
             };
 
-            emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams)
+            syncToGoogleSheet(templateParams, EMAIL_PROXY_URL)
                 .then(() => {
                     showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
                 .catch(err => {
-                    console.error("EmailJS Error:", err);
+                    console.error("Email Proxy Error:", err);
                     alert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
                     showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
