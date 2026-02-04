@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationContainer = document.getElementById('notification-container');
 
     function showAlert(message, type = 'info') {
-        if (!notificationContainer) {
-            alert(message);
-            return;
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            container.className = 'notification-container';
+            document.body.appendChild(container);
         }
 
         const notification = document.createElement('div');
@@ -20,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="notification-close">&times;</button>
         `;
 
-        notificationContainer.appendChild(notification);
+        container.appendChild(notification);
 
         // Snappy animation entrance
         requestAnimationFrame(() => {
