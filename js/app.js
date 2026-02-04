@@ -244,6 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authClose) {
         authClose.addEventListener('click', () => {
             authModal.classList.remove('active');
+            // Reset to default state after transition
+            setTimeout(() => {
+                if (otpView) otpView.style.display = 'none';
+                if (signupView) signupView.style.display = 'none';
+                if (loginView) loginView.style.display = 'block';
+                currentSignupData = null;
+                generatedOTP = null;
+            }, 300);
         });
     }
 
