@@ -245,6 +245,26 @@ h4 {
     color: var(--color-gold);
 }
 
+.btn-login-custom {
+    background: #ffffff !important;
+    color: var(--color-gold) !important;
+    border: 1px solid var(--color-gold) !important;
+    padding: 0.6rem 1.8rem !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+    transition: all var(--transition-medium) !important;
+    cursor: pointer !important;
+    font-family: var(--font-body) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 0.85rem !important;
+}
+
+.btn-login-custom:hover {
+    background: var(--color-gold) !important;
+    color: #ffffff !important;
+}
+
 .hero-image {
     flex: 1;
     display: flex;

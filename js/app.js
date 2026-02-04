@@ -580,7 +580,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             const formData = new FormData(this);
-            const paymentMethod = formData.get('payment');
 
             // Collect standalone image upload from the Atelier section
             const mainUpload = document.getElementById('main-upload');
@@ -610,11 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => {
                     localStorage.removeItem('bakenovation_cart');
                     alert("Order Confirmed & Recorded! Redirecting...");
-                    if (paymentMethod === 'online') {
-                        window.location.href = 'payment.html';
-                    } else {
-                        window.location.href = 'success.html';
-                    }
+                    window.location.href = 'success.html';
                 })
                 .catch(error => {
                     console.error("Full Order Flow Error:", error);
@@ -655,13 +650,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 cartItemsContainer.appendChild(itemEl);
-                // Simple price estimation logic (if not provided)
-                total += item.price || 2500;
             });
         }
 
         if (cartCountBadge) cartCountBadge.innerText = cart.length;
-        if (cartTotalPrice) cartTotalPrice.innerText = `₹${total}`;
 
         // Add remove listeners
         document.querySelectorAll('.remove-item').forEach(btn => {
@@ -945,69 +937,71 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Real AI Generation Logic
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            // UI Loading State
-            const btnText = aiGenerateBtn.querySelector('.btn-text');
-            const spinner = aiGenerateBtn.querySelector('.spinner');
-            if (btnText) btnText.style.display = 'none';
-            if (spinner) spinner.style.display = 'block';
-            aiGenerateBtn.disabled = true;
+            checkLoginAndProceed(() => {
+                // UI Loading State
+                const btnText = aiGenerateBtn.querySelector('.btn-text');
+                const spinner = aiGenerateBtn.querySelector('.spinner');
+                if (btnText) btnText.style.display = 'none';
+                if (spinner) spinner.style.display = 'block';
+                aiGenerateBtn.disabled = true;
 
-            // Show Loading Overlay
-            if (aiLoading) aiLoading.style.display = 'flex';
+                // Show Loading Overlay
+                if (aiLoading) aiLoading.style.display = 'flex';
 
-            // Construct Ultra-Fast, Highly Accurate Prompt for Pollinations AI
-            const userDetails = aiPrompt.value.trim();
+                // Construct Ultra-Fast, Highly Accurate Prompt for Pollinations AI
+                const userDetails = aiPrompt.value.trim();
 
-            // PRIORITY: User Details > Aesthetic > Color > Type
-            const promptParts = [
-                userDetails,
-                `${snapState.style} aesthetic`,
-                `${snapState.color} theme`,
-                `${snapState.type} cake`
-            ].filter(Boolean);
+                // PRIORITY: User Details > Aesthetic > Color > Type
+                const promptParts = [
+                    userDetails,
+                    `${snapState.style} aesthetic`,
+                    `${snapState.color} theme`,
+                    `${snapState.type} cake`
+                ].filter(Boolean);
 
-            const fastPrompt = `${promptParts.join(', ')}, professional food photography, 8k resolution, ultra-realistic, luxurious detailing, soft studio lighting, vibrant colors, white background`;
+                const fastPrompt = `${promptParts.join(', ')}, professional food photography, 8k resolution, ultra-realistic, luxurious detailing, soft studio lighting, vibrant colors, white background`;
 
-            const encodedPrompt = encodeURIComponent(fastPrompt);
-            const seed = Math.floor(Math.random() * 10000000); // Larger seed range
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+                const encodedPrompt = encodeURIComponent(fastPrompt);
+                const seed = Math.floor(Math.random() * 10000000); // Larger seed range
+                const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 
-            console.log("Generating AI Image with optimized prompt:", fastPrompt);
+                console.log("Generating AI Image with optimized prompt:", fastPrompt);
 
-            // Fetch and display
-            if (aiGeneratedImage) {
-                // Pre-load the image
-                const tempImage = new Image();
-                tempImage.onload = () => {
-                    aiGeneratedImage.src = imageUrl;
-                    snapState.currentImageUrl = imageUrl;
+                // Fetch and display
+                if (aiGeneratedImage) {
+                    // Pre-load the image
+                    const tempImage = new Image();
+                    tempImage.onload = () => {
+                        aiGeneratedImage.src = imageUrl;
+                        snapState.currentImageUrl = imageUrl;
 
-                    // Add to Recent Generations Gallery (Fixed variable name)
-                    addToGallery(imageUrl, fastPrompt);
+                        // Add to Recent Generations Gallery (Fixed variable name)
+                        addToGallery(imageUrl, fastPrompt);
 
-                    // Reveal with snappy animation
-                    gsap.fromTo(aiGeneratedImage,
-                        { opacity: 0, scale: 0.98, filter: "blur(10px)" },
-                        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
-                    );
+                        // Reveal with snappy animation
+                        gsap.fromTo(aiGeneratedImage,
+                            { opacity: 0, scale: 0.98, filter: "blur(10px)" },
+                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
+                        );
 
-                    // Reset UI
-                    if (aiLoading) aiLoading.style.display = 'none';
-                    if (btnText) btnText.style.display = 'inline';
-                    if (spinner) spinner.style.display = 'none';
-                    aiGenerateBtn.disabled = false;
-                };
+                        // Reset UI
+                        if (aiLoading) aiLoading.style.display = 'none';
+                        if (btnText) btnText.style.display = 'inline';
+                        if (spinner) spinner.style.display = 'none';
+                        aiGenerateBtn.disabled = false;
+                    };
 
-                tempImage.onerror = () => {
-                    alert("The AI is currently busy. Please try again in a moment.");
-                    if (aiLoading) aiLoading.style.display = 'none';
-                    if (btnText) btnText.style.display = 'inline';
-                    if (spinner) spinner.style.display = 'none';
-                    aiGenerateBtn.disabled = false;
-                };
+                    tempImage.onerror = () => {
+                        alert("The AI is currently busy. Please try again in a moment.");
+                        if (aiLoading) aiLoading.style.display = 'none';
+                        if (btnText) btnText.style.display = 'inline';
+                        if (spinner) spinner.style.display = 'none';
+                        aiGenerateBtn.disabled = false;
+                    };
 
-                tempImage.src = imageUrl;
-            }
+                    tempImage.src = imageUrl;
+                }
+            });
         });
     }
 

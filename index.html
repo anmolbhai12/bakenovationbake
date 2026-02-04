@@ -42,7 +42,7 @@
                     <li><a href="#about">The Visionary</a></li>
                 </ul>
                 <div id="user-nav-area">
-                    <button id="login-trigger" class="btn-text" style="color: var(--color-gold);">Login</button>
+                    <button id="login-trigger" class="btn-login-custom">Login</button>
                 </div>
                 <div class="cart-icon-wrapper" id="cart-toggle">
                     <svg class="cart-svg" viewBox="0 0 24 24" width="24" height="24">
@@ -330,6 +330,8 @@
                     <label>Delivery Address</label>
                     <textarea name="address" required class="luxury-input" rows="2"
                         placeholder="Street, City, Zip Code"></textarea>
+                    <p style="color: var(--color-gold); font-size: 0.8rem; margin-top: -0.3rem; margin-bottom: 0.5rem;">
+                        Note: We deliver cake only in Delhi</p>
                 </div>
 
                 <div class="control-group">
@@ -344,19 +346,6 @@
                         placeholder="Describe any further customization or details here..."></textarea>
                 </div>
 
-                <div class="control-group">
-                    <label>Payment Method</label>
-                    <div class="payment-options">
-                        <label class="radio-label">
-                            <input type="radio" name="payment" value="cash" checked>
-                            <span>Cash on Delivery</span>
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="payment" value="online">
-                            <span>Pay Online (Net Banking/Cards)</span>
-                        </label>
-                    </div>
-                </div>
 
                 <button type="submit" class="btn-luxury w-100">Finalize & Send Cart Order</button>
             </form>
@@ -411,15 +400,10 @@
                 <p class="empty-cart-msg">Your cart is currently empty.</p>
             </div>
 
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total Estimate:</span>
-                    <span id="cart-total-price">₹0</span>
-                </div>
-                <button id="checkout-btn" class="btn-luxury w-100" style="margin-top: 1rem;">Proceed to
-                    Checkout</button>
-            </div>
+            <button id="checkout-btn" class="btn-luxury w-100" style="margin-top: 1rem;">Proceed to
+                Checkout</button>
         </div>
+    </div>
     </div>
 
     <!-- Auth Modal -->
