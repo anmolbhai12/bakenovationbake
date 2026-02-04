@@ -38,3 +38,19 @@ You have a few easy options to make this website public:
 - **Luxury Design System:** Gold & Deep Purple theme.
 - **Interactive Atelier:** Calculate cake prices based on shape, tiers, and flavors.
 - **Responsive:** Looks great on mobile and desktop.
+- **Custom Auth System:** Email OTP (Google Apps Script) and WhatsApp OTP support.
+- **Backend-Free:** Uses Google Sheets as a database for Orders and Users.
+
+## 🔑 Setup Instructions (Important)
+
+### 1. Email OTP Proxy
+To make the email verification work:
+1. Go to `script.google.com` and create a new project.
+2. Paste the code from `email_otp_proxy.gs`.
+3. Deploy as a Web App (Access: Anyone).
+4. Update `EMAIL_PROXY_URL` in `js/app.js` with your deployment URL.
+
+### 2. WhatsApp OTP (Optional)
+This project includes a self-hosted WhatsApp bot structure (`whatsapp-bot/`).
+- `whatsapp_proxy.gs` acts as a bridge between the frontend and the bot.
+- See `whatsapp-bot/SETUP_GUIDE.md` for full bot hosting instructions.
