@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakenovation Admin - Order Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0b1f 0%, #2d1b33 100%);
+            color: #f5f5f5;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #d4af37;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-id {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #ff9800;
+            color: #000;
+        }
+
+        .status-quoted {
+            background: #2196f3;
+            color: #fff;
+        }
+
+        .status-paid {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .order-details {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .order-details p {
+            margin-bottom: 0.5rem;
+        }
+
+        .order-details strong {
+            color: #d4af37;
+        }
+
+        .quote-form {
+            margin-top: 1rem;
+        }
+
+        .quote-form input {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 0.7rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #f3d489);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #d4af37;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎂 Bakenovation Order Manager</h1>
+        <div id="orders-container" class="orders-grid">
+            <div class="loading">Loading orders...</div>
+        </div>
+    </div>
+
+    <script>
+        const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const BOT_URL = 'https://bakenovation-bot.alwaysdata.net';
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${GAS_URL}?action=list`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displayOrders(data.orders);
+                } else {
+                    document.getElementById('orders-container').innerHTML = '<p class="loading">Error loading orders</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('orders-container').innerHTML = '<p class="loading">Network error</p>';
+            }
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('orders-container');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="loading">No orders yet</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                const details = JSON.parse(order.OrderDetails || '{}');
+                const isPending = order.Status === 'Pending';
+
+                return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">${order.OrderID}</span>
+                            <span class="status-badge status-${order.Status.toLowerCase()}">${order.Status}</span>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>Name:</strong> ${order.Name}</p>
+                            <p><strong>Phone:</strong> ${order.Phone}</p>
+                            <p><strong>Email:</strong> ${order.Email}</p>
+                            <p><strong>Design:</strong> ${details.design || 'Custom'}</p>
+                            <p><strong>Message:</strong> ${details.message || 'N/A'}</p>
+                            ${order.Amount ? `<p><strong>Amount:</strong> ₹${order.Amount}</p>` : ''}
+                            ${order.DeliveryDate ? `<p><strong>Delivery:</strong> ${order.DeliveryDate}</p>` : ''}
+                        </div>
+                        ${isPending ? `
+                            <div class="quote-form">
+                                <input type="number" id="amount-${order.OrderID}" placeholder="Amount (₹)" required>
+                                <input type="date" id="date-${order.OrderID}" required>
+                                <button class="btn btn-primary" onclick="sendQuote('${order.OrderID}', '${order.Phone}')">
+                                    Send Quote via WhatsApp
+                                </button>
+                            </div>
+                        ` : `
+                            <button class="btn btn-secondary" onclick="markAsPaid('${order.OrderID}')">
+                                Mark as Paid
+                            </button>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function sendQuote(orderId, phone) {
+            const amount = document.getElementById(`amount-${orderId}`).value;
+            const date = document.getElementById(`date-${orderId}`).value;
+
+            if (!amount || !date) {
+                alert('Please fill in both amount and delivery date');
+                return;
+            }
+
+            try {
+                // Update order in sheet
+                await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update',
+                        orderId: orderId,
+                        amount: amount,
+                        deliveryDate: date,
+                        status: 'Quoted'
+                    })
+                });
+
+                // Send WhatsApp message
+                const message = `🎂 *Bakenovation Quote*\n\nOrder ID: ${orderId}\n💰 Amount: ₹${amount}\n📅 Delivery Date: ${date}\n\nReply "Yes" to confirm and receive payment details.`;
+
+                await fetch(`${BOT_URL}/send-quote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, message, orderId })
+                });
+
+                alert('Quote sent successfully!');
+                loadOrders();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to send quote');
+            }
+        }
+
+        async function markAsPaid(orderId) {
+            try {
+                await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update',
+                        orderId: orderId,
+                        status: 'Paid'
+                    })
+                });
+
+                alert('Order marked as paid!');
+                loadOrders();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to update order');
+            }
+        }
+
+        // Load orders on page load
+        loadOrders();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadOrders, 30000);
+    </script>
+</body>
+
+</html>

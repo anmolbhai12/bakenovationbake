@@ -176,6 +176,45 @@ app.get('/send-otp', async (req, res) => {
     }
 });
 
+// Send quote to customer (called by admin dashboard)
+app.post('/send-quote', async (req, res) => {
+    try {
+        const { phone, message, orderId } = req.body;
+
+        if (!phone || !message) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Missing required parameters: phone and message'
+            });
+        }
+
+        if (!bot.isConnected) {
+            return res.status(503).json({
+                status: 'error',
+                message: 'WhatsApp not connected. Please scan QR code first.',
+                hint: 'Visit /status to get QR code'
+            });
+        }
+
+        const result = await bot.sendMessage(phone, message);
+
+        res.json({
+            status: 'success',
+            data: result,
+            orderId: orderId,
+            phone: phone,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error('Error in /send-quote:', error);
+        res.status(500).json({
+            status: 'error',
+            message: error.message || 'Failed to send quote'
+        });
+    }
+});
+
 // Disconnect endpoint (for maintenance)
 app.post('/disconnect', async (req, res) => {
     try {

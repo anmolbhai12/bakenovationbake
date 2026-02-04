@@ -1157,4 +1157,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- ORDER FORM SUBMISSION HANDLER ---
+    // Reuse orderForm variable declared earlier at line 103
+    if (orderForm) {
+        orderForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(orderForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(orderForm.action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showAlert(`Order received! Your Order ID is ${result.orderId}. We'll contact you soon!`, 'success');
+                    orderForm.reset();
+                    const modal = document.getElementById('order-modal');
+                    if (modal) modal.classList.remove('active');
+                } else {
+                    showAlert('Order submission failed. Please try again or contact us directly.', 'error');
+                }
+            } catch (error) {
+                console.error('Order submission error:', error);
+                showAlert('Network error. Please check your connection and try again.', 'error');
+            }
+        });
+    }
+
 });

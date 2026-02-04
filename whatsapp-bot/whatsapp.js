@@ -65,6 +65,50 @@ class WhatsAppBot {
             // Save credentials when updated
             this.sock.ev.on('creds.update', saveCreds);
 
+            // Listen for incoming messages (for customer replies)
+            this.sock.ev.on('messages.upsert', async ({ messages }) => {
+                for (const msg of messages) {
+                    if (!msg.message || msg.key.fromMe) continue; // Skip own messages
+
+                    const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
+                    const sender = msg.key.remoteJid;
+
+                    console.log(`📩 Message from ${sender}: ${text}`);
+
+                    // Check if customer replied "Yes" to confirm order
+                    if (text.toLowerCase().trim() === 'yes') {
+                        console.log('✅ Customer confirmed order, sending payment QR...');
+
+                        // Send payment QR code
+                        const paymentMessage = `✅ *Order Confirmed!*\n\nPlease scan the QR code below to make payment.\n\nAfter payment, send a screenshot for verification.`;
+
+                        try {
+                            await this.sock.sendMessage(sender, { text: paymentMessage });
+
+                            // Send local payment QR code
+                            const qrImagePath = path.join(__dirname, 'payment_qr.png');
+
+                            // Check if QR exists
+                            if (fs.existsSync(qrImagePath)) {
+                                await this.sock.sendMessage(sender, {
+                                    image: fs.readFileSync(qrImagePath),
+                                    caption: '💳 Scan to Pay - Bakenovation Studio'
+                                });
+                                console.log('✅ Payment QR sent successfully');
+                            } else {
+                                console.error('❌ Payment QR not found. Run: node generate_qr.js');
+                                await this.sock.sendMessage(sender, {
+                                    text: '⚠️ Payment QR not available. Please contact us directly.'
+                                });
+                            }
+                        } catch (error) {
+                            console.error('❌ Error sending payment QR:', error);
+                        }
+                    }
+                }
+            });
+
+
         } catch (error) {
             console.error('❌ Error initializing WhatsApp:', error);
             throw error;
