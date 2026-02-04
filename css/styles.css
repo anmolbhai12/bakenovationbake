@@ -1407,3 +1407,76 @@ h4 {
 .use-this-btn {
     pointer-events: auto;
 }
+
+/* --- CUSTOM NOTIFICATION STYLES --- */
+.notification-container {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    pointer-events: none;
+}
+
+.notification {
+    background: rgba(26, 11, 31, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-gold);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 300px;
+    max-width: 450px;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+}
+
+.notification.active {
+    transform: translateX(0);
+}
+
+.notification-icon {
+    color: var(--color-gold);
+    font-size: 1.5rem;
+}
+
+.notification-message {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-family: var(--font-body);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: auto;
+    padding: 0.2rem;
+    transition: color 0.3s ease;
+}
+
+.notification-close:hover {
+    color: var(--color-gold);
+}
+
+@media (max-width: 500px) {
+    .notification-container {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+    }
+
+    .notification {
+        min-width: unset;
+        width: 100%;
+    }
+}

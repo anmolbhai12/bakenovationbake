@@ -3,6 +3,49 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Initial Page Load Animations
 document.addEventListener('DOMContentLoaded', () => {
+    const notificationContainer = document.getElementById('notification-container');
+
+    function showAlert(message, type = 'info') {
+        if (!notificationContainer) {
+            alert(message);
+            return;
+        }
+
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+
+        notification.innerHTML = `
+            <div class="notification-icon">${type === 'success' ? '✨' : 'ℹ️'}</div>
+            <div class="notification-message">${message}</div>
+            <button class="notification-close">&times;</button>
+        `;
+
+        notificationContainer.appendChild(notification);
+
+        // Snappy animation entrance
+        requestAnimationFrame(() => {
+            notification.classList.add('active');
+        });
+
+        // Auto-dismiss logic
+        const autoDismiss = setTimeout(() => {
+            dismissNotification(notification);
+        }, 5000);
+
+        // Manual Close
+        notification.querySelector('.notification-close').onclick = () => {
+            clearTimeout(autoDismiss);
+            dismissNotification(notification);
+        };
+    }
+
+    function dismissNotification(el) {
+        el.classList.remove('active');
+        // Wait for CSS transition before removal
+        setTimeout(() => {
+            if (el.parentNode) el.parentNode.removeChild(el);
+        }, 500);
+    }
 
     // Hero Animations
     const tl = gsap.timeline();
@@ -65,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Save intent
             window.pendingAction = callback;
             authModal.classList.add('active');
-            alert("Please login or create an account to proceed with your order.");
+            showAlert("Please login or create an account to proceed with your order.");
         }
     }
 
@@ -265,13 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentSignupMethod === 'email') {
                 target = document.getElementById('signup-email').value.trim();
                 if (users.find(u => u.email === target)) {
-                    alert('Account already exists with this email.');
+                    showAlert('Account already exists with this email.');
                     return;
                 }
             } else {
                 target = document.getElementById('signup-whatsapp').value.trim();
                 if (users.find(u => u.whatsapp === target)) {
-                    alert('Account already exists with this WhatsApp number.');
+                    showAlert('Account already exists with this WhatsApp number.');
                     return;
                 }
             }
@@ -316,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(err => {
                     console.error("Email Proxy Error:", err);
-                    alert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
+                    showAlert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
                     showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
                 .finally(() => {
@@ -487,23 +530,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             currentSignupData = null; // Clear now
                             authModal.classList.remove('active');
                             updateAuthUI();
-                            alert(`Verified! Welcome to the Atelier, ${activeUser.name}!`);
+                            showAlert(`Verified! Welcome to the Atelier, ${activeUser.name}!`, 'success');
                         })
                         .catch(err => {
                             console.error("Signup sync error:", err);
                             currentSignupData = null;
                             authModal.classList.remove('active');
                             updateAuthUI();
-                            alert(`Welcome, ${activeUser.name}!`);
+                            showAlert(`Welcome, ${activeUser.name}!`, 'success');
                         });
                 } else {
                     // Just login, no spreadsheet sync
                     authModal.classList.remove('active');
                     updateAuthUI();
-                    alert(`Welcome back, ${activeUser.name}!`);
+                    showAlert(`Welcome back, ${activeUser.name}!`, 'success');
                 }
             } else {
-                alert("Invalid verification code. Please try again.");
+                showAlert("Invalid verification code. Please try again.");
             }
         });
     }
@@ -562,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 sendOTP(user.name, identifier, null, currentLoginMethod);
             } else {
-                alert(`No account found with this ${currentLoginMethod === 'email' ? 'email' : 'WhatsApp number'}. Please sign up first.`);
+                showAlert(`No account found with this ${currentLoginMethod === 'email' ? 'email' : 'WhatsApp number'}. Please sign up first.`);
             }
         });
     }
@@ -608,12 +651,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(response => {
                     localStorage.removeItem('bakenovation_cart');
-                    alert("Order Confirmed & Recorded! Redirecting...");
+                    showAlert("Order Confirmed & Recorded! Redirecting...", 'success');
                     window.location.href = 'success.html';
                 })
                 .catch(error => {
                     console.error("Full Order Flow Error:", error);
-                    alert('CRITICAL: Sync slow or blocked. Redirecting manually.');
+                    showAlert('CRITICAL: Sync slow or blocked. Redirecting manually.');
                     window.location.href = 'success.html';
                 });
         });
@@ -698,7 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) {
-                alert('Your cart is empty!');
+                showAlert('Your cart is empty!');
                 return;
             }
 
@@ -992,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
 
                     tempImage.onerror = () => {
-                        alert("The AI is currently busy. Please try again in a moment.");
+                        showAlert("The AI is currently busy. Please try again in a moment.");
                         if (aiLoading) aiLoading.style.display = 'none';
                         if (btnText) btnText.style.display = 'inline';
                         if (spinner) spinner.style.display = 'none';
