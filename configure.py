@@ -58,6 +58,13 @@ def main():
         f"const GAS_URL = '{gas_url}';"
     )
     
+    # Update Bot config
+    update_file(
+        'whatsapp-bot/config.json',
+        r'"GAS_URL": ".*?"',
+        f'"GAS_URL": "{gas_url}"'
+    )
+    
     print("\n✅ Configuration complete!")
     print("\n🚀 Next Steps:")
     print("1. Generate payment QR: cd whatsapp-bot && node generate_qr.js")

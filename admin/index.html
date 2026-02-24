@@ -83,8 +83,9 @@
                             <div><strong>Flavor:</strong> ${details.flavor || 'N/A'}</div>
                             <div><strong>Structure:</strong> ${details.tiers || 'N/A'} Tiers</div>
                             ${details.message ? `<div><strong>Dedication:</strong> "${details.message}"</div>` : ''}
-                            ${o.DeliveryDate ? `<div><strong>Schedule:</strong> ${o.DeliveryDate}</div>` : ''}
-                            ${o.Amount ? `<div><strong>Investment:</strong> ₹${o.Amount}</div>` : ''}
+                            ${o.DeliveryDate ? `<div><strong>Date:</strong> ${o.DeliveryDate}</div>` : ''}
+                            ${o.DeliveryTime ? `<div><strong>Time:</strong> ${o.DeliveryTime}</div>` : ''}
+                            ${o.Amount ? `<div><strong>Total:</strong> ₹${o.Amount}</div>` : ''}
                         </div>
 
                         <div class="action-panel">
@@ -93,12 +94,21 @@
                                     <div class="input-row">
                                         <input type="number" id="amt-${o.OrderID}" placeholder="Amount (₹)">
                                         <input type="date" id="date-${o.OrderID}">
+                                        <input type="time" id="time-${o.OrderID}">
                                     </div>
-                                    <button class="btn" onclick="sendQuote(event, '${o.OrderID}')">Confirm & Send Quote</button>
+                                    <button class="btn" onclick="sendToNegotiator(event, '${o.OrderID}')">Start WhatsApp Negotiation</button>
                                 </div>
                             ` : isQuoted ? `
-                                <button class="btn" onclick="updateStatus(event, '${o.OrderID}', 'Paid')">Confirm Receipt of Payment</button>
-                            ` : '<p style="text-align:center; opacity:0.5; font-size:0.8rem">Archive Entry Only</p>'}
+                                <div style="display:grid; gap:10px">
+                                    <span style="color:#d4af37; font-size:0.8rem">Waiting for customer confirmation...</span>
+                                    <button class="btn" onclick="updateStatus(event, '${o.OrderID}', 'Paid')">Confirm Receipt of Payment</button>
+                                </div>
+                            ` : o.Status === 'Negotiating' ? `
+                                <div style="display:grid; gap:10px">
+                                    <span style="color:#00e676; font-size:0.8rem">Bot is interacting with client...</span>
+                                    <button class="btn" onclick="loadOrders()">Refresh Status</button>
+                                </div>
+                            ` : '<p style="text-align:center; opacity:0.5; font-size:0.8rem">Order Finalised</p>'}
                         </div>
                     </div>
                 `;
@@ -117,44 +127,55 @@
             });
         }
 
-        async function sendQuote(event, id) {
+        async function sendToNegotiator(event, id) {
             const btn = event.currentTarget;
             const amount = document.getElementById(`amt-${id}`).value;
             const date = document.getElementById(`date-${id}`).value;
+            const time = document.getElementById(`time-${id}`).value;
 
-            if (!amount || !date) {
-                alert('⚠️ Please enter both Amount and Date.');
+            if (!amount || !date || !time) {
+                alert('⚠️ Please enter Amount, Date, and Time.');
                 return;
             }
 
-            // Resilient lookup data
             const card = btn.closest('.card');
-            const name = card.querySelector('h3').innerText;
             const phone = card.querySelector('p').innerText.replace('📞 ', '');
 
             const originalText = btn.innerHTML;
-            btn.innerHTML = '🚀 Sending...';
+            btn.innerHTML = '🚀 Handing to Bot...';
             btn.disabled = true;
 
             try {
+                // 1. Update Sheet with Quote Data & move to "Negotiating"
                 await sendToScript({
                     action: 'update_order',
                     orderId: id,
                     amount: amount,
                     deliveryDate: date,
-                    status: 'Quoted',
-                    name: name,
-                    phone: phone
+                    deliveryTime: time,
+                    status: 'Negotiating',
+                    botState: 'AWAITING_CONFIRMATION'
                 });
 
-                // Optimistic Success Message
-                alert('✅ Request Sent!\n\nThe dashboard will refresh in a few seconds.');
+                // 2. Trigger Bot to send the details for verification
+                // We call our server.js endpoint which then talks to the client
+                const botRes = await fetch('https://bakenovation-bot.alwaysdata.net/send-negotiation-start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: phone,
+                        orderId: id,
+                        amount: amount,
+                        date: date,
+                        time: time
+                    })
+                });
 
-                // Add a small delay then reload to hopefully show the new state
+                alert('✅ Verification Request Sent!\n\nThe bot will now confirm details with the client.');
                 setTimeout(() => loadOrders(), 2000);
 
             } catch (e) {
-                alert('❌ Network Error: ' + e.message);
+                alert('❌ Fault: ' + e.message);
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;

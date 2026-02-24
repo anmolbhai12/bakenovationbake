@@ -176,41 +176,48 @@ app.get('/send-otp', async (req, res) => {
     }
 });
 
-// Send quote to customer (called by admin dashboard)
-app.post('/send-quote', async (req, res) => {
+// Send negotiation start (verification profile)
+app.post('/send-negotiation-start', async (req, res) => {
     try {
-        const { phone, message, orderId } = req.body;
+        const { phone, orderId, amount, date, time } = req.body;
 
-        if (!phone || !message) {
+        if (!phone || !orderId || !amount || !date || !time) {
             return res.status(400).json({
                 status: 'error',
-                message: 'Missing required parameters: phone and message'
+                message: 'Missing required parameters: phone, orderId, amount, date, time'
             });
         }
 
         if (!bot.isConnected) {
             return res.status(503).json({
                 status: 'error',
-                message: 'WhatsApp not connected. Please scan QR code first.',
-                hint: 'Visit /status to get QR code'
+                message: 'WhatsApp not connected.'
             });
         }
+
+        // Format the verification message
+        const message = `🌟 *Bakenovation Order Verification* 🌟\n\n` +
+            `We have received your request! Please verify the details below:\n\n` +
+            `🍰 *Order ID:* ${orderId}\n` +
+            `📅 *Proposed Date:* ${date}\n` +
+            `⏰ *Estimated Time:* ${time}\n` +
+            `💰 *Total Investment:* ₹${amount}\n\n` +
+            `If these details are correct, please reply with *Confirm* to proceed.\n` +
+            `_Reply "Help" if you need to talk to us._`;
 
         const result = await bot.sendMessage(phone, message);
 
         res.json({
             status: 'success',
-            data: result,
             orderId: orderId,
-            phone: phone,
-            timestamp: new Date().toISOString()
+            phone: phone
         });
 
     } catch (error) {
-        console.error('Error in /send-quote:', error);
+        console.error('Error in /send-negotiation-start:', error);
         res.status(500).json({
             status: 'error',
-            message: error.message || 'Failed to send quote'
+            message: error.message || 'Failed to start negotiation'
         });
     }
 });

@@ -65,45 +65,90 @@ class WhatsAppBot {
             // Save credentials when updated
             this.sock.ev.on('creds.update', saveCreds);
 
-            // Listen for incoming messages (for customer replies)
+            // Load config
+            const configPath = path.join(__dirname, 'config.json');
+            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+            // Listen for incoming messages (for customer negotiation)
             this.sock.ev.on('messages.upsert', async ({ messages }) => {
                 for (const msg of messages) {
-                    if (!msg.message || msg.key.fromMe) continue; // Skip own messages
+                    if (!msg.message || msg.key.fromMe) continue;
 
-                    const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
+                    const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').toLowerCase().trim();
                     const sender = msg.key.remoteJid;
+                    const phone = sender.split('@')[0];
 
                     console.log(`📩 Message from ${sender}: ${text}`);
 
-                    // Check if customer replied "Yes" to confirm order
-                    if (text.toLowerCase().trim() === 'yes') {
-                        console.log('✅ Customer confirmed order, sending payment QR...');
+                    // 1. Handle Global "Help" Command
+                    if (text === 'help') {
+                        await this.sock.sendMessage(sender, {
+                            text: `🆘 *Support Center*\n\nIf you need any assistance or have an urgent request, please contact us at:\n📞 ${config.HELP_NUMBER}`
+                        });
+                        continue;
+                    }
 
-                        // Send payment QR code
-                        const paymentMessage = `✅ *Order Confirmed!*\n\nPlease scan the QR code below to make payment.\n\nAfter payment, send a screenshot for verification.`;
+                    // 2. Fetch Order Context from GAS
+                    try {
+                        const gasRes = await fetch(`${config.GAS_URL}?action=get_order&phone=${phone}`);
+                        const gasData = await gasRes.json();
 
-                        try {
-                            await this.sock.sendMessage(sender, { text: paymentMessage });
+                        if (gasData.status !== 'success' || !gasData.order) continue;
 
-                            // Send local payment QR code
+                        const order = gasData.order;
+                        const currentState = order.botstate || 'START';
+
+                        // 3. State Machine Logic
+
+                        // Action: CONFIRM
+                        if (['confirm', 'yes', 'correct'].includes(text) && currentState === 'AWAITING_CONFIRMATION') {
+                            const nextMsg = `✅ *Details Confirmed!*\n\n` +
+                                `📅 *Delivery Date:* ${order.deliverydate}\n` +
+                                `⏰ *Delivery Time:* ${order.deliverytime}\n` +
+                                `💰 *Total Amount:* ₹${order.amount}\n\n` +
+                                `Reply *Continue* to see payment options and finalize your order.`;
+
+                            await this.updateGAS(config.GAS_URL, { action: 'update_order', phone, botState: 'AWAITING_PAYMENT' });
+                            await this.sock.sendMessage(sender, { text: nextMsg });
+                        }
+
+                        // Action: CONTINUE
+                        else if (['continue', 'pay', 'proceed'].includes(text) && currentState === 'AWAITING_PAYMENT') {
+                            const paymentMsg = `💳 *Payment Instructions* 💳\n\n` +
+                                `Please scan the QR code below to pay ₹${order.amount}.\n\n` +
+                                `⚠️ *Important:* After paying, please send a *screenshot* of the success screen here for verification.\n\n` +
+                                `Once verified, we will start preparing your masterpiece! 🎂`;
+
+                            await this.updateGAS(config.GAS_URL, { action: 'update_order', phone, botState: 'PAYMENT_PENDING' });
+                            await this.sock.sendMessage(sender, { text: paymentMsg });
+
                             const qrImagePath = path.join(__dirname, 'payment_qr.png');
-
-                            // Check if QR exists
                             if (fs.existsSync(qrImagePath)) {
                                 await this.sock.sendMessage(sender, {
                                     image: fs.readFileSync(qrImagePath),
-                                    caption: '💳 Scan to Pay - Bakenovation Studio'
-                                });
-                                console.log('✅ Payment QR sent successfully');
-                            } else {
-                                console.error('❌ Payment QR not found. Run: node generate_qr.js');
-                                await this.sock.sendMessage(sender, {
-                                    text: '⚠️ Payment QR not available. Please contact us directly.'
+                                    caption: 'Scan to Pay - Bakenovation Studio'
                                 });
                             }
-                        } catch (error) {
-                            console.error('❌ Error sending payment QR:', error);
+
+                            // Notify Admin
+                            if (config.ADMIN_NUMBER && config.ADMIN_NUMBER !== '+91XXXXXXXXXX') {
+                                const adminMsg = `🔔 *ORDER UPDATE*\n\nClient ${order.name} (${phone}) has moved to *Payment* for order ${order.orderid}.`;
+                                await this.sendMessage(config.ADMIN_NUMBER, adminMsg);
+                            }
                         }
+
+                        // Interaction: SCREENSHOT DETECTED
+                        else if (msg.message.imageMessage && currentState === 'PAYMENT_PENDING') {
+                            await this.sock.sendMessage(sender, { text: `✅ *Image Received!*\n\nWe are verifying your payment now. You will receive a final confirmation shortly! ✨` });
+
+                            if (config.ADMIN_NUMBER && config.ADMIN_NUMBER !== '+91XXXXXXXXXX') {
+                                const adminMsg = `💰 *PAYMENT SCREENSHOT RECEIVED*\n\nOrder ID: ${order.orderid}\nClient: ${order.name}\n\nPlease check your bank and mark as *Paid* in the Console.`;
+                                await this.sendMessage(config.ADMIN_NUMBER, adminMsg);
+                            }
+                        }
+
+                    } catch (e) {
+                        console.error('Bot Intelligence Failure:', e);
                     }
                 }
             });
@@ -112,6 +157,19 @@ class WhatsAppBot {
         } catch (error) {
             console.error('❌ Error initializing WhatsApp:', error);
             throw error;
+        }
+    }
+
+    async updateGAS(url, payload) {
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            console.log(`📡 GAS Updated: ${payload.action} for ${payload.phone}`);
+        } catch (error) {
+            console.error('❌ GAS Sync Error:', error);
         }
     }
 
