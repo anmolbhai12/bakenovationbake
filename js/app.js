@@ -1028,11 +1028,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
                     }, 25000);
 
-                    // --- HYPER-RESONANCE V25: DUAL-SUFFIX SYSTEM ---
-                    // Generic cake suffix (only for no-text requests)
-                    const cakeSuffix = "luxury multi-tier cake, professional food photography, 8k, white studio background, cinematic lighting";
-                    // Sculpture-only suffix — NO cake keywords that confuse the AI
-                    const sculptureSuffix = "3D sculpted object, hyper-realistic, 8k render, studio white background, sharp edges, fine detail, photorealistic CGI, no flowers, no tiers, no round cake";
+                    // --- CAKE-FIRST ARCHITECTURE V26 ---
+                    // Always anchor on CAKE first, then layer the theme/shape on top.
+                    // This works WITH the AI's training data instead of against it.
+                    const cakeBase = "professional custom fondant cake, luxury bakery creation, cake art, high-end patisserie, professional cake photography, 8k, white studio background, cinematic lighting";
 
                     // ATOMIC SEED — guaranteed unique on every click
                     const atomicSeed = (Math.floor(Math.random() * 99999999) ^ Date.now()) >>> 0;
@@ -1040,35 +1039,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     let finalPrompt = "";
                     if (rawUserText) {
-                        // SYSTEM OVERRIDE: Treat every typed request as a sculpted object
-                        const negatives = "negative prompt: round cake, tiered cake, flowers, fondant roses, fairy lights, wedding decor";
-                        finalPrompt = `SCULPTED 3D OBJECT: A photorealistic luxury cake SHAPED EXACTLY LIKE "${rawUserText}". The entire thing is an edible high-end cake. Sculpted perfectly from fondant and sugar. NOT a round cake. NOT a generic cake. The cake IS THE OBJECT. ${sculptureSuffix}. ${negatives}. seed:${uniqueRef}`;
+                        // CAKE-FIRST: lead with cake, theme it with user input
+                        finalPrompt = `A stunning luxury custom cake designed with a "${rawUserText}" theme. Elaborate fondant decoration, shaped and sculpted to represent "${rawUserText}". Award-winning cake design. ${cakeBase}. unique:${uniqueRef}`;
                     } else {
-                        finalPrompt = `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Signature atelier design. seed:${uniqueRef}. ${cakeSuffix}`;
+                        finalPrompt = `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Signature atelier design. ${cakeBase}. seed:${uniqueRef}`;
                     }
 
-                    // CONSOLE TRACE: Open F12 to see the exact prompt being sent
-                    console.log('%c🍰 HYPER-RESONANCE V25 — PROMPT TRACE', 'color:#d4af37;font-weight:bold;font-size:14px');
-                    console.log('📤 Sending to AI:', finalPrompt);
+                    // CONSOLE TRACE
+                    console.log('%c🍰 CAKE-FIRST V26 — PROMPT', 'color:#d4af37;font-weight:bold;font-size:14px');
+                    console.log('📤 Sending:', finalPrompt);
+
                     console.log('🌱 Seed:', atomicSeed);
 
-                    const tryTier = (tier = 1) => {
-                        const model = (tier === 2) ? 'turbo' : 'flux';
-                        const negativeParam = rawUserText
-                            ? encodeURIComponent('round cake, tiered cake, flowers, roses, fairy lights, wedding decor, balloons, generic cake, boring cake')
-                            : '';
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&enhance=true&model=${model}${negativeParam ? '&negative=' + negativeParam : ''}`;
-                        console.log('🌐 URL:', imageUrl);
+                    // --- HUGGING FACE BACKEND V27 ---
+                    // No token in code — uses HF's public inference (rate limited but free)
+                    const HF_MODELS = [
+                        'black-forest-labs/FLUX.1-schnell',  // Tier 1: Best quality
+                        'stabilityai/stable-diffusion-xl-base-1.0', // Tier 2: Reliable fallback
+                    ];
 
-                        const tempImage = new Image();
-                        tempImage.onload = () => {
+                    const tryHFTier = async (tierIndex = 0) => {
+                        if (tierIndex >= HF_MODELS.length) {
+                            // All tiers failed — reset UI silently
+                            clearTimeout(safetyTimeout);
+                            if (aiLoading) aiLoading.style.display = 'none';
+                            if (btnText) btnText.style.display = 'inline';
+                            if (spinner) spinner.style.display = 'none';
+                            aiGenerateBtn.disabled = false;
+                            if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
+                            return;
+                        }
+
+                        const model = HF_MODELS[tierIndex];
+                        console.log(`🤗 HF Tier ${tierIndex + 1}: Calling ${model}...`);
+
+                        try {
+                            const response = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    inputs: finalPrompt,
+                                    parameters: { num_inference_steps: 4, seed: atomicSeed }
+                                })
+                            });
+
+                            if (!response.ok) {
+                                const errText = await response.text();
+                                console.warn(`HF Tier ${tierIndex + 1} failed (${response.status}):`, errText);
+                                return tryHFTier(tierIndex + 1);
+                            }
+
+                            const blob = await response.blob();
+                            const objectUrl = URL.createObjectURL(blob);
+
                             clearTimeout(safetyTimeout);
                             if (aiGeneratedImage) {
-                                aiGeneratedImage.src = imageUrl;
+                                aiGeneratedImage.src = objectUrl;
                                 aiGeneratedImage.style.filter = 'none';
                                 aiGeneratedImage.style.opacity = '1';
-                                snapState.currentImageUrl = imageUrl;
-                                addToGallery(imageUrl, finalPrompt);
+                                snapState.currentImageUrl = objectUrl;
+                                addToGallery(objectUrl, finalPrompt);
                                 gsap.fromTo(aiGeneratedImage,
                                     { opacity: 0, scale: 0.97, filter: "blur(10px)" },
                                     { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }
@@ -1078,22 +1110,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 if (spinner) spinner.style.display = 'none';
                                 aiGenerateBtn.disabled = false;
                             }
-                        };
-                        tempImage.onerror = () => {
-                            if (tier < 3) { tryTier(tier + 1); }
-                            else {
-                                clearTimeout(safetyTimeout);
-                                if (aiLoading) aiLoading.style.display = 'none';
-                                if (btnText) btnText.style.display = 'inline';
-                                if (spinner) spinner.style.display = 'none';
-                                aiGenerateBtn.disabled = false;
-                                if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
-                            }
-                        };
-                        tempImage.src = imageUrl;
+                        } catch (err) {
+                            console.warn(`HF Tier ${tierIndex + 1} error:`, err);
+                            tryHFTier(tierIndex + 1);
+                        }
                     };
 
-                    tryTier(1);
+                    tryHFTier(0);
+
                 };
 
                 startHyperResonanceV25();
