@@ -989,26 +989,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (spinner) spinner.style.display = 'block';
                     aiGenerateBtn.disabled = true;
                     if (aiLoading) aiLoading.style.display = 'flex';
-                    if (loadingMsg) loadingMsg.innerText = attempt > 1 ? `Consulting Elite Servers (Attempt ${attempt}/3)...` : originalLoadingMsg;
+                    if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
 
-                    const userDetails = aiPrompt.value.trim();
+                    const userDetails = aiPrompt.value.trim().toLowerCase();
 
-                    // --- DIRECT ARTISAN PROMPT ---
-                    let primaryPrompt = "";
+                    // --- ELITE FLUX PROMPT ARCHITECT ---
+                    let fluxPrompt = "";
+                    const aesthetic = `${snapState.style} aesthetic`;
+                    const color = `${snapState.color} palette`;
+
                     if (userDetails) {
-                        primaryPrompt = `${userDetails}, highly detailed luxury cake, professional food photography, 8k, ultra-realistic, white studio background`;
+                        // Priority 1: User specified sculpture/shape
+                        fluxPrompt = `A hyper-realistic 3D sculpted edible cake precisely shaped like ${userDetails}, ${aesthetic}, ${color}, professional high-end food photography, detailed frosting textures, cinematic lighting, 8k resolution, white marble background, luxury dessert masterpiece`;
                     } else {
-                        primaryPrompt = `luxurious ${snapState.color} ${snapState.style} ${snapState.type} cake, professional food photography, 8k, ultra-realistic, white studio background`;
+                        // Priority 2: Style-based default
+                        fluxPrompt = `A luxurious ${snapState.type} designer cake, ${aesthetic}, ${color}, elite patisserie style, professional studio lighting, ultra-realistic, shot on 35mm lens, white background`;
                     }
 
-                    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(primaryPrompt)}?seed=${Math.floor(Math.random() * 1000000)}&width=1024&height=1024&nologo=true`;
+                    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fluxPrompt)}?seed=${Math.floor(Math.random() * 9999999)}&width=1024&height=1024&nologo=true&model=flux`;
 
                     if (aiGeneratedImage) {
                         const tempImage = new Image();
                         tempImage.onload = () => {
                             aiGeneratedImage.src = imageUrl;
                             snapState.currentImageUrl = imageUrl;
-                            addToGallery(imageUrl, primaryPrompt);
+                            addToGallery(imageUrl, fluxPrompt);
 
                             gsap.fromTo(aiGeneratedImage,
                                 { opacity: 0, scale: 0.98, filter: "blur(10px)" },
@@ -1023,15 +1028,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            if (attempt < 3) {
-                                setTimeout(() => startGeneration(attempt + 1), 1500);
-                            } else {
-                                showAlert("The AI service is momentarily busy. Please try again in 5 seconds.");
-                                if (aiLoading) aiLoading.style.display = 'none';
-                                if (btnText) btnText.style.display = 'inline';
-                                if (spinner) spinner.style.display = 'none';
-                                aiGenerateBtn.disabled = false;
-                            }
+                            showAlert("The Haute-Couture AI is refining its skills. Please try again in a few seconds.");
+                            if (aiLoading) aiLoading.style.display = 'none';
+                            if (btnText) btnText.style.display = 'inline';
+                            if (spinner) spinner.style.display = 'none';
+                            aiGenerateBtn.disabled = false;
                         };
 
                         tempImage.src = imageUrl;
