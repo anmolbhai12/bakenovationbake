@@ -993,50 +993,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim().toLowerCase();
 
-                    // --- ELITE FLUX PROMPT ARCHITECT ---
-                    let fluxPrompt = "";
-                    const aesthetic = `${snapState.style} aesthetic`;
-                    const color = `${snapState.color} palette`;
+                    // --- ELITE SMART-DUO PROMPT ARCHITECT ---
+                    const getPrompt = (isTurbo = false) => {
+                        const aesthetic = `${snapState.style} style`;
+                        const color = `${snapState.color} palette`;
+                        let core = "";
 
-                    if (userDetails) {
-                        // Priority 1: User specified sculpture/shape
-                        fluxPrompt = `A hyper-realistic 3D sculpted edible cake precisely shaped like ${userDetails}, ${aesthetic}, ${color}, professional high-end food photography, detailed frosting textures, cinematic lighting, 8k resolution, white marble background, luxury dessert masterpiece`;
-                    } else {
-                        // Priority 2: Style-based default
-                        fluxPrompt = `A luxurious ${snapState.type} designer cake, ${aesthetic}, ${color}, elite patisserie style, professional studio lighting, ultra-realistic, shot on 35mm lens, white background`;
-                    }
+                        if (userDetails) {
+                            core = `A professional 3D sculpted luxury edible cake exactly shaped like ${userDetails}, no round base, full 3D sculpture`;
+                        } else {
+                            core = `A luxurious ${snapState.type} designer cake`;
+                        }
 
-                    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fluxPrompt)}?seed=${Math.floor(Math.random() * 9999999)}&width=1024&height=1024&nologo=true&model=flux`;
+                        const detailSuffix = "high-end food photography, 8k, realistic textures, white background, cinematic lighting";
+                        return `${core}, ${aesthetic}, ${color}. ${detailSuffix}${isTurbo ? ', speed-optimized' : ''}`;
+                    };
 
-                    if (aiGeneratedImage) {
+                    const tryGenerate = async (engine = 'flux', attempt = 1) => {
+                        const currentPrompt = getPrompt(engine === 'turbo');
+                        if (loadingMsg) loadingMsg.innerText = engine === 'flux' ? "Consulting Elite Sculptor (FLUX)..." : "Engaging High-Speed Chef (Turbo)...";
+
+                        const seed = Math.floor(Math.random() * 9999999);
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(currentPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true${engine === 'flux' ? '&model=flux' : ''}`;
+
                         const tempImage = new Image();
                         tempImage.onload = () => {
-                            aiGeneratedImage.src = imageUrl;
-                            snapState.currentImageUrl = imageUrl;
-                            addToGallery(imageUrl, fluxPrompt);
+                            if (aiGeneratedImage) {
+                                aiGeneratedImage.src = imageUrl;
+                                snapState.currentImageUrl = imageUrl;
+                                addToGallery(imageUrl, currentPrompt);
 
-                            gsap.fromTo(aiGeneratedImage,
-                                { opacity: 0, scale: 0.98, filter: "blur(10px)" },
-                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }
-                            );
+                                gsap.fromTo(aiGeneratedImage,
+                                    { opacity: 0, scale: 0.98, filter: "blur(10px)" },
+                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }
+                                );
 
-                            // Success Cleanup
-                            if (aiLoading) aiLoading.style.display = 'none';
-                            if (btnText) btnText.style.display = 'inline';
-                            if (spinner) spinner.style.display = 'none';
-                            aiGenerateBtn.disabled = false;
+                                if (aiLoading) aiLoading.style.display = 'none';
+                                if (btnText) btnText.style.display = 'inline';
+                                if (spinner) spinner.style.display = 'none';
+                                aiGenerateBtn.disabled = false;
+                            }
                         };
 
                         tempImage.onerror = () => {
-                            showAlert("The Haute-Couture AI is refining its skills. Please try again in a few seconds.");
-                            if (aiLoading) aiLoading.style.display = 'none';
-                            if (btnText) btnText.style.display = 'inline';
-                            if (spinner) spinner.style.display = 'none';
-                            aiGenerateBtn.disabled = false;
+                            if (engine === 'flux') {
+                                console.log("Flux limit reached, switching to Turbo...");
+                                tryGenerate('turbo', 1); // Immediate fallback
+                            } else if (attempt < 2) {
+                                console.log("Turbo retry...");
+                                setTimeout(() => tryGenerate('turbo', attempt + 1), 1000);
+                            } else {
+                                showAlert("The AI kitchen is very busy. Please try one more time in 10 seconds.");
+                                if (aiLoading) aiLoading.style.display = 'none';
+                                if (btnText) btnText.style.display = 'inline';
+                                if (spinner) spinner.style.display = 'none';
+                                aiGenerateBtn.disabled = false;
+                            }
                         };
 
                         tempImage.src = imageUrl;
-                    }
+                    };
+
+                    tryGenerate('flux'); // Start with the best model
                 };
 
                 startGeneration();
