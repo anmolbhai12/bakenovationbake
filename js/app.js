@@ -975,73 +975,81 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Real AI Generation Logic
+    // 3. Real AI Generation Logic with Triple-Retry Resilience
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
             checkLoginAndProceed(() => {
-                // UI Loading State
                 const btnText = aiGenerateBtn.querySelector('.btn-text');
                 const spinner = aiGenerateBtn.querySelector('.spinner');
-                if (btnText) btnText.style.display = 'none';
-                if (spinner) spinner.style.display = 'block';
-                aiGenerateBtn.disabled = true;
+                const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+                const originalLoadingMsg = loadingMsg ? loadingMsg.innerText : "Chef is sketching your masterpiece...";
 
-                // Show Loading Overlay
-                if (aiLoading) aiLoading.style.display = 'flex';
+                const startGeneration = (attempt = 1) => {
+                    // UI Loading State
+                    if (btnText) btnText.style.display = 'none';
+                    if (spinner) spinner.style.display = 'block';
+                    aiGenerateBtn.disabled = true;
+                    if (aiLoading) aiLoading.style.display = 'flex';
+                    if (loadingMsg) loadingMsg.innerText = attempt > 1 ? `Retrying (Attempt ${attempt}/3)...` : originalLoadingMsg;
 
-                // Construct Ultra-Fast, Highly Accurate Prompt for Pollinations AI
-                const userDetails = aiPrompt.value.trim();
+                    // Construct Optimized Prompt Parts
+                    const userDetails = aiPrompt.value.trim();
+                    const promptParts = [
+                        userDetails,
+                        `${snapState.style} style`,
+                        `${snapState.color} palette`,
+                        `${snapState.type} cake`
+                    ].filter(Boolean);
 
-                // PRIORITY: User Details > Aesthetic > Color > Type
-                const promptParts = [
-                    userDetails,
-                    `${snapState.style} aesthetic`,
-                    `${snapState.color} theme`,
-                    `${snapState.type} cake`
-                ].filter(Boolean);
+                    // High-quality suffix for elite results
+                    const eliteSuffix = "professional food styling, focus on textures, 8k resolution, cinematic lighting, ultra-realistic, white background, no text, no watermark";
+                    const fastPrompt = `${promptParts.join(', ')}. ${eliteSuffix}`;
 
-                const fastPrompt = `${promptParts.join(', ')}, professional food photography, 8k resolution, ultra-realistic, luxurious detailing, soft studio lighting, vibrant colors, white background`;
+                    const encodedPrompt = encodeURIComponent(fastPrompt);
+                    const seed = Math.floor(Math.random() * 9999999) + attempt; // Modifying seed slightly on retry
+                    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 
-                const encodedPrompt = encodeURIComponent(fastPrompt);
-                const seed = Math.floor(Math.random() * 10000000); // Larger seed range
-                const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+                    if (aiGeneratedImage) {
+                        const tempImage = new Image();
+                        tempImage.onload = () => {
+                            aiGeneratedImage.src = imageUrl;
+                            snapState.currentImageUrl = imageUrl;
+                            addToGallery(imageUrl, fastPrompt);
 
-                console.log("Generating AI Image with optimized prompt:", fastPrompt);
+                            // Reveal Animation
+                            gsap.fromTo(aiGeneratedImage,
+                                { opacity: 0, scale: 0.98, filter: "blur(10px)" },
+                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
+                            );
 
-                // Fetch and display
-                if (aiGeneratedImage) {
-                    // Pre-load the image
-                    const tempImage = new Image();
-                    tempImage.onload = () => {
-                        aiGeneratedImage.src = imageUrl;
-                        snapState.currentImageUrl = imageUrl;
+                            // Reset UI
+                            if (aiLoading) aiLoading.style.display = 'none';
+                            if (btnText) btnText.style.display = 'inline';
+                            if (spinner) spinner.style.display = 'none';
+                            aiGenerateBtn.disabled = false;
+                            if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
+                        };
 
-                        // Add to Recent Generations Gallery (Fixed variable name)
-                        addToGallery(imageUrl, fastPrompt);
+                        tempImage.onerror = () => {
+                            if (attempt < 3) {
+                                console.log(`AI generation failed (Attempt ${attempt}). Retrying...`);
+                                // Exponential backoff (1s, 2s)
+                                setTimeout(() => startGeneration(attempt + 1), attempt * 1000);
+                            } else {
+                                showAlert("The AI is exceptionally busy right now. Please wait a few seconds and try again.");
+                                if (aiLoading) aiLoading.style.display = 'none';
+                                if (btnText) btnText.style.display = 'inline';
+                                if (spinner) spinner.style.display = 'none';
+                                aiGenerateBtn.disabled = false;
+                                if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
+                            }
+                        };
 
-                        // Reveal with snappy animation
-                        gsap.fromTo(aiGeneratedImage,
-                            { opacity: 0, scale: 0.98, filter: "blur(10px)" },
-                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
-                        );
+                        tempImage.src = imageUrl;
+                    }
+                };
 
-                        // Reset UI
-                        if (aiLoading) aiLoading.style.display = 'none';
-                        if (btnText) btnText.style.display = 'inline';
-                        if (spinner) spinner.style.display = 'none';
-                        aiGenerateBtn.disabled = false;
-                    };
-
-                    tempImage.onerror = () => {
-                        showAlert("The AI is currently busy. Please try again in a moment.");
-                        if (aiLoading) aiLoading.style.display = 'none';
-                        if (btnText) btnText.style.display = 'inline';
-                        if (spinner) spinner.style.display = 'none';
-                        aiGenerateBtn.disabled = false;
-                    };
-
-                    tempImage.src = imageUrl;
-                }
+                startGeneration();
             });
         });
     }
