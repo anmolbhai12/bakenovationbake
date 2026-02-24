@@ -28,17 +28,46 @@ function handleRequest(e) {
 
     // Internal Route Map
     if (action === 'create_order') return createOrder(data);
+    if (action === 'ai_generate') return aiGenerateProxy(data);
     if (action === 'list_orders') return listOrders();
     if (action === 'update_order') return updateOrder(data);
     if (action === 'get_order') return getOrder(data);
     if (action === 'sync_signup') return syncSignup(data);
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
-    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v2.0 is Live!' });
+    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v3.0 (SOVEREIGN) is Live!' });
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {
     return jsonResponse({ status: 'error', message: error.toString() });
+  }
+}
+
+function aiGenerateProxy(data) {
+  const model = data.model || 'black-forest-labs/FLUX.1-schnell';
+  const token = data.token;
+  const prompt = data.prompt;
+  const seed = data.seed || Math.floor(Math.random() * 1000000);
+
+  if (!token || !prompt) return jsonResponse({ status: 'error', message: 'Missing token/prompt' });
+
+  try {
+    const response = UrlFetchApp.fetch('https://api-inference.huggingface.co/models/' + model, {
+      method: 'post',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      payload: JSON.stringify({ inputs: prompt, parameters: { num_inference_steps: 4, seed: seed } }),
+      muteHttpExceptions: true
+    });
+
+    if (response.getResponseCode() !== 200) {
+      return jsonResponse({ status: 'error', code: response.getResponseCode(), body: response.getContentText() });
+    }
+
+    const blob = response.getBlob();
+    const base64 = Utilities.base64Encode(blob.getBytes());
+    return jsonResponse({ status: 'success', image: 'data:image/jpeg;base64,' + base64 });
+  } catch (e) {
+    return jsonResponse({ status: 'error', message: e.toString() });
   }
 }
 
@@ -54,19 +83,33 @@ function createOrder(data) {
     extra: data.extra_description || '',
     design: data.ordered_design || ''
   };
-  sheet.appendRow([
-    new Date().toISOString(), 
-    orderId, 
-    data.name || '', 
-    data.phone || '', 
-    data.email || '', 
-    JSON.stringify(details), 
+
+  const row = [
+    new Date().toISOString(),
+    orderId,
+    data.name || '',
+    data.phone || '',
+    data.email || '',
+    JSON.stringify(details),
     '', // Amount
     '', // DeliveryDate
     '', // DeliveryTime
     'Pending', // Status
     'START' // BotState
-  ]);
+  ];
+
+  sheet.appendRow(row);
+
+  // GMAIL NOTIFICATION
+  try {
+    const adminEmail = Session.getEffectiveUser().getEmail();
+    const subject = `🎂 NEW ORDER: ${data.name} [${orderId}]`;
+    const body = `You have a new Bespoke Order!\n\nClient: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nAddress: ${data.address}\n\nDetails: ${JSON.stringify(details, null, 2)}`;
+    GmailApp.sendEmail(adminEmail, subject, body);
+  } catch (e) {
+    Logger.log("Email failed: " + e.toString());
+  }
+
   return jsonResponse({ status: 'success', orderId: orderId });
 }
 

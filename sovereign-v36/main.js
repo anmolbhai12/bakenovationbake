@@ -1066,47 +1066,38 @@ document.addEventListener('DOMContentLoaded', () => {
                             'runwayml/stable-diffusion-v1-5'
                         ];
 
-                        // TIER 1 & 2: HuggingFace (Needs Token)
+                        // SOVEREIGN PROXY RELAY V36 (Bypasses Browser CORS Blocks)
                         if (tierIndex < HF_MODELS.length) {
                             const model = HF_MODELS[tierIndex];
                             const token = getHFToken();
 
-                            if (!token) {
-                                console.warn("No token provided, skipping HF tiers...");
-                                return tryTier(HF_MODELS.length); // Skip to Pollinations
-                            }
+                            console.log(`🤗 Sovereign Proxy Tier ${tierIndex + 1}: Routing through Google...`);
 
-                            console.log(`🤗 HF Tier ${tierIndex + 1}: Calling ${model}...`);
                             try {
-                                const response = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
+                                // Instead of direct HF call (blocked by CORS), we use our Unified Proxy
+                                const proxyUrl = UNIFIED_GAS_URL;
+                                const response = await fetch(proxyUrl, {
                                     method: 'POST',
-                                    headers: {
-                                        'Authorization': `Bearer ${token}`,
-                                        'Content-Type': 'application/json'
-                                    },
                                     body: JSON.stringify({
-                                        inputs: finalPrompt,
-                                        parameters: { num_inference_steps: 4, seed: atomicSeed }
+                                        action: 'ai_generate',
+                                        model: model,
+                                        token: token,
+                                        prompt: finalPrompt,
+                                        seed: atomicSeed
                                     })
                                 });
 
-                                if (response.status === 503) {
-                                    console.warn(`HF Model ${model} is loading, falling back...`);
+                                const result = await response.json();
+
+                                if (result.status === 'success' && result.image) {
+                                    applyImage(result.image);
+                                } else {
+                                    console.warn(`Proxy Tier ${tierIndex + 1} failed:`, result.message || result.body);
                                     return tryTier(tierIndex + 1);
                                 }
-
-                                if (!response.ok) {
-                                    const errText = await response.text();
-                                    console.warn(`HF Tier ${tierIndex + 1} failed:`, errText);
-                                    return tryTier(tierIndex + 1);
-                                }
-
-                                const blob = await response.blob();
-                                const objectUrl = URL.createObjectURL(blob);
-                                applyImage(objectUrl);
 
                             } catch (err) {
-                                console.warn(`HF Tier ${tierIndex + 1} error:`, err);
+                                console.warn(`Proxy Tier ${tierIndex + 1} unexpected error:`, err);
                                 tryTier(tierIndex + 1);
                             }
                         }
