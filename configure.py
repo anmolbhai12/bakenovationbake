@@ -54,7 +54,7 @@ def main():
     # Update admin dashboard
     update_file(
         'admin/index.html',
-        r"const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';",
+        r"const GAS_URL = '.*?';",
         f"const GAS_URL = '{gas_url}';"
     )
     

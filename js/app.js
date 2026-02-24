@@ -130,21 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpInput = document.getElementById('otp-input');
     const userNavArea = document.getElementById('user-nav-area');
 
-    // Email OTP Proxy URL (Custom GAS Solution)
-    const EMAIL_PROXY_URL = 'https://script.google.com/macros/s/AKfycbyFQwPQeSuRo3Et4QQ5jOO-00YUSIKM7yHHNYBkAEPkrdzx6_NL25C6vuIgK4KMXYizOg/exec';
+    // Unified Google Apps Script URL
+    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbywRuixOpaQXuAiSLAWvlfIMrHVy4U41EGmdUWmMQAnrjbWeb7U0qO5wZTJfsYsCq64rw/exec';
 
-
-    // Google Sheets Sync URL (Email Signups)
-    const EMAIL_SIGNUP_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyA6r5M4ELZd0Xl5koe8tz86NJPDmE4_cRXoI-DJyvgL9iMmWuUmIjQZNSxqRfpqOoJ/exec';
-
-    // Google Sheets Sync URL (Orders)
-    const ORDER_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxLHaZ4ip3vOKo-XspoddJ1LkHSZdaSO0i59ONwbhA1qw564yupAZZkb6wxsA5xzOrPbw/exec'; // Paste your new Orders Sheet URL here
-
-    // Google Sheets Sync URL (WhatsApp Signups)
-    const WHATSAPP_SIGNUP_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxQthx6RV4kMMEhnwLDqfjXjA3xwW5H36rojXPANySSHuRV2GlhdWkYp7yR5udavXdoPw/exec'; // Paste your new WhatsApp Login Sheet URL here
-
-    // WhatsApp Proxy URL (Automated OTP)
-    const WHATSAPP_PROXY_URL = 'https://script.google.com/macros/s/AKfycbx7WjGrAo8YV1RCpJHCvPpPUVVjXWMXX0pfWcBAaRdcAWjBAqbeyF-myEYsrFcUWPsz/exec'; // Deployed Google Script URL
+    const EMAIL_PROXY_URL = UNIFIED_GAS_URL;
+    const EMAIL_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
+    const ORDER_SHEET_URL = UNIFIED_GAS_URL;
+    const WHATSAPP_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
+    const WHATSAPP_PROXY_URL = UNIFIED_GAS_URL;
 
 
 
@@ -356,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 to_email: target
             };
 
-            syncToGoogleSheet(templateParams, EMAIL_PROXY_URL)
+            syncToGoogleSheet(Object.assign(templateParams, { action: 'send_email_otp' }), EMAIL_PROXY_URL)
                 .then(() => {
                     showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
@@ -386,10 +379,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (submitBtn) submitBtn.innerText = "Dispatching Code...";
 
-            // Use Power-Sync (Form/Iframe) to bypass CORS entirely
+            // Use Power-Sync (Form/Iframe POST) to bypass CORS entirely
             syncToGoogleSheet({
                 phone: cleanNumber,
-                message: message
+                message: message,
+                action: 'send_whatsapp_otp'
             }, WHATSAPP_PROXY_URL)
                 .then(() => {
                     console.log("✅ OTP Dispatch Signal Sent");
@@ -527,7 +521,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         identifier: activeUser.whatsapp || activeUser.email,
                         dob: activeUser.dob || "New Member",
                         method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
-                        type: 'Signup'
+                        type: 'Signup',
+                        action: 'sync_signup'
                     }, syncUrl)
                         .then(() => {
                             currentSignupData = null; // Clear now
@@ -638,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.forEach((value, key) => {
                 if (typeof value === 'string') orderData[key] = value;
             });
-            orderData.type = 'Order';
+            orderData.action = 'create_order';
 
             // FORCE SEQUENCE: Sync to Sheets FIRST, then FormSubmit
             syncToGoogleSheet(orderData, ORDER_SHEET_URL)
@@ -1163,29 +1158,32 @@ document.addEventListener('DOMContentLoaded', () => {
         orderForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const submitBtn = orderForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.innerText : 'Place Order';
+            if (submitBtn) {
+                submitBtn.innerText = 'Syncing...';
+                submitBtn.disabled = true;
+            }
+
             const formData = new FormData(orderForm);
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(orderForm.action, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                // Use Power-Sync to bypass CORS for Google Sheets
+                await syncToGoogleSheet(data, orderForm.action);
 
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    showAlert(`Order received! Your Order ID is ${result.orderId}. We'll contact you soon!`, 'success');
-                    orderForm.reset();
-                    const modal = document.getElementById('order-modal');
-                    if (modal) modal.classList.remove('active');
-                } else {
-                    showAlert('Order submission failed. Please try again or contact us directly.', 'error');
-                }
+                showAlert(`Order Successfully Synced! We will contact you soon for final confirmation Luxe Studio.`, 'success');
+                orderForm.reset();
+                const modal = document.getElementById('order-modal');
+                if (modal) modal.classList.remove('active');
             } catch (error) {
                 console.error('Order submission error:', error);
-                showAlert('Network error. Please check your connection and try again.', 'error');
+                showAlert('Sync could not be verified, but your request may have been sent. Please contact us if you don\'t hear back.', 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }
             }
         });
     }

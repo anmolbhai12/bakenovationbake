@@ -299,8 +299,10 @@
                 <p>Where should we deliver your masterpiece?</p>
             </div>
 
-            <form id="order-form" action="YOUR_GOOGLE_APPS_SCRIPT_URL_HERE" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="create">
+            <form id="order-form"
+                action="https://script.google.com/macros/s/AKfycbywRuixOpaQXuAiSLAWvlfIMrHVy4U41EGmdUWmMQAnrjbWeb7U0qO5wZTJfsYsCq64rw/exec"
+                method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="create_order">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_subject" value="New Bespoke Cake Order!">
                 <input type="hidden" name="_template" value="table">

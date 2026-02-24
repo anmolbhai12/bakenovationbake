@@ -4,280 +4,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bakenovation Admin - Order Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a0b1f 0%, #2d1b33 100%);
-            color: #f5f5f5;
-            padding: 2rem;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            color: #d4af37;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .orders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .order-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .order-id {
-            color: #d4af37;
-            font-weight: bold;
-        }
-
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: #ff9800;
-            color: #000;
-        }
-
-        .status-quoted {
-            background: #2196f3;
-            color: #fff;
-        }
-
-        .status-paid {
-            background: #4caf50;
-            color: #fff;
-        }
-
-        .order-details {
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .order-details p {
-            margin-bottom: 0.5rem;
-        }
-
-        .order-details strong {
-            color: #d4af37;
-        }
-
-        .quote-form {
-            margin-top: 1rem;
-        }
-
-        .quote-form input {
-            width: 100%;
-            padding: 0.7rem;
-            margin-bottom: 0.7rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 6px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #d4af37, #f3d489);
-            color: #000;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            margin-top: 0.5rem;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #d4af37;
-        }
-    </style>
+    <title>Bakenovation | Studio Console</title>
+    <link rel="stylesheet" href="admin_premium.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>🎂 Bakenovation Order Manager</h1>
-        <div id="orders-container" class="orders-grid">
-            <div class="loading">Loading orders...</div>
+        <header>
+            <p class="subtitle">Bespoke Excellence</p>
+            <h1>Artisan Console</h1>
+        </header>
+
+        <div class="controls">
+            <button class="btn" onclick="loadOrders()">
+                <span>🔄</span> Refresh Orders
+            </button>
+            <button class="btn" onclick="runDiagnostic()">
+                <span>🔍</span> System Health
+            </button>
+        </div>
+
+        <div id="orders-container" class="grid">
+            <div class="loading-state">Initialising encrypted link...</div>
         </div>
     </div>
 
     <script>
-        const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-        const BOT_URL = 'https://bakenovation-bot.alwaysdata.net';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbywRuixOpaQXuAiSLAWvlfIMrHVy4U41EGmdUWmMQAnrjbWeb7U0qO5wZTJfsYsCq64rw/exec';
 
         async function loadOrders() {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '<div class="loading-state">Syncing Orders...</div>';
+
             try {
-                const response = await fetch(`${GAS_URL}?action=list`);
-                const data = await response.json();
+                const res = await fetch(`${GAS_URL}?action=list`);
+                const data = await res.json();
 
                 if (data.status === 'success') {
-                    displayOrders(data.orders);
+                    render(data.orders);
                 } else {
-                    document.getElementById('orders-container').innerHTML = '<p class="loading">Error loading orders</p>';
+                    container.innerHTML = `<div class="loading-state" style="color:#ff4d4d">Server Sync Failed: ${data.message}</div>`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('orders-container').innerHTML = '<p class="loading">Network error</p>';
+            } catch (e) {
+                container.innerHTML = `<div class="loading-state" style="color:#ff4d4d">Network Fault: ${e.message}</div>`;
             }
         }
 
-        function displayOrders(orders) {
+        function render(orders) {
             const container = document.getElementById('orders-container');
-
-            if (orders.length === 0) {
-                container.innerHTML = '<p class="loading">No orders yet</p>';
+            if (!orders || orders.length === 0) {
+                container.innerHTML = '<div class="loading-state">No orders in current cycle.</div>';
                 return;
             }
 
-            container.innerHTML = orders.map(order => {
-                const details = JSON.parse(order.OrderDetails || '{}');
-                const isPending = order.Status === 'Pending';
+            container.innerHTML = orders.reverse().map((o, idx) => {
+                let details = {};
+                try {
+                    details = typeof o.OrderDetails === 'string' ? JSON.parse(o.OrderDetails) : (o.OrderDetails || {});
+                } catch (e) { console.warn('Parse fail:', o.OrderID); }
+
+                const statusClass = `badge-${(o.Status || 'pending').toLowerCase()}`;
+                const isPending = (o.Status || '').toLowerCase() === 'pending';
+                const isQuoted = (o.Status || '').toLowerCase() === 'quoted';
 
                 return `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">${order.OrderID}</span>
-                            <span class="status-badge status-${order.Status.toLowerCase()}">${order.Status}</span>
+                    <div class="card" style="animation-delay: ${idx * 0.1}s">
+                        <div class="card-header">
+                            <span class="order-id">${o.OrderID || 'N/A'}</span>
+                            <span class="badge ${statusClass}">${o.Status || 'Pending'}</span>
                         </div>
-                        <div class="order-details">
-                            <p><strong>Name:</strong> ${order.Name}</p>
-                            <p><strong>Phone:</strong> ${order.Phone}</p>
-                            <p><strong>Email:</strong> ${order.Email}</p>
-                            <p><strong>Design:</strong> ${details.design || 'Custom'}</p>
-                            <p><strong>Message:</strong> ${details.message || 'N/A'}</p>
-                            ${order.Amount ? `<p><strong>Amount:</strong> ₹${order.Amount}</p>` : ''}
-                            ${order.DeliveryDate ? `<p><strong>Delivery:</strong> ${order.DeliveryDate}</p>` : ''}
+                        
+                        <div class="customer-info">
+                            <h3>${o.Name || 'Anonymous Client'}</h3>
+                            <p>📞 ${o.Phone || 'No Contact'}</p>
                         </div>
-                        ${isPending ? `
-                            <div class="quote-form">
-                                <input type="number" id="amount-${order.OrderID}" placeholder="Amount (₹)" required>
-                                <input type="date" id="date-${order.OrderID}" required>
-                                <button class="btn btn-primary" onclick="sendQuote('${order.OrderID}', '${order.Phone}')">
-                                    Send Quote via WhatsApp
-                                </button>
-                            </div>
-                        ` : `
-                            <button class="btn btn-secondary" onclick="markAsPaid('${order.OrderID}')">
-                                Mark as Paid
-                            </button>
-                        `}
+
+                        <div class="details-panel">
+                            <div><strong>Flavor:</strong> ${details.flavor || 'N/A'}</div>
+                            <div><strong>Structure:</strong> ${details.tiers || 'N/A'} Tiers</div>
+                            ${details.message ? `<div><strong>Dedication:</strong> "${details.message}"</div>` : ''}
+                            ${o.DeliveryDate ? `<div><strong>Schedule:</strong> ${o.DeliveryDate}</div>` : ''}
+                            ${o.Amount ? `<div><strong>Investment:</strong> ₹${o.Amount}</div>` : ''}
+                        </div>
+
+                        <div class="action-panel">
+                            ${isPending ? `
+                                <div class="action-form">
+                                    <div class="input-row">
+                                        <input type="number" id="amt-${o.OrderID}" placeholder="Amount (₹)">
+                                        <input type="date" id="date-${o.OrderID}">
+                                    </div>
+                                    <button class="btn" onclick="sendQuote(event, '${o.OrderID}')">Confirm & Send Quote</button>
+                                </div>
+                            ` : isQuoted ? `
+                                <button class="btn" onclick="updateStatus(event, '${o.OrderID}', 'Paid')">Confirm Receipt of Payment</button>
+                            ` : '<p style="text-align:center; opacity:0.5; font-size:0.8rem">Archive Entry Only</p>'}
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
-        async function sendQuote(orderId, phone) {
-            const amount = document.getElementById(`amount-${orderId}`).value;
-            const date = document.getElementById(`date-${orderId}`).value;
+        // --- UNIVERSAL NO-CORS SENDER ---
+        async function sendToScript(payload) {
+            // "no-cors" mode means we can't read the response, but the browser allows the send.
+            // We blindly assume success if no network error occurs.
+            await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        async function sendQuote(event, id) {
+            const btn = event.currentTarget;
+            const amount = document.getElementById(`amt-${id}`).value;
+            const date = document.getElementById(`date-${id}`).value;
 
             if (!amount || !date) {
-                alert('Please fill in both amount and delivery date');
+                alert('⚠️ Please enter both Amount and Date.');
                 return;
             }
 
+            // Resilient lookup data
+            const card = btn.closest('.card');
+            const name = card.querySelector('h3').innerText;
+            const phone = card.querySelector('p').innerText.replace('📞 ', '');
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '🚀 Sending...';
+            btn.disabled = true;
+
             try {
-                // Update order in sheet
-                await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'update',
-                        orderId: orderId,
-                        amount: amount,
-                        deliveryDate: date,
-                        status: 'Quoted'
-                    })
+                await sendToScript({
+                    action: 'update_order',
+                    orderId: id,
+                    amount: amount,
+                    deliveryDate: date,
+                    status: 'Quoted',
+                    name: name,
+                    phone: phone
                 });
 
-                // Send WhatsApp message
-                const message = `🎂 *Bakenovation Quote*\n\nOrder ID: ${orderId}\n💰 Amount: ₹${amount}\n📅 Delivery Date: ${date}\n\nReply "Yes" to confirm and receive payment details.`;
+                // Optimistic Success Message
+                alert('✅ Request Sent!\n\nThe dashboard will refresh in a few seconds.');
 
-                await fetch(`${BOT_URL}/send-quote`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, message, orderId })
-                });
+                // Add a small delay then reload to hopefully show the new state
+                setTimeout(() => loadOrders(), 2000);
 
-                alert('Quote sent successfully!');
-                loadOrders();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to send quote');
+            } catch (e) {
+                alert('❌ Network Error: ' + e.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
-        async function markAsPaid(orderId) {
+        async function updateStatus(event, id, status) {
+            const btn = event.currentTarget;
+            const card = btn.closest('.card');
+            const name = card.querySelector('h3').innerText;
+            const phone = card.querySelector('p').innerText.replace('📞 ', '');
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '🚀 Updating...';
+            btn.disabled = true;
+
             try {
-                await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'update',
-                        orderId: orderId,
-                        status: 'Paid'
-                    })
+                await sendToScript({
+                    action: 'update_order',
+                    orderId: id,
+                    status: status,
+                    name: name,
+                    phone: phone
                 });
 
-                alert('Order marked as paid!');
-                loadOrders();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to update order');
+                alert('✅ Status Updated!\n\nRefreshing...');
+                setTimeout(() => loadOrders(), 2000);
+
+            } catch (e) {
+                alert('❌ Network Error: ' + e.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
-        // Load orders on page load
+        async function runDiagnostic() {
+            try {
+                const res = await fetch(`${GAS_URL}?action=diagnostic`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert(`CONSOLE HEALTH REPORT\n\n- Spreadsheet: ${data.spreadsheetName}\n- Tabs: ${data.tabsFound.join(', ')}\n- Active Trace: ${data.activeTabUsed}\n- Headers: ${data.headers.join(' | ')}`);
+                } else alert('Health Check Failed: ' + data.message);
+            } catch (e) { alert('Critical Fault: ' + e.message); }
+        }
+
         loadOrders();
-
-        // Auto-refresh every 30 seconds
-        setInterval(loadOrders, 30000);
     </script>
 </body>
 

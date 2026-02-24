@@ -62,7 +62,8 @@ def main():
             else:
                 print(f"📄 Uploading file: {item}...")
                 with open(local_path, "rb") as f:
-                    ftp.storbinary(f"STOR {os.path.join(REMOTE_DIR, item).replace('\\', '/')}", f)
+                    remote_path = os.path.join(REMOTE_DIR, item).replace('\\', '/')
+                    ftp.storbinary(f"STOR {remote_path}", f)
 
         ftp.quit()
         print("\n✨ DEPLOYMENT COMPLETE!")
