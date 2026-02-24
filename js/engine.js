@@ -1021,12 +1021,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     const safetyTimeout = setTimeout(() => {
-                        if (aiLoading) aiLoading.style.display = 'none';
-                        if (btnText) btnText.style.display = 'inline';
-                        if (spinner) spinner.style.display = 'none';
-                        aiGenerateBtn.disabled = false;
-                        if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
-                    }, 25000);
+                        console.warn("⚠️ AI Engine Timeout - Forcing UI Reset");
+                        resetLoadingState();
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.style.filter = 'none';
+                            aiGeneratedImage.style.opacity = '1';
+                        }
+                    }, 18000);
 
                     // --- CAKE-FIRST ARCHITECTURE V28 (REINFORCED) ---
                     // Hardened prompt to ensure 100% "Cake-Only" results.
@@ -1043,12 +1044,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // CONSOLE TRACE
-                    console.log('%c🍰 HYPER-ACCURACY v28 — PROMPT', 'color:#d4af37;font-weight:bold;font-size:14px');
+                    console.log('%c🍰 HYPER-ACCURACY v32 — PROMPT', 'color:#d4af37;font-weight:bold;font-size:14px');
                     console.log('📤 Sending:', finalPrompt);
 
                     console.log('🌱 Seed:', atomicSeed);
 
-                    // --- ULTRA-RELIABLE 3-TIER BACKEND V30 (ZERO PROMPT) ---
+                    // --- ULTRA-RELIABLE 3-TIER BACKEND V32 (ZERO PROMPT) ---
                     const getHFToken = () => {
                         // OBFUSCATED TOKEN: Hidden from automated scanners to prevent push-blocks
                         const a = "hf_hQscerF";
