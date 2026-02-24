@@ -975,18 +975,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- BEPOKE INFINITE AI ORCHESTRATOR ---
-    const CAKE_VAULT = [
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate
-        "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=80&w=1024", // Wedding
-        "https://images.unsplash.com/photo-1535141192574-5d4897c825a1?q=80&w=1024", // Luxury
-        "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=1024", // Modern
-        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024", // Minimalist
-        "https://images.unsplash.com/photo-1562280963-8a5475740a10?q=80&w=1024", // Dark
-        "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?q=80&w=1024", // Rustic
-        "https://images.unsplash.com/photo-1606913084603-3e7567d098af?q=80&w=1024"  // Pink
-    ];
-
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
             checkLoginAndProceed(() => {
@@ -1003,51 +991,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (aiLoading) aiLoading.style.display = 'flex';
                     if (loadingMsg) loadingMsg.innerText = attempt > 1 ? `Consulting Elite Servers (Attempt ${attempt}/3)...` : originalLoadingMsg;
 
-                    const userDetails = aiPrompt.value.trim().toLowerCase();
+                    const userDetails = aiPrompt.value.trim();
 
-                    // --- DEEP-ARTESIAN PROMPT ARCHITECT (v2.5) ---
-                    let mainSubject = "";
-
-                    // Priority 1: 3D Sculpted Shapes (Cars, Characters, etc.)
-                    if (userDetails.includes("shape") || userDetails.includes("shaped") || userDetails.includes("like a")) {
-                        mainSubject = `A hyper-realistic 3D sculpted professional custom cake shaped exactly like ${userDetails}. The entire cake is a detailed 3D sculpture, no round base, just the object sculpture.`;
-                    }
-                    // Priority 2: Specific Theme with Default
-                    else if (userDetails) {
-                        mainSubject = `A luxurious ${userDetails} themed ${snapState.type} cake`;
-                    }
-                    // Priority 3: Pure Default
-                    else {
-                        mainSubject = `A high-end designer ${snapState.type} cake in ${snapState.style} style`;
-                    }
-
-                    const eliteContext = `gourmet patisserie style, soft studio lighting, ultra-realistic textures, 8k resolution, cinematic food photography, white marble background, no clutter, no text`;
-                    const finalPrompt = `${mainSubject}, ${snapState.color} color theme, ${snapState.style} aesthetic, ${eliteContext}`;
-
-                    // --- GENERATION ENGINE (MULTI-LAYER) ---
-                    let imageUrl = '';
-                    const seed = Math.floor(Math.random() * 999999);
-                    const timestamp = Date.now();
-
-                    if (attempt === 1) {
-                        // LAYER 1: Standard Pollinations
-                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&enhance=true`;
-                    } else if (attempt === 2) {
-                        // LAYER 2: Randomized Jitter (Bypasses all caches)
-                        const jitter = `${finalPrompt} (artisan detail level: ${seed})`;
-                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(jitter)}?seed=${seed + 5}&width=1024&height=1024&nologo=true&t=${timestamp}`;
+                    // --- DIRECT ARTISAN PROMPT ---
+                    let primaryPrompt = "";
+                    if (userDetails) {
+                        primaryPrompt = `${userDetails}, highly detailed luxury cake, professional food photography, 8k, ultra-realistic, white studio background`;
                     } else {
-                        // LAYER 3: The Artisan Vault (Last Resort Safety)
-                        const vaultIndex = (snapState.style.length + snapState.color.length + seed) % CAKE_VAULT.length;
-                        imageUrl = CAKE_VAULT[vaultIndex];
+                        primaryPrompt = `luxurious ${snapState.color} ${snapState.style} ${snapState.type} cake, professional food photography, 8k, ultra-realistic, white studio background`;
                     }
+
+                    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(primaryPrompt)}?seed=${Math.floor(Math.random() * 1000000)}&width=1024&height=1024&nologo=true`;
 
                     if (aiGeneratedImage) {
                         const tempImage = new Image();
                         tempImage.onload = () => {
                             aiGeneratedImage.src = imageUrl;
                             snapState.currentImageUrl = imageUrl;
-                            addToGallery(imageUrl, finalPrompt);
+                            addToGallery(imageUrl, primaryPrompt);
 
                             gsap.fromTo(aiGeneratedImage,
                                 { opacity: 0, scale: 0.98, filter: "blur(10px)" },
@@ -1063,10 +1024,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         tempImage.onerror = () => {
                             if (attempt < 3) {
-                                setTimeout(() => startGeneration(attempt + 1), 1000);
+                                setTimeout(() => startGeneration(attempt + 1), 1500);
                             } else {
-                                // Absolute Safety: Use first vault image
-                                aiGeneratedImage.src = CAKE_VAULT[0];
+                                showAlert("The AI service is momentarily busy. Please try again in 5 seconds.");
                                 if (aiLoading) aiLoading.style.display = 'none';
                                 if (btnText) btnText.style.display = 'inline';
                                 if (spinner) spinner.style.display = 'none';
