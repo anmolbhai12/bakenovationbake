@@ -1003,10 +1003,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (aiLoading) aiLoading.style.display = 'flex';
                     if (loadingMsg) loadingMsg.innerText = attempt > 1 ? `Consulting Elite Servers (Attempt ${attempt}/3)...` : originalLoadingMsg;
 
-                    const userDetails = aiPrompt.value.trim();
-                    const promptParts = [userDetails, `${snapState.style} style`, `${snapState.color} palette`, `${snapState.type} cake`].filter(Boolean);
-                    const eliteSuffix = "professional food styling, focus on textures, 8k resolution, cinematic lighting, ultra-realistic, white background, no text, no watermark";
-                    const finalPrompt = `${promptParts.join(', ')}. ${eliteSuffix}`;
+                    const userDetails = aiPrompt.value.trim().toLowerCase();
+
+                    // --- SMART PROMPT ARCHITECT ---
+                    let coreSubject = "";
+                    let styleContext = `${snapState.style} aesthetic`;
+                    let colorContext = `${snapState.color} theme`;
+
+                    // If user provides specific details, make them the ABSOLUTE priority
+                    if (userDetails) {
+                        if (userDetails.includes("shape") || userDetails.includes("like a") || userDetails.includes("shaped")) {
+                            // High-priority 3D sculpting logic
+                            coreSubject = `a professional 3D sculpted cake exactly shaped like ${userDetails}`;
+                        } else {
+                            coreSubject = `${userDetails}, ${snapState.type} cake`;
+                        }
+                    } else {
+                        coreSubject = `a luxurious ${snapState.type} cake`;
+                    }
+
+                    const eliteSuffix = "professional food photography, gourmet patisserie style, focus on cake textures and fondant details, 8k resolution, cinematic lighting, ultra-realistic, white background, no text, no watermark";
+                    const finalPrompt = `${coreSubject}, ${styleContext}, ${colorContext}. ${eliteSuffix}`;
 
                     // --- GENERATION ENGINE SELECTOR ---
                     let imageUrl = '';
