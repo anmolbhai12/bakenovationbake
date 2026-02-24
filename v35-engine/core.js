@@ -618,51 +618,48 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
 
 
-    // Handle Form Submission with Custom Redirects
+    // --- CONSOLIDATED ORDER FORM HANDLER V35 ---
     if (orderForm) {
         orderForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const btn = orderForm.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
-            btn.innerText = "🔄 Syncing with Bakery...";
+            btn.innerText = "🔄 Processing Sovereign Order...";
             btn.disabled = true;
 
             const formData = new FormData(this);
-
-            // Collect standalone image upload from the Atelier section
-            const mainUpload = document.getElementById('main-upload');
-            if (mainUpload && mainUpload.files.length > 0) {
-                formData.set('attachment', mainUpload.files[0]);
-            }
-
-            // Sync with Google Sheets (Orders Sheet) - STRIP FILES FIRST
             const orderData = {};
             formData.forEach((value, key) => {
                 if (typeof value === 'string') orderData[key] = value;
             });
             orderData.action = 'create_order';
 
-            // FORCE SEQUENCE: Sync to Sheets FIRST, then FormSubmit
-            syncToGoogleSheet(orderData, ORDER_SHEET_URL)
+            // ATTACHMENT HANDLING
+            const mainUpload = document.getElementById('main-upload');
+            if (mainUpload && mainUpload.files.length > 0) {
+                formData.set('attachment', mainUpload.files[0]);
+            }
+
+            // Sync to Unified Sheets + Gmail
+            syncToGoogleSheet(orderData, UNIFIED_GAS_URL)
                 .then(() => {
-                    btn.innerText = "🚀 Finishing Order...";
-                    // Debug Confirmation
-                    console.log("Sheet Sync Response Received");
-                    return fetch(this.action, {
+                    btn.innerText = "🚀 Finalizing...";
+                    console.log("Sovereign Order Synced");
+                    return fetch(UNIFIED_GAS_URL, {
                         method: 'POST',
                         body: formData,
                         headers: { 'Accept': 'application/json' }
                     });
                 })
-                .then(response => {
+                .then(() => {
                     localStorage.removeItem('bakenovation_cart');
-                    showAlert("Order Confirmed & Recorded! Redirecting...", 'success');
-                    window.location.href = 'success.html';
+                    showAlert("Order Placed Successfully! We will reach out shortly.", 'success');
+                    setTimeout(() => window.location.href = 'success.html', 1500);
                 })
                 .catch(error => {
-                    console.error("Full Order Flow Error:", error);
-                    showAlert('CRITICAL: Sync slow or blocked. Redirecting manually.');
-                    window.location.href = 'success.html';
+                    console.error("Order Error:", error);
+                    showAlert('Sync slow. Please contact us if you don\'t hear back.');
+                    setTimeout(() => window.location.href = 'success.html', 2000);
                 });
         });
     }
@@ -1145,10 +1142,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
 
                     const resetLoadingState = () => {
+                        console.log("🔱 Sovereign UI Resetting...");
                         if (aiLoading) aiLoading.style.display = 'none';
                         if (btnText) btnText.style.display = 'inline';
                         if (spinner) spinner.style.display = 'none';
                         aiGenerateBtn.disabled = false;
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.style.filter = 'none';
+                            aiGeneratedImage.style.opacity = '1';
+                        }
                     };
 
                     tryTier(0);
@@ -1266,40 +1268,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ORDER FORM SUBMISSION HANDLER ---
-    // Reuse orderForm variable declared earlier at line 103
-    if (orderForm) {
-        orderForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const submitBtn = orderForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn ? submitBtn.innerText : 'Place Order';
-            if (submitBtn) {
-                submitBtn.innerText = 'Syncing...';
-                submitBtn.disabled = true;
-            }
-
-            const formData = new FormData(orderForm);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                // Use Power-Sync to bypass CORS for Google Sheets
-                await syncToGoogleSheet(data, orderForm.action);
-
-                showAlert(`Order Successfully Synced! We will contact you soon for final confirmation Luxe Studio.`, 'success');
-                orderForm.reset();
-                const modal = document.getElementById('order-modal');
-                if (modal) modal.classList.remove('active');
-            } catch (error) {
-                console.error('Order submission error:', error);
-                showAlert('Sync could not be verified, but your request may have been sent. Please contact us if you don\'t hear back.', 'error');
-            } finally {
-                if (submitBtn) {
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                }
-            }
-        });
-    }
+    // REMOVED DUPLICATE LISTENER
 
 });
