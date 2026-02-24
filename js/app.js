@@ -141,8 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    let users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
-    let activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
+    let users = [];
+    let activeUser = null;
+    try {
+        users = JSON.parse(localStorage.getItem('bakenovation_users')) || [];
+        activeUser = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || null;
+    } catch (e) {
+        console.error("Storage corruption detected, resetting session.");
+        localStorage.removeItem('bakenovation_activeUser');
+    }
     let currentSignupData = null;
     let generatedOTP = null;
     let currentLoginMethod = 'email'; // 'email' or 'whatsapp'
