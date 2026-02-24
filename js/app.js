@@ -990,27 +990,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
                 const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startHyperAccuracyV24 = async () => {
+                const startHyperResonanceV25 = async () => {
                     const btnText = aiGenerateBtn.querySelector('.btn-text');
                     const spinner = aiGenerateBtn.querySelector('.spinner');
                     const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
 
-                    const userDetails = aiPrompt.value.trim().toLowerCase();
-                    const isCustomShape = userDetails.includes('car') || userDetails.includes('shape') || userDetails.includes('bottle') || userDetails.includes('box') || userDetails.includes('sculpture') || userDetails.includes('like a');
+                    const rawUserText = aiPrompt.value.trim();
+                    const userDetails = rawUserText.toLowerCase();
+                    const isCustomShape = userDetails.length > 0 && (
+                        userDetails.includes('car') || userDetails.includes('shape') ||
+                        userDetails.includes('bottle') || userDetails.includes('box') ||
+                        userDetails.includes('sculpture') || userDetails.includes('truck') ||
+                        userDetails.includes('animal') || userDetails.includes('book') ||
+                        userDetails.includes('guitar') || userDetails.includes('phone') ||
+                        userDetails.includes('shoe') || userDetails.includes('bag') ||
+                        userDetails.includes('house') || userDetails.includes('castle') ||
+                        true // ALWAYS treat custom text as a shape override
+                    );
 
-                    const originalLoadingMsg = isCustomShape ? "Forging your custom sculpture..." : "Chef is sculpting your masterpiece...";
-
-                    // UI State
+                    const loadingText = rawUserText ? "⚡ Architecting your sculpture..." : "Chef is sculpting your masterpiece...";
                     if (btnText) btnText.style.display = 'none';
                     if (spinner) spinner.style.display = 'block';
                     aiGenerateBtn.disabled = true;
                     if (aiLoading) aiLoading.style.display = 'flex';
-                    if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
+                    if (loadingMsg) loadingMsg.innerText = loadingText;
 
-                    // --- HYPER-ACCURACY ENGINE V24: SHAPE-FIRST ARCHITECT ---
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.style.filter = 'blur(20px) brightness(0.8)';
-                        aiGeneratedImage.style.opacity = '0.6';
+                        aiGeneratedImage.style.filter = 'blur(15px) brightness(0.7)';
+                        aiGeneratedImage.style.opacity = '0.5';
                     }
 
                     const safetyTimeout = setTimeout(() => {
@@ -1018,33 +1025,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (btnText) btnText.style.display = 'inline';
                         if (spinner) spinner.style.display = 'none';
                         aiGenerateBtn.disabled = false;
-                        if (aiGeneratedImage) {
-                            aiGeneratedImage.style.filter = 'none';
-                            aiGeneratedImage.style.opacity = '1';
-                        }
+                        if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
                     }, 25000);
 
-                    const qualitySuffix = "ultra-realistic professional food photography, 8k, high-end luxury patisserie, masterpiece details, sharp macro focus, white studio background, cinematic lighting";
+                    // --- HYPER-RESONANCE V25: DUAL-SUFFIX SYSTEM ---
+                    // Generic cake suffix (only for no-text requests)
+                    const cakeSuffix = "luxury multi-tier cake, professional food photography, 8k, white studio background, cinematic lighting";
+                    // Sculpture-only suffix — NO cake keywords that confuse the AI
+                    const sculptureSuffix = "3D sculpted object, hyper-realistic, 8k render, studio white background, sharp edges, fine detail, photorealistic CGI, no flowers, no tiers, no round cake";
 
-                    // SEED EXPLOSION: Force a new universe on every click
-                    const atomicSeed = Math.floor(Math.random() * 20000000) + Date.now();
-                    const uniqueRef = Math.random().toString(36).substring(2, 10);
+                    // ATOMIC SEED — guaranteed unique on every click
+                    const atomicSeed = (Math.floor(Math.random() * 99999999) ^ Date.now()) >>> 0;
+                    const uniqueRef = atomicSeed.toString(36);
 
                     let finalPrompt = "";
-                    if (userDetails) {
-                        if (isCustomShape) {
-                            // ATOMIC SHAPE OVERRIDE: Ignore all chips for shapes
-                            finalPrompt = `A 3D HYPER-REALISTIC CAKE LITERALLY SCULPTED IN THE SHAPE OF A ${userDetails.toUpperCase()}. The entire object is an edible high-end cake. This is NOT a round or tiered cake. The object IS the cake. Sharp edges, 3D structure. Ref: ${uniqueRef}. ${qualitySuffix}`;
-                        } else {
-                            finalPrompt = `Bespoke luxury ${snapState.color} ${snapState.style} ${snapState.type} cake incorporating details: ${userDetails}. High-fashion design. Ref: ${uniqueRef}. ${qualitySuffix}`;
-                        }
+                    if (rawUserText) {
+                        // SYSTEM OVERRIDE: Treat every typed request as a sculpted object
+                        const negatives = "negative prompt: round cake, tiered cake, flowers, fondant roses, fairy lights, wedding decor";
+                        finalPrompt = `SCULPTED 3D OBJECT: A photorealistic luxury cake SHAPED EXACTLY LIKE "${rawUserText}". The entire thing is an edible high-end cake. Sculpted perfectly from fondant and sugar. NOT a round cake. NOT a generic cake. The cake IS THE OBJECT. ${sculptureSuffix}. ${negatives}. seed:${uniqueRef}`;
                     } else {
-                        finalPrompt = `Elite ${snapState.color} ${snapState.style} ${snapState.type} luxury artistic cake. Modern masterpiece. Ref: ${uniqueRef}. ${qualitySuffix}`;
+                        finalPrompt = `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Signature atelier design. seed:${uniqueRef}. ${cakeSuffix}`;
                     }
 
-                    const tryTrinityTier = (tier = 1) => {
+                    // CONSOLE TRACE: Open F12 to see the exact prompt being sent
+                    console.log('%c🍰 HYPER-RESONANCE V25 — PROMPT TRACE', 'color:#d4af37;font-weight:bold;font-size:14px');
+                    console.log('📤 Sending to AI:', finalPrompt);
+                    console.log('🌱 Seed:', atomicSeed);
+
+                    const tryTier = (tier = 1) => {
                         const model = (tier === 2) ? 'turbo' : 'flux';
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&model=${model}`;
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&enhance=true&model=${model}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
@@ -1055,38 +1065,34 @@ document.addEventListener('DOMContentLoaded', () => {
                                 aiGeneratedImage.style.opacity = '1';
                                 snapState.currentImageUrl = imageUrl;
                                 addToGallery(imageUrl, finalPrompt);
-
                                 gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.98, filter: "blur(10px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }
+                                    { opacity: 0, scale: 0.97, filter: "blur(10px)" },
+                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }
                                 );
-
                                 if (aiLoading) aiLoading.style.display = 'none';
                                 if (btnText) btnText.style.display = 'inline';
                                 if (spinner) spinner.style.display = 'none';
                                 aiGenerateBtn.disabled = false;
                             }
                         };
-
                         tempImage.onerror = () => {
-                            if (tier < 3) {
-                                tryTrinityTier(tier + 1);
-                            } else {
+                            if (tier < 3) { tryTier(tier + 1); }
+                            else {
                                 clearTimeout(safetyTimeout);
                                 if (aiLoading) aiLoading.style.display = 'none';
                                 if (btnText) btnText.style.display = 'inline';
                                 if (spinner) spinner.style.display = 'none';
                                 aiGenerateBtn.disabled = false;
+                                if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
                             }
                         };
-
                         tempImage.src = imageUrl;
                     };
 
-                    tryTrinityTier(1);
+                    tryTier(1);
                 };
 
-                startHyperAccuracyV24();
+                startHyperResonanceV25();
             });
         });
     }
