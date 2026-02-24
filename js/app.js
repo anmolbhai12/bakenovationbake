@@ -1005,41 +1005,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim().toLowerCase();
 
-                    // --- SMART PROMPT ARCHITECT ---
-                    let coreSubject = "";
-                    let styleContext = `${snapState.style} aesthetic`;
-                    let colorContext = `${snapState.color} theme`;
+                    // --- DEEP-ARTESIAN PROMPT ARCHITECT (v2.5) ---
+                    let mainSubject = "";
 
-                    // If user provides specific details, make them the ABSOLUTE priority
-                    if (userDetails) {
-                        if (userDetails.includes("shape") || userDetails.includes("like a") || userDetails.includes("shaped")) {
-                            // High-priority 3D sculpting logic
-                            coreSubject = `a professional 3D sculpted cake exactly shaped like ${userDetails}`;
-                        } else {
-                            coreSubject = `${userDetails}, ${snapState.type} cake`;
-                        }
-                    } else {
-                        coreSubject = `a luxurious ${snapState.type} cake`;
+                    // Priority 1: 3D Sculpted Shapes (Cars, Characters, etc.)
+                    if (userDetails.includes("shape") || userDetails.includes("shaped") || userDetails.includes("like a")) {
+                        mainSubject = `A hyper-realistic 3D sculpted professional custom cake shaped exactly like ${userDetails}. The entire cake is a detailed 3D sculpture, no round base, just the object sculpture.`;
+                    }
+                    // Priority 2: Specific Theme with Default
+                    else if (userDetails) {
+                        mainSubject = `A luxurious ${userDetails} themed ${snapState.type} cake`;
+                    }
+                    // Priority 3: Pure Default
+                    else {
+                        mainSubject = `A high-end designer ${snapState.type} cake in ${snapState.style} style`;
                     }
 
-                    const eliteSuffix = "professional food photography, gourmet patisserie style, focus on cake textures and fondant details, 8k resolution, cinematic lighting, ultra-realistic, white background, no text, no watermark";
-                    const finalPrompt = `${coreSubject}, ${styleContext}, ${colorContext}. ${eliteSuffix}`;
+                    const eliteContext = `gourmet patisserie style, soft studio lighting, ultra-realistic textures, 8k resolution, cinematic food photography, white marble background, no clutter, no text`;
+                    const finalPrompt = `${mainSubject}, ${snapState.color} color theme, ${snapState.style} aesthetic, ${eliteContext}`;
 
-                    // --- GENERATION ENGINE SELECTOR ---
+                    // --- GENERATION ENGINE (MULTI-LAYER) ---
                     let imageUrl = '';
-                    const seed = Math.floor(Math.random() * 9999999);
+                    const seed = Math.floor(Math.random() * 999999);
+                    const timestamp = Date.now();
 
                     if (attempt === 1) {
-                        // PRIMARY: Pollinations (Dynamic)
-                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true`;
+                        // LAYER 1: Standard Pollinations
+                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&enhance=true`;
                     } else if (attempt === 2) {
-                        // SECONDARY: Jittered Pollinations (Force Cache Bypass)
-                        const jitteredPrompt = `${finalPrompt}, variant ${seed}`;
-                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(jitteredPrompt)}?seed=${seed + 1}&width=1024&height=1024&nologo=true`;
+                        // LAYER 2: Randomized Jitter (Bypasses all caches)
+                        const jitter = `${finalPrompt} (artisan detail level: ${seed})`;
+                        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(jitter)}?seed=${seed + 5}&width=1024&height=1024&nologo=true&t=${timestamp}`;
                     } else {
-                        // FINAL FALLBACK: Bakenovation Vault (100% Reliable, Curated)
-                        console.log("⚠️ AI Servers Busy. Pulling from Artisan Vault.");
-                        const vaultIndex = (snapState.style.length + snapState.color.length) % CAKE_VAULT.length;
+                        // LAYER 3: The Artisan Vault (Last Resort Safety)
+                        const vaultIndex = (snapState.style.length + snapState.color.length + seed) % CAKE_VAULT.length;
                         imageUrl = CAKE_VAULT[vaultIndex];
                     }
 
