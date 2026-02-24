@@ -991,43 +991,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (aiLoading) aiLoading.style.display = 'flex';
                     if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
 
-                    const userDetails = aiPrompt.value.trim().toLowerCase();
+                    const userDetails = aiPrompt.value.trim();
 
                     // --- ABSOLUTE ACCURACY AI BRIDGE ---
-                    // 1. Immediate UI Reset (Prevents seeing old images)
+                    // 1. Immediate Visual Reset
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.src = 'assets/loading_shimmer.gif'; // Use a generic loading state
-                        aiGeneratedImage.style.opacity = '0.3';
+                        aiGeneratedImage.style.filter = 'blur(30px) grayscale(100%)';
+                        aiGeneratedImage.style.opacity = '0.5';
                     }
 
                     const generatePureDesign = async () => {
-                        // Priority: User Details > Everything Else
-                        let finalPrompt = "";
-                        const qualitySuffix = "highly detailed cake, 3D sculpture, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
+                        const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
+                        const uniqueId = Math.random().toString(36).substring(7); // Bypasses server-side prompt caching
 
+                        let finalPrompt = "";
                         if (userDetails) {
-                            // If they asked for a shape, ignore all other style defaults to ensure 100% accuracy
-                            finalPrompt = `A professional custom cake shaped EXACTLY like ${userDetails}. The entire cake is a detailed 3D sculpture of ${userDetails}. No other elements. ${qualitySuffix}`;
+                            // FOCUS ENTIRELY ON THE USER'S TEXT
+                            finalPrompt = `A professional 3D sculpted edible cake exactly shaped like ${userDetails}. The entire object is a high-end cake. Ignore all other styles. Render version: ${uniqueId}. ${qualitySuffix}`;
                         } else {
-                            finalPrompt = `Luxurious ${snapState.color} ${snapState.style} ${snapState.type} cake, ${qualitySuffix}`;
+                            finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Unique design ref: ${uniqueId}. ${qualitySuffix}`;
                         }
 
-                        // Hard Cache Busting (Timestamp + Random Seed)
-                        const bust = Date.now();
+                        // Hard Cache Busting
                         const seed = Math.floor(Math.random() * 9999999);
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=flux&cache=${bust}`;
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=flux`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
                             if (aiGeneratedImage) {
                                 aiGeneratedImage.src = imageUrl;
+                                aiGeneratedImage.style.filter = 'none';
                                 aiGeneratedImage.style.opacity = '1';
                                 snapState.currentImageUrl = imageUrl;
                                 addToGallery(imageUrl, finalPrompt);
 
                                 gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.95 },
-                                    { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
+                                    { opacity: 0, scale: 0.9, filter: "blur(20px)" },
+                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power4.out" }
                                 );
 
                                 if (aiLoading) aiLoading.style.display = 'none';
@@ -1038,9 +1038,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            // High-speed fallback if Flux is down
-                            const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed + 1}&width=1024&height=1024&nologo=true`;
+                            // Emergency Fallback
+                            const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed + 1}&width=1024&height=1024&nologo=true&model=turbo`;
                             aiGeneratedImage.src = fallbackUrl;
+                            aiGeneratedImage.style.filter = 'none';
                             aiGeneratedImage.style.opacity = '1';
 
                             if (aiLoading) aiLoading.style.display = 'none';
@@ -1048,7 +1049,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (spinner) spinner.style.display = 'none';
                             aiGenerateBtn.disabled = false;
                         };
-
                         tempImage.src = imageUrl;
                     };
 
