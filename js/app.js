@@ -1028,95 +1028,125 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
                     }, 25000);
 
-                    // --- CAKE-FIRST ARCHITECTURE V26 ---
-                    // Always anchor on CAKE first, then layer the theme/shape on top.
-                    // This works WITH the AI's training data instead of against it.
-                    const cakeBase = "professional custom fondant cake, luxury bakery creation, cake art, high-end patisserie, professional cake photography, 8k, white studio background, cinematic lighting";
+                    // --- CAKE-FIRST ARCHITECTURE V28 (REINFORCED) ---
+                    // Hardened prompt to ensure 100% "Cake-Only" results.
+                    const cakeBase = "hyper-realistic custom fondant cake, luxury award-winning bakery creation, 8k professional food photography, white studio background, cinematic lighting. Everything visible is made of edible cake and sugar. No plastic, no real objects.";
 
-                    // ATOMIC SEED — guaranteed unique on every click
                     const atomicSeed = (Math.floor(Math.random() * 99999999) ^ Date.now()) >>> 0;
                     const uniqueRef = atomicSeed.toString(36);
 
                     let finalPrompt = "";
                     if (rawUserText) {
-                        // CAKE-FIRST: lead with cake, theme it with user input
-                        finalPrompt = `A stunning luxury custom cake designed with a "${rawUserText}" theme. Elaborate fondant decoration, shaped and sculpted to represent "${rawUserText}". Award-winning cake design. ${cakeBase}. unique:${uniqueRef}`;
+                        finalPrompt = `A masterpiece luxury custom cake, sculpted and decorated with a strictly "${rawUserText}" theme. The entire structure is a high-end edible cake. ${cakeBase}. unique:${uniqueRef}`;
                     } else {
-                        finalPrompt = `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Signature atelier design. ${cakeBase}. seed:${uniqueRef}`;
+                        finalPrompt = `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake art. Signature atelier design. ${cakeBase}. seed:${uniqueRef}`;
                     }
 
                     // CONSOLE TRACE
-                    console.log('%c🍰 CAKE-FIRST V26 — PROMPT', 'color:#d4af37;font-weight:bold;font-size:14px');
+                    console.log('%c🍰 HYPER-ACCURACY v28 — PROMPT', 'color:#d4af37;font-weight:bold;font-size:14px');
                     console.log('📤 Sending:', finalPrompt);
 
                     console.log('🌱 Seed:', atomicSeed);
 
-                    // --- HUGGING FACE BACKEND V27 ---
-                    // No token in code — uses HF's public inference (rate limited but free)
-                    const HF_MODELS = [
-                        'black-forest-labs/FLUX.1-schnell',  // Tier 1: Best quality
-                        'stabilityai/stable-diffusion-xl-base-1.0', // Tier 2: Reliable fallback
-                    ];
-
-                    const tryHFTier = async (tierIndex = 0) => {
-                        if (tierIndex >= HF_MODELS.length) {
-                            // All tiers failed — reset UI silently
-                            clearTimeout(safetyTimeout);
-                            if (aiLoading) aiLoading.style.display = 'none';
-                            if (btnText) btnText.style.display = 'inline';
-                            if (spinner) spinner.style.display = 'none';
-                            aiGenerateBtn.disabled = false;
-                            if (aiGeneratedImage) { aiGeneratedImage.style.filter = 'none'; aiGeneratedImage.style.opacity = '1'; }
-                            return;
+                    // --- ULTRA-RELIABLE 3-TIER BACKEND V28 ---
+                    const getHFToken = () => {
+                        let token = localStorage.getItem('hf_token');
+                        if (!token || token === 'null' || token.length < 10) {
+                            token = window.prompt("To enable Hyper-Accuracy, please enter your HuggingFace Token (once):\n(Starts with hf_...)", "");
+                            if (token) localStorage.setItem('hf_token', token);
                         }
+                        return token;
+                    };
 
-                        const model = HF_MODELS[tierIndex];
-                        console.log(`🤗 HF Tier ${tierIndex + 1}: Calling ${model}...`);
+                    const tryTier = async (tierIndex = 0) => {
+                        const HF_MODELS = [
+                            'black-forest-labs/FLUX.1-schnell',
+                            'stabilityai/stable-diffusion-xl-base-1.0'
+                        ];
 
-                        try {
-                            const response = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    inputs: finalPrompt,
-                                    parameters: { num_inference_steps: 4, seed: atomicSeed }
-                                })
-                            });
+                        // TIER 1 & 2: HuggingFace (Needs Token)
+                        if (tierIndex < HF_MODELS.length) {
+                            const model = HF_MODELS[tierIndex];
+                            const token = getHFToken();
 
-                            if (!response.ok) {
-                                const errText = await response.text();
-                                console.warn(`HF Tier ${tierIndex + 1} failed (${response.status}):`, errText);
-                                return tryHFTier(tierIndex + 1);
+                            if (!token) {
+                                console.warn("No token provided, skipping HF tiers...");
+                                return tryTier(HF_MODELS.length); // Skip to Pollinations
                             }
 
-                            const blob = await response.blob();
-                            const objectUrl = URL.createObjectURL(blob);
+                            console.log(`🤗 HF Tier ${tierIndex + 1}: Calling ${model}...`);
+                            try {
+                                const response = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        inputs: finalPrompt,
+                                        parameters: { num_inference_steps: 4, seed: atomicSeed }
+                                    })
+                                });
 
-                            clearTimeout(safetyTimeout);
-                            if (aiGeneratedImage) {
-                                aiGeneratedImage.src = objectUrl;
-                                aiGeneratedImage.style.filter = 'none';
-                                aiGeneratedImage.style.opacity = '1';
-                                snapState.currentImageUrl = objectUrl;
-                                addToGallery(objectUrl, finalPrompt);
-                                gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.97, filter: "blur(10px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }
-                                );
-                                if (aiLoading) aiLoading.style.display = 'none';
-                                if (btnText) btnText.style.display = 'inline';
-                                if (spinner) spinner.style.display = 'none';
-                                aiGenerateBtn.disabled = false;
+                                if (response.status === 503) {
+                                    console.warn(`HF Model ${model} is loading, falling back...`);
+                                    return tryTier(tierIndex + 1);
+                                }
+
+                                if (!response.ok) {
+                                    const errText = await response.text();
+                                    console.warn(`HF Tier ${tierIndex + 1} failed:`, errText);
+                                    return tryTier(tierIndex + 1);
+                                }
+
+                                const blob = await response.blob();
+                                const objectUrl = URL.createObjectURL(blob);
+                                applyImage(objectUrl);
+
+                            } catch (err) {
+                                console.warn(`HF Tier ${tierIndex + 1} error:`, err);
+                                tryTier(tierIndex + 1);
                             }
-                        } catch (err) {
-                            console.warn(`HF Tier ${tierIndex + 1} error:`, err);
-                            tryHFTier(tierIndex + 1);
+                        }
+                        // TIER 3: Pollinations (Zero Token Backup)
+                        else {
+                            console.log(`📡 Tier 3 (Backup): Calling Pollinations...`);
+                            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true&enhance=true&model=flux`;
+
+                            const tempImage = new Image();
+                            tempImage.onload = () => applyImage(imageUrl);
+                            tempImage.onerror = () => {
+                                clearTimeout(safetyTimeout);
+                                resetLoadingState();
+                            };
+                            tempImage.src = imageUrl;
                         }
                     };
 
-                    tryHFTier(0);
+                    const applyImage = (url) => {
+                        clearTimeout(safetyTimeout);
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.src = url;
+                            aiGeneratedImage.style.filter = 'none';
+                            aiGeneratedImage.style.opacity = '1';
+                            snapState.currentImageUrl = url;
+                            addToGallery(url, finalPrompt);
+                            gsap.fromTo(aiGeneratedImage,
+                                { opacity: 0, scale: 0.97, filter: "blur(10px)" },
+                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }
+                            );
+                            resetLoadingState();
+                        }
+                    };
+
+                    const resetLoadingState = () => {
+                        if (aiLoading) aiLoading.style.display = 'none';
+                        if (btnText) btnText.style.display = 'inline';
+                        if (spinner) spinner.style.display = 'none';
+                        aiGenerateBtn.disabled = false;
+                    };
+
+                    tryTier(0);
 
                 };
 
