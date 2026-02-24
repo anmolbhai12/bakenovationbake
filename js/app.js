@@ -1054,7 +1054,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const tryTier = (tier = 1) => {
                         const model = (tier === 2) ? 'turbo' : 'flux';
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&enhance=true&model=${model}`;
+                        const negativeParam = rawUserText
+                            ? encodeURIComponent('round cake, tiered cake, flowers, roses, fairy lights, wedding decor, balloons, generic cake, boring cake')
+                            : '';
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&enhance=true&model=${model}${negativeParam ? '&negative=' + negativeParam : ''}`;
+                        console.log('🌐 URL:', imageUrl);
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
