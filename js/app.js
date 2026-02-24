@@ -990,11 +990,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
                 const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startEliteStudioV23 = async () => {
+                const startHyperAccuracyV24 = async () => {
                     const btnText = aiGenerateBtn.querySelector('.btn-text');
                     const spinner = aiGenerateBtn.querySelector('.spinner');
                     const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
-                    const originalLoadingMsg = "Chef is sculpting your masterpiece...";
+
+                    const userDetails = aiPrompt.value.trim().toLowerCase();
+                    const isCustomShape = userDetails.includes('car') || userDetails.includes('shape') || userDetails.includes('bottle') || userDetails.includes('box') || userDetails.includes('sculpture') || userDetails.includes('like a');
+
+                    const originalLoadingMsg = isCustomShape ? "Forging your custom sculpture..." : "Chef is sculpting your masterpiece...";
 
                     // UI State
                     if (btnText) btnText.style.display = 'none';
@@ -1003,17 +1007,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (aiLoading) aiLoading.style.display = 'flex';
                     if (loadingMsg) loadingMsg.innerText = originalLoadingMsg;
 
-                    const userDetails = aiPrompt.value.trim();
-
-                    // --- TRINITY ENGINE V23: THE NUCLEAR FAIL-SAFE ---
+                    // --- HYPER-ACCURACY ENGINE V24: SHAPE-FIRST ARCHITECT ---
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.style.filter = 'blur(25px) contrast(1.1)';
-                        aiGeneratedImage.style.opacity = '0.5';
+                        aiGeneratedImage.style.filter = 'blur(20px) brightness(0.8)';
+                        aiGeneratedImage.style.opacity = '0.6';
                     }
 
-                    // Reset Timeout Logic (Safety Guard)
                     const safetyTimeout = setTimeout(() => {
-                        console.error("AI Generation timeout reached. Resetting UI.");
                         if (aiLoading) aiLoading.style.display = 'none';
                         if (btnText) btnText.style.display = 'inline';
                         if (spinner) spinner.style.display = 'none';
@@ -1022,26 +1022,29 @@ document.addEventListener('DOMContentLoaded', () => {
                             aiGeneratedImage.style.filter = 'none';
                             aiGeneratedImage.style.opacity = '1';
                         }
-                    }, 20000); // 20s hard reset
+                    }, 25000);
 
-                    const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail, sharp focus";
-                    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(7);
+                    const qualitySuffix = "ultra-realistic professional food photography, 8k, high-end luxury patisserie, masterpiece details, sharp macro focus, white studio background, cinematic lighting";
+
+                    // SEED EXPLOSION: Force a new universe on every click
+                    const atomicSeed = Math.floor(Math.random() * 20000000) + Date.now();
+                    const uniqueRef = Math.random().toString(36).substring(2, 10);
 
                     let finalPrompt = "";
                     if (userDetails) {
-                        // NUCLEAR PROMPT INJECTION: Force the shape above all else
-                        finalPrompt = `A 3D SCULPTED CAKE LITERALLY SHAPED LIKE ${userDetails}. The entire object is an edible high-end cake. This is NOT a round cake. The shape of the cake IS THE ${userDetails}. NO BACKGROUND ELEMENTS. Render: ${uniqueId}. ${qualitySuffix}`;
+                        if (isCustomShape) {
+                            // ATOMIC SHAPE OVERRIDE: Ignore all chips for shapes
+                            finalPrompt = `A 3D HYPER-REALISTIC CAKE LITERALLY SCULPTED IN THE SHAPE OF A ${userDetails.toUpperCase()}. The entire object is an edible high-end cake. This is NOT a round or tiered cake. The object IS the cake. Sharp edges, 3D structure. Ref: ${uniqueRef}. ${qualitySuffix}`;
+                        } else {
+                            finalPrompt = `Bespoke luxury ${snapState.color} ${snapState.style} ${snapState.type} cake incorporating details: ${userDetails}. High-fashion design. Ref: ${uniqueRef}. ${qualitySuffix}`;
+                        }
                     } else {
-                        finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury artistic cake. Ref: ${uniqueId}. ${qualitySuffix}`;
+                        finalPrompt = `Elite ${snapState.color} ${snapState.style} ${snapState.type} luxury artistic cake. Modern masterpiece. Ref: ${uniqueRef}. ${qualitySuffix}`;
                     }
 
-                    const tryTrinityTier = (tier = 1, seedOffset = 0) => {
-                        const seed = Math.floor(Math.random() * 9999999) + seedOffset;
-                        let model = 'flux';
-                        if (tier === 2) model = 'turbo';
-                        if (tier === 3) model = 'flux'; // Random fallback
-
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=${model}`;
+                    const tryTrinityTier = (tier = 1) => {
+                        const model = (tier === 2) ? 'turbo' : 'flux';
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed + tier}&width=1024&height=1024&nologo=true&model=${model}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
@@ -1054,8 +1057,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 addToGallery(imageUrl, finalPrompt);
 
                                 gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.95, filter: "blur(15px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power4.out" }
+                                    { opacity: 0, scale: 0.98, filter: "blur(10px)" },
+                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }
                                 );
 
                                 if (aiLoading) aiLoading.style.display = 'none';
@@ -1067,19 +1070,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         tempImage.onerror = () => {
                             if (tier < 3) {
-                                console.warn(`Trinity Tier ${tier} busy. Escalating...`);
-                                tryTrinityTier(tier + 1, seed + 1);
+                                tryTrinityTier(tier + 1);
                             } else {
-                                console.error("Trinity Engines exhausted. Resetting UI silently.");
                                 clearTimeout(safetyTimeout);
                                 if (aiLoading) aiLoading.style.display = 'none';
                                 if (btnText) btnText.style.display = 'inline';
                                 if (spinner) spinner.style.display = 'none';
                                 aiGenerateBtn.disabled = false;
-                                if (aiGeneratedImage) {
-                                    aiGeneratedImage.style.filter = 'none';
-                                    aiGeneratedImage.style.opacity = '1';
-                                }
                             }
                         };
 
@@ -1089,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tryTrinityTier(1);
                 };
 
-                startEliteStudioV23();
+                startHyperAccuracyV24();
             });
         });
     }
