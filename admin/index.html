@@ -37,7 +37,7 @@
             container.innerHTML = '<div class="loading-state">Syncing Orders...</div>';
 
             try {
-                const res = await fetch(`${GAS_URL}?action=list`);
+                const res = await fetch(`${GAS_URL}?action=list_orders`);
                 const data = await res.json();
 
                 if (data.status === 'success') {
