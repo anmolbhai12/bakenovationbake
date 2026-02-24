@@ -172,25 +172,42 @@ function sendWhatsAppOTP(data) {
 }
 
 function getSheet(name, headers) {
+  let ss = null;
+  
+  // Method 1: Try ID (Hardcoded)
   try {
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    let sheet = ss.getSheetByName(name);
-    
-    if (!sheet) {
-      sheet = ss.insertSheet(name);
-      sheet.appendRow(headers);
+    if (SPREADSHEET_ID && SPREADSHEET_ID !== 'YOUR_ID_HERE') {
+      ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     }
-    return sheet;
-  } catch (e) {
-    // FALLBACK: If openById fails, try active spreadsheet (Resilience)
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(name);
-    if (!sheet) {
-      sheet = ss.insertSheet(name);
-      sheet.appendRow(headers);
-    }
-    return sheet;
+  } catch (e) {}
+
+  // Method 2: Try Active (If bound)
+  if (!ss) {
+    try {
+      ss = SpreadsheetApp.getActiveSpreadsheet();
+    } catch (e) {}
   }
+
+  // Method 3: Try finding ANY accessible spreadsheet (Last Resort)
+  if (!ss) {
+    try {
+      const files = DriveApp.getFilesByType(MimeType.GOOGLE_SHEETS);
+      if (files.hasNext()) {
+        ss = SpreadsheetApp.open(files.next());
+      }
+    } catch (e) {}
+  }
+
+  if (!ss) {
+    throw new Error("CRITICAL: No Spreadsheet Found. Please open your Google Sheet, go to Extensions > Apps Script, and paste the code there.");
+  }
+
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    sheet.appendRow(headers);
+  }
+  return sheet;
 }
 
 function diagnosticCheck() {
