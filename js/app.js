@@ -990,7 +990,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
                 const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startGenerationV22 = async (attempt = 1) => {
+                const startEliteStudioV23 = async () => {
+                    const btnText = aiGenerateBtn.querySelector('.btn-text');
+                    const spinner = aiGenerateBtn.querySelector('.spinner');
+                    const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+                    const originalLoadingMsg = "Chef is sculpting your masterpiece...";
+
                     // UI State
                     if (btnText) btnText.style.display = 'none';
                     if (spinner) spinner.style.display = 'block';
@@ -1000,29 +1005,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim();
 
-                    // --- ULTRA-RESILIENT AI BRIDGE V22 ---
+                    // --- TRINITY ENGINE V23: THE NUCLEAR FAIL-SAFE ---
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.style.filter = 'blur(40px) contrast(1.2)';
-                        aiGeneratedImage.style.opacity = '0.4';
+                        aiGeneratedImage.style.filter = 'blur(25px) contrast(1.1)';
+                        aiGeneratedImage.style.opacity = '0.5';
                     }
 
-                    const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
-                    const uniqueId = Date.now().toString(36);
+                    // Reset Timeout Logic (Safety Guard)
+                    const safetyTimeout = setTimeout(() => {
+                        console.error("AI Generation timeout reached. Resetting UI.");
+                        if (aiLoading) aiLoading.style.display = 'none';
+                        if (btnText) btnText.style.display = 'inline';
+                        if (spinner) spinner.style.display = 'none';
+                        aiGenerateBtn.disabled = false;
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.style.filter = 'none';
+                            aiGeneratedImage.style.opacity = '1';
+                        }
+                    }, 20000); // 20s hard reset
+
+                    const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail, sharp focus";
+                    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(7);
 
                     let finalPrompt = "";
                     if (userDetails) {
-                        finalPrompt = `A professional 3D sculpted cake exactly like ${userDetails}. The entire object is a high-end edible cake. High-fashion patisserie. Render: ${uniqueId}. ${qualitySuffix}`;
+                        // NUCLEAR PROMPT INJECTION: Force the shape above all else
+                        finalPrompt = `A 3D SCULPTED CAKE LITERALLY SHAPED LIKE ${userDetails}. The entire object is an edible high-end cake. This is NOT a round cake. The shape of the cake IS THE ${userDetails}. NO BACKGROUND ELEMENTS. Render: ${uniqueId}. ${qualitySuffix}`;
                     } else {
-                        finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury elite cake. Ref: ${uniqueId}. ${qualitySuffix}`;
+                        finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury artistic cake. Ref: ${uniqueId}. ${qualitySuffix}`;
                     }
 
-                    const tryGeneration = (engineTier = 'flux', seedOffset = 0) => {
-                        const seed = Math.floor(Math.random() * 8888888) + seedOffset;
-                        const model = engineTier === 'flux' ? 'flux' : 'turbo';
+                    const tryTrinityTier = (tier = 1, seedOffset = 0) => {
+                        const seed = Math.floor(Math.random() * 9999999) + seedOffset;
+                        let model = 'flux';
+                        if (tier === 2) model = 'turbo';
+                        if (tier === 3) model = 'flux'; // Random fallback
+
                         const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=${model}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
+                            clearTimeout(safetyTimeout);
                             if (aiGeneratedImage) {
                                 aiGeneratedImage.src = imageUrl;
                                 aiGeneratedImage.style.filter = 'none';
@@ -1031,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 addToGallery(imageUrl, finalPrompt);
 
                                 gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.9, filter: "blur(20px)" },
+                                    { opacity: 0, scale: 0.95, filter: "blur(15px)" },
                                     { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power4.out" }
                                 );
 
@@ -1043,28 +1066,30 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            if (engineTier === 'flux') {
-                                console.warn("Flux busy, switching to Turbo...");
-                                tryGeneration('turbo', 1);
+                            if (tier < 3) {
+                                console.warn(`Trinity Tier ${tier} busy. Escalating...`);
+                                tryTrinityTier(tier + 1, seed + 1);
                             } else {
-                                console.warn("All engines exhausted, final retry with Flux Random...");
-                                // If all fails, at least reset UI and try one last time silently
-                                setTimeout(() => {
-                                    if (aiLoading) aiLoading.style.display = 'none';
-                                    if (btnText) btnText.style.display = 'inline';
-                                    if (spinner) spinner.style.display = 'none';
-                                    aiGenerateBtn.disabled = false;
-                                }, 1000);
+                                console.error("Trinity Engines exhausted. Resetting UI silently.");
+                                clearTimeout(safetyTimeout);
+                                if (aiLoading) aiLoading.style.display = 'none';
+                                if (btnText) btnText.style.display = 'inline';
+                                if (spinner) spinner.style.display = 'none';
+                                aiGenerateBtn.disabled = false;
+                                if (aiGeneratedImage) {
+                                    aiGeneratedImage.style.filter = 'none';
+                                    aiGeneratedImage.style.opacity = '1';
+                                }
                             }
                         };
 
                         tempImage.src = imageUrl;
                     };
 
-                    tryGeneration('flux', 0);
+                    tryTrinityTier(1);
                 };
 
-                startGenerationV22();
+                startEliteStudioV23();
             });
         });
     }

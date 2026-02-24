@@ -1000,53 +1000,209 @@ h4 {
     gap: 1.5rem;
 }
 
+/* --- AI STUDIO: THE ATELIER --- */
+.sweet-snap-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    margin-top: 3rem;
+    min-height: 600px;
+}
+
+.snap-controls {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.snap-label {
+    display: block;
+    color: var(--color-gold);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.snap-chips-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.snap-chip {
+    padding: 0.6rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    color: var(--color-text);
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.snap-chip:hover {
+    background: rgba(197, 160, 89, 0.1);
+    border-color: var(--color-gold);
+}
+
+.snap-chip.active {
+    background: var(--color-gold);
+    color: #1a0b1f;
+    border-color: var(--color-gold);
+    font-weight: 600;
+}
+
+.snap-colors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.snap-color {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.snap-color.active {
+    border-color: var(--color-gold);
+    transform: scale(1.15);
+}
+
+.snap-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    color: var(--color-text);
+    padding: 1.2rem;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    resize: none;
+    transition: all 0.3s ease;
+}
+
+.snap-input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-snap-primary {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--color-gold);
+    color: #1a0b1f;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-snap-primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);
+}
+
+.btn-snap-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* --- THE PREVIEW FRAME --- */
+.snap-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
 .snap-result-frame {
     width: 100%;
-    aspect-ratio: 4/5;
-    background: #f0f0f0;
-    border-radius: 12px;
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
-    border: 1px solid #e0e0e0;
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .snap-result-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: filter 0.8s ease, opacity 0.8s ease;
 }
 
-/* Loader Override */
-.loader-snap {
-    width: 48px;
-    height: 48px;
-    border: 3px solid #fff;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-}
-
-.loader-snap::after {
-    content: '';
-    box-sizing: border-box;
+/* THE RELENTLESS LOADER */
+.ai-loading-overlay {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 11, 31, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    color: white;
+}
+
+.loader-snap {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(197, 160, 89, 0.1);
     border-radius: 50%;
-    border: 3px solid transparent;
-    border-bottom-color: #d4af37;
+    border-top-color: var(--color-gold);
+    animation: rotate 1s linear infinite;
+    margin-bottom: 2rem;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.snap-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.btn-snap-secondary {
+    padding: 1rem;
+    background: transparent;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all 0.3s ease;
+}
+
+.btn-snap-secondary:hover {
+    background: rgba(197, 160, 89, 0.1);
 }
 
 /* Responsive */
 @media (max-width: 900px) {
     .sweet-snap-container {
         grid-template-columns: 1fr;
-        padding: 1.5rem;
+        gap: 2rem;
     }
 }
 
