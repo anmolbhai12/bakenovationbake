@@ -993,28 +993,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim().toLowerCase();
 
-                    // --- ELITE SMART-DUO PROMPT ARCHITECT ---
-                    const getPrompt = (isTurbo = false) => {
-                        const aesthetic = `${snapState.style} style`;
-                        const color = `${snapState.color} palette`;
-                        let core = "";
+                    // --- ELITE ARTISAN INFINITY ARCHITECT ---
+                    const getPrompt = (tier = 1) => {
+                        const base = userDetails ? userDetails : `luxurious ${snapState.type} designer cake`;
+                        const styling = "professional food styling, 8k, realistic textures, white studio background, cinematic lighting";
 
-                        if (userDetails) {
-                            core = `A professional 3D sculpted luxury edible cake exactly shaped like ${userDetails}, no round base, full 3D sculpture`;
-                        } else {
-                            core = `A luxurious ${snapState.type} designer cake`;
-                        }
-
-                        const detailSuffix = "high-end food photography, 8k, realistic textures, white background, cinematic lighting";
-                        return `${core}, ${aesthetic}, ${color}. ${detailSuffix}${isTurbo ? ', speed-optimized' : ''}`;
+                        if (tier === 1) return `A hyper-realistic 3D sculpted edible cake exactly shaped like ${base}, ${snapState.style} aesthetic, ${snapState.color} palette. ${styling}`;
+                        if (tier === 2) return `Professional pastry-chef 3D sculpture of ${base}, ${snapState.color} theme, ${styling}`;
+                        return `${base} cake, ${snapState.color}, ${snapState.style}, high definition, food photography`;
                     };
 
-                    const tryGenerate = async (engine = 'flux', attempt = 1) => {
-                        const currentPrompt = getPrompt(engine === 'turbo');
-                        if (loadingMsg) loadingMsg.innerText = engine === 'flux' ? "Consulting Elite Sculptor (FLUX)..." : "Engaging High-Speed Chef (Turbo)...";
+                    const tryGenerate = async (tier = 1, attempt = 1) => {
+                        const currentPrompt = getPrompt(tier);
+                        const statusMsgs = [
+                            "Consulting Elite Sculptor...",
+                            "Refining Textures...",
+                            "Applying Gold Leaf...",
+                            "Final Polish..."
+                        ];
 
-                        const seed = Math.floor(Math.random() * 9999999);
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(currentPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true${engine === 'flux' ? '&model=flux' : ''}`;
+                        if (loadingMsg) loadingMsg.innerText = statusMsgs[Math.min(tier - 1, 3)];
+
+                        const seed = Math.floor(Math.random() * 9999999) + tier;
+                        let modelParam = "";
+                        if (tier === 1) modelParam = "&model=flux";
+                        if (tier === 2) modelParam = "&model=turbo";
+
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(currentPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true${modelParam}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
@@ -1036,25 +1041,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            if (engine === 'flux') {
-                                console.log("Flux limit reached, switching to Turbo...");
-                                tryGenerate('turbo', 1); // Immediate fallback
+                            if (tier < 4) {
+                                // Silent Fallback/Retry
+                                setTimeout(() => tryGenerate(tier + 1, 1), 500);
                             } else if (attempt < 2) {
-                                console.log("Turbo retry...");
-                                setTimeout(() => tryGenerate('turbo', attempt + 1), 1000);
+                                // Final jittered retry
+                                setTimeout(() => tryGenerate(4, attempt + 1), 1000);
                             } else {
-                                showAlert("The AI kitchen is very busy. Please try one more time in 10 seconds.");
+                                // Real failure - don't show an alert, just reset UI so they can try again
                                 if (aiLoading) aiLoading.style.display = 'none';
                                 if (btnText) btnText.style.display = 'inline';
                                 if (spinner) spinner.style.display = 'none';
                                 aiGenerateBtn.disabled = false;
+                                console.error("AI Bridge timed out.");
                             }
                         };
 
                         tempImage.src = imageUrl;
                     };
 
-                    tryGenerate('flux'); // Start with the best model
+                    tryGenerate(1); // Start with Tier 1 (FLUX)
                 };
 
                 startGeneration();
