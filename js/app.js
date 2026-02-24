@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
                 const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startGeneration = async (attempt = 1) => {
+                const startGenerationV22 = async (attempt = 1) => {
                     // UI State
                     if (btnText) btnText.style.display = 'none';
                     if (spinner) spinner.style.display = 'block';
@@ -1000,28 +1000,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim();
 
-                    // --- ABSOLUTE ACCURACY AI BRIDGE ---
-                    // 1. Immediate Visual Reset
+                    // --- ULTRA-RESILIENT AI BRIDGE V22 ---
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.style.filter = 'blur(30px) grayscale(100%)';
-                        aiGeneratedImage.style.opacity = '0.5';
+                        aiGeneratedImage.style.filter = 'blur(40px) contrast(1.2)';
+                        aiGeneratedImage.style.opacity = '0.4';
                     }
 
-                    const generatePureDesign = async () => {
-                        const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
-                        const uniqueId = Math.random().toString(36).substring(7); // Bypasses server-side prompt caching
+                    const qualitySuffix = "highly detailed luxury 3D cake, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
+                    const uniqueId = Date.now().toString(36);
 
-                        let finalPrompt = "";
-                        if (userDetails) {
-                            // FOCUS ENTIRELY ON THE USER'S TEXT
-                            finalPrompt = `A professional 3D sculpted edible cake exactly shaped like ${userDetails}. The entire object is a high-end cake. Ignore all other styles. Render version: ${uniqueId}. ${qualitySuffix}`;
-                        } else {
-                            finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake. Unique design ref: ${uniqueId}. ${qualitySuffix}`;
-                        }
+                    let finalPrompt = "";
+                    if (userDetails) {
+                        finalPrompt = `A professional 3D sculpted cake exactly like ${userDetails}. The entire object is a high-end edible cake. High-fashion patisserie. Render: ${uniqueId}. ${qualitySuffix}`;
+                    } else {
+                        finalPrompt = `Bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury elite cake. Ref: ${uniqueId}. ${qualitySuffix}`;
+                    }
 
-                        // Hard Cache Busting
-                        const seed = Math.floor(Math.random() * 9999999);
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=flux`;
+                    const tryGeneration = (engineTier = 'flux', seedOffset = 0) => {
+                        const seed = Math.floor(Math.random() * 8888888) + seedOffset;
+                        const model = engineTier === 'flux' ? 'flux' : 'turbo';
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=${model}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
@@ -1045,24 +1043,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            // Emergency Fallback
-                            const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed + 1}&width=1024&height=1024&nologo=true&model=turbo`;
-                            aiGeneratedImage.src = fallbackUrl;
-                            aiGeneratedImage.style.filter = 'none';
-                            aiGeneratedImage.style.opacity = '1';
-
-                            if (aiLoading) aiLoading.style.display = 'none';
-                            if (btnText) btnText.style.display = 'inline';
-                            if (spinner) spinner.style.display = 'none';
-                            aiGenerateBtn.disabled = false;
+                            if (engineTier === 'flux') {
+                                console.warn("Flux busy, switching to Turbo...");
+                                tryGeneration('turbo', 1);
+                            } else {
+                                console.warn("All engines exhausted, final retry with Flux Random...");
+                                // If all fails, at least reset UI and try one last time silently
+                                setTimeout(() => {
+                                    if (aiLoading) aiLoading.style.display = 'none';
+                                    if (btnText) btnText.style.display = 'inline';
+                                    if (spinner) spinner.style.display = 'none';
+                                    aiGenerateBtn.disabled = false;
+                                }, 1000);
+                            }
                         };
+
                         tempImage.src = imageUrl;
                     };
 
-                    generatePureDesign();
+                    tryGeneration('flux', 0);
                 };
 
-                startGeneration();
+                startGenerationV22();
             });
         });
     }
