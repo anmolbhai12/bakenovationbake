@@ -993,44 +993,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const userDetails = aiPrompt.value.trim().toLowerCase();
 
-                    // --- ELITE ARTISAN INFINITY ARCHITECT ---
-                    const getPrompt = (tier = 1) => {
-                        const base = userDetails ? userDetails : `luxurious ${snapState.type} designer cake`;
-                        const styling = "professional food styling, 8k, realistic textures, white studio background, cinematic lighting";
+                    // --- ABSOLUTE ACCURACY AI BRIDGE ---
+                    // 1. Immediate UI Reset (Prevents seeing old images)
+                    if (aiGeneratedImage) {
+                        aiGeneratedImage.src = 'assets/loading_shimmer.gif'; // Use a generic loading state
+                        aiGeneratedImage.style.opacity = '0.3';
+                    }
 
-                        if (tier === 1) return `A hyper-realistic 3D sculpted edible cake exactly shaped like ${base}, ${snapState.style} aesthetic, ${snapState.color} palette. ${styling}`;
-                        if (tier === 2) return `Professional pastry-chef 3D sculpture of ${base}, ${snapState.color} theme, ${styling}`;
-                        return `${base} cake, ${snapState.color}, ${snapState.style}, high definition, food photography`;
-                    };
+                    const generatePureDesign = async () => {
+                        // Priority: User Details > Everything Else
+                        let finalPrompt = "";
+                        const qualitySuffix = "highly detailed cake, 3D sculpture, professional food photography, 8k, ultra-realistic, white studio background, masterpiece detail";
 
-                    const tryGenerate = async (tier = 1, attempt = 1) => {
-                        const currentPrompt = getPrompt(tier);
-                        const statusMsgs = [
-                            "Consulting Elite Sculptor...",
-                            "Refining Textures...",
-                            "Applying Gold Leaf...",
-                            "Final Polish..."
-                        ];
+                        if (userDetails) {
+                            // If they asked for a shape, ignore all other style defaults to ensure 100% accuracy
+                            finalPrompt = `A professional custom cake shaped EXACTLY like ${userDetails}. The entire cake is a detailed 3D sculpture of ${userDetails}. No other elements. ${qualitySuffix}`;
+                        } else {
+                            finalPrompt = `Luxurious ${snapState.color} ${snapState.style} ${snapState.type} cake, ${qualitySuffix}`;
+                        }
 
-                        if (loadingMsg) loadingMsg.innerText = statusMsgs[Math.min(tier - 1, 3)];
-
-                        const seed = Math.floor(Math.random() * 9999999) + tier;
-                        let modelParam = "";
-                        if (tier === 1) modelParam = "&model=flux";
-                        if (tier === 2) modelParam = "&model=turbo";
-
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(currentPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true${modelParam}`;
+                        // Hard Cache Busting (Timestamp + Random Seed)
+                        const bust = Date.now();
+                        const seed = Math.floor(Math.random() * 9999999);
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed}&width=1024&height=1024&nologo=true&model=flux&cache=${bust}`;
 
                         const tempImage = new Image();
                         tempImage.onload = () => {
                             if (aiGeneratedImage) {
                                 aiGeneratedImage.src = imageUrl;
+                                aiGeneratedImage.style.opacity = '1';
                                 snapState.currentImageUrl = imageUrl;
-                                addToGallery(imageUrl, currentPrompt);
+                                addToGallery(imageUrl, finalPrompt);
 
                                 gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.98, filter: "blur(10px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }
+                                    { opacity: 0, scale: 0.95 },
+                                    { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" }
                                 );
 
                                 if (aiLoading) aiLoading.style.display = 'none';
@@ -1041,26 +1038,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         tempImage.onerror = () => {
-                            if (tier < 4) {
-                                // Silent Fallback/Retry
-                                setTimeout(() => tryGenerate(tier + 1, 1), 500);
-                            } else if (attempt < 2) {
-                                // Final jittered retry
-                                setTimeout(() => tryGenerate(4, attempt + 1), 1000);
-                            } else {
-                                // Real failure - don't show an alert, just reset UI so they can try again
-                                if (aiLoading) aiLoading.style.display = 'none';
-                                if (btnText) btnText.style.display = 'inline';
-                                if (spinner) spinner.style.display = 'none';
-                                aiGenerateBtn.disabled = false;
-                                console.error("AI Bridge timed out.");
-                            }
+                            // High-speed fallback if Flux is down
+                            const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${seed + 1}&width=1024&height=1024&nologo=true`;
+                            aiGeneratedImage.src = fallbackUrl;
+                            aiGeneratedImage.style.opacity = '1';
+
+                            if (aiLoading) aiLoading.style.display = 'none';
+                            if (btnText) btnText.style.display = 'inline';
+                            if (spinner) spinner.style.display = 'none';
+                            aiGenerateBtn.disabled = false;
                         };
 
                         tempImage.src = imageUrl;
                     };
 
-                    tryGenerate(1); // Start with Tier 1 (FLUX)
+                    generatePureDesign();
                 };
 
                 startGeneration();
