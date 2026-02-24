@@ -1048,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     console.log('🌱 Seed:', atomicSeed);
 
-                    // --- ULTRA-RELIABLE 3-TIER BACKEND V28 ---
+                    // --- ULTRA-RELIABLE 3-TIER BACKEND V30 (ZERO PROMPT) ---
                     const getHFToken = () => {
                         // OBFUSCATED TOKEN: Hidden from automated scanners to prevent push-blocks
                         const a = "hf_hQscerF";
