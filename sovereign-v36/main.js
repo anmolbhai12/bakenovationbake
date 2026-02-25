@@ -1261,4 +1261,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // REMOVED DUPLICATE LISTENER
 
+    // ===================================================
+    // FLEURONS HEADER: Wire up all buttons
+    // ===================================================
+
+    // --- SEARCH BUTTON ---
+    const searchModal = document.getElementById('search-modal');
+    const searchTriggerBtn = document.getElementById('search-trigger-btn');
+    const searchCloseButtons = document.querySelectorAll('.search-close');
+    const searchForm = document.getElementById('search-form');
+    const searchResults = document.getElementById('search-results');
+
+    if (searchTriggerBtn && searchModal) {
+        searchTriggerBtn.addEventListener('click', () => {
+            searchModal.classList.add('active');
+            setTimeout(() => {
+                const inp = document.getElementById('search-input');
+                if (inp) inp.focus();
+            }, 100);
+        });
+    }
+    searchCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (searchModal) searchModal.classList.remove('active');
+        });
+    });
+    if (searchModal) {
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) searchModal.classList.remove('active');
+        });
+    }
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (searchResults) {
+                searchResults.style.display = 'block';
+                // Basic keyword matching to collection items
+                const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
+                let found = 0;
+                cakes.forEach(cake => {
+                    if (cake.textContent.toLowerCase().includes(query)) found++;
+                });
+                searchResults.innerHTML = found > 0
+                    ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
+                    : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
+                // Re-bind close buttons after innerHTML update
+                document.querySelectorAll('.search-close').forEach(b => {
+                    b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
+                });
+            }
+        });
+    }
+
+    // --- WISHLIST BUTTON ---
+    const wishlistModal = document.getElementById('wishlist-modal');
+    const wishlistTrigger = document.getElementById('wishlist-trigger');
+    const wishlistCloseButtons = document.querySelectorAll('.wishlist-close');
+
+    if (wishlistTrigger && wishlistModal) {
+        wishlistTrigger.addEventListener('click', () => {
+            wishlistModal.classList.add('active');
+        });
+    }
+    wishlistCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (wishlistModal) wishlistModal.classList.remove('active');
+            // If "Explore Collection" is clicked, close and scroll
+            window.location.hash = '#collection';
+        });
+    });
+    if (wishlistModal) {
+        wishlistModal.addEventListener('click', (e) => {
+            if (e.target === wishlistModal) wishlistModal.classList.remove('active');
+        });
+    }
+
+    // --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const subNav = document.querySelector('.fleurons-sub-nav');
+    if (menuToggle && subNav) {
+        menuToggle.addEventListener('click', () => {
+            subNav.classList.toggle('mobile-open');
+        });
+    }
+
+    // --- RESPONSIVE: hide/show elements ---
+    function applyResponsive() {
+        const w = window.innerWidth;
+        document.querySelectorAll('.hidden-mobile').forEach(el => {
+            el.style.display = w < 768 ? 'none' : 'flex';
+        });
+        document.querySelectorAll('.mobile-only').forEach(el => {
+            el.style.display = w < 768 ? 'flex' : 'none';
+        });
+    }
+    applyResponsive();
+    window.addEventListener('resize', applyResponsive);
+
 });

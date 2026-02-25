@@ -29,10 +29,37 @@
     <div class="bg-fixed"></div>
 
     <!-- Navigation -->
-    <nav class="navbar glass-panel">
-        <div class="container container-nav">
-            <div class="nav-left">
-                <button class="menu-toggle" id="menu-toggle">
+    <!-- Fleurons-style Header -->
+    <div class="fleurons-top-banner">
+        COD Not available
+    </div>
+    <header class="fleurons-main-header">
+        <div class="fleurons-header-container">
+            <div class="fleurons-logo">
+                <a href="#hero" class="brand-text">BAKENOVATION</a>
+            </div>
+            <div class="fleurons-actions">
+                <button id="wishlist-trigger" class="fleurons-action-btn hidden-mobile">Wish Lists</button>
+                <div id="user-nav-area" class="fleurons-user-area hidden-mobile">
+                    <button id="login-trigger" class="fleurons-action-btn">My Account</button>
+                </div>
+                <button id="search-trigger-btn" class="fleurons-action-btn flex-center">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span class="hidden-mobile" style="margin-left:5px;">Search</span>
+                </button>
+                <button id="cart-toggle" class="fleurons-action-btn flex-center" style="cursor: pointer;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                        style="position:relative;">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="cart-count" class="fleurons-cart-badge">0</span>
+                </button>
+                <button class="menu-toggle mobile-only" id="menu-toggle">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -40,39 +67,44 @@
                     </svg>
                 </button>
             </div>
-
-            <a href="#" class="logo">
-                <img src="assets/logo.jpg" alt="Bakenovation Logo">
-            </a>
-
-            <div class="nav-right">
-                <div id="user-nav-area">
-                    <button id="login-trigger" class="icon-btn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </button>
-                </div>
-                <div class="cart-icon-wrapper" id="cart-toggle">
-                    <svg class="cart-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <span class="cart-badge" id="cart-count">0</span>
-                </div>
-            </div>
         </div>
-        <div class="nav-bottom d-none d-lg-block">
-            <ul class="nav-links">
+    </header>
+    <nav class="fleurons-sub-nav">
+        <div class="fleurons-header-container">
+            <ul class="fleurons-nav-links">
                 <li><a href="#hero">Home</a></li>
-                <li><a href="#collection">Collection</a></li>
-                <li><a href="#atelier">The Atelier</a></li>
-                <li><a href="#visionary">The Visionary</a></li>
-                <li><a href="#about">About</a></li>
+                <li class="fleurons-dropdown">
+                    <a href="#collection">Trending <svg class="fleurons-chevron" viewBox="0 0 24 24" width="12"
+                            height="12" stroke="currentColor" stroke-width="2" fill="none">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#collection">Best Sellers</a></li>
+                        <li><a href="#collection">New Arrivals</a></li>
+                    </ul>
+                </li>
+                <li class="fleurons-dropdown">
+                    <a href="#atelier">Gifting <svg class="fleurons-chevron" viewBox="0 0 24 24" width="12" height="12"
+                            stroke="currentColor" stroke-width="2" fill="none">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#atelier">Corporate</a></li>
+                        <li><a href="#atelier">Personal</a></li>
+                    </ul>
+                </li>
+                <li class="fleurons-highlight"><a href="#visionary">Why Us?</a></li>
+                <li><a href="#footer">Contact Us</a></li>
+                <li class="fleurons-dropdown">
+                    <a href="#collection">Shop All <svg class="fleurons-chevron" viewBox="0 0 24 24" width="12"
+                            height="12" stroke="currentColor" stroke-width="2" fill="none">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#collection">Cakes</a></li>
+                        <li><a href="#collection">Pastries</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>
@@ -723,6 +755,42 @@
                     </p>
 
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div id="wishlist-modal" class="modal-overlay">
+        <div class="glass-panel modal-content" style="max-width: 400px; text-align: center;">
+            <button class="modal-close wishlist-close">&times;</button>
+            <h2 class="text-orchid" style="margin-bottom: 1rem;">Your Wishlist</h2>
+            <div style="padding: 2rem 0;">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--color-text-muted)"
+                    stroke-width="1" style="margin-bottom: 1rem;">
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                    </path>
+                </svg>
+                <p class="empty-cart-msg" id="wishlist-msg">Your wishlist is currently empty.</p>
+                <button class="btn-luxury wishlist-close" style="margin-top: 1.5rem; display: inline-block;">Explore
+                    Collection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal-overlay">
+        <div class="glass-panel modal-content" style="max-width: 600px;">
+            <button class="modal-close search-close">&times;</button>
+            <h2 class="text-orchid" style="margin-bottom: 1.5rem;">Search Bakenovation</h2>
+            <form id="search-form" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <input type="text" id="search-input" class="luxury-input"
+                    placeholder="Search for cakes, themes, flavors..." style="flex: 1;" required>
+                <button type="submit" class="btn-luxury">Search</button>
+            </form>
+            <div id="search-results" style="text-align: center; display: none;">
+                <p class="empty-cart-msg">No results found. Try browsing our <a href="#collection"
+                        style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>
             </div>
         </div>
     </div>

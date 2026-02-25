@@ -145,6 +145,149 @@ h4 {
     display: block;
 }
 
+/* =============================================
+   FLEURONS-STYLE HEADER
+   ============================================= */
+.fleurons-top-banner {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    z-index: 1100;
+    background: #1a5c2b;
+    color: #fff;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 0.4rem 0;
+    text-transform: uppercase;
+}
+.fleurons-main-header {
+    position: fixed;
+    top: 26px; left: 0; width: 100%;
+    z-index: 1000;
+    background: #4a0a2e;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.fleurons-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 1rem 0;
+    display: block;
+    transition: opacity 0.2s;
+}
+.brand-text:hover { opacity: 0.85; }
+.fleurons-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.fleurons-action-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    padding: 0.55rem 0.9rem;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.fleurons-action-btn:hover { background: rgba(255,255,255,0.12); }
+.flex-center { display: flex; align-items: center; gap: 4px; }
+.fleurons-cart-badge {
+    background: var(--color-orchid);
+    color: #2d004d;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2px;
+}
+.fleurons-sub-nav {
+    position: fixed;
+    top: 88px; left: 0; width: 100%;
+    z-index: 999;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+.fleurons-nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 0; padding: 0; margin: 0;
+    justify-content: center;
+}
+.fleurons-nav-links > li > a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #2c2c2c;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 0.9rem 1.4rem;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+.fleurons-nav-links > li > a:hover { color: #4a0a2e; }
+.fleurons-highlight > a {
+    background: #4a0a2e !important;
+    color: #fff !important;
+    border-radius: 20px;
+    padding: 0.5rem 1.2rem !important;
+}
+.fleurons-highlight > a:hover { opacity: 0.9; }
+.fleurons-dropdown { position: relative; }
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0;
+    background: #fff;
+    min-width: 180px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-top: 3px solid #4a0a2e;
+    list-style: none;
+    padding: 0.5rem 0;
+    z-index: 9999;
+}
+.dropdown-menu li a {
+    display: block;
+    padding: 0.65rem 1.2rem;
+    color: #2c2c2c;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    transition: background 0.15s, color 0.15s;
+}
+.dropdown-menu li a:hover { background: #f8f0ff; color: #4a0a2e; }
+.fleurons-dropdown:hover .dropdown-menu { display: block; }
+.fleurons-chevron { transition: transform 0.2s; }
+.fleurons-dropdown:hover .fleurons-chevron { transform: rotate(90deg); }
+.hidden-mobile { display: flex; }
+.mobile-only { display: none; }
+.hero-section { padding-top: 200px !important; }
+
+/* ============================================= */
 /* Navbar Styles */
 .navbar {
     position: fixed;
@@ -2175,4 +2318,48 @@ h4 {
     color: var(--color-text-muted);
     font-size: 0.8rem;
     opacity: 0.6;
+}
+
+/* =============================================
+   FLEURONS HEADER - MOBILE RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+    .fleurons-sub-nav {
+        top: 88px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        border-bottom: none;
+        background: #fff;
+    }
+    .fleurons-sub-nav.mobile-open {
+        max-height: 400px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .fleurons-nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+    }
+    .fleurons-nav-links > li > a {
+        padding: 0.9rem 1.5rem;
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .fleurons-highlight > a {
+        margin: 0.5rem 1.5rem;
+    }
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-left: 3px solid #4a0a2e;
+        border-top: none;
+        margin-left: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .fleurons-dropdown:hover .dropdown-menu,
+    .fleurons-dropdown.open .dropdown-menu {
+        display: block;
+    }
+    .hero-section { padding-top: 160px !important; }
 }
