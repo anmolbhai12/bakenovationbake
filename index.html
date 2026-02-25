@@ -60,7 +60,7 @@
         <div class="hero-content">
             <h1 class="hero-title">
                 <span class="d-block reveal-text">Artistry in</span>
-                <span class="d-block reveal-text text-gold">Every Slice</span>
+                <span class="d-block reveal-text text-orchid">Orchid Elegance</span>
             </h1>
             <p class="hero-subtitle reveal-text">Bespoke couture cakes designed for life's most exquisite moments.</p>
             <div class="hero-actions reveal-text">
@@ -80,7 +80,7 @@
         <section id="collection" class="section">
             <div class="container">
                 <div class="section-header reveal-on-scroll">
-                    <h2 class="text-gold">The Collection</h2>
+                    <h2 class="text-orchid">Bespoke Collection</h2>
                     <p class="section-subtitle">Curated designs for the discerning palate.</p>
                 </div>
 
@@ -162,7 +162,7 @@
             <div class="container">
                 <div class="glass-panel text-center">
                     <div class="customizer-header">
-                        <h2 class="text-gold">The Atelier: AI Studio</h2>
+                        <h2 class="text-orchid">The Atelier: AI Studio</h2>
                         <p class="section-subtitle">Design your bespoke cake in seconds.</p>
                     </div>
 
@@ -173,11 +173,24 @@
                             <!-- 1. Cake Type -->
                             <div class="control-group">
                                 <label class="snap-label">Occasion</label>
-                                <div class="snap-chips-wrapper">
-                                    <button class="snap-chip active" data-type="wedding">Wedding</button>
-                                    <button class="snap-chip" data-type="birthday">Birthday</button>
-                                    <button class="snap-chip" data-type="custom">Custom</button>
-                                </div>
+                                .snap-chip {
+                                background: transparent;
+                                border: 1px solid rgba(255, 255, 255, 0.2);
+                                color: var(--color-text);
+                                padding: 0.6rem 1.2rem;
+                                border-radius: 50px;
+                                cursor: pointer;
+                                transition: all var(--transition-medium);
+                                font-size: 0.85rem;
+                                font-family: var(--font-body);
+                                }
+
+                                .snap-chip:hover,
+                                .snap-chip.active {
+                                background: var(--color-orchid);
+                                border-color: var(--color-orchid);
+                                color: var(--color-deep-purple);
+                                }
                             </div>
 
                             <!-- 2. Aesthetic / Style -->
@@ -217,7 +230,7 @@
                             </div>
 
                             <!-- Generate Button -->
-                            <button id="ai-generate-btn" class="btn-snap-primary">
+                            <button id="ai-generate-btn" class="btn-snap-primary bg-orchid">
                                 <span class="btn-text">Generate Design</span>
                                 <span class="spinner" style="display: none;">✨</span>
                             </button>
@@ -241,7 +254,7 @@
 
                     <!-- Recent Generations Gallery -->
                     <div class="recent-generations-header" style="margin-top: 5rem;">
-                        <h3 class="text-gold">Recent Concepts</h3>
+                        <h3 class="text-orchid">Recent Concepts</h3>
                         <p class="section-subtitle">Your session history of AI designs.</p>
                     </div>
                     <div id="recent-generations-grid" class="recent-generations-grid"></div>
@@ -250,7 +263,7 @@
                 <div class="order-quick-details"
                     style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left;">
                     <div class="section-header text-center">
-                        <h3 class="text-gold">Bring Your Vision to Life</h3>
+                        <h3 class="text-orchid">Bring Your Vision to Life</h3>
                         <p class="section-subtitle">Have a reference image for your bespoke cake? Upload it here.</p>
                     </div>
 
@@ -271,10 +284,24 @@
 
 
 
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-container reveal-on-scroll">
+                    <h2 class="text-orchid">Join the Atelier</h2>
+                    <p class="section-subtitle">Sign up for exclusive updates, new arrivals & insider only discounts</p>
+                    <div class="newsletter-input-group">
+                        <input type="email" placeholder="Your email address" class="newsletter-input">
+                        <button class="newsletter-btn">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- About / Contact (The Visionary) -->
         <section id="about" class="section">
             <div class="container text-center reveal-on-scroll">
-                <h2 class="text-gold">The Visionary</h2>
+                <h2 class="text-orchid">The Visionary</h2>
                 <p class="about-text">
                     Chef Harmeet brings a touch of avant-garde fashion to the world of patisserie.
                     Every creation is a labor of love, precision, and artistry.
@@ -295,7 +322,7 @@
         <div class="glass-panel modal-content">
             <button class="modal-close">&times;</button>
             <div class="customizer-header">
-                <h2 class="text-gold">Final Details</h2>
+                <h2 class="text-orchid">Final Details</h2>
                 <p>Where should we deliver your masterpiece?</p>
             </div>
 
@@ -332,7 +359,8 @@
                     <label>Delivery Address</label>
                     <textarea name="address" required class="luxury-input" rows="2"
                         placeholder="Street, City, Zip Code"></textarea>
-                    <p style="color: var(--color-gold); font-size: 0.8rem; margin-top: -0.3rem; margin-bottom: 0.5rem;">
+                    <p
+                        style="color: var(--color-orchid); font-size: 0.8rem; margin-top: -0.3rem; margin-bottom: 0.5rem;">
                         Note: We deliver cake only in Delhi</p>
                 </div>
 
@@ -361,22 +389,23 @@
             <button class="modal-close detail-close">&times;</button>
             <div class="detail-image" style="flex: 1; min-width: 300px;">
                 <img id="detail-img" src="" alt="Cake Detail"
-                    style="width: 100%; border-radius: 8px; border: 1px solid var(--color-gold);">
+                    style="width: 100%; border-radius: 8px; border: 1px solid var(--color-orchid);">
             </div>
             <div class="detail-info" style="flex: 1; min-width: 300px;">
-                <h2 id="detail-title" class="text-gold" style="margin-bottom: 0.5rem;">Cake Name</h2>
+                <h2 id="detail-title" class="text-orchid" style="margin-bottom: 0.5rem;">Cake Name</h2>
 
                 <div
-                    style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-gold);">
-                    <span><strong style="color: white;">Servings:</strong> <span
-                            id="detail-servings">12-15</span></span>
-                    <span><strong style="color: white;">Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
+                    style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
+                    <span><strong style="color: white;">Servings:</strong> <span id="detail-servings"
+                            style="color: var(--color-orchid);">12-15</span></span>
+                    <span><strong style="color: white;">Weight:</strong> <span id="detail-weight"
+                            style="color: var(--color-orchid);">2.5 kg</span></span>
                 </div>
 
                 <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Description goes
                     here.</p>
 
-                <h4 class="text-gold" style="font-size: 1rem; margin-bottom: 0.5rem;">Premium Ingredients</h4>
+                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem;">Premium Ingredients</h4>
                 <ul id="detail-ingredients"
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
                     <!-- Populated by JS -->
@@ -385,7 +414,7 @@
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button class="btn-luxury" id="detail-add-to-cart-btn" style="flex: 1;">Add to Cart</button>
                     <button class="btn-luxury" id="detail-direct-order-btn"
-                        style="flex: 1; background: var(--color-gold); color: var(--color-bg);">Order Now</button>
+                        style="flex: 1; background: var(--color-orchid); color: var(--color-bg);">Order Now</button>
                 </div>
             </div>
         </div>
@@ -395,7 +424,7 @@
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-drawer-content glass-panel">
             <button class="cart-close" id="cart-close">&times;</button>
-            <h2 class="text-gold" style="margin-bottom: 2rem;">Your Atelier Cart</h2>
+            <h2 class="text-orchid" style="margin-bottom: 2rem;">Your Atelier Cart</h2>
 
             <div id="cart-items" class="cart-items-list">
                 <!-- Items populated by JS -->
@@ -413,7 +442,7 @@
             <button class="modal-close auth-close">&times;</button>
             <div id="login-view">
                 <div class="customizer-header">
-                    <h2 class="text-gold">Welcome Back</h2>
+                    <h2 class="text-orchid">Welcome Back</h2>
                     <p id="login-method-text">Login via Email OTP</p>
                 </div>
                 <form id="login-form" class="auth-form">
@@ -430,7 +459,7 @@
 
                     <div style="margin-top: 1rem; text-align: center;">
                         <button type="button" id="toggle-login-method" class="btn-text"
-                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            style="color: var(--color-orchid); font-size: 0.85rem;">
                             Login with WhatsApp instead
                         </button>
                     </div>
@@ -441,7 +470,7 @@
 
             <div id="signup-view" style="display: none;">
                 <div class="customizer-header">
-                    <h2 class="text-gold">Join the Atelier</h2>
+                    <h2 class="text-orchid">Join the Atelier</h2>
                     <p id="signup-method-text">Sign up via Email OTP</p>
                 </div>
                 <form id="signup-form" class="auth-form">
@@ -469,7 +498,7 @@
 
                     <div style="margin-top: 1rem; text-align: center;">
                         <button type="button" id="toggle-signup-method" class="btn-text"
-                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            style="color: var(--color-orchid); font-size: 0.85rem;">
                             Sign up with WhatsApp instead
                         </button>
                     </div>
