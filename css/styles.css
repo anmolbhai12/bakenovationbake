@@ -116,7 +116,13 @@ h4 {
     box-shadow: none;
 }
 
-/* Glassmorphism Utilities */
+/* Layout Utilities */
+.container {
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .glass-panel {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -2684,7 +2690,15 @@ h4 {
 }
 
 .collection-sidebar {
-    flex: 0 0 260px;
+    flex: 0 0 280px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
 }
 
 .collection-main {
@@ -2719,6 +2733,20 @@ h4 {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.filter-item a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    width: 100%;
+}
+
+.filter-item a:hover,
+.filter-item a.active {
+    color: var(--color-orchid);
+    padding-left: 5px;
 }
 
 .filter-item input[type="checkbox"] {

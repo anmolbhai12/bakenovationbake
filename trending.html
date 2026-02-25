@@ -136,58 +136,41 @@
             </nav>
 
             <!-- Collection Header -->
-            <header class="collection-header">
-                <h1 class="text-maroon">Trending Now</h1>
-                <p class="section-pretitle">The Bento Picks</p>
+            <header class="collection-header" style="margin-bottom: 3rem; text-align: center;">
+                <h1 class="text-maroon" style="font-size: 3rem;">Trending Now</h1>
+                <p class="section-pretitle">The Bento Picks & Seasonal Favorites</p>
             </header>
-
-            <!-- Toolbar -->
-            <div class="collection-toolbar">
-                <div class="toolbar-left">
-                    <span class="toolbar-label">View As</span>
-                    <div class="view-as-toggles">
-                        <button class="view-toggle-btn active" title="Grid 2">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <rect x="3" y="3" width="8" height="8" />
-                                <rect x="13" y="3" width="8" height="8" />
-                                <rect x="3" y="13" width="8" height="8" />
-                                <rect x="13" y="13" width="8" height="8" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="toolbar-right">
-                    <div class="toolbar-item">
-                        <span class="toolbar-label">Items per page</span>
-                        <select class="toolbar-select">
-                            <option>20</option>
-                            <option>40</option>
-                            <option>All</option>
-                        </select>
-                    </div>
-                    <div class="toolbar-item">
-                        <span class="toolbar-label">Sort by</span>
-                        <select class="toolbar-select">
-                            <option>Alphabetically, A-Z</option>
-                            <option>Price, low to high</option>
-                            <option>Price, high to low</option>
-                            <option>Best Selling</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
 
             <!-- Main Layout -->
             <div class="collection-container">
                 <!-- Sidebar -->
                 <aside class="collection-sidebar">
                     <div class="filter-group">
-                        <h3 class="filter-title">Categories</h3>
-                        <ul class="filter-list">
-                            <li class="filter-item"><a href="#cookies" class="text-muted">Cookies</a></li>
-                            <li class="filter-item"><a href="#anniversary" class="text-muted">Anniversary Cakes</a></li>
-                            <li class="filter-item"><a href="#classic" class="text-muted">Classic Cakes</a></li>
-                            <li class="filter-item"><a href="#bento" class="text-muted">Bento Cakes</a></li>
+                        <h3 class="filter-title">Varieties</h3>
+                        <ul class="filter-list" id="category-filter">
+                            <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
+                            <li class="filter-item"><a href="#cookies" data-filter="cookies">Cookies</a></li>
+                            <li class="filter-item"><a href="#anniversary" data-filter="anniversary">Anniversary
+                                    Cakes</a></li>
+                            <li class="filter-item"><a href="#classic" data-filter="classic">Classic Cakes</a></li>
+                            <li class="filter-item"><a href="#kids" data-filter="kids">Kids Cakes</a></li>
+                            <li class="filter-item"><a href="#aesthetic" data-filter="aesthetic">Aesthetic Cakes</a>
+                            </li>
+                            <li class="filter-item"><a href="#floral" data-filter="floral">Floral Cakes</a></li>
+                            <li class="filter-item"><a href="#geode" data-filter="geode">Geode Cakes</a></li>
+                            <li class="filter-item"><a href="#butterfly" data-filter="butterfly">Butterfly Cakes</a>
+                            </li>
+                            <li class="filter-item"><a href="#secret-message" data-filter="secret-message">Hidden
+                                    Message Bento</a></li>
+                            <li class="filter-item"><a href="#bento" data-filter="bento">Bento Cakes</a></li>
+                            <li class="filter-item"><a href="#signature" data-filter="signature">Signature Cakes</a>
+                            </li>
+                            <li class="filter-item"><a href="#fruit" data-filter="fruit">Fruit Cakes</a></li>
+                            <li class="filter-item"><a href="#cheesecakes" data-filter="cheesecakes">Cheesecakes</a>
+                            </li>
+                            <li class="filter-item"><a href="#tea-cakes" data-filter="tea-cakes">Tea Cakes</a></li>
+                            <li class="filter-item"><a href="#christmas" data-filter="christmas">Christmas Special</a>
+                            </li>
                         </ul>
                     </div>
 
@@ -199,21 +182,9 @@
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <h3 class="filter-title">Price</h3>
-                        <div class="price-range-slider">
-                            <div class="price-inputs">
-                                <input type="number" placeholder="Min" class="price-input-field">
-                                <span>-</span>
-                                <input type="number" placeholder="Max" class="price-input-field">
-                            </div>
-                            <button class="price-apply-btn">Apply</button>
-                        </div>
-                    </div>
-
                     <!-- Featured Products -->
                     <div class="featured-products-sidebar">
-                        <h3 class="filter-title">Featured Products</h3>
+                        <h3 class="filter-title" style="margin-bottom: 1.5rem;">Featured</h3>
                         <div class="sidebar-product-item">
                             <div class="sidebar-product-img">
                                 <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
@@ -232,7 +203,7 @@
                     <div class="collection-grid"
                         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
                         <!-- Bento 1 -->
-                        <a href="javascript:void(0)" class="product-card" id="bento"
+                        <a href="javascript:void(0)" class="product-card" id="bento" data-category="bento"
                             onclick="openProductDetail('minimalist-heart')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
@@ -244,7 +215,7 @@
                         </a>
 
                         <!-- Bento 2 -->
-                        <a href="javascript:void(0)" class="product-card" id="cookies"
+                        <a href="javascript:void(0)" class="product-card" id="cookies" data-category="cookies"
                             onclick="openProductDetail('stars-sprinkles')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
@@ -256,7 +227,7 @@
                         </a>
 
                         <!-- Bento 3 -->
-                        <a href="javascript:void(0)" class="product-card" id="floral"
+                        <a href="javascript:void(0)" class="product-card" id="floral" data-category="floral"
                             onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
@@ -268,7 +239,7 @@
                         </a>
 
                         <!-- Bento 4 -->
-                        <a href="javascript:void(0)" class="product-card" id="geode"
+                        <a href="javascript:void(0)" class="product-card" id="geode" data-category="geode"
                             onclick="openProductDetail('24k-teddy')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
@@ -280,8 +251,8 @@
                         </a>
 
                         <!-- Bento 5 -->
-                        <a href="javascript:void(0)" class="product-card"
-                            onclick="openProductDetail('birthday-candles')">
+                        <a href="javascript:void(0)" class="product-card" id="butterfly" data-category="butterfly"
+                            onclick="openProductDetail('ombre-bento')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436"
                                     alt="Birthday Candles Bento Cake">
@@ -292,7 +263,7 @@
                         </a>
 
                         <!-- Bento 6 -->
-                        <a href="javascript:void(0)" class="product-card" id="signature"
+                        <a href="javascript:void(0)" class="product-card" id="signature" data-category="signature"
                             onclick="openProductDetail('te-amo')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
@@ -304,7 +275,7 @@
                         </a>
 
                         <!-- Bento 7 -->
-                        <a href="javascript:void(0)" class="product-card" id="christmas"
+                        <a href="javascript:void(0)" class="product-card" id="christmas" data-category="christmas"
                             onclick="openProductDetail('minimalist-bento')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
@@ -581,6 +552,67 @@
             document.getElementById('cake-detail-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
+
+        // Variety Filtering Logic
+        function filterProducts(category) {
+            const cards = document.querySelectorAll('.product-card');
+            const links = document.querySelectorAll('#category-filter a');
+
+            // Update active link
+            links.forEach(link => {
+                if (link.getAttribute('data-filter') === category) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // Filter cards
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                    }, 50);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update page count (if needed)
+            const visibleCount = document.querySelectorAll('.product-card[style*="display: block"]').length;
+            const progressText = document.querySelector('.progress-text');
+            if (progressText) {
+                progressText.innerText = `Showing 1 - ${visibleCount} of 145 products`;
+            }
+        }
+
+        // Handle sidebar clicks
+        document.querySelectorAll('#category-filter a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const filter = link.getAttribute('data-filter');
+                if (filter) {
+                    // We let the hash handle it for consistency with the main menu
+                    // window.location.hash = filter; 
+                    // Actually, if we are already on the page, hashchange will fire.
+                }
+            });
+        });
+
+        // Listen for hash changes (from main menu or sidebar)
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initial check
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+        });
 
         document.querySelectorAll('.detail-close').forEach(btn => {
             btn.addEventListener('click', () => {

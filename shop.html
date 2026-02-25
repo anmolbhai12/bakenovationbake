@@ -136,58 +136,33 @@
             </nav>
 
             <!-- Collection Header -->
-            <header class="collection-header">
-                <h1 class="text-maroon">Shop All</h1>
-                <p class="section-pretitle">Explore Collection</p>
+            <header class="collection-header" style="margin-bottom: 3rem; text-align: center;">
+                <h1 class="text-maroon" style="font-size: 3rem;">Shop All</h1>
+                <p class="section-pretitle">The Complete Bakenovation Collection</p>
             </header>
-
-            <!-- Toolbar -->
-            <div class="collection-toolbar">
-                <div class="toolbar-left">
-                    <span class="toolbar-label">View As</span>
-                    <div class="view-as-toggles">
-                        <button class="view-toggle-btn active" title="Grid 2">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <rect x="3" y="3" width="8" height="8" />
-                                <rect x="13" y="3" width="8" height="8" />
-                                <rect x="3" y="13" width="8" height="8" />
-                                <rect x="13" y="13" width="8" height="8" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="toolbar-right">
-                    <div class="toolbar-item">
-                        <span class="toolbar-label">Items per page</span>
-                        <select class="toolbar-select">
-                            <option>20</option>
-                            <option>40</option>
-                            <option>All</option>
-                        </select>
-                    </div>
-                    <div class="toolbar-item">
-                        <span class="toolbar-label">Sort by</span>
-                        <select class="toolbar-select">
-                            <option>Alphabetically, A-Z</option>
-                            <option>Price, low to high</option>
-                            <option>Price, high to low</option>
-                            <option>Best Selling</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
 
             <!-- Main Layout -->
             <div class="collection-container">
                 <!-- Sidebar -->
                 <aside class="collection-sidebar">
                     <div class="filter-group">
-                        <h3 class="filter-title">Categories</h3>
-                        <ul class="filter-list">
-                            <li class="filter-item"><a href="#cookies" class="text-muted">Cookies</a></li>
-                            <li class="filter-item"><a href="#anniversary" class="text-muted">Anniversary Cakes</a></li>
-                            <li class="filter-item"><a href="#classic" class="text-muted">Classic Cakes</a></li>
-                            <li class="filter-item"><a href="#bento" class="text-muted">Bento Cakes</a></li>
+                        <h3 class="filter-title">Varieties</h3>
+                        <ul class="filter-list" id="category-filter">
+                            <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
+                            <li class="filter-item"><a href="#abby" data-filter="abby">Abby</a></li>
+                            <li class="filter-item"><a href="#art-of-orchids" data-filter="art-of-orchids">Art of
+                                    Orchids</a></li>
+                            <li class="filter-item"><a href="#astronaut" data-filter="astronaut">Astronaut</a></li>
+                            <li class="filter-item"><a href="#birthday-cake" data-filter="birthday-cake">Birthday
+                                    Cake</a></li>
+                            <li class="filter-item"><a href="#bed-of-blossom" data-filter="bed-of-blossom">Bed of
+                                    Blossom</a></li>
+                            <li class="filter-item"><a href="#belgian-chocolate" data-filter="belgian-chocolate">Belgian
+                                    Chocolate</a></li>
+                            <li class="filter-item"><a href="#black-gold" data-filter="black-gold">Black & Gold</a></li>
+                            <li class="filter-item"><a href="#black-forest" data-filter="black-forest">Black Forest</a>
+                            </li>
+                            <li class="filter-item"><a href="#blueberry" data-filter="blueberry">Blueberry</a></li>
                         </ul>
                     </div>
 
@@ -198,33 +173,6 @@
                             <label class="filter-item"><input type="checkbox"> Out of stock</label>
                         </div>
                     </div>
-
-                    <div class="filter-group">
-                        <h3 class="filter-title">Price</h3>
-                        <div class="price-range-slider">
-                            <div class="price-inputs">
-                                <input type="number" placeholder="Min" class="price-input-field">
-                                <span>-</span>
-                                <input type="number" placeholder="Max" class="price-input-field">
-                            </div>
-                            <button class="price-apply-btn">Apply</button>
-                        </div>
-                    </div>
-
-                    <!-- Featured Products -->
-                    <div class="featured-products-sidebar">
-                        <h3 class="filter-title">Featured Products</h3>
-                        <div class="sidebar-product-item">
-                            <div class="sidebar-product-img">
-                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
-                                    alt="Product">
-                            </div>
-                            <div class="sidebar-product-info">
-                                <h5>Raspberry Vintage</h5>
-                                <p>Rs. 2,300</p>
-                            </div>
-                        </div>
-                    </div>
                 </aside>
 
                 <!-- Grid -->
@@ -232,7 +180,7 @@
                     <div class="collection-grid"
                         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
                         <!-- 1. Raspberry Vintage Cake -->
-                        <a href="javascript:void(0)" class="product-card" id="blueberry"
+                        <a href="javascript:void(0)" class="product-card" id="blueberry" data-category="blueberry"
                             onclick="openProductDetail('raspberry-vintage')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
@@ -244,7 +192,7 @@
                         </a>
 
                         <!-- 2. 24K Teddy -->
-                        <a href="javascript:void(0)" class="product-card" id="black-gold"
+                        <a href="javascript:void(0)" class="product-card" id="black-gold" data-category="black-forest"
                             onclick="openProductDetail('24k-teddy')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
@@ -257,7 +205,7 @@
 
                         <!-- 3. Classic LV -->
                         <a href="javascript:void(0)" class="product-card" id="bed-of-blossom"
-                            onclick="openProductDetail('classic-lv')">
+                            data-category="bed-of-blossom" onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                     alt="Classic LV">
@@ -269,7 +217,7 @@
 
                         <!-- 4. Golden Couple -->
                         <a href="javascript:void(0)" class="product-card" id="birthday-cake"
-                            onclick="openProductDetail('golden-couple')">
+                            data-category="birthday-cake" onclick="openProductDetail('golden-couple')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                     alt="Golden Couple Anniversary Cake">
@@ -281,7 +229,7 @@
 
                         <!-- 5. Hello Gorgeous -->
                         <a href="javascript:void(0)" class="product-card" id="art-of-orchids"
-                            onclick="openProductDetail('hello-gorgeous')">
+                            data-category="art-of-orchids" onclick="openProductDetail('hello-gorgeous')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
                                     alt="Hello Gorgeous">
@@ -292,7 +240,8 @@
                         </a>
 
                         <!-- 6. Abby -->
-                        <a href="javascript:void(0)" class="product-card" id="abby" onclick="openProductDetail('abby')">
+                        <a href="javascript:void(0)" class="product-card" id="abby" data-category="abby"
+                            onclick="openProductDetail('abby')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                     alt="Abby">
@@ -303,7 +252,7 @@
                         </a>
 
                         <!-- 7. Vintage All Pink & Bows -->
-                        <a href="javascript:void(0)" class="product-card" id="astronaut"
+                        <a href="javascript:void(0)" class="product-card" id="astronaut" data-category="astronaut"
                             onclick="openProductDetail('pink-bows')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
@@ -525,6 +474,50 @@
             document.getElementById('cake-detail-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
+
+        // Variety Filtering Logic
+        function filterProducts(category) {
+            const cards = document.querySelectorAll('.product-card');
+            const links = document.querySelectorAll('#category-filter a');
+
+            links.forEach(link => {
+                if (link.getAttribute('data-filter') === category) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                    }, 50);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const visibleCount = document.querySelectorAll('.product-card[style*="display: block"]').length;
+            const progressText = document.querySelector('.progress-text');
+            if (progressText) {
+                progressText.innerText = `Showing 1 - ${visibleCount} of 210 products`;
+            }
+        }
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+        });
 
         document.querySelectorAll('.detail-close').forEach(btn => {
             btn.addEventListener('click', () => {
