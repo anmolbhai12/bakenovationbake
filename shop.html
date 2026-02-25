@@ -232,7 +232,7 @@
                     <div class="collection-grid"
                         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
                         <!-- 1. Raspberry Vintage Cake -->
-                        <a href="javascript:void(0)" class="product-card"
+                        <a href="javascript:void(0)" class="product-card" id="blueberry"
                             onclick="openProductDetail('raspberry-vintage')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
@@ -244,7 +244,8 @@
                         </a>
 
                         <!-- 2. 24K Teddy -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('24k-teddy')">
+                        <a href="javascript:void(0)" class="product-card" id="black-gold"
+                            onclick="openProductDetail('24k-teddy')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
                                     alt="24K Teddy">
@@ -255,7 +256,8 @@
                         </a>
 
                         <!-- 3. Classic LV -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('classic-lv')">
+                        <a href="javascript:void(0)" class="product-card" id="bed-of-blossom"
+                            onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                     alt="Classic LV">
@@ -266,7 +268,8 @@
                         </a>
 
                         <!-- 4. Golden Couple -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('golden-couple')">
+                        <a href="javascript:void(0)" class="product-card" id="birthday-cake"
+                            onclick="openProductDetail('golden-couple')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                     alt="Golden Couple Anniversary Cake">
@@ -277,7 +280,8 @@
                         </a>
 
                         <!-- 5. Hello Gorgeous -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('hello-gorgeous')">
+                        <a href="javascript:void(0)" class="product-card" id="art-of-orchids"
+                            onclick="openProductDetail('hello-gorgeous')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
                                     alt="Hello Gorgeous">
@@ -288,7 +292,7 @@
                         </a>
 
                         <!-- 6. Abby -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('abby')">
+                        <a href="javascript:void(0)" class="product-card" id="abby" onclick="openProductDetail('abby')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                     alt="Abby">
@@ -299,7 +303,8 @@
                         </a>
 
                         <!-- 7. Vintage All Pink & Bows -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('pink-bows')">
+                        <a href="javascript:void(0)" class="product-card" id="astronaut"
+                            onclick="openProductDetail('pink-bows')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
                                     alt="Vintage All Pink & Bows Cake">
@@ -369,6 +374,7 @@
     </footer>
 
     <!-- Standard Cake Detail Modal -->
+    <!-- Standard Cake Detail Modal -->
     <div id="cake-detail-modal" class="modal-overlay">
         <div class="glass-panel modal-content"
             style="max-width: 900px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap; padding: 3rem;">
@@ -380,11 +386,13 @@
             <div class="detail-info" style="flex: 1; min-width: 300px;">
                 <h2 id="detail-title" class="text-orchid"
                     style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 2rem;">Cake Name</h2>
+
                 <div
                     style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
                     <span><strong>Servings:</strong> <span id="detail-servings">12-15</span></span>
                     <span><strong>Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
                 </div>
+
                 <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
                     Description goes here.</p>
 
@@ -392,6 +400,7 @@
                     INGREDIENTS</h4>
                 <ul id="detail-ingredients"
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
+                    <!-- Populated by JS -->
                 </ul>
 
                 <div class="product-options" style="margin-bottom: 2rem;">
@@ -416,10 +425,16 @@
                             <ul
                                 style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
                                 <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>Delivery between 12pm - 7pm only.</li>
+                                <li>Delivery will take place between 12pm - 7pm only.</li>
                             </ul>
                         </div>
                     </details>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn-luxury" style="flex: 1;">Add to Cart</button>
+                    <button class="btn-luxury"
+                        style="flex: 1; background: var(--color-orchid); color: var(--color-bg);">Order Now</button>
                 </div>
             </div>
         </div>
@@ -503,7 +518,7 @@
             ingredientsList.innerHTML = '';
             product.ingredients.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span style="color: var(--color-orchid); margin-right: 10px;">&bull;</span> ${item}`;
+                li.innerHTML = `<span style="color: #6c1d45; margin-right: 10px;">&bull;</span> ${item}`;
                 ingredientsList.appendChild(li);
             });
 

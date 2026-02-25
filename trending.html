@@ -232,7 +232,7 @@
                     <div class="collection-grid"
                         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
                         <!-- Bento 1 -->
-                        <a href="javascript:void(0)" class="product-card"
+                        <a href="javascript:void(0)" class="product-card" id="bento"
                             onclick="openProductDetail('minimalist-heart')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
@@ -244,7 +244,7 @@
                         </a>
 
                         <!-- Bento 2 -->
-                        <a href="javascript:void(0)" class="product-card"
+                        <a href="javascript:void(0)" class="product-card" id="cookies"
                             onclick="openProductDetail('stars-sprinkles')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
@@ -256,7 +256,8 @@
                         </a>
 
                         <!-- Bento 3 -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('pearls-bento')">
+                        <a href="javascript:void(0)" class="product-card" id="floral"
+                            onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
                                     alt="Pearls Bento Cake">
@@ -267,7 +268,8 @@
                         </a>
 
                         <!-- Bento 4 -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('ombre-bento')">
+                        <a href="javascript:void(0)" class="product-card" id="geode"
+                            onclick="openProductDetail('24k-teddy')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
                                     alt="Ombre Bento Cake">
@@ -290,7 +292,8 @@
                         </a>
 
                         <!-- Bento 6 -->
-                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('te-amo')">
+                        <a href="javascript:void(0)" class="product-card" id="signature"
+                            onclick="openProductDetail('te-amo')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
                                     alt="Te Amo Bento Cake">
@@ -301,7 +304,7 @@
                         </a>
 
                         <!-- Bento 7 -->
-                        <a href="javascript:void(0)" class="product-card"
+                        <a href="javascript:void(0)" class="product-card" id="christmas"
                             onclick="openProductDetail('minimalist-bento')">
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
@@ -371,7 +374,7 @@
         </div>
     </footer>
 
-    <!-- Standard Modal -->
+    <!-- Standard Cake Detail Modal -->
     <div id="cake-detail-modal" class="modal-overlay">
         <div class="glass-panel modal-content"
             style="max-width: 900px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap; padding: 3rem;">
@@ -383,11 +386,13 @@
             <div class="detail-info" style="flex: 1; min-width: 300px;">
                 <h2 id="detail-title" class="text-orchid"
                     style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 2rem;">Cake Name</h2>
+
                 <div
                     style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
                     <span><strong>Servings:</strong> <span id="detail-servings">12-15</span></span>
                     <span><strong>Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
                 </div>
+
                 <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
                     Description goes here.</p>
 
@@ -395,6 +400,7 @@
                     INGREDIENTS</h4>
                 <ul id="detail-ingredients"
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
+                    <!-- Populated by JS -->
                 </ul>
 
                 <div class="product-options" style="margin-bottom: 2rem;">
@@ -410,21 +416,6 @@
                             <option value="2.5">2.5 kg</option>
                         </select>
                     </div>
-                    <div class="option-group">
-                        <label
-                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
-                            Type</label>
-                        <div style="display: flex; gap: 1rem;">
-                            <label class="luxury-radio">
-                                <input type="radio" name="cake-type" value="eggless" checked>
-                                <span>Eggless</span>
-                            </label>
-                            <label class="luxury-radio">
-                                <input type="radio" name="cake-type" value="egg">
-                                <span>With Egg</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="product-info-accordions">
@@ -434,22 +425,16 @@
                             <ul
                                 style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
                                 <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>This product is perishable; delivery will be attempted only once.</li>
                                 <li>Delivery will take place between 12pm - 7pm only.</li>
                             </ul>
                         </div>
                     </details>
-                    <details class="luxury-accordion">
-                        <summary>Care Instructions</summary>
-                        <div class="accordion-content">
-                            <ul
-                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>Store in an airtight container in the refrigerator.</li>
-                                <li style="color: #6c1d45; font-weight: 500;">Note: Intense food coloring may cause
-                                    temporary staining.</li>
-                            </ul>
-                        </div>
-                    </details>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn-luxury" style="flex: 1;">Add to Cart</button>
+                    <button class="btn-luxury"
+                        style="flex: 1; background: var(--color-orchid); color: var(--color-bg);">Order Now</button>
                 </div>
             </div>
         </div>
