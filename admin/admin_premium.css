@@ -2,7 +2,7 @@
 
 :root {
     --gold: #d4af37;
-    --dark: #0c0410;
+    --dark: #0a040d;
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(212, 175, 55, 0.3);
 }
@@ -15,7 +15,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: radial-gradient(circle at top right, #1a0b1f, #0c0410);
+    background: radial-gradient(circle at top right, #1a0b1f, #0a040d);
     color: #f5f5f5;
     min-height: 100vh;
     padding: 40px 20px;
