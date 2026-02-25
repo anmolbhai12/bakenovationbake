@@ -76,13 +76,25 @@
                 </div>
 
                 <div class="collection-grid">
+                    <!-- 4. Golden Couple (Gifting Highlight) -->
                     <div class="collection-item" onclick="openProductDetail('golden-couple')">
                         <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/GoldenCoupleAnniversaryCake_1.jpg?v=1711617436"
+                            <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                 alt="Golden Couple Anniversary Cake">
                             <div class="item-overlay">
                                 <h3>Golden Couple Anniversary Cake</h3>
-                                <p>A sophisticated choice for celebrating love.</p>
+                                <p>From Rs. 2,400</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 2. 24K Teddy (Gifting Highlight) -->
+                    <div class="collection-item" onclick="openProductDetail('24k-teddy')">
+                        <div class="item-image">
+                            <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                alt="24K Teddy">
+                            <div class="item-overlay">
+                                <h3>24K Teddy</h3>
+                                <p>From Rs. 2,400</p>
                             </div>
                         </div>
                     </div>
@@ -131,34 +143,6 @@
                 <ul id="detail-ingredients"
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
                 </ul>
-
-                <div class="product-options" style="margin-bottom: 2rem;">
-                    <div class="option-group" style="margin-bottom: 1.5rem;">
-                        <label
-                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
-                            Weight</label>
-                        <select id="detail-weight-select" class="luxury-input" style="padding: 0.8rem;">
-                            <option value="0.5">0.5 kg</option>
-                            <option value="1.0">1.0 kg</option>
-                            <option value="1.5">1.5 kg</option>
-                            <option value="2.0">2.0 kg</option>
-                            <option value="2.5">2.5 kg</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="product-info-accordions">
-                    <details class="luxury-accordion" open>
-                        <summary>Delivery Information</summary>
-                        <div class="accordion-content">
-                            <ul
-                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>Delivery between 12pm - 7pm only.</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
             </div>
         </div>
     </div>
@@ -173,10 +157,18 @@
             'golden-couple': {
                 title: 'Golden Couple Anniversary Cake',
                 desc: 'A sophisticated choice for celebrating love. Featuring elegant gold details and a timeless aesthetic.',
-                img: 'https://fleurons.in/cdn/shop/files/GoldenCoupleAnniversaryCake_1.jpg?v=1711617436',
+                img: 'https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750',
                 servings: '15-20',
                 weight: '3.0 kg',
                 ingredients: ['24K Gold Leaf', 'Dark Chocolate Ganache', 'Champagne Essence', 'Gold Dust']
+            },
+            '24k-teddy': {
+                title: '24K Teddy',
+                desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
+                img: 'https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210',
+                servings: '15-20',
+                weight: '2.5 kg',
+                ingredients: ['Dark Chocolate Ganache', '24K Edible Gold', 'Sugar Pearls', 'Fondant Accents']
             }
         };
 
