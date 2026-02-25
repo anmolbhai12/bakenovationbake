@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/styles.css?v=12">
 </head>
 
 <body>
@@ -30,22 +30,24 @@
                 <a href="index.html" class="brand-text">BAKENOVATION</a>
             </div>
             <div class="fleurons-actions">
-                <button class="fleurons-action-btn hidden-mobile">Wish Lists</button>
-                <button class="fleurons-action-btn">My Account</button>
-                <button class="fleurons-action-btn flex-center">
+                <button id="wishlist-trigger" class="fleurons-action-btn hidden-mobile">Wish Lists</button>
+                <div id="user-nav-area" class="fleurons-user-area hidden-mobile">
+                    <button id="login-trigger" class="fleurons-action-btn">My Account</button>
+                </div>
+                <button id="search-trigger-btn" class="fleurons-action-btn flex-center">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <span class="hidden-mobile" style="margin-left:5px;">Search</span>
                 </button>
-                <button class="fleurons-action-btn flex-center">
+                <button id="cart-toggle" class="fleurons-action-btn flex-center">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
-                    <span class="fleurons-cart-badge">0</span>
+                    <span id="cart-count" class="fleurons-cart-badge">0</span>
                 </button>
             </div>
         </div>
@@ -57,8 +59,8 @@
                 <li><a href="index.html">Home</a></li>
                 <li class="active"><a href="trending.html">Trending</a></li>
                 <li><a href="gifting.html">Gifting</a></li>
-                <li class="fleurons-highlight"><a href="index.html#visionary">Why Us?</a></li>
-                <li><a href="index.html#footer">Contact Us</a></li>
+                <li class="fleurons-highlight"><a href="index.html#about">Why Us?</a></li>
+                <li><a href="#footer">Contact Us</a></li>
                 <li><a href="shop.html">Shop All</a></li>
             </ul>
         </div>
@@ -69,17 +71,52 @@
             <div class="container">
                 <div class="section-header">
                     <h1 class="text-orchid">TRENDING NOW</h1>
-                    <p class="section-subtitle">Our most popular and seasonally curated picks.</p>
+                    <p class="section-subtitle">Our most popular and seasonally curated picks from the Bento collection.
+                    </p>
                 </div>
 
                 <div class="collection-grid">
-                    <div class="collection-item" onclick="openProductDetail('raspberry-vintage')">
+                    <!-- Bento 1 -->
+                    <div class="collection-item" onclick="openProductDetail('minimalist-heart')">
                         <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/RaspberryVintageCake_1.jpg?v=1711617436"
-                                alt="Raspberry Vintage Cake">
+                            <img src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
+                                alt="Minimalist Heart Bento">
                             <div class="item-overlay">
-                                <h3>Raspberry Vintage Cake</h3>
-                                <p>Topped with imported raspberries, and ribbons.</p>
+                                <h3>Minimalist Heart Bento</h3>
+                                <p>Simple, elegant heart design.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bento 2 -->
+                    <div class="collection-item" onclick="openProductDetail('stars-sprinkles')">
+                        <div class="item-image">
+                            <img src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
+                                alt="Stars and Sprinkles Bento Cake">
+                            <div class="item-overlay">
+                                <h3>Stars and Sprinkles Bento Cake</h3>
+                                <p>Festive and whimsical.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bento 3 -->
+                    <div class="collection-item" onclick="openProductDetail('pearls-bento')">
+                        <div class="item-image">
+                            <img src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
+                                alt="Pearls Bento Cake">
+                            <div class="item-overlay">
+                                <h3>Pearls Bento Cake</h3>
+                                <p>Chic and sophisticated.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bento 4 -->
+                    <div class="collection-item" onclick="openProductDetail('ombre-bento')">
+                        <div class="item-image">
+                            <img src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
+                                alt="Ombre Bento Cake">
+                            <div class="item-overlay">
+                                <h3>Ombre Bento Cake</h3>
+                                <p>Beautiful color gradient.</p>
                             </div>
                         </div>
                     </div>
@@ -88,24 +125,38 @@
         </section>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" id="footer">
         <div class="container footer-grid">
             <div class="footer-col">
                 <h3>Information</h3>
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="trending.html">Trending</a></li>
-                    <li><a href="index.html#visionary">Why Us?</a></li>
-                    <li><a href="index.html#footer">Contact Us</a></li>
+                    <li><a href="index.html#about">Why Us?</a></li>
+                    <li><a href="#footer">Contact Us</a></li>
                     <li><a href="shop.html">Shop All</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Search</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#">Delivery Information</a></li>
+                    <li><a href="#">Care Instructions</a></li>
                 </ul>
             </div>
             <div class="footer-col newsletter-col">
                 <h3>Newsletter Sign Up</h3>
-                <p>Exclusive updates and insider discounts.</p>
+                <p>Exclusive updates and insider only discounts.</p>
                 <div class="footer-newsletter">
-                    <input type="email" placeholder="Email" class="footer-input">
-                    <button class="footer-btn">Sub</button>
+                    <input type="email" placeholder="Your email address" class="footer-input">
+                    <button class="footer-btn">Subscribe</button>
+                </div>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook">Facebook</a>
+                    <a href="#" aria-label="Instagram">Instagram</a>
                 </div>
             </div>
         </div>
@@ -118,7 +169,7 @@
             <button class="modal-close detail-close">&times;</button>
             <div class="detail-image" style="flex: 1; min-width: 300px;">
                 <img id="detail-img" src="" alt="Cake Detail"
-                    style="width: 100%; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                    style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
             </div>
             <div class="detail-info" style="flex: 1; min-width: 300px;">
                 <h2 id="detail-title" class="text-orchid"
@@ -130,13 +181,52 @@
                 </div>
                 <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
                     Description goes here.</p>
+
+                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">PREMIUM
+                    INGREDIENTS</h4>
+                <ul id="detail-ingredients"
+                    style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
+                </ul>
+
+                <div class="product-options" style="margin-bottom: 2rem;">
+                    <div class="option-group" style="margin-bottom: 1.5rem;">
+                        <label
+                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
+                            Weight</label>
+                        <select id="detail-weight-select" class="luxury-input" style="padding: 0.8rem;">
+                            <option value="0.5">0.5 kg</option>
+                            <option value="1.0">1.0 kg</option>
+                            <option value="1.5">1.5 kg</option>
+                            <option value="2.0">2.0 kg</option>
+                            <option value="2.5">2.5 kg</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label
+                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
+                            Type</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label class="luxury-radio">
+                                <input type="radio" name="cake-type" value="eggless" checked>
+                                <span>Eggless</span>
+                            </label>
+                            <label class="luxury-radio">
+                                <input type="radio" name="cake-type" value="egg">
+                                <span>With Egg</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="product-info-accordions">
                     <details class="luxury-accordion" open>
                         <summary>Delivery Information</summary>
                         <div class="accordion-content">
                             <ul
                                 style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>Delivery attempted only once.</li>
+                                <li>The delivered product might vary slightly from the image shown.</li>
+                                <li>This product is perishable; delivery will be attempted only once.</li>
+                                <li>Delivery will take place between 12pm - 7pm only.</li>
                             </ul>
                         </div>
                     </details>
@@ -145,7 +235,9 @@
                         <div class="accordion-content">
                             <ul
                                 style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>Store refrigerated.</li>
+                                <li>Store in an airtight container in the refrigerator.</li>
+                                <li style="color: #6c1d45; font-weight: 500;">Note: Intense food coloring may cause
+                                    temporary staining.</li>
                             </ul>
                         </div>
                     </details>
@@ -154,16 +246,47 @@
         </div>
     </div>
 
+    <!-- Modals for Full Parity -->
+    <div id="auth-modal" class="modal-overlay"></div>
+    <div id="search-modal" class="modal-overlay"></div>
+    <div id="cart-drawer" class="cart-drawer"></div>
+
     <script>
         const productData = {
-            'raspberry-vintage': {
-                title: 'Raspberry Vintage Cake',
-                desc: 'Topped with imported raspberries, and ribbons, this cake is a must for 2025-2026 celebrations.',
-                img: 'https://fleurons.in/cdn/shop/files/RaspberryVintageCake_1.jpg?v=1711617436',
-                servings: '12-15',
-                weight: '2.5 kg'
+            'minimalist-heart': {
+                title: 'Minimalist Heart Bento',
+                desc: 'The perfect mini cake for a sweet gesture. Simple, elegant heart design with smooth frosting.',
+                img: 'https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Velvet Sponge', 'Choice of Frosting', 'Signature Heart Topper']
+            },
+            'stars-sprinkles': {
+                title: 'Stars and Sprinkles Bento Cake',
+                desc: 'A festive and fun mini cake covered in whimsical stars and colorful sprinkles.',
+                img: 'https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Vanilla Sponge', 'Rainbow Sprinkles', 'Sugar Stars']
+            },
+            'pearls-bento': {
+                title: 'Pearls Bento Cake',
+                desc: 'Chic and sophisticated, decorated with delicate edible pearls for a touch of class.',
+                img: 'https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['White Chocolate Sponge', 'Edible Pearls', 'Silk Frosting']
+            },
+            'ombre-bento': {
+                title: 'Ombre Bento Cake',
+                desc: 'A beautiful gradient of colors, making it the perfect "Thinking of You" mini gift.',
+                img: 'https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Gradient Frosting', 'Light Sponge', 'Natural Extracts']
             }
         };
+
         function openProductDetail(id) {
             const product = productData[id];
             if (!product) return;
@@ -172,11 +295,23 @@
             document.getElementById('detail-img').src = product.img;
             document.getElementById('detail-servings').innerText = product.servings;
             document.getElementById('detail-weight').innerText = product.weight;
+
+            const ingredientsList = document.getElementById('detail-ingredients');
+            ingredientsList.innerHTML = '';
+            product.ingredients.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span style="color: #6c1d45; margin-right: 10px;">&bull;</span> ${item}`;
+                ingredientsList.appendChild(li);
+            });
+
             document.getElementById('cake-detail-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
+
         document.querySelectorAll('.detail-close').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.getElementById('cake-detail-modal').classList.remove('active');
+                document.body.style.overflow = 'auto';
             });
         });
     </script>

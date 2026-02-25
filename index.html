@@ -417,7 +417,7 @@
                     </div>
                     <div class="testimonial-card">
                         <div class="stars">★★★★★</div>
-                        <p>"Chef Harmeet is a visionary. The AI studio made it so easy to visualize exactly what I
+                        <p>"Chef Harneet is a visionary. The AI studio made it so easy to visualize exactly what I
                             wanted for my wedding."</p>
                         <h4>- Rahul M.</h4>
                     </div>
@@ -430,15 +430,30 @@
             </div>
         </section>
 
-        <!-- About / Contact (The Visionary) -->
+        <!-- About / Our Journey -->
         <section id="about" class="section visionary-section">
             <div class="container text-center reveal-on-scroll">
-                <h2 class="text-orchid">The Visionary</h2>
+                <h2 class="text-orchid">Our Journey</h2>
                 <div class="visionary-container">
-                    <p class="about-text">
-                        Chef Harmeet brings a touch of avant-garde fashion to the world of patisserie.
-                        Every creation is a labor of love, precision, and artistry.
+                    <p class="about-text" style="font-size: 1.2rem; margin-bottom: 2rem;">
+                        A Passion for Baking, A Commitment to Excellence
                     </p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem;">
+                        <div>
+                            <h3 class="text-orchid" style="font-size: 2.5rem; margin-bottom: 0.5rem;">1+ mn</h3>
+                            <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Smiles</p>
+                        </div>
+                        <div>
+                            <h3 class="text-orchid" style="font-size: 2.5rem; margin-bottom: 0.5rem;">100+</h3>
+                            <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Pin Codes
+                                Covered</p>
+                        </div>
+                        <div>
+                            <h3 class="text-orchid" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Top 10</h3>
+                            <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em;">Online Brand
+                                for Cakes</p>
+                        </div>
+                    </div>
                     <div class="contact-actions">
                         <a href="mailto:hello@bakenovation.com" class="btn-luxury">Contact Studio</a>
                     </div>
@@ -586,6 +601,36 @@
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
                     <!-- Populated by JS -->
                 </ul>
+
+                <div class="product-options" style="margin-bottom: 2rem;">
+                    <div class="option-group" style="margin-bottom: 1.5rem;">
+                        <label
+                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
+                            Weight</label>
+                        <select id="detail-weight-select" class="luxury-input" style="padding: 0.8rem;">
+                            <option value="0.5">0.5 kg</option>
+                            <option value="1.0">1.0 kg</option>
+                            <option value="1.5">1.5 kg</option>
+                            <option value="2.0">2.0 kg</option>
+                            <option value="2.5">2.5 kg</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label
+                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
+                            Type</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label class="luxury-radio">
+                                <input type="radio" name="cake-type" value="eggless" checked>
+                                <span>Eggless</span>
+                            </label>
+                            <label class="luxury-radio">
+                                <input type="radio" name="cake-type" value="egg">
+                                <span>With Egg</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="product-info-accordions">
                     <details class="luxury-accordion" open>
@@ -806,6 +851,38 @@
                 servings: '15-20',
                 weight: '3.0 kg',
                 ingredients: ['24K Gold Leaf', 'Dark Chocolate Ganache', 'Champagne Essence', 'Gold Dust']
+            },
+            'minimalist-heart': {
+                title: 'Minimalist Heart Bento',
+                desc: 'The perfect mini cake for a sweet gesture. Simple, elegant heart design with smooth frosting.',
+                img: 'https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Velvet Sponge', 'Choice of Frosting', 'Signature Heart Topper']
+            },
+            'stars-sprinkles': {
+                title: 'Stars and Sprinkles Bento Cake',
+                desc: 'A festive and fun mini cake covered in whimsical stars and colorful sprinkles.',
+                img: 'https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Vanilla Sponge', 'Rainbow Sprinkles', 'Sugar Stars']
+            },
+            'pearls-bento': {
+                title: 'Pearls Bento Cake',
+                desc: 'Chic and sophisticated, decorated with delicate edible pearls for a touch of class.',
+                img: 'https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['White Chocolate Sponge', 'Edible Pearls', 'Silk Frosting']
+            },
+            'ombre-bento': {
+                title: 'Ombre Bento Cake',
+                desc: 'A beautiful gradient of colors, making it the perfect "Thinking of You" mini gift.',
+                img: 'https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436',
+                servings: '1-2',
+                weight: '0.5 kg',
+                ingredients: ['Gradient Frosting', 'Light Sponge', 'Natural Extracts']
             }
         };
 

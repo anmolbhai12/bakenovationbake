@@ -9,10 +9,10 @@
     /* Fleurons Announcement Green */
     --color-orchid: #dfc5fe;
     --color-lavender-light: #f8f4ff;
-    --color-bg: #ffffff;
-    --color-text: #232323;
-    --color-text-muted: #5a5a5a;
-    --color-overlay: rgba(255, 255, 255, 0.9);
+    --color-bg: #0a040d;
+    --color-text: #ffffff;
+    --color-text-muted: #b0b0b0;
+    --color-overlay: rgba(10, 4, 13, 0.9);
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Raleway', sans-serif;
@@ -2442,4 +2442,43 @@ h4 {
     .hero-section {
         padding-top: 160px !important;
     }
+}
+
+/* Luxury Radio Buttons */
+.luxury-radio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.luxury-radio input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--color-orchid);
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-medium);
+}
+
+.luxury-radio input[type="radio"]:checked {
+    background: var(--color-orchid);
+}
+
+.luxury-radio input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
 }
