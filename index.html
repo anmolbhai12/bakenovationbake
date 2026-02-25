@@ -109,19 +109,19 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header id="hero" class="hero-section">
         <div class="hero-background">
             <img src="assets/hero-cake.png" alt="Luxury Cake Background" class="bg-cake-image">
         </div>
         <div class="hero-content">
             <h1 class="hero-title reveal-text">
-                Artistry in <span class="text-orchid">Orchid Elegance</span>
+                The Gift of <span class="text-orchid">Celebration</span>
             </h1>
-            <p class="hero-subtitle reveal-text">Bespoke couture cakes designed for life's most exquisite moments.</p>
+            <p class="hero-subtitle reveal-text">Exquisite couture cakes, macarons, and artisanal treats curated for
+                your most precious moments.</p>
             <div class="hero-actions reveal-text">
-                <a href="#atelier" class="btn-luxury">Start Designing</a>
-                <a href="#collection" class="btn-text">View Gallery &darr;</a>
+                <a href="shop.html" class="btn-luxury">Shop Now</a>
+                <a href="#collection" class="btn-text">Discover More &darr;</a>
             </div>
         </div>
     </header>
@@ -129,76 +129,44 @@
     <!-- Content to flesh out layout -->
     <main>
 
-        <!-- Collection Section -->
         <section id="collection" class="section">
             <div class="container">
                 <div class="section-header reveal-on-scroll">
-                    <h2 class="text-orchid">Bespoke Collection</h2>
-                    <p class="section-subtitle">Curated designs for the discerning palate.</p>
+                    <h2 class="text-orchid">Most-Loved Creations</h2>
+                    <p class="section-subtitle">A curated selection of our finest and most popular designs.</p>
                 </div>
 
                 <div class="collection-grid" id="collection-grid">
-                    <!-- Item 1 -->
-                    <div class="collection-item reveal-on-scroll">
+                    <!-- Item 1: Raspberry Vintage Cake -->
+                    <div class="collection-item reveal-on-scroll" onclick="openProductDetail('raspberry-vintage')">
                         <div class="item-image">
-                            <img src="assets/chocolate_cake.png" alt="Midnight Silk"
-                                onerror="this.src='assets/hero-cake.png'">
+                            <img src="https://fleurons.in/cdn/shop/files/RaspberryVintageCake_1.jpg?v=1711617436"
+                                alt="Raspberry Vintage Cake" onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
-                                <h3>Midnight Silk</h3>
-                                <p>Dark chocolate ganache with gold leaf.</p>
+                                <h3>Raspberry Vintage Cake</h3>
+                                <p>Topped with imported raspberries, and ribbons.</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Item 2 -->
-                    <div class="collection-item reveal-on-scroll">
+                    <!-- Item 2: Vintage All Pink & Bows Cake -->
+                    <div class="collection-item reveal-on-scroll" onclick="openProductDetail('pink-bows')">
                         <div class="item-image">
-                            <img src="assets/red_velvet.png" alt="Crimson Velvet"
-                                onerror="this.src='assets/hero-cake.png'">
+                            <img src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
+                                alt="Vintage All Pink & Bows Cake" onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
-                                <h3>Crimson Velvet</h3>
-                                <p>Red velvet sponge with cream cheese frosting.</p>
+                                <h3>Vintage All Pink & Bows Cake</h3>
+                                <p>Feminine, elegant and everything pink!</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Item 3 -->
-                    <div class="collection-item reveal-on-scroll">
+                    <!-- Item 3: Golden Couple Anniversary Cake -->
+                    <div class="collection-item reveal-on-scroll" onclick="openProductDetail('golden-couple')">
                         <div class="item-image">
-                            <img src="assets/vanilla_cake.png" alt="Gilded Era"
-                                onerror="this.src='assets/hero-cake.png'">
+                            <img src="https://fleurons.in/cdn/shop/files/GoldenCoupleAnniversaryCake_1.jpg?v=1711617436"
+                                alt="Golden Couple Anniversary Cake" onerror="this.src='assets/hero-cake.png'">
                             <div class="item-overlay">
-                                <h3>Gilded Era</h3>
-                                <p>Vanilla bean with fresh floral accents.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- HIDDEN ITEMS -->
-                    <div class="collection-item hidden-item" style="display:none;">
-                        <div class="item-image">
-                            <img src="assets/wedding_cake.png" alt="Royal Wedding"
-                                onerror="this.src='assets/hero-cake.png'">
-                            <div class="item-overlay">
-                                <h3>Royal Wedding</h3>
-                                <p>4-tier masterpiece with sugar flowers.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collection-item hidden-item" style="display:none;">
-                        <div class="item-image">
-                            <img src="assets/hero-cake.png" alt="Abstract Art"
-                                onerror="this.src='assets/hero-cake.png'">
-                            <div class="item-overlay">
-                                <h3>Abstract Art</h3>
-                                <p>Modern geometric design in gold and blue.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collection-item hidden-item" style="display:none;">
-                        <div class="item-image">
-                            <img src="assets/chocolate_cake.png" alt="Rustic Charm"
-                                onerror="this.src='assets/hero-cake.png'">
-                            <div class="item-overlay">
-                                <h3>Rustic Charm</h3>
-                                <p>Semi-naked cake with fresh berries.</p>
+                                <h3>Golden Couple Anniversary Cake</h3>
+                                <p>A sophisticated choice for celebrating love.</p>
                             </div>
                         </div>
                     </div>
@@ -215,12 +183,13 @@
             <div class="container">
                 <div class="section-header reveal-on-scroll">
                     <h2 class="text-orchid">WATCH AND BUY</h2>
-                    <p class="section-subtitle">Glimpses of our artisanal craftsmanship.</p>
+                    <p class="section-subtitle">Trending Cakes | Diwali Gifts | Occasions</p>
                 </div>
                 <div class="video-grid reveal-on-scroll">
                     <div class="video-card">
                         <div class="video-wrapper">
-                            <img src="assets/hero-cake.png" alt="Artisanal Video Placeholder">
+                            <img src="https://fleurons.in/cdn/shop/files/TrendingCakes.jpg?v=1711617436"
+                                alt="Trending Cakes" onerror="this.src='assets/hero-cake.png'">
                             <div class="play-overlay">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
@@ -228,11 +197,12 @@
                                 </svg>
                             </div>
                         </div>
-                        <h3>The Orchid Assembly</h3>
+                        <h3>Trending Cakes</h3>
                     </div>
                     <div class="video-card">
                         <div class="video-wrapper">
-                            <img src="assets/chocolate_cake.png" alt="Artisanal Video Placeholder">
+                            <img src="https://fleurons.in/cdn/shop/files/DiwaliGifts.jpg?v=1711617436"
+                                alt="Diwali Gifts" onerror="this.src='assets/hero-cake.png'">
                             <div class="play-overlay">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
@@ -240,7 +210,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <h3>Floral Piping Art</h3>
+                        <h3>Diwali Gifts</h3>
                     </div>
                 </div>
             </div>
@@ -250,24 +220,26 @@
         <section class="section journal-section">
             <div class="container">
                 <div class="section-header reveal-on-scroll">
-                    <h2 class="text-orchid">THE JOURNAL</h2>
+                    <h2 class="text-orchid">The Fleurons Journal</h2>
                     <p class="section-subtitle">Stories behind the sweet masterpieces.</p>
                 </div>
                 <div class="journal-grid reveal-on-scroll">
                     <article class="journal-card">
                         <div class="journal-img">
-                            <img src="assets/hero-cake.png" alt="Journal Article">
+                            <img src="https://fleurons.in/cdn/shop/articles/MeaningBehindCake.jpg?v=1711617436"
+                                alt="Journal Article" onerror="this.src='assets/hero-cake.png'">
                         </div>
                         <div class="journal-content">
                             <span>February 24, 2026</span>
-                            <h3>The Meaning Behind Your Cake: Colors & Symbols</h3>
+                            <h3>The Meaning Behind Your Cake: Colors, Symbols & Designs That Speak</h3>
                             <p>Exploring how choice of flowers and colors speaks volumes in celebration cakes...</p>
                             <a href="#" class="btn-text">Read Article &rarr;</a>
                         </div>
                     </article>
                     <article class="journal-card">
                         <div class="journal-img">
-                            <img src="assets/chocolate_cake.png" alt="Journal Article">
+                            <img src="https://fleurons.in/cdn/shop/articles/CakeTrends2025.jpg?v=1711617436"
+                                alt="Journal Article" onerror="this.src='assets/hero-cake.png'">
                         </div>
                         <div class="journal-content">
                             <span>February 20, 2026</span>
@@ -589,50 +561,57 @@
     <!-- Cake Detail Modal -->
     <div id="cake-detail-modal" class="modal-overlay">
         <div class="glass-panel modal-content"
-            style="max-width: 800px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap;">
+            style="max-width: 900px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap; padding: 3rem;">
             <button class="modal-close detail-close">&times;</button>
             <div class="detail-image" style="flex: 1; min-width: 300px;">
                 <img id="detail-img" src="" alt="Cake Detail"
-                    style="width: 100%; border-radius: 8px; border: 1px solid var(--color-orchid);">
+                    style="width: 100%; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
             </div>
             <div class="detail-info" style="flex: 1; min-width: 300px;">
-                <h2 id="detail-title" class="text-orchid" style="margin-bottom: 0.5rem;">Cake Name</h2>
+                <h2 id="detail-title" class="text-orchid"
+                    style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 2rem;">Cake Name</h2>
 
                 <div
                     style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
-                    <span><strong style="color: white;">Servings:</strong> <span id="detail-servings"
-                            style="color: var(--color-orchid);">12-15</span></span>
-                    <span><strong style="color: white;">Weight:</strong> <span id="detail-weight"
-                            style="color: var(--color-orchid);">2.5 kg</span></span>
+                    <span><strong>Servings:</strong> <span id="detail-servings">12-15</span></span>
+                    <span><strong>Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
                 </div>
 
-                <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">Description goes
-                    here.</p>
+                <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
+                    Description goes here.</p>
 
-                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem;">Premium Ingredients</h4>
+                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">PREMIUM
+                    INGREDIENTS</h4>
                 <ul id="detail-ingredients"
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
                     <!-- Populated by JS -->
                 </ul>
 
-                <div class="product-info-accordions" style="margin-bottom: 2rem;">
-                    <details class="luxury-accordion">
+                <div class="product-info-accordions">
+                    <details class="luxury-accordion" open>
                         <summary>Delivery Information</summary>
                         <div class="accordion-content">
-                            <p>All our creations are hand-delivered in temperature-controlled vehicles across Delhi NCR
-                                to ensure pristine condition upon arrival.</p>
+                            <ul
+                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
+                                <li>The delivered product might vary slightly from the image shown.</li>
+                                <li>This product is perishable; delivery will be attempted only once.</li>
+                                <li>Delivery cannot be redirected to any other address.</li>
+                                <li>Delivery will take place between 12pm - 7pm only.</li>
+                                <li>For specific time delivery, additional charges apply.</li>
+                            </ul>
                         </div>
                     </details>
                     <details class="luxury-accordion">
                         <summary>Care Instructions</summary>
                         <div class="accordion-content">
                             <ul
-                                style="padding-left: 1.2rem; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.6;">
-                                <li>Store in an air-conditioned environment.</li>
-                                <li>Avoid direct sunlight and heat sources.</li>
-                                <li>Fondant cakes should not be refrigerated prior to cutting to prevent condensation.
-                                </li>
-                                <li>Consume within 48 hours for optimal taste.</li>
+                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
+                                <li>Store in an airtight container in the refrigerator.</li>
+                                <li>The cake should be consumed on the same day for best taste.</li>
+                                <li>Slice and serve at room temperature.</li>
+                                <li>Sculptural elements may contain wire or wood supports.</li>
+                                <li style="color: #6c1d45; font-weight: 500;">Note: Intense food coloring may cause
+                                    temporary staining.</li>
                             </ul>
                         </div>
                     </details>
@@ -800,6 +779,73 @@
 
     <!-- AI SOVEREIGN ENGINE V36 (CORS-KILLER PROXY) -->
     <script src="sovereign-v36/main.js?v=36"></script>
+
+    <script>
+        // Fleurons Product Data
+        const productData = {
+            'raspberry-vintage': {
+                title: 'Raspberry Vintage Cake',
+                desc: 'Topped with imported raspberries, and ribbons, this cake is a must for 2025-2026 celebrations. Perfect for those Pinteresty birthdays, and anniversaries, for the perfect vintage aesthetic era.',
+                img: 'https://fleurons.in/cdn/shop/files/RaspberryVintageCake_1.jpg?v=1711617436',
+                servings: '12-15',
+                weight: '2.5 kg',
+                ingredients: ['Imported Raspberries', 'Premium Vanilla', 'Artisanal Ribbons', 'Silk Cream']
+            },
+            'pink-bows': {
+                title: 'Vintage All Pink & Bows Cake',
+                desc: 'Feminine, elegant and everything pink! This vintage cake is perfect for those who love bows and ribbons. Perfect for those Pinteresty birthdays, and anniversaries.',
+                img: 'https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436',
+                servings: '10-12',
+                weight: '2.0 kg',
+                ingredients: ['Pink Buttercream', 'Satin Bows', 'Strawberry Infusion', 'Velvet Sponge']
+            },
+            'golden-couple': {
+                title: 'Golden Couple Anniversary Cake',
+                desc: 'A sophisticated choice for celebrating love. Featuring elegant gold details and a timeless aesthetic.',
+                img: 'https://fleurons.in/cdn/shop/files/GoldenCoupleAnniversaryCake_1.jpg?v=1711617436',
+                servings: '15-20',
+                weight: '3.0 kg',
+                ingredients: ['24K Gold Leaf', 'Dark Chocolate Ganache', 'Champagne Essence', 'Gold Dust']
+            }
+        };
+
+        function openProductDetail(id) {
+            const product = productData[id];
+            if (!product) return;
+
+            document.getElementById('detail-title').innerText = product.title;
+            document.getElementById('detail-desc').innerText = product.desc;
+            document.getElementById('detail-img').src = product.img;
+            document.getElementById('detail-servings').innerText = product.servings;
+            document.getElementById('detail-weight').innerText = product.weight;
+
+            const ingredientsList = document.getElementById('detail-ingredients');
+            ingredientsList.innerHTML = '';
+            product.ingredients.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span style="color: #6c1d45; margin-right: 10px;">&bull;</span> ${item}`;
+                ingredientsList.appendChild(li);
+            });
+
+            document.getElementById('cake-detail-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close logic
+        document.querySelectorAll('.detail-close, .modal-close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
 </body>
 
 </html>
