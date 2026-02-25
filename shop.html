@@ -129,95 +129,200 @@
     </nav>
 
     <main style="padding-top: 180px;">
-        <section class="section">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-pretitle">Explore Collection</p>
-                    <h1 class="text-maroon">Shop All</h1>
-                    <div class="section-line"></div>
-                </div>
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> Products
+            </nav>
 
-                <div class="collection-grid">
-                    <!-- 1. Raspberry Vintage Cake -->
-                    <div class="collection-item" onclick="openProductDetail('raspberry-vintage')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
-                                alt="Raspberry Vintage Cake">
-                            <div class="item-overlay">
-                                <h3>Raspberry Vintage Cake</h3>
-                                <p>From Rs. 2,300</p>
-                            </div>
-                        </div>
+            <!-- Collection Header -->
+            <header class="collection-header">
+                <h1 class="text-maroon">Shop All</h1>
+                <p class="section-pretitle">Explore Collection</p>
+            </header>
+
+            <!-- Toolbar -->
+            <div class="collection-toolbar">
+                <div class="toolbar-left">
+                    <span class="toolbar-label">View As</span>
+                    <div class="view-as-toggles">
+                        <button class="view-toggle-btn active" title="Grid 2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="3" y="3" width="8" height="8" />
+                                <rect x="13" y="3" width="8" height="8" />
+                                <rect x="3" y="13" width="8" height="8" />
+                                <rect x="13" y="13" width="8" height="8" />
+                            </svg>
+                        </button>
                     </div>
-                    <!-- 2. 24K Teddy -->
-                    <div class="collection-item" onclick="openProductDetail('24k-teddy')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
-                                alt="24K Teddy">
-                            <div class="item-overlay">
-                                <h3>24K Teddy</h3>
-                                <p>From Rs. 2,400</p>
-                            </div>
-                        </div>
+                </div>
+                <div class="toolbar-right">
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Items per page</span>
+                        <select class="toolbar-select">
+                            <option>20</option>
+                            <option>40</option>
+                            <option>All</option>
+                        </select>
                     </div>
-                    <!-- 3. Classic LV -->
-                    <div class="collection-item" onclick="openProductDetail('classic-lv')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
-                                alt="Classic LV">
-                            <div class="item-overlay">
-                                <h3>Classic LV</h3>
-                                <p>From Rs. 2,500</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 4. Golden Couple -->
-                    <div class="collection-item" onclick="openProductDetail('golden-couple')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
-                                alt="Golden Couple Anniversary Cake">
-                            <div class="item-overlay">
-                                <h3>Golden Couple Anniversary Cake</h3>
-                                <p>From Rs. 2,400</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 5. Hello Gorgeous -->
-                    <div class="collection-item" onclick="openProductDetail('hello-gorgeous')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
-                                alt="Hello Gorgeous">
-                            <div class="item-overlay">
-                                <h3>Hello Gorgeous</h3>
-                                <p>From Rs. 3,600</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 6. Abby -->
-                    <div class="collection-item" onclick="openProductDetail('abby')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
-                                alt="Abby">
-                            <div class="item-overlay">
-                                <h3>Abby</h3>
-                                <p>From Rs. 3,100</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 7. Vintage All Pink & Bows -->
-                    <div class="collection-item" onclick="openProductDetail('pink-bows')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
-                                alt="Vintage All Pink & Bows Cake">
-                            <div class="item-overlay">
-                                <h3>Vintage All Pink & Bows Cake</h3>
-                                <p>From Rs. 2,500</p>
-                            </div>
-                        </div>
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Sort by</span>
+                        <select class="toolbar-select">
+                            <option>Alphabetically, A-Z</option>
+                            <option>Price, low to high</option>
+                            <option>Price, high to low</option>
+                            <option>Best Selling</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Main Layout -->
+            <div class="collection-container">
+                <!-- Sidebar -->
+                <aside class="collection-sidebar">
+                    <div class="filter-group">
+                        <h3 class="filter-title">Categories</h3>
+                        <ul class="filter-list">
+                            <li class="filter-item"><a href="#cookies" class="text-muted">Cookies</a></li>
+                            <li class="filter-item"><a href="#anniversary" class="text-muted">Anniversary Cakes</a></li>
+                            <li class="filter-item"><a href="#classic" class="text-muted">Classic Cakes</a></li>
+                            <li class="filter-item"><a href="#bento" class="text-muted">Bento Cakes</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Availability</h3>
+                        <div class="filter-list">
+                            <label class="filter-item"><input type="checkbox" checked> In stock</label>
+                            <label class="filter-item"><input type="checkbox"> Out of stock</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Price</h3>
+                        <div class="price-range-slider">
+                            <div class="price-inputs">
+                                <input type="number" placeholder="Min" class="price-input-field">
+                                <span>-</span>
+                                <input type="number" placeholder="Max" class="price-input-field">
+                            </div>
+                            <button class="price-apply-btn">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Products -->
+                    <div class="featured-products-sidebar">
+                        <h3 class="filter-title">Featured Products</h3>
+                        <div class="sidebar-product-item">
+                            <div class="sidebar-product-img">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Product">
+                            </div>
+                            <div class="sidebar-product-info">
+                                <h5>Raspberry Vintage</h5>
+                                <p>Rs. 2,300</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Grid -->
+                <div class="collection-main">
+                    <div class="collection-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                        <!-- 1. Raspberry Vintage Cake -->
+                        <a href="javascript:void(0)" class="product-card"
+                            onclick="openProductDetail('raspberry-vintage')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Raspberry Vintage Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Raspberry Vintage Cake</h3>
+                            <div class="product-card-price">From Rs. 2,300</div>
+                        </a>
+
+                        <!-- 2. 24K Teddy -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('24k-teddy')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                    alt="24K Teddy">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">24K Teddy</h3>
+                            <div class="product-card-price">From Rs. 2,400</div>
+                        </a>
+
+                        <!-- 3. Classic LV -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('classic-lv')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
+                                    alt="Classic LV">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Classic LV</h3>
+                            <div class="product-card-price">From Rs. 2,500</div>
+                        </a>
+
+                        <!-- 4. Golden Couple -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('golden-couple')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
+                                    alt="Golden Couple Anniversary Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Golden Couple Anniversary Cake</h3>
+                            <div class="product-card-price">From Rs. 2,400</div>
+                        </a>
+
+                        <!-- 5. Hello Gorgeous -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('hello-gorgeous')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
+                                    alt="Hello Gorgeous">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Hello Gorgeous</h3>
+                            <div class="product-card-price">From Rs. 3,600</div>
+                        </a>
+
+                        <!-- 6. Abby -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('abby')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
+                                    alt="Abby">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Abby</h3>
+                            <div class="product-card-price">From Rs. 3,100</div>
+                        </a>
+
+                        <!-- 7. Vintage All Pink & Bows -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('pink-bows')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
+                                    alt="Vintage All Pink & Bows Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Vintage All Pink & Bows Cake</h3>
+                            <div class="product-card-price">From Rs. 2,500</div>
+                        </a>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-section">
+                        <div class="pagination-progress">
+                            <span class="progress-text">Showing 1 - 7 of 210 products</span>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width: 3.3%;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-show-more">Show More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="fleurons-footer">

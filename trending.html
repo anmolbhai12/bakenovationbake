@@ -129,95 +129,203 @@
     </nav>
 
     <main style="padding-top: 180px;">
-        <section class="section">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-pretitle">The Bento Picks</p>
-                    <h1 class="text-maroon">Trending Now</h1>
-                    <div class="section-line"></div>
-                </div>
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> Products
+            </nav>
 
-                <div class="collection-grid">
-                    <!-- Bento 1 -->
-                    <div class="collection-item" onclick="openProductDetail('minimalist-heart')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
-                                alt="Minimalist Heart Bento">
-                            <div class="item-overlay">
-                                <h3>Minimalist Heart Bento</h3>
-                                <p>Simple, elegant heart design.</p>
-                            </div>
-                        </div>
+            <!-- Collection Header -->
+            <header class="collection-header">
+                <h1 class="text-maroon">Trending Now</h1>
+                <p class="section-pretitle">The Bento Picks</p>
+            </header>
+
+            <!-- Toolbar -->
+            <div class="collection-toolbar">
+                <div class="toolbar-left">
+                    <span class="toolbar-label">View As</span>
+                    <div class="view-as-toggles">
+                        <button class="view-toggle-btn active" title="Grid 2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="3" y="3" width="8" height="8" />
+                                <rect x="13" y="3" width="8" height="8" />
+                                <rect x="3" y="13" width="8" height="8" />
+                                <rect x="13" y="13" width="8" height="8" />
+                            </svg>
+                        </button>
                     </div>
-                    <!-- Bento 2 -->
-                    <div class="collection-item" onclick="openProductDetail('stars-sprinkles')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
-                                alt="Stars and Sprinkles Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Stars and Sprinkles Bento Cake</h3>
-                                <p>Festive and whimsical.</p>
-                            </div>
-                        </div>
+                </div>
+                <div class="toolbar-right">
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Items per page</span>
+                        <select class="toolbar-select">
+                            <option>20</option>
+                            <option>40</option>
+                            <option>All</option>
+                        </select>
                     </div>
-                    <!-- Bento 3 -->
-                    <div class="collection-item" onclick="openProductDetail('pearls-bento')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
-                                alt="Pearls Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Pearls Bento Cake</h3>
-                                <p>Chic and sophisticated.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bento 4 -->
-                    <div class="collection-item" onclick="openProductDetail('ombre-bento')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
-                                alt="Ombre Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Ombre Bento Cake</h3>
-                                <p>Beautiful color gradient.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bento 5 -->
-                    <div class="collection-item" onclick="openProductDetail('birthday-candles')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436"
-                                alt="Birthday Candles Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Birthday Candles Bento Cake</h3>
-                                <p>Classic birthday celebration.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bento 6 -->
-                    <div class="collection-item" onclick="openProductDetail('te-amo')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
-                                alt="Te Amo Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Te Amo Bento Cake</h3>
-                                <p>Express your love.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bento 7 -->
-                    <div class="collection-item" onclick="openProductDetail('minimalist-bento')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
-                                alt="Minimalist Bento Cake">
-                            <div class="item-overlay">
-                                <h3>Minimalist Bento Cake</h3>
-                                <p>Simple and clean.</p>
-                            </div>
-                        </div>
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Sort by</span>
+                        <select class="toolbar-select">
+                            <option>Alphabetically, A-Z</option>
+                            <option>Price, low to high</option>
+                            <option>Price, high to low</option>
+                            <option>Best Selling</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Main Layout -->
+            <div class="collection-container">
+                <!-- Sidebar -->
+                <aside class="collection-sidebar">
+                    <div class="filter-group">
+                        <h3 class="filter-title">Categories</h3>
+                        <ul class="filter-list">
+                            <li class="filter-item"><a href="#cookies" class="text-muted">Cookies</a></li>
+                            <li class="filter-item"><a href="#anniversary" class="text-muted">Anniversary Cakes</a></li>
+                            <li class="filter-item"><a href="#classic" class="text-muted">Classic Cakes</a></li>
+                            <li class="filter-item"><a href="#bento" class="text-muted">Bento Cakes</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Availability</h3>
+                        <div class="filter-list">
+                            <label class="filter-item"><input type="checkbox" checked> In stock</label>
+                            <label class="filter-item"><input type="checkbox"> Out of stock</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Price</h3>
+                        <div class="price-range-slider">
+                            <div class="price-inputs">
+                                <input type="number" placeholder="Min" class="price-input-field">
+                                <span>-</span>
+                                <input type="number" placeholder="Max" class="price-input-field">
+                            </div>
+                            <button class="price-apply-btn">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Products -->
+                    <div class="featured-products-sidebar">
+                        <h3 class="filter-title">Featured Products</h3>
+                        <div class="sidebar-product-item">
+                            <div class="sidebar-product-img">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Product">
+                            </div>
+                            <div class="sidebar-product-info">
+                                <h5>Raspberry Vintage</h5>
+                                <p>Rs. 2,300</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Grid -->
+                <div class="collection-main">
+                    <div class="collection-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                        <!-- Bento 1 -->
+                        <a href="javascript:void(0)" class="product-card"
+                            onclick="openProductDetail('minimalist-heart')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
+                                    alt="Minimalist Heart Bento">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Minimalist Heart Bento</h3>
+                            <div class="product-card-price">From Rs. 500</div>
+                        </a>
+
+                        <!-- Bento 2 -->
+                        <a href="javascript:void(0)" class="product-card"
+                            onclick="openProductDetail('stars-sprinkles')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
+                                    alt="Stars and Sprinkles Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Stars and Sprinkles Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 550</div>
+                        </a>
+
+                        <!-- Bento 3 -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('pearls-bento')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
+                                    alt="Pearls Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Pearls Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 600</div>
+                        </a>
+
+                        <!-- Bento 4 -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('ombre-bento')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
+                                    alt="Ombre Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Ombre Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 580</div>
+                        </a>
+
+                        <!-- Bento 5 -->
+                        <a href="javascript:void(0)" class="product-card"
+                            onclick="openProductDetail('birthday-candles')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436"
+                                    alt="Birthday Candles Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Birthday Candles Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 650</div>
+                        </a>
+
+                        <!-- Bento 6 -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('te-amo')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
+                                    alt="Te Amo Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Te Amo Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 590</div>
+                        </a>
+
+                        <!-- Bento 7 -->
+                        <a href="javascript:void(0)" class="product-card"
+                            onclick="openProductDetail('minimalist-bento')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
+                                    alt="Minimalist Bento Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Minimalist Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 450</div>
+                        </a>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-section">
+                        <div class="pagination-progress">
+                            <span class="progress-text">Showing 1 - 7 of 145 products</span>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width: 5%;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-show-more">Show More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="fleurons-footer">

@@ -129,40 +129,142 @@
     </nav>
 
     <main style="padding-top: 180px;">
-        <section class="section">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-pretitle">The Art of Giving</p>
-                    <h1 class="text-maroon">Gifting</h1>
-                    <div class="section-line"></div>
-                </div>
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> <span>/</span> Products
+            </nav>
 
-                <div class="collection-grid">
-                    <!-- 4. Golden Couple (Gifting Highlight) -->
-                    <div class="collection-item" onclick="openProductDetail('golden-couple')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
-                                alt="Golden Couple Anniversary Cake">
-                            <div class="item-overlay">
-                                <h3>Golden Couple Anniversary Cake</h3>
-                                <p>From Rs. 2,400</p>
-                            </div>
-                        </div>
+            <!-- Collection Header -->
+            <header class="collection-header">
+                <h1 class="text-maroon">Gifting</h1>
+                <p class="section-pretitle">The Art of Giving</p>
+            </header>
+
+            <!-- Toolbar -->
+            <div class="collection-toolbar">
+                <div class="toolbar-left">
+                    <span class="toolbar-label">View As</span>
+                    <div class="view-as-toggles">
+                        <button class="view-toggle-btn active" title="Grid 2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="3" y="3" width="8" height="8" />
+                                <rect x="13" y="3" width="8" height="8" />
+                                <rect x="3" y="13" width="8" height="8" />
+                                <rect x="13" y="13" width="8" height="8" />
+                            </svg>
+                        </button>
                     </div>
-                    <!-- 2. 24K Teddy (Gifting Highlight) -->
-                    <div class="collection-item" onclick="openProductDetail('24k-teddy')">
-                        <div class="item-image">
-                            <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
-                                alt="24K Teddy">
-                            <div class="item-overlay">
-                                <h3>24K Teddy</h3>
-                                <p>From Rs. 2,400</p>
-                            </div>
-                        </div>
+                </div>
+                <div class="toolbar-right">
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Items per page</span>
+                        <select class="toolbar-select">
+                            <option>20</option>
+                            <option>40</option>
+                            <option>All</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-item">
+                        <span class="toolbar-label">Sort by</span>
+                        <select class="toolbar-select">
+                            <option>Alphabetically, A-Z</option>
+                            <option>Price, low to high</option>
+                            <option>Price, high to low</option>
+                            <option>Best Selling</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Main Layout -->
+            <div class="collection-container">
+                <!-- Sidebar -->
+                <aside class="collection-sidebar">
+                    <div class="filter-group">
+                        <h3 class="filter-title">Categories</h3>
+                        <ul class="filter-list">
+                            <li class="filter-item"><a href="#hampers" class="text-muted">Hampers</a></li>
+                            <li class="filter-item"><a href="#festive" class="text-muted">Festive Gifting</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Availability</h3>
+                        <div class="filter-list">
+                            <label class="filter-item"><input type="checkbox" checked> In stock</label>
+                            <label class="filter-item"><input type="checkbox"> Out of stock</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Price</h3>
+                        <div class="price-range-slider">
+                            <div class="price-inputs">
+                                <input type="number" placeholder="Min" class="price-input-field">
+                                <span>-</span>
+                                <input type="number" placeholder="Max" class="price-input-field">
+                            </div>
+                            <button class="price-apply-btn">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Products -->
+                    <div class="featured-products-sidebar">
+                        <h3 class="filter-title">Featured Products</h3>
+                        <div class="sidebar-product-item">
+                            <div class="sidebar-product-img">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Product">
+                            </div>
+                            <div class="sidebar-product-info">
+                                <h5>Raspberry Vintage</h5>
+                                <p>Rs. 2,300</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Grid -->
+                <div class="collection-main">
+                    <div class="collection-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                        <!-- 4. Golden Couple (Gifting Highlight) -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('golden-couple')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
+                                    alt="Golden Couple Anniversary Cake">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Golden Couple Anniversary Cake</h3>
+                            <div class="product-card-price">From Rs. 2,400</div>
+                        </a>
+
+                        <!-- 2. 24K Teddy (Gifting Highlight) -->
+                        <a href="javascript:void(0)" class="product-card" onclick="openProductDetail('24k-teddy')">
+                            <div class="product-card-image-wrap">
+                                <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                    alt="24K Teddy">
+                            </div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">24K Teddy</h3>
+                            <div class="product-card-price">From Rs. 2,400</div>
+                        </a>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-section">
+                        <div class="pagination-progress">
+                            <span class="progress-text">Showing 1 - 2 of 48 products</span>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style="width: 4%;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-show-more">Show More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="fleurons-footer">
