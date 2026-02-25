@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } else {
-            userNavArea.innerHTML = `<button id="login-trigger" class="btn-text" style="color: var(--color-gold);">Login</button>`;
+            userNavArea.innerHTML = `<button id="login-trigger" class="btn-text" style="color: var(--color-orchid);">Login</button>`;
             const newLoginTrigger = document.getElementById('login-trigger');
             if (newLoginTrigger) {
                 newLoginTrigger.addEventListener('click', () => {
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Please check your phone. If it doesn't arrive in 30 seconds, try manual verification below.
                     </p>
                     <div style="margin-top: 1.5rem;">
-                        <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: rgba(212, 175, 55, 0.1); color: var(--color-gold); border: 1px solid var(--color-gold); border-radius: 8px; font-size: 0.8rem;">Didn't receive it? Send manually</a>
+                        <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: rgba(223, 197, 254, 0.1); color: var(--color-orchid); border: 1px solid var(--color-orchid); border-radius: 8px; font-size: 0.8rem;">Didn't receive it? Send manually</a>
                     </div>
                 </div>`;
                     showOTPView("Verify Identity", otpMsg, true);
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
                         We couldn't trigger the automatic send. Please use manual verification:
                     </p>
-                    <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; background: var(--color-gold); color: #000; border-radius: 8px; font-weight: 600;">Verify via WhatsApp</a>
+                    <a href="${waLink}" target="_blank" class="btn-luxury btn-sm" style="display: inline-block; text-decoration: none; padding: 0.75rem 1.5rem; background: var(--color-orchid); color: white; border-radius: 8px; font-weight: 600;">Verify via WhatsApp</a>
                 </div>`;
                     showOTPView("Verify Identity", otpMsg, true);
                 })

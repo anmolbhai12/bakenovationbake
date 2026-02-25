@@ -30,46 +30,67 @@
 
     <!-- Navigation -->
     <nav class="navbar glass-panel">
-        <div class="container">
+        <div class="container container-nav">
+            <div class="nav-left">
+                <button class="menu-toggle" id="menu-toggle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
             <a href="#" class="logo">
                 <img src="assets/logo.jpg" alt="Bakenovation Logo">
             </a>
-            <div class="nav-right" style="display: flex; align-items: center; gap: 1.5rem;">
-                <ul class="nav-links">
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#collection">Collection</a></li>
-                    <li><a href="#atelier">The Atelier</a></li>
-                    <li><a href="#about">The Visionary</a></li>
-                </ul>
+
+            <div class="nav-right">
                 <div id="user-nav-area">
-                    <button id="login-trigger" class="btn-login-custom">Login</button>
+                    <button id="login-trigger" class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
                 </div>
                 <div class="cart-icon-wrapper" id="cart-toggle">
-                    <svg class="cart-svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor"
-                            d="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18M7.27,18L5.7,14.54L2,5H7V11H15V5H22V7H17V13H7M2,3H5L5.68,5H22V3H2Z" />
+                    <svg class="cart-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
                     <span class="cart-badge" id="cart-count">0</span>
                 </div>
             </div>
         </div>
+        <div class="nav-bottom d-none d-lg-block">
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#atelier">The Atelier</a></li>
+                <li><a href="#visionary">The Visionary</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Hero Section -->
     <header id="hero" class="hero-section">
+        <div class="hero-background">
+            <img src="assets/hero-cake.png" alt="Luxury Cake Background" class="bg-cake-image">
+        </div>
         <div class="hero-content">
-            <h1 class="hero-title">
-                <span class="d-block reveal-text">Artistry in</span>
-                <span class="d-block reveal-text text-orchid">Orchid Elegance</span>
+            <h1 class="hero-title reveal-text">
+                Artistry in <span class="text-orchid">Orchid Elegance</span>
             </h1>
             <p class="hero-subtitle reveal-text">Bespoke couture cakes designed for life's most exquisite moments.</p>
             <div class="hero-actions reveal-text">
                 <a href="#atelier" class="btn-luxury">Start Designing</a>
                 <a href="#collection" class="btn-text">View Gallery &darr;</a>
             </div>
-        </div>
-        <div class="hero-image">
-            <img src="assets/hero-cake.png" alt="Luxury Wedding Cake" class="floating-cake">
         </div>
     </header>
 
@@ -157,6 +178,76 @@
             </div>
         </section>
 
+        <!-- WATCH AND BUY Section -->
+        <section class="section watch-buy-section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <h2 class="text-orchid">WATCH AND BUY</h2>
+                    <p class="section-subtitle">Glimpses of our artisanal craftsmanship.</p>
+                </div>
+                <div class="video-grid reveal-on-scroll">
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <img src="assets/hero-cake.png" alt="Artisanal Video Placeholder">
+                            <div class="play-overlay">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3>The Orchid Assembly</h3>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <img src="assets/chocolate_cake.png" alt="Artisanal Video Placeholder">
+                            <div class="play-overlay">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3>Floral Piping Art</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE JOURNAL Section -->
+        <section class="section journal-section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <h2 class="text-orchid">THE JOURNAL</h2>
+                    <p class="section-subtitle">Stories behind the sweet masterpieces.</p>
+                </div>
+                <div class="journal-grid reveal-on-scroll">
+                    <article class="journal-card">
+                        <div class="journal-img">
+                            <img src="assets/hero-cake.png" alt="Journal Article">
+                        </div>
+                        <div class="journal-content">
+                            <span>February 24, 2026</span>
+                            <h3>The Meaning Behind Your Cake: Colors & Symbols</h3>
+                            <p>Exploring how choice of flowers and colors speaks volumes in celebration cakes...</p>
+                            <a href="#" class="btn-text">Read Article &rarr;</a>
+                        </div>
+                    </article>
+                    <article class="journal-card">
+                        <div class="journal-img">
+                            <img src="assets/chocolate_cake.png" alt="Journal Article">
+                        </div>
+                        <div class="journal-content">
+                            <span>February 20, 2026</span>
+                            <h3>Top Cake Trends of 2025: What’s Hot This Year</h3>
+                            <p>From non-fondant textures to architectural toppers, here is what is trending...</p>
+                            <a href="#" class="btn-text">Read Article &rarr;</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <!-- The Atelier (Sweet Snap AI Replica) -->
         <section id="atelier" class="section">
             <div class="container">
@@ -217,7 +308,8 @@
                                         data-color="lavender"></button>
                                     <button class="snap-color" style="background: #87ceeb;" data-color="blue"></button>
                                     <button class="snap-color" style="background: #98fb98;" data-color="mint"></button>
-                                    <button class="snap-color" style="background: #d4af37;" data-color="gold"></button>
+                                    <button class="snap-color" style="background: #dfc5fe;"
+                                        data-color="orchid"></button>
                                     <button class="snap-color" style="background: #1a0b1f;" data-color="dark"></button>
                                 </div>
                             </div>
@@ -245,6 +337,27 @@
                                     <div class="loader-snap"></div>
                                     <p>Chef is sketchng your masterpiece...</p>
                                 </div>
+                            </div>
+                            <div class="product-info-accordions"
+                                style="margin-top: 2rem; width: 100%; text-align: left;">
+                                <details class="luxury-accordion">
+                                    <summary>Delivery Information</summary>
+                                    <div class="accordion-content">
+                                        <p>All our creations are hand-delivered in temperature-controlled vehicles
+                                            across Delhi NCR to ensure pristine condition upon arrival.</p>
+                                    </div>
+                                </details>
+                                <details class="luxury-accordion">
+                                    <summary>Care Instructions</summary>
+                                    <div class="accordion-content">
+                                        <ul
+                                            style="padding-left: 1.2rem; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.6;">
+                                            <li>Store in an air-conditioned environment.</li>
+                                            <li>Avoid direct sunlight and heat sources.</li>
+                                            <li>Consume within 48 hours for optimal taste.</li>
+                                        </ul>
+                                    </div>
+                                </details>
                             </div>
                             <div class="snap-actions">
                                 <button id="ai-add-to-cart-btn" class="btn-snap-secondary">Add Design to Cart</button>
@@ -284,35 +397,94 @@
 
 
 
-        <!-- Newsletter Section -->
-        <section class="newsletter-section">
+        <!-- TESTIMONIALS Section -->
+        <section class="section testimonials-section">
             <div class="container">
-                <div class="newsletter-container reveal-on-scroll">
-                    <h2 class="text-orchid">Join the Atelier</h2>
-                    <p class="section-subtitle">Sign up for exclusive updates, new arrivals & insider only discounts</p>
-                    <div class="newsletter-input-group">
-                        <input type="email" placeholder="Your email address" class="newsletter-input">
-                        <button class="newsletter-btn">Subscribe</button>
+                <div class="section-header reveal-on-scroll">
+                    <h2 class="text-orchid">REAL REVIEWS, REAL LOVE</h2>
+                    <p class="section-subtitle">What our patrons have to say.</p>
+                </div>
+                <div class="testimonials-grid reveal-on-scroll">
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p>"The Art of Orchids cake was more than just a dessert; it was the centerpiece of our
+                            celebration. Truly bespoke artistry!"</p>
+                        <h4>- Ananya S.</h4>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p>"Chef Harmeet is a visionary. The AI studio made it so easy to visualize exactly what I
+                            wanted for my wedding."</p>
+                        <h4>- Rahul M.</h4>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p>"Stunning aesthetics and equally divine taste. Easily the best couture bakery in Delhi."</p>
+                        <h4>- Priya K.</h4>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- About / Contact (The Visionary) -->
-        <section id="about" class="section">
+        <section id="about" class="section visionary-section">
             <div class="container text-center reveal-on-scroll">
                 <h2 class="text-orchid">The Visionary</h2>
-                <p class="about-text">
-                    Chef Harmeet brings a touch of avant-garde fashion to the world of patisserie.
-                    Every creation is a labor of love, precision, and artistry.
-                </p>
-                <div class="contact-actions">
-                    <a href="mailto:hello@bakenovation.com" class="btn-luxury">Contact Studio</a>
+                <div class="visionary-container">
+                    <p class="about-text">
+                        Chef Harmeet brings a touch of avant-garde fashion to the world of patisserie.
+                        Every creation is a labor of love, precision, and artistry.
+                    </p>
+                    <div class="contact-actions">
+                        <a href="mailto:hello@bakenovation.com" class="btn-luxury">Contact Studio</a>
+                    </div>
                 </div>
             </div>
         </section>
-
     </main>
+
+    <!-- FOOTER Section -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#collection">Trending</a></li>
+                    <li><a href="#">Why Us?</a></li>
+                    <li><a href="#about">Contact Us</a></li>
+                    <li><a href="#collection">Shop All</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="#">Search</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#">Delivery Information</a></li>
+                    <li><a href="#">Care Instructions</a></li>
+                </ul>
+            </div>
+            <div class="footer-col newsletter-col">
+                <h3>Newsletter Sign Up</h3>
+                <p>Sign up for exclusive updates, new arrivals & insider only discounts</p>
+                <div class="footer-newsletter">
+                    <input type="email" placeholder="Your email address" class="footer-input">
+                    <button class="footer-btn">Subscribe</button>
+                </div>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook">Facebook</a>
+                    <a href="#" aria-label="Instagram">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Bakenovation. Conceptualized with Love.</p>
+            </div>
+        </div>
+    </footer>
 
 
 
@@ -410,6 +582,29 @@
                     style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
                     <!-- Populated by JS -->
                 </ul>
+
+                <div class="product-info-accordions" style="margin-bottom: 2rem;">
+                    <details class="luxury-accordion">
+                        <summary>Delivery Information</summary>
+                        <div class="accordion-content">
+                            <p>All our creations are hand-delivered in temperature-controlled vehicles across Delhi NCR
+                                to ensure pristine condition upon arrival.</p>
+                        </div>
+                    </details>
+                    <details class="luxury-accordion">
+                        <summary>Care Instructions</summary>
+                        <div class="accordion-content">
+                            <ul
+                                style="padding-left: 1.2rem; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.6;">
+                                <li>Store in an air-conditioned environment.</li>
+                                <li>Avoid direct sunlight and heat sources.</li>
+                                <li>Fondant cakes should not be refrigerated prior to cutting to prevent condensation.
+                                </li>
+                                <li>Consume within 48 hours for optimal taste.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button class="btn-luxury" id="detail-add-to-cart-btn" style="flex: 1;">Add to Cart</button>
@@ -509,7 +704,7 @@
 
             <div id="otp-view" style="display: none;">
                 <div class="customizer-header">
-                    <h2 class="text-gold" id="otp-title">Verify Email</h2>
+                    <h2 class="text-orchid" id="otp-title">Verify Email</h2>
                     <p id="otp-message">We've sent a code to your Gmail</p>
                 </div>
                 <form id="otp-form" class="auth-form">
@@ -520,7 +715,7 @@
                     </div>
                     <button type="submit" class="btn-luxury w-100">Verify & Create Account</button>
                     <p class="auth-switch text-center">Didn't get it? <a href="#" id="resend-otp"
-                            style="color: var(--color-gold);">Resend Code</a></p>
+                            style="color: var(--color-orchid);">Resend Code</a></p>
                     <p class="auth-switch text-center" style="margin-top: 1rem;">
                         <a href="#" id="back-to-auth"
                             style="color: var(--color-text-muted); font-size: 0.8rem; text-decoration: underline;">Change
