@@ -56,17 +56,9 @@ body {
     /* Removed brightness filter to show raw texture */
 }
 
-/* Add a subtle overlay to ensure readability if background is too vibrant */
 /* Subtle overlay removed to let raw texture shine */
 .bg-fixed::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(26, 8, 34, 0.1);
-    /* Minimal darkening */
+    content: none;
 }
 
 h1,
