@@ -130,6 +130,8 @@
                                     <div class="weight-chip active" onclick="selectChip(this, 'tiers')">1 Tier</div>
                                     <div class="weight-chip" onclick="selectChip(this, 'tiers')">2 Tiers</div>
                                     <div class="weight-chip" onclick="selectChip(this, 'tiers')">3 Tiers</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'tiers')">4 Tiers</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'tiers')">5 Tiers</div>
                                 </div>
                             </div>
                             <div class="option-group">
@@ -137,6 +139,14 @@
                                 <div id="detail-fake-tier-options" class="weight-options">
                                     <div class="weight-chip active" onclick="selectChip(this, 'fake-tier')">No</div>
                                     <div class="weight-chip" onclick="selectChip(this, 'fake-tier')">Yes</div>
+                                </div>
+                            </div>
+                            <div id="which-fake-tier-group" class="option-group" style="display: none;">
+                                <label class="toolbar-label">Which tier is fake?</label>
+                                <div id="detail-which-fake-options" class="weight-options">
+                                    <div class="weight-chip active" onclick="selectChip(this, 'which-fake')">Top</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'which-fake')">Middle</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'which-fake')">Bottom</div>
                                 </div>
                             </div>
                         </div>
@@ -321,13 +331,15 @@
             const cakeOptions = document.getElementById('cake-specific-options');
 
             if (product.category === 'cookies') {
-                mainOptionLabel.innerText = 'Select Packets';
+                mainOptionLabel.innerText = 'No. of Packets';
                 cakeOptions.style.display = 'none';
-                // Adjust cookie weights to packets
-                product.weights = product.weights || ['1 Packet', '2 Packets', '5 Packets'];
+                // Adjust cookie weights to packets strictly
+                product.weights = ['1 Packet', '2 Packets', '5 Packets', '10 Packets'];
             } else {
                 mainOptionLabel.innerText = 'Select Weight';
                 cakeOptions.style.display = 'block';
+                // Reset fake tier toggle visibility
+                document.getElementById('which-fake-tier-group').style.display = 'none';
             }
 
             // Weight/Packets Options
@@ -353,6 +365,16 @@
             const parent = chip.parentElement;
             parent.querySelectorAll('.weight-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
+
+            // Conditional logic for fake tier
+            if (type === 'fake-tier') {
+                const whichFakeGroup = document.getElementById('which-fake-tier-group');
+                if (chip.innerText === 'Yes') {
+                    whichFakeGroup.style.display = 'block';
+                } else {
+                    whichFakeGroup.style.display = 'none';
+                }
+            }
         }
 
         function selectDiet(btn, value) {
