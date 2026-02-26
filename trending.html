@@ -145,53 +145,99 @@
             <div class="collection-container">
                 <!-- Sidebar -->
                 <aside class="collection-sidebar">
-                    <div class="filter-group">
-                        <h3 class="filter-title">Varieties</h3>
-                        <ul class="filter-list" id="category-filter">
-                            <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
-                            <li class="filter-item"><a href="#cookies" data-filter="cookies">Cookies</a></li>
-                            <li class="filter-item"><a href="#anniversary" data-filter="anniversary">Anniversary
-                                    Cakes</a></li>
-                            <li class="filter-item"><a href="#classic" data-filter="classic">Classic Cakes</a></li>
-                            <li class="filter-item"><a href="#kids" data-filter="kids">Kids Cakes</a></li>
-                            <li class="filter-item"><a href="#aesthetic" data-filter="aesthetic">Aesthetic Cakes</a>
-                            </li>
-                            <li class="filter-item"><a href="#floral" data-filter="floral">Floral Cakes</a></li>
-                            <li class="filter-item"><a href="#geode" data-filter="geode">Geode Cakes</a></li>
-                            <li class="filter-item"><a href="#butterfly" data-filter="butterfly">Butterfly Cakes</a>
-                            </li>
-                            <li class="filter-item"><a href="#secret-message" data-filter="secret-message">Secret/Hidden
-                                    Message Bento Cakes</a></li>
-                            <li class="filter-item"><a href="#bento" data-filter="bento">Bento Cakes</a></li>
-                            <li class="filter-item"><a href="#signature" data-filter="signature">Signature Cakes</a>
-                            </li>
-                            <li class="filter-item"><a href="#fruit" data-filter="fruit">Fruit Cakes</a></li>
-                            <li class="filter-item"><a href="#cheesecakes" data-filter="cheesecakes">Cheesecakes</a>
-                            </li>
-                            <li class="filter-item"><a href="#tea-cakes" data-filter="tea-cakes">Tea Cakes</a></li>
-                            <li class="filter-item"><a href="#christmas" data-filter="christmas">Christmas</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="filter-group">
-                        <h3 class="filter-title">Availability</h3>
-                        <div class="filter-list">
-                            <label class="filter-item"><input type="checkbox" checked> In stock</label>
-                            <label class="filter-item"><input type="checkbox"> Out of stock</label>
+                    <!-- Categories Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">CATEGORIES</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <ul class="filter-list" id="category-filter">
+                                <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
+                                <li class="filter-item"><a href="#cookies" data-filter="cookies">Cookies</a></li>
+                                <li class="filter-item"><a href="#anniversary" data-filter="anniversary">Anniversary
+                                        Cakes</a></li>
+                                <li class="filter-item"><a href="#classic" data-filter="classic">Classic Cakes</a></li>
+                                <li class="filter-item"><a href="#kids" data-filter="kids">Kids Cakes</a></li>
+                                <li class="filter-item"><a href="#aesthetic" data-filter="aesthetic">Aesthetic Cakes</a>
+                                </li>
+                                <li class="filter-item"><a href="#floral" data-filter="floral">Floral Cakes</a></li>
+                                <li class="filter-item"><a href="#geode" data-filter="geode">Geode Cakes</a></li>
+                                <li class="filter-item"><a href="#butterfly" data-filter="butterfly">Butterfly Cakes</a>
+                                </li>
+                                <li class="filter-item"><a href="#secret-message"
+                                        data-filter="secret-message">Secret/Hidden Message Bento Cakes</a></li>
+                                <li class="filter-item"><a href="#bento" data-filter="bento">Bento Cakes</a></li>
+                                <li class="filter-item"><a href="#signature" data-filter="signature">Signature Cakes</a>
+                                </li>
+                                <li class="filter-item"><a href="#fruit" data-filter="fruit">Fruit Cakes</a></li>
+                                <li class="filter-item"><a href="#cheesecakes" data-filter="cheesecakes">Cheesecakes</a>
+                                </li>
+                                <li class="filter-item"><a href="#tea-cakes" data-filter="tea-cakes">Tea Cakes</a></li>
+                                <li class="filter-item"><a href="#christmas" data-filter="christmas">Christmas</a></li>
+                            </ul>
                         </div>
                     </div>
-
-                    <!-- Featured Products -->
-                    <div class="featured-products-sidebar">
-                        <h3 class="filter-title" style="margin-bottom: 1.5rem;">Featured</h3>
-                        <div class="sidebar-product-item">
-                            <div class="sidebar-product-img">
-                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
-                                    alt="Product">
+                    <!-- Availability Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">AVAILABILITY</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <label class="sidebar-checkbox-label"><input type="checkbox" checked><span>In Stock<span
+                                        class="sidebar-count">(15)</span></span></label>
+                            <label class="sidebar-checkbox-label"><input type="checkbox"><span>Out Of Stock<span
+                                        class="sidebar-count">(0)</span></span></label>
+                        </div>
+                    </div>
+                    <!-- Price Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">PRICE</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <div class="price-range-wrap">
+                                <input type="range" id="price-min-range" min="0" max="5000" value="0"
+                                    class="price-range-slider" oninput="syncPriceInputs()">
+                                <input type="range" id="price-max-range" min="0" max="5000" value="5000"
+                                    class="price-range-slider" oninput="syncPriceInputs()">
                             </div>
-                            <div class="sidebar-product-info">
-                                <h5>Raspberry Vintage</h5>
-                                <p>Rs. 2,300</p>
+                            <div class="price-inputs">
+                                <span class="price-input-group">&#8377; <input type="number" id="price-min-val"
+                                        value="0" min="0" max="5000" oninput="syncPriceSliders()"></span>
+                                <span class="price-sep">to</span>
+                                <span class="price-input-group">&#8377; <input type="number" id="price-max-val"
+                                        value="5000" min="0" max="5000" oninput="syncPriceSliders()"></span>
+                            </div>
+                            <button class="price-apply-btn" onclick="applyFilters()">APPLY</button>
+                        </div>
+                    </div>
+                    <!-- Featured Products Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">FEATURED PRODUCTS</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Signature Blend" onclick="openProductDetail('raspberry-vintage')">
+                                <div class="featured-product-info"><span class="featured-product-name">Signature
+                                        Blend</span><span class="featured-product-price">From Rs. 1,800</span></div>
+                            </div>
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                    alt="Geode Magic" onclick="openProductDetail('24k-teddy')">
+                                <div class="featured-product-info"><span class="featured-product-name">Geode
+                                        Magic</span><span class="featured-product-price">From Rs. 1,500</span></div>
+                            </div>
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
+                                    alt="Secret Message Bento" onclick="openProductDetail('te-amo')">
+                                <div class="featured-product-info"><span class="featured-product-name">Secret Message
+                                        Bento</span><span class="featured-product-price">From Rs. 650</span></div>
                             </div>
                         </div>
                     </div>
@@ -199,10 +245,64 @@
 
                 <!-- Grid -->
                 <div class="collection-main">
-                    <div class="collection-grid"
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                    <!-- Toolbar -->
+                    <div class="collection-toolbar">
+                        <div class="toolbar-left">
+                            <span class="toolbar-label">VIEW AS</span>
+                            <div class="view-as-btns">
+                                <button class="view-btn" id="view-list" onclick="setView('list')" title="List"><svg
+                                        viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="2" y="3" width="16" height="3" rx="1" />
+                                        <rect x="2" y="9" width="16" height="3" rx="1" />
+                                        <rect x="2" y="15" width="16" height="3" rx="1" />
+                                    </svg></button>
+                                <button class="view-btn" id="view-2col" onclick="setView('2col')" title="2 Columns"><svg
+                                        viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="2" y="2" width="7" height="16" rx="1" />
+                                        <rect x="11" y="2" width="7" height="16" rx="1" />
+                                    </svg></button>
+                                <button class="view-btn active" id="view-3col" onclick="setView('3col')"
+                                    title="3 Columns"><svg viewBox="0 0 20 20" width="16" height="16"
+                                        fill="currentColor">
+                                        <rect x="1" y="2" width="5" height="16" rx="1" />
+                                        <rect x="7.5" y="2" width="5" height="16" rx="1" />
+                                        <rect x="14" y="2" width="5" height="16" rx="1" />
+                                    </svg></button>
+                                <button class="view-btn" id="view-4col" onclick="setView('4col')" title="4 Columns"><svg
+                                        viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="1" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="5.5" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="10" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="14.5" y="2" width="3.5" height="16" rx="1" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <div class="toolbar-control">
+                                <label class="toolbar-label" for="items-per-page">ITEMS PER PAGE</label>
+                                <select id="items-per-page" class="toolbar-select" onchange="applyFilters()">
+                                    <option value="12">12</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="40">40</option>
+                                    <option value="100">All</option>
+                                </select>
+                            </div>
+                            <div class="toolbar-control">
+                                <label class="toolbar-label" for="sort-by">SORT BY</label>
+                                <select id="sort-by" class="toolbar-select" onchange="applyFilters()">
+                                    <option value="best">Best selling</option>
+                                    <option value="price-asc">Price, low to high</option>
+                                    <option value="price-desc">Price, high to low</option>
+                                    <option value="az">Alphabetically, A-Z</option>
+                                    <option value="za">Alphabetically, Z-A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collection-grid" id="product-grid">
                         <a href="javascript:void(0)" class="product-card" id="cookies" data-category="cookies"
-                            onclick="openProductDetail('stars-sprinkles')">
+                            data-price="550" data-new="true" onclick="openProductDetail('stars-sprinkles')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
                                     alt="Cookies"></div>
@@ -211,7 +311,7 @@
                             <div class="product-card-price">From Rs. 550</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="anniversary" data-category="anniversary"
-                            onclick="openProductDetail('classic-lv')">
+                            data-price="800" onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
                                     alt="Anniversary"></div>
@@ -220,7 +320,7 @@
                             <div class="product-card-price">From Rs. 800</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="classic" data-category="classic"
-                            onclick="openProductDetail('classic-lv')">
+                            data-price="950" onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                     alt="Classic"></div>
@@ -229,7 +329,8 @@
                             <div class="product-card-price">From Rs. 950</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="kids" data-category="kids"
-                            onclick="openProductDetail('minimalist-heart')">
+                            data-price="700" data-new="true" onclick="openProductDetail('minimalist-heart')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
                                     alt="Kids"></div>
@@ -238,7 +339,7 @@
                             <div class="product-card-price">From Rs. 700</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="aesthetic" data-category="aesthetic"
-                            onclick="openProductDetail('ombre-bento')">
+                            data-price="850" onclick="openProductDetail('ombre-bento')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436"
                                     alt="Aesthetic"></div>
@@ -247,25 +348,26 @@
                             <div class="product-card-price">From Rs. 850</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="floral" data-category="floral"
-                            onclick="openProductDetail('classic-lv')">
+                            data-price="1200" onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436"
                                     alt="Floral"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Floral Dream</h3>
-                            <div class="product-card-price">From Rs. 1200</div>
+                            <div class="product-card-price">From Rs. 1,200</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="geode" data-category="geode"
-                            onclick="openProductDetail('24k-teddy')">
+                            data-price="1500" data-new="true" onclick="openProductDetail('24k-teddy')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
                                     alt="Geode"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Geode Magic</h3>
-                            <div class="product-card-price">From Rs. 1500</div>
+                            <div class="product-card-price">From Rs. 1,500</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="butterfly" data-category="butterfly"
-                            onclick="openProductDetail('ombre-bento')">
+                            data-price="900" onclick="openProductDetail('ombre-bento')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436"
                                     alt="Butterfly"></div>
@@ -274,7 +376,7 @@
                             <div class="product-card-price">From Rs. 900</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="secret-message"
-                            data-category="secret-message" onclick="openProductDetail('te-amo')">
+                            data-category="secret-message" data-price="650" onclick="openProductDetail('te-amo')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436"
                                     alt="Secret Message"></div>
@@ -283,7 +385,7 @@
                             <div class="product-card-price">From Rs. 650</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="bento" data-category="bento"
-                            onclick="openProductDetail('minimalist-heart')">
+                            data-price="500" onclick="openProductDetail('minimalist-heart')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436"
                                     alt="Bento"></div>
@@ -292,34 +394,34 @@
                             <div class="product-card-price">From Rs. 500</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="signature" data-category="signature"
-                            onclick="openProductDetail('raspberry-vintage')">
+                            data-price="1800" onclick="openProductDetail('raspberry-vintage')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
                                     alt="Signature"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Signature Blend</h3>
-                            <div class="product-card-price">From Rs. 1800</div>
+                            <div class="product-card-price">From Rs. 1,800</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="fruit" data-category="fruit"
-                            onclick="openProductDetail('raspberry-vintage')">
+                            data-price="1400" onclick="openProductDetail('raspberry-vintage')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
                                     alt="Fruit"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Fresh Fruit Delight</h3>
-                            <div class="product-card-price">From Rs. 1400</div>
+                            <div class="product-card-price">From Rs. 1,400</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="cheesecakes" data-category="cheesecakes"
-                            onclick="openProductDetail('minimalist-bento')">
+                            data-price="1100" onclick="openProductDetail('minimalist-bento')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
                                     alt="Cheesecakes"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Rich Cheesecake</h3>
-                            <div class="product-card-price">From Rs. 1100</div>
+                            <div class="product-card-price">From Rs. 1,100</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="tea-cakes" data-category="tea-cakes"
-                            onclick="openProductDetail('stars-sprinkles')">
+                            data-price="750" onclick="openProductDetail('stars-sprinkles')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436"
                                     alt="Tea Cakes"></div>
@@ -328,13 +430,13 @@
                             <div class="product-card-price">From Rs. 750</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="christmas" data-category="christmas"
-                            onclick="openProductDetail('minimalist-bento')">
+                            data-price="1300" onclick="openProductDetail('minimalist-bento')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436"
                                     alt="Christmas"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Christmas Special</h3>
-                            <div class="product-card-price">From Rs. 1300</div>
+                            <div class="product-card-price">From Rs. 1,300</div>
                         </a>
                     </div>
 
@@ -466,6 +568,333 @@
     <div id="auth-modal" class="modal-overlay"></div>
     <div id="search-modal" class="modal-overlay"></div>
     <div id="cart-drawer" class="cart-drawer"></div>
+
+    <style>
+        .sidebar-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--color-text, #ddd);
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-toggle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted, #aaa);
+            transition: transform 0.25s;
+            line-height: 1;
+        }
+
+        .sidebar-section-toggle.collapsed {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-section-body {
+            padding-bottom: 14px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s;
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .sidebar-section-body.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-bottom: 0;
+        }
+
+        .sidebar-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .sidebar-checkbox-label input[type="checkbox"] {
+            accent-color: #6c1d45;
+            width: 15px;
+            height: 15px;
+        }
+
+        .sidebar-count {
+            color: var(--color-text-muted, #888);
+            margin-left: 3px;
+            font-size: 0.8em;
+        }
+
+        .price-range-wrap {
+            position: relative;
+            height: 20px;
+            margin-bottom: 12px;
+        }
+
+        .price-range-slider {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .price-range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6c1d45;
+            pointer-events: all;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .price-range-slider::-webkit-slider-runnable-track {
+            background: rgba(255, 255, 255, 0.15);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .price-inputs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .price-input-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.82rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .price-input-group input {
+            width: 65px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 0.82rem;
+            color: var(--color-text, #ddd);
+            outline: none;
+        }
+
+        .price-sep {
+            font-size: 0.8rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .price-apply-btn {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .price-apply-btn:hover {
+            background: #6c1d45;
+        }
+
+        .featured-product-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .featured-product-item:last-child {
+            border-bottom: none;
+        }
+
+        .featured-product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .featured-product-item img:hover {
+            opacity: 0.8;
+        }
+
+        .featured-product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .featured-product-name {
+            font-size: 0.8rem;
+            color: var(--color-text, #ddd);
+            line-height: 1.3;
+        }
+
+        .featured-product-price {
+            font-size: 0.75rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .collection-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 0 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--color-text-muted, #aaa);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .toolbar-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text, #ddd);
+            padding: 5px 28px 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            outline: none;
+        }
+
+        .view-as-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text-muted, #aaa);
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: rgba(108, 29, 69, 0.3);
+            border-color: #6c1d45;
+            color: #fff;
+        }
+
+        .product-badge-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #6c1d45;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 2px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .product-card {
+            position: relative;
+        }
+
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            transition: all 0.3s;
+        }
+
+        #product-grid.view-list {
+            grid-template-columns: 1fr;
+        }
+
+        #product-grid.view-list .product-card {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        #product-grid.view-list .product-card-image-wrap {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        #product-grid.view-2col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #product-grid.view-3col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        #product-grid.view-4col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    </style>
 
     <script>
         const productData = {
@@ -604,72 +1033,71 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Variety Filtering Logic
-        function filterProducts(category) {
-            const cards = document.querySelectorAll('.product-card');
-            const links = document.querySelectorAll('#category-filter a');
-
-            // Update active link
-            links.forEach(link => {
-                if (link.getAttribute('data-filter') === category) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-
-            // Filter cards
-            cards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                if (category === 'all' || cardCategory === category) {
-                    card.style.display = 'block';
-                    card.style.opacity = '0';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                    }, 50);
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Update page count (if needed)
-            const visibleCount = document.querySelectorAll('.product-card[style*="display: block"]').length;
-            const progressText = document.querySelector('.progress-text');
-            if (progressText) {
-                progressText.innerText = `Showing 1 - ${visibleCount} of 145 products`;
-            }
+        // ===== SIDEBAR COLLAPSE =====
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.sidebar-section-toggle');
+            body.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
         }
-
-        // Handle sidebar clicks
-        document.querySelectorAll('#category-filter a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const filter = link.getAttribute('data-filter');
-                if (filter) {
-                    // We let the hash handle it for consistency with the main menu
-                    // window.location.hash = filter; 
-                    // Actually, if we are already on the page, hashchange will fire.
-                }
+        // ===== PRICE RANGE SYNC =====
+        function syncPriceInputs() {
+            const minR = document.getElementById('price-min-range');
+            const maxR = document.getElementById('price-max-range');
+            let minVal = parseInt(minR.value), maxVal = parseInt(maxR.value);
+            if (minVal > maxVal) { minR.value = maxVal; minVal = maxVal; }
+            document.getElementById('price-min-val').value = minVal;
+            document.getElementById('price-max-val').value = maxVal;
+        }
+        function syncPriceSliders() {
+            document.getElementById('price-min-range').value = parseInt(document.getElementById('price-min-val').value) || 0;
+            document.getElementById('price-max-range').value = parseInt(document.getElementById('price-max-val').value) || 5000;
+        }
+        // ===== VIEW AS =====
+        function setView(mode) {
+            document.getElementById('product-grid').className = 'view-' + mode;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + mode).classList.add('active');
+        }
+        // ===== MAIN FILTER + SORT + PAGINATION =====
+        let currentCategory = 'all';
+        function applyFilters() {
+            const cards = Array.from(document.querySelectorAll('.product-card'));
+            const minPrice = parseInt(document.getElementById('price-min-val').value) || 0;
+            const maxPrice = parseInt(document.getElementById('price-max-val').value) || 5000;
+            const sortBy = document.getElementById('sort-by').value;
+            const perPage = parseInt(document.getElementById('items-per-page').value);
+            let visible = cards.filter(card => {
+                const cat = card.getAttribute('data-category');
+                const price = parseInt(card.getAttribute('data-price')) || 0;
+                return (currentCategory === 'all' || cat === currentCategory) && price >= minPrice && price <= maxPrice;
             });
-        });
-
-        // Listen for hash changes (from main menu or sidebar)
-        window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.replace('#', '') || 'all';
-            filterProducts(hash);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Initial check
-        window.addEventListener('DOMContentLoaded', () => {
-            const hash = window.location.hash.replace('#', '') || 'all';
-            filterProducts(hash);
-        });
-
+            visible.sort((a, b) => {
+                const pA = parseInt(a.getAttribute('data-price')) || 0, pB = parseInt(b.getAttribute('data-price')) || 0;
+                const nA = a.querySelector('.product-card-title')?.innerText || '', nB = b.querySelector('.product-card-title')?.innerText || '';
+                if (sortBy === 'price-asc') return pA - pB;
+                if (sortBy === 'price-desc') return pB - pA;
+                if (sortBy === 'az') return nA.localeCompare(nB);
+                if (sortBy === 'za') return nB.localeCompare(nA);
+                return 0;
+            });
+            cards.forEach(c => { c.style.display = 'none'; });
+            visible.slice(0, perPage).forEach((card, i) => {
+                card.style.display = '';
+                card.style.opacity = '0';
+                setTimeout(() => { card.style.opacity = '1'; }, i * 30);
+            });
+            const progressText = document.querySelector('.progress-text');
+            if (progressText) progressText.innerText = `Showing 1 - ${Math.min(perPage, visible.length)} of ${visible.length} products`;
+            document.querySelectorAll('#category-filter a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-filter') === currentCategory);
+            });
+        }
+        function filterProducts(category) { currentCategory = category; applyFilters(); }
+        window.addEventListener('hashchange', () => { const h = window.location.hash.replace('#', '') || 'all'; filterProducts(h); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+        window.addEventListener('DOMContentLoaded', () => { filterProducts(window.location.hash.replace('#', '') || 'all'); });
         document.querySelectorAll('.detail-close').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.getElementById('cake-detail-modal').classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
+            btn.addEventListener('click', () => { document.getElementById('cake-detail-modal').classList.remove('active'); document.body.style.overflow = 'auto'; });
         });
     </script>
 </body>
