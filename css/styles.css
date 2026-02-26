@@ -1,20 +1,20 @@
 :root {
-    --color-gold: #c5a059;
-    --color-gold-light: #e6c888;
-    --color-maroon: #641f3a;
-    /* Exact Fleurons Burgundy */
-    --color-maroon-dark: #4a0a2e;
-    --color-green: #1b7639;
-    /* Exact Fleurons Announcement Green */
+    --color-gold: #e6c888;
+    --color-gold-light: #f5e4bc;
+    --color-purple: #421054;
+    /* Deep Silk Purple */
+    --color-purple-dark: #2d0b3a;
+    --color-lavender: #be93e4;
+    --color-silk-bg: #f8f0ff;
+    --color-green: #2d5a27;
+
     --color-bg: #ffffff;
-    /* White background for Fleurons theme */
-    --color-text: #000000;
-    --color-text-muted: #5e5e5e;
-    --color-border: #eeeeee;
+    --color-text: #1a0b1f;
+    --color-text-muted: #5e4b63;
+    --color-border: #e6dee9;
 
     --font-heading: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
-    /* Fleurons uses Inter/Raleway blend */
+    --font-body: 'Raleway', sans-serif;
 
     --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-medium: 0.4s ease-out;
@@ -62,7 +62,7 @@ h4 {
     letter-spacing: 0.05em;
     text-transform: none;
     /* Fleurons uses mixed case in many headers */
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .text-gold {
@@ -94,8 +94,8 @@ h4 {
 .btn-luxury {
     display: inline-block;
     padding: 0.8rem 2.5rem;
-    background: var(--color-maroon);
-    border: 1px solid var(--color-maroon);
+    background: var(--color-purple);
+    border: 1px solid var(--color-purple);
     color: #ffffff;
     font-family: var(--font-body);
     font-weight: 500;
@@ -103,7 +103,6 @@ h4 {
     letter-spacing: 0.1em;
     text-decoration: none;
     border-radius: 0;
-    /* SQUARE CORNERS */
     transition: all var(--transition-medium);
     cursor: pointer;
     font-size: 0.8rem;
@@ -111,7 +110,7 @@ h4 {
 
 .btn-luxury:hover {
     background: #ffffff;
-    color: var(--color-maroon);
+    color: var(--color-purple);
     transform: none;
     box-shadow: none;
 }
@@ -169,12 +168,10 @@ h4 {
 .fleurons-main-header {
     position: fixed;
     top: 28px;
-    /* Adjusted for taller green banner */
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: var(--color-maroon);
-    /* Burgundy Header */
+    background: var(--color-purple);
     border-bottom: none;
     height: 80px;
     display: flex;
@@ -289,7 +286,7 @@ h4 {
 }
 
 .fleurons-nav-links>li>a:hover {
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .fleurons-highlight>a {
@@ -510,7 +507,7 @@ h4 {
     line-height: 1.2;
     margin-bottom: 2rem;
     font-weight: 400;
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .hero-background {
@@ -2506,7 +2503,7 @@ h4 {
 }
 
 .footer-links a:hover {
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .newsletter-text {
@@ -2555,7 +2552,7 @@ h4 {
 }
 
 .social-icon:hover {
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .footer-bottom {
@@ -2611,7 +2608,7 @@ h4 {
 }
 
 .breadcrumb a:hover {
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .breadcrumb span {
@@ -2670,7 +2667,7 @@ h4 {
 }
 
 .view-toggle-btn.active {
-    color: var(--color-maroon);
+    color: var(--color-purple);
 }
 
 .toolbar-select {
