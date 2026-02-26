@@ -1,127 +1,436 @@
-/**
- * Central Product Database for Bakenovation
- * Used by shop.html, trending.html, gifting.html, and product.html
- */
-
 const productData = {
-    // --- Shop / Featured ---
-    'raspberry-vintage': {
-        title: 'Raspberry Vintage Cake',
-        desc: 'Topped with imported raspberries, and ribbons, this cake is a must for 2025-2026 celebrations. Perfect for those Pinteresty birthdays, and anniversaries, for the perfect vintage aesthetic era.',
-        price: 1800,
-        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972.jpg?v=1711617436'],
-        weights: ['0.5 kg', '1.0 kg', '1.5 kg', '2.0 kg'],
-        care: 'Store in refrigerator. Best consumed within 24 hours of delivery.'
+    'cookies-special': {
+        title: 'Cookies Special',
+        desc: 'Cookies Special - A premium creation from Bakenovation.',
+        price: 550,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    '24k-teddy': {
-        title: '24K Teddy',
-        desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
-        price: 4500,
-        imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210'],
-        weights: ['1.0 kg', '1.5 kg', '2.5 kg'],
-        care: 'Edible gold is delicate. Keep away from direct sunlight.'
+    'classic-cookies-box': {
+        title: 'Classic Cookies Box',
+        desc: 'Classic Cookies Box - A premium creation from Bakenovation.',
+        price: 650,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'mini-cookie-gift-box': {
+        title: 'Mini Cookie Gift Box',
+        desc: 'Mini Cookie Gift Box - A premium creation from Bakenovation.',
+        price: 480,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'anniversary-cake': {
+        title: 'Anniversary Cake',
+        desc: 'Anniversary Cake - A premium creation from Bakenovation.',
+        price: 800,
+        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'golden-couple': {
+        title: 'Golden Couple',
+        desc: 'Golden Couple - A premium creation from Bakenovation.',
+        price: 2400,
+        imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'raspberry-vintage': {
+        title: 'Raspberry Vintage',
+        desc: 'Raspberry Vintage - A premium creation from Bakenovation.',
+        price: 1800,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
     'classic-lv': {
         title: 'Classic LV',
-        desc: 'Non-Fondant cake, topped with golden buds, and handcrafted sugar peonies and leaves. Stencilling in Louis Vuitton pattern.',
-        price: 2200,
-        imgs: ['https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118.jpg?v=1748428764'],
-        weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-        care: 'Handle with care to preserve the stencilled design.'
-    },
-    'golden-couple': {
-        title: 'Golden Couple Anniversary Cake',
-        desc: 'Featuring golden buds and handcrafted sugar flowers, this cake is a sophisticated choice for celebrating love.',
-        price: 2200,
-        imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750'],
-        weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-        care: 'Keep refrigerated until serving.'
+        desc: 'Classic LV - A premium creation from Bakenovation.',
+        price: 950,
+        imgs: ['https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
     'hello-gorgeous': {
         title: 'Hello Gorgeous',
-        desc: 'Layered with shades of purple cream, adorned with edible pearls, chocolate spheres and edible wafer paper flowers.',
-        price: 2200,
+        desc: 'Hello Gorgeous - A premium creation from Bakenovation.',
+        price: 1100,
         imgs: ['https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC.jpg?v=1748428843'],
-        weights: ['1.0 kg', '1.5 kg'],
-        care: 'Wafer paper is sensitive to humidity.'
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'classic-bento': {
+        title: 'Classic Bento',
+        desc: 'Classic Bento - A premium creation from Bakenovation.',
+        price: 800,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'kids-special': {
+        title: 'Kids Special',
+        desc: 'Kids Special - A premium creation from Bakenovation.',
+        price: 700,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'kids-star-cake': {
+        title: 'Kids Star Cake',
+        desc: 'Kids Star Cake - A premium creation from Bakenovation.',
+        price: 550,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'birthday-candles-bento': {
+        title: 'Birthday Candles Bento',
+        desc: 'Birthday Candles Bento - A premium creation from Bakenovation.',
+        price: 620,
+        imgs: ['https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'aesthetic-beauty': {
+        title: 'Aesthetic Beauty',
+        desc: 'Aesthetic Beauty - A premium creation from Bakenovation.',
+        price: 850,
+        imgs: ['https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'vintage-pink-amp-bows': {
+        title: 'Vintage Pink &amp; Bows',
+        desc: 'Vintage Pink &amp; Bows - A premium creation from Bakenovation.',
+        price: 950,
+        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'floral-dream': {
+        title: 'Floral Dream',
+        desc: 'Floral Dream - A premium creation from Bakenovation.',
+        price: 1200,
+        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'golden-floral-cake': {
+        title: 'Golden Floral Cake',
+        desc: 'Golden Floral Cake - A premium creation from Bakenovation.',
+        price: 2400,
+        imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'raspberry-floral': {
+        title: 'Raspberry Floral',
+        desc: 'Raspberry Floral - A premium creation from Bakenovation.',
+        price: 1800,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'geode-magic': {
+        title: 'Geode Magic',
+        desc: 'Geode Magic - A premium creation from Bakenovation.',
+        price: 1500,
+        imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'geode-vintage': {
+        title: 'Geode Vintage',
+        desc: 'Geode Vintage - A premium creation from Bakenovation.',
+        price: 1800,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'crystal-geode-cake': {
+        title: 'Crystal Geode Cake',
+        desc: 'Crystal Geode Cake - A premium creation from Bakenovation.',
+        price: 1200,
+        imgs: ['https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'butterfly-kisses': {
+        title: 'Butterfly Kisses',
+        desc: 'Butterfly Kisses - A premium creation from Bakenovation.',
+        price: 900,
+        imgs: ['https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'butterfly-ombre': {
+        title: 'Butterfly Ombre',
+        desc: 'Butterfly Ombre - A premium creation from Bakenovation.',
+        price: 780,
+        imgs: ['https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'butterfly-mini-bento': {
+        title: 'Butterfly Mini Bento',
+        desc: 'Butterfly Mini Bento - A premium creation from Bakenovation.',
+        price: 650,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'secret-message-bento': {
+        title: 'Secret Message Bento',
+        desc: 'Secret Message Bento - A premium creation from Bakenovation.',
+        price: 650,
+        imgs: ['https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'hidden-heart-bento': {
+        title: 'Hidden Heart Bento',
+        desc: 'Hidden Heart Bento - A premium creation from Bakenovation.',
+        price: 750,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'love-note-bento': {
+        title: 'Love Note Bento',
+        desc: 'Love Note Bento - A premium creation from Bakenovation.',
+        price: 580,
+        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'stars-amp-sprinkles-bento': {
+        title: 'Stars &amp; Sprinkles Bento',
+        desc: 'Stars &amp; Sprinkles Bento - A premium creation from Bakenovation.',
+        price: 620,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'ombre-bento': {
+        title: 'Ombre Bento',
+        desc: 'Ombre Bento - A premium creation from Bakenovation.',
+        price: 580,
+        imgs: ['https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'signature-blend': {
+        title: 'Signature Blend',
+        desc: 'Signature Blend - A premium creation from Bakenovation.',
+        price: 1800,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    '24k-gold-signature': {
+        title: '24K Gold Signature',
+        desc: '24K Gold Signature - A premium creation from Bakenovation.',
+        price: 2400,
+        imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'signature-elegance': {
+        title: 'Signature Elegance',
+        desc: 'Signature Elegance - A premium creation from Bakenovation.',
+        price: 1500,
+        imgs: ['https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC.jpg?v=1748428843'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'fresh-fruit-delight': {
+        title: 'Fresh Fruit Delight',
+        desc: 'Fresh Fruit Delight - A premium creation from Bakenovation.',
+        price: 1400,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'tropical-fruit-cake': {
+        title: 'Tropical Fruit Cake',
+        desc: 'Tropical Fruit Cake - A premium creation from Bakenovation.',
+        price: 1100,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'berry-bliss-cake': {
+        title: 'Berry Bliss Cake',
+        desc: 'Berry Bliss Cake - A premium creation from Bakenovation.',
+        price: 950,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'rich-cheesecake': {
+        title: 'Rich Cheesecake',
+        desc: 'Rich Cheesecake - A premium creation from Bakenovation.',
+        price: 1100,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'ny-style-cheesecake': {
+        title: 'NY Style Cheesecake',
+        desc: 'NY Style Cheesecake - A premium creation from Bakenovation.',
+        price: 980,
+        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'raspberry-cheesecake': {
+        title: 'Raspberry Cheesecake',
+        desc: 'Raspberry Cheesecake - A premium creation from Bakenovation.',
+        price: 1250,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'afternoon-tea-cake': {
+        title: 'Afternoon Tea Cake',
+        desc: 'Afternoon Tea Cake - A premium creation from Bakenovation.',
+        price: 750,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'earl-grey-tea-cake': {
+        title: 'Earl Grey Tea Cake',
+        desc: 'Earl Grey Tea Cake - A premium creation from Bakenovation.',
+        price: 680,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'matcha-tea-cake': {
+        title: 'Matcha Tea Cake',
+        desc: 'Matcha Tea Cake - A premium creation from Bakenovation.',
+        price: 820,
+        imgs: ['https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'christmas-special': {
+        title: 'Christmas Special',
+        desc: 'Christmas Special - A premium creation from Bakenovation.',
+        price: 1300,
+        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'xmas-stars-bento': {
+        title: 'Xmas Stars Bento',
+        desc: 'Xmas Stars Bento - A premium creation from Bakenovation.',
+        price: 1100,
+        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'festive-delight-cake': {
+        title: 'Festive Delight Cake',
+        desc: 'Festive Delight Cake - A premium creation from Bakenovation.',
+        price: 1500,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'raspberry-vintage-cake': {
+        title: 'Raspberry Vintage Cake',
+        desc: 'Raspberry Vintage Cake - A premium creation from Bakenovation.',
+        price: 1800,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    '24k-teddy': {
+        title: '24K Teddy',
+        desc: '24K Teddy - A premium creation from Bakenovation.',
+        price: 4500,
+        imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'golden-couple-anniversary-cake': {
+        title: 'Golden Couple Anniversary Cake',
+        desc: 'Golden Couple Anniversary Cake - A premium creation from Bakenovation.',
+        price: 2200,
+        imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
     'abby': {
         title: 'Abby',
-        desc: 'Tall cake created in a shade of light grey, decorated with edible gold leaf, imported sprinkles, and chocolate balls.',
+        desc: 'Abby - A premium creation from Bakenovation.',
         price: 1800,
-        imgs: ['https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1.jpg?v=1748428924'],
-        weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-        care: 'A tall cake requires careful transport.'
+        imgs: ['https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'pink-bows': {
+    'vintage-all-pink-bows-cake': {
         title: 'Vintage All Pink & Bows Cake',
-        desc: 'Feminine, elegant and everything pink! Adorned with delicate bows for a truly vintage aesthetic.',
+        desc: 'Vintage All Pink & Bows Cake - A premium creation from Bakenovation.',
         price: 1500,
         imgs: ['https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436'],
-        weights: ['0.5 kg', '1.0 kg'],
-        care: 'Bows are made of icing, handle gently.'
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-
-    // --- Bento Cakes / Trending ---
-    'minimalist-heart': {
+    'minimalist-heart-bento': {
         title: 'Minimalist Heart Bento',
-        desc: 'The perfect mini cake for a sweet gesture. Simple, elegant heart design with smooth frosting.',
+        desc: 'Minimalist Heart Bento - A premium creation from Bakenovation.',
         price: 750,
-        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Keep in the bento box until serving.'
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'stars-sprinkles': {
+    'stars-and-sprinkles-bento-cake': {
         title: 'Stars and Sprinkles Bento Cake',
-        desc: 'A festive and fun mini cake covered in whimsical stars and colorful sprinkles.',
-        price: 750,
-        imgs: ['https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Store in a cool place.'
-    },
-    'pearls-bento': {
-        title: 'Pearls Bento Cake',
-        desc: 'Chic and sophisticated, decorated with delicate edible pearls for a touch of class.',
+        desc: 'Stars and Sprinkles Bento Cake - A premium creation from Bakenovation.',
         price: 850,
-        imgs: ['https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Pearls are edible but hard, chew carefully.'
+        imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'ombre-bento': {
+    'pearls-bento-cake': {
+        title: 'Pearls Bento Cake',
+        desc: 'Pearls Bento Cake - A premium creation from Bakenovation.',
+        price: 2200,
+        imgs: ['https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
+    },
+    'ombre-bento-cake': {
         title: 'Ombre Bento Cake',
-        desc: 'A beautiful gradient of colors, making it the perfect "Thinking of You" mini gift.',
-        price: 800,
-        imgs: ['https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Maintain at room temperature for 15 mins before serving.'
+        desc: 'Ombre Bento Cake - A premium creation from Bakenovation.',
+        price: 2200,
+        imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'birthday-candles': {
+    'birthday-candles-bento-cake': {
         title: 'Birthday Candles Bento Cake',
-        desc: 'Classic birthday celebration in a box, complete with miniature candles and festive decor.',
-        price: 900,
-        imgs: ['https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Remove candles before slicing.'
+        desc: 'Birthday Candles Bento Cake - A premium creation from Bakenovation.',
+        price: 2200,
+        imgs: ['https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'te-amo': {
-        title: 'Te Amo Bento Cake',
-        desc: 'Express your love with this romantic mini cake, perfectly sized for a couple.',
-        price: 950,
-        imgs: ['https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Perfect for sharing!'
+    'belgian-chocolate-gift-box': {
+        title: 'Belgian Chocolate Gift Box',
+        desc: 'Belgian Chocolate Gift Box - A premium creation from Bakenovation.',
+        price: 2100,
+        imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149'],
+        weights: ['0.5 kg', '1.0 kg', '1.5 kg'],
+        care: 'Store in refrigerator. Best consumed within 24 hours.'
     },
-    'minimalist-bento': {
-        title: 'Minimalist Bento Cake',
-        desc: 'Simple and clean design, focusing on high-quality frosting and light sponge.',
-        price: 700,
-        imgs: ['https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436'],
-        weights: ['0.5 kg'],
-        care: 'Store in airtight container.'
-    }
 };
 
-// Export for module support if needed, but for now we'll use it as a global script
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = productData;
-}
+if (typeof module !== 'undefined' && module.exports) { module.exports = productData; }
