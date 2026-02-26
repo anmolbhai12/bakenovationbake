@@ -274,18 +274,24 @@
 
     <script src="js/products.js"></script>
     <script>
+        let currentProduct = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const productId = params.get('id');
-            const product = productData[productId];
+            currentProduct = productData[productId];
 
-            if (productId && product) {
-                renderProduct(product);
+            if (productId && currentProduct) {
+                renderProduct(currentProduct);
                 document.getElementById('product-content-wrap').style.display = 'flex';
                 setupDateConstraints();
             } else {
                 document.getElementById('error-message').style.display = 'block';
             }
+
+            // Setup Event Listeners for Add to Cart / Buy Now
+            document.querySelector('.btn-buynow').onclick = () => handleCheckout(true);
+            document.querySelector('.btn-addcart').onclick = () => handleCheckout(false);
         });
 
         function setupDateConstraints() {
@@ -352,6 +358,60 @@
                 chip.onclick = () => selectChip(chip, 'main');
                 weightWrap.appendChild(chip);
             });
+
+            updatePrice();
+        }
+
+        function updatePrice() {
+            if (!currentProduct) return;
+
+            let price = currentProduct.price;
+
+            // Weight Multiplier
+            const selectedWeight = document.querySelector('#detail-weight-options .weight-chip.active')?.innerText || '';
+            if (selectedWeight.includes('1.0 kg')) price *= 1.8;
+            else if (selectedWeight.includes('1.5 kg')) price *= 2.5;
+            else if (selectedWeight.includes('2 Packets')) price *= 1.8;
+            else if (selectedWeight.includes('5 Packets')) price *= 4;
+            else if (selectedWeight.includes('10 Packets')) price *= 7.5;
+
+            // Tier Add-ons
+            if (currentProduct.category === 'cakes') {
+                const tiers = document.querySelector('#detail-tiers-options .weight-chip.active')?.innerText || '';
+                if (tiers.includes('2')) price += 500;
+                else if (tiers.includes('3')) price += 1000;
+                else if (tiers.includes('4')) price += 1500;
+                else if (tiers.includes('5')) price += 2000;
+
+                const fake = document.querySelector('#detail-fake-tier-options .weight-chip.active')?.innerText || '';
+                if (fake === 'Yes') price += 300;
+
+                const diet = document.querySelector('.diet-btn.active')?.innerText || '';
+                if (diet.includes('Eggless')) price += 100;
+            }
+
+            const qty = parseInt(document.getElementById('detail-qty').value) || 1;
+            document.getElementById('detail-price').innerText = 'Rs. ' + Math.round(price * qty);
+        }
+
+        function handleCheckout(isBuyNow) {
+            const orderData = {
+                productId: new URLSearchParams(window.location.search).get('id'),
+                title: currentProduct.title,
+                price: document.getElementById('detail-price').innerText.replace('Rs. ', ''),
+                weight: document.querySelector('#detail-weight-options .weight-chip.active')?.innerText,
+                qty: document.getElementById('detail-qty').value,
+                date: document.getElementById('delivery-date').value,
+                time: document.querySelector('#time-slot-options .weight-chip.active')?.innerText,
+                message: document.getElementById('cake-message').value,
+                diet: document.querySelector('.diet-btn.active')?.innerText.trim(),
+                tiers: currentProduct.category === 'cakes' ? document.querySelector('#detail-tiers-options .weight-chip.active')?.innerText : null,
+                fakeTier: currentProduct.category === 'cakes' ? document.querySelector('#detail-fake-tier-options .weight-chip.active')?.innerText : null,
+                whichFake: document.getElementById('which-fake-tier-group').style.display === 'block' ? document.querySelector('#detail-which-fake-options .weight-chip.active')?.innerText : null
+            };
+
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            window.location.href = 'checkout.html';
         }
 
         function changeMainImage(url, thumbEl) {
@@ -369,17 +429,15 @@
             // Conditional logic for fake tier
             if (type === 'fake-tier') {
                 const whichFakeGroup = document.getElementById('which-fake-tier-group');
-                if (chip.innerText === 'Yes') {
-                    whichFakeGroup.style.display = 'block';
-                } else {
-                    whichFakeGroup.style.display = 'none';
-                }
+                whichFakeGroup.style.display = (chip.innerText === 'Yes') ? 'block' : 'none';
             }
+            updatePrice();
         }
 
         function selectDiet(btn, value) {
             document.querySelectorAll('.diet-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            updatePrice();
         }
 
         function updateQty(delta) {
@@ -388,6 +446,7 @@
             val += delta;
             if (val < 1) val = 1;
             qtyInput.value = val;
+            updatePrice();
         }
     </script>
 </body>

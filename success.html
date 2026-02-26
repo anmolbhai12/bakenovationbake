@@ -4,46 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmed | Bakenovation</title>
+    <title>Order Success | Bakenovation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=12">
     <style>
-        body {
+        .success-main {
+            height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
             text-align: center;
-            background: var(--color-bg);
+            background: #fffaf0;
         }
 
         .success-card {
-            padding: 3rem;
-            max-width: 600px;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
         }
 
         .check-icon {
-            font-size: 4rem;
-            color: var(--color-gold);
-            margin-bottom: 1.5rem;
-            display: block;
+            font-size: 5rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--color-maroon);
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-home {
+            background: var(--color-maroon);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
-    <div class="success-card">
-        <span class="check-icon">&#10003;</span>
-        <h1 class="text-gold">Delivery Confirmed</h1>
-        <p class="about-text" style="margin: 1.5rem auto;">
-            Thank you for your order. Your bespoke creation has been commissioned.
-            <br>
-            We have sent a confirmation email with all details.
-        </p>
-        <a href="index.html" class="btn-luxury">Return to Atelier</a>
-    </div>
+    <main class="success-main">
+        <div class="success-card">
+            <div class="check-icon">✓</div>
+            <h1>Order Placed!</h1>
+            <p>Thank you for your order. We have received your payment confirmation. Our team will verify and start
+                preparing your premium treats. You will receive a status update on WhatsApp shortly.</p>
+            <a href="index.html" class="btn-home">Back to Home</a>
+        </div>
+    </main>
 </body>
 
 </html>

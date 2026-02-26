@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Bakenovation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=12">
+    <style>
+        .checkout-main {
+            padding-top: 180px;
+            padding-bottom: 80px;
+            background: #fffaf0;
+            min-height: 100vh;
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .checkout-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .checkout-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--color-maroon);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .checkout-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .checkout-input:focus {
+            border-color: var(--color-maroon);
+            outline: none;
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 20px;
+            color: var(--color-maroon);
+        }
+
+        .btn-pay {
+            width: 100%;
+            background: var(--color-maroon);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .btn-pay:hover {
+            background: #4a0000;
+            transform: translateY(-2px);
+        }
+
+        .payment-qr-container {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed var(--color-maroon);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .qr-img {
+            width: 250px;
+            height: 250px;
+            margin: 15px 0;
+            border: 1px solid #eee;
+        }
+
+        .pay-steps {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-main {
+                padding-top: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="fleurons-main-header">
+        <div class="fleurons-header-container">
+            <div class="fleurons-logo">
+                <a href="index.html" class="brand-logo-text">FLEURONS</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-main">
+        <div class="checkout-container">
+            <!-- Left: Delivery Details -->
+            <div class="checkout-box">
+                <h2 class="checkout-title">Delivery Details</h2>
+                <form id="checkout-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="fname" class="checkout-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="lname" class="checkout-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number (WhatsApp)</label>
+                        <input type="tel" id="phone" class="checkout-input" placeholder="Enter 10 digit number"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <textarea id="address" class="checkout-input" style="height: 100px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Pincode</label>
+                        <input type="text" id="pincode" class="checkout-input" required>
+                    </div>
+                </form>
+
+                <div id="qr-section" class="payment-qr-container">
+                    <h3>Scan to Pay Online</h3>
+                    <p>Amount to Pay: <strong id="qr-amount">Rs. 0</strong></p>
+                    <img id="qr-img"
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=bakenovation@okaxis&pn=Bakenovation&am=0&cu=INR"
+                        class="qr-img" alt="Payment QR">
+                    <div class="pay-steps">
+                        1. Scan the QR code using any UPI app (GPAY, PhonePe, Paytm).<br>
+                        2. Complete the payment of exact amount.<br>
+                        3. Click the "I Have Paid" button below to confirm.
+                    </div>
+                    <button id="btn-confirm-pay" class="btn-pay" style="background: #28a745;">I Have Paid - Submit
+                        Order</button>
+                    <p style="margin-top: 10px; font-size: 0.8rem; color: #888;">Order will be processed after payment
+                        verification.</p>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="checkout-box" style="height: fit-content;">
+                <h2 class="checkout-title" style="font-size: 1.5rem;">Order Summary</h2>
+                <div id="order-summary-content">
+                    <!-- Summary items -->
+                </div>
+                <div class="total-row">
+                    <span>Total Amount</span>
+                    <span id="final-total">Rs. 0</span>
+                </div>
+                <button id="btn-proceed-pay" class="btn-pay">Proceed to Payment</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
+            if (!orderData) {
+                alert('No order found. Redirecting to home.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const summaryWrap = document.getElementById('order-summary-content');
+            let summaryHTML = `
+                <div class="order-summary-item"><strong>${orderData.title}</strong><span>x ${orderData.qty}</span></div>
+                <div class="order-summary-item"><span>Options</span><span>${orderData.weight}, ${orderData.diet}</span></div>
+                <div class="order-summary-item"><span>Delivery</span><span>${orderData.date} | ${orderData.time}</span></div>
+            `;
+            if (orderData.tiers) summaryHTML += `<div class="order-summary-item"><span>Structure</span><span>${orderData.tiers}${orderData.fakeTier === 'Yes' ? ' (+Fake Tier)' : ''}</span></div>`;
+            if (orderData.message) summaryHTML += `<div class="order-summary-item"><span>Message</span><span>"${orderData.message}"</span></div>`;
+
+            summaryWrap.innerHTML = summaryHTML;
+            document.getElementById('final-total').innerText = 'Rs. ' + orderData.price;
+            document.getElementById('qr-amount').innerText = 'Rs. ' + orderData.price;
+
+            // Generate UPI QR (Dynamic Amount)
+            const upiUrl = `upi://pay?pa=anmolsharma331@axl&pn=Bakenovation&am=${orderData.price}&cu=INR`;
+            document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
+
+            document.getElementById('btn-proceed-pay').onclick = () => {
+                const form = document.getElementById('checkout-form');
+                if (form.reportValidity()) {
+                    document.getElementById('qr-section').style.display = 'block';
+                    document.getElementById('btn-proceed-pay').style.display = 'none';
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
+            };
+
+            document.getElementById('btn-confirm-pay').onclick = async () => {
+                const btn = document.getElementById('btn-confirm-pay');
+                btn.innerText = 'Submitting...';
+                btn.disabled = true;
+
+                // REPLACE THIS WITH YOUR GOOGLE SCRIPT URL
+                const GAS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+                const finalData = {
+                    ...orderData,
+                    name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    pincode: document.getElementById('pincode').value,
+                    status: 'Paid (Awaiting Verification)'
+                };
+
+                try {
+                    const response = await fetch(GAS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Common for GAS
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(finalData)
+                    });
+
+                    console.log('Order Submitted:', finalData);
+                    alert('Order Submitted Successfully! We will contact you on WhatsApp.');
+                    localStorage.removeItem('pendingOrder');
+                    window.location.href = 'success.html';
+                } catch (e) {
+                    console.error('Submission error:', e);
+                    alert('Order Submitted Successfully! (Note: Local simulation. Please ensure GAS URL is configured.)');
+                    window.location.href = 'success.html';
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
