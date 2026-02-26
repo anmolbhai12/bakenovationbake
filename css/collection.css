@@ -997,23 +997,222 @@
     background: #333;
 }
 
-.btn-addcart {
+/* ---------- PRODUCT DETAIL PAGE (DYNAMIC) ---------- */
+.product-detail-wrap {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.detail-media-gallery {
+    flex: 1.2;
+    position: sticky;
+    top: 170px;
+}
+
+.main-image-container {
     width: 100%;
-    height: 50px;
-    background: transparent;
-    color: #641f3a;
-    border: 2px solid #641f3a;
-    border-radius: 4px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.main-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail-list {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.thumb-item {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
     cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 2px solid transparent;
     transition: all 0.2s;
 }
 
-.btn-addcart:hover {
-    background: #641f3a;
+.thumb-item.active {
+    border-color: #4a0a2e;
+}
+
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detail-info-panel {
+    flex: 1;
+    position: sticky;
+    top: 170px;
+}
+
+.detail-vendor {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #c5a059;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.detail-title {
+    font-size: 2.4rem;
+    font-family: 'Playfair Display', serif;
+    color: #4a0a2e;
+    margin-bottom: 10px;
+}
+
+.detail-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4a0a2e;
+    margin-bottom: 30px;
+}
+
+.option-group {
+    margin-bottom: 25px;
+}
+
+.weight-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.weight-chip {
+    padding: 10px 20px;
+    border: 1px solid #e8d0da;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    color: #555;
+}
+
+.weight-chip.active {
+    background: #4a0a2e;
     color: #fff;
+    border-color: #4a0a2e;
+}
+
+/* Dietary Selector */
+.dietary-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.diet-btn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e8d0da;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.diet-btn.active {
+    border-color: #4a0a2e;
+    background: #fdf6f9;
+    color: #4a0a2e;
+    font-weight: 600;
+}
+
+.luxury-input {
+    border: 1px solid #e8d0da;
+    padding: 12px 15px !important;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 4px;
+}
+
+.luxury-input:focus {
+    border-color: #4a0a2e;
+}
+
+.quantity-picker {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e8d0da;
+    border-radius: 4px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.qty-btn {
+    width: 40px;
+    height: 45px;
+    background: #fdf6f9;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #4a0a2e;
+}
+
+.qty-input {
+    width: 60px;
+    height: 45px;
+    text-align: center !important;
+    border: none !important;
+    border-left: 1px solid #e8d0da !important;
+    border-right: 1px solid #e8d0da !important;
+    font-weight: 600;
+    margin: 0 !important;
+    background: #fff !important;
+    padding: 0 !important;
+}
+
+.btn-addcart,
+.btn-buynow {
+    padding: 18px;
+    border: none;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-addcart {
+    background: #fff;
+    border: 1px solid #4a0a2e;
+    color: #4a0a2e;
+}
+
+.btn-addcart:hover {
+    background: #4a0a2e;
+    color: #fff;
+}
+
+.btn-buynow:hover {
+    opacity: 0.8;
 }
 
 /* Accordions */
@@ -1058,20 +1257,19 @@
 
 /* Responsiveness for Modal */
 @media (max-width: 900px) {
-    .modal-content.product-detail-wrap {
+    .product-detail-wrap {
         flex-direction: column;
-        height: 95vh;
-        max-height: none;
-        overflow-y: auto;
+        gap: 30px;
     }
 
-    .detail-media-gallery {
-        flex: none;
-        padding: 1.5rem;
-    }
-
+    .detail-media-gallery,
     .detail-info-panel {
-        padding: 1.5rem;
-        overflow-y: visible;
+        position: static;
+        width: 100%;
+        padding: 0;
+    }
+
+    .detail-title {
+        font-size: 1.8rem;
     }
 }
