@@ -145,48 +145,184 @@
             <div class="collection-container">
                 <!-- Sidebar -->
                 <aside class="collection-sidebar">
-                    <div class="filter-group">
-                        <h3 class="filter-title">Varieties</h3>
-                        <ul class="filter-list" id="category-filter">
-                            <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
-                            <li class="filter-item"><a href="#abby" data-filter="abby">Abby</a></li>
-                            <li class="filter-item"><a href="#art-of-orchids" data-filter="art-of-orchids">Art of
-                                    Orchids</a></li>
-                            <li class="filter-item"><a href="#astronaut" data-filter="astronaut">Astronaut</a></li>
-                            <li class="filter-item"><a href="#birthday-cake" data-filter="birthday-cake">Birthday
-                                    Cake</a></li>
-                            <li class="filter-item"><a href="#bed-of-blossom" data-filter="bed-of-blossom">Bed of
-                                    Blossom</a></li>
-                            <li class="filter-item"><a href="#belgian-chocolate" data-filter="belgian-chocolate">Belgian
-                                    Chocolate Cake</a></li>
-                            <li class="filter-item"><a href="#birthday-ballon-bento"
-                                    data-filter="birthday-ballon-bento">Birthday Ballon Bento Cake</a></li>
-                            <li class="filter-item"><a href="#birthday-cake-bento"
-                                    data-filter="birthday-cake-bento">Birthday Cake Bento</a></li>
-                            <li class="filter-item"><a href="#birthday-candles-bento"
-                                    data-filter="birthday-candles-bento">Birthday Candles Bento Cake</a></li>
-                            <li class="filter-item"><a href="#black-gold" data-filter="black-gold">Black & Gold</a></li>
-                            <li class="filter-item"><a href="#black-forest" data-filter="black-forest">Black Forest
-                                    Cake</a></li>
-                            <li class="filter-item"><a href="#blueberry" data-filter="blueberry">Blueberry Cake</a></li>
-                        </ul>
+                    <!-- Categories Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">CATEGORIES</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <ul class="filter-list" id="category-filter">
+                                <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
+                                <li class="filter-item"><a href="#abby" data-filter="abby">Abby</a></li>
+                                <li class="filter-item"><a href="#art-of-orchids" data-filter="art-of-orchids">Art of
+                                        Orchids</a></li>
+                                <li class="filter-item"><a href="#astronaut" data-filter="astronaut">Astronaut</a></li>
+                                <li class="filter-item"><a href="#birthday-cake" data-filter="birthday-cake">Birthday
+                                        Cake</a></li>
+                                <li class="filter-item"><a href="#bed-of-blossom" data-filter="bed-of-blossom">Bed of
+                                        Blossom</a></li>
+                                <li class="filter-item"><a href="#belgian-chocolate"
+                                        data-filter="belgian-chocolate">Belgian Chocolate Cake</a></li>
+                                <li class="filter-item"><a href="#birthday-ballon-bento"
+                                        data-filter="birthday-ballon-bento">Birthday Ballon Bento Cake</a></li>
+                                <li class="filter-item"><a href="#birthday-cake-bento"
+                                        data-filter="birthday-cake-bento">Birthday Cake Bento</a></li>
+                                <li class="filter-item"><a href="#birthday-candles-bento"
+                                        data-filter="birthday-candles-bento">Birthday Candles Bento Cake</a></li>
+                                <li class="filter-item"><a href="#black-gold" data-filter="black-gold">Black &amp;
+                                        Gold</a></li>
+                                <li class="filter-item"><a href="#black-forest" data-filter="black-forest">Black Forest
+                                        Cake</a></li>
+                                <li class="filter-item"><a href="#blueberry" data-filter="blueberry">Blueberry Cake</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div class="filter-group">
-                        <h3 class="filter-title">Availability</h3>
-                        <div class="filter-list">
-                            <label class="filter-item"><input type="checkbox" checked> In stock</label>
-                            <label class="filter-item"><input type="checkbox"> Out of stock</label>
+                    <!-- Availability Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">AVAILABILITY</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <label class="sidebar-checkbox-label">
+                                <input type="checkbox" id="instock-check" checked onchange="applyFilters()">
+                                <span>In Stock<span class="sidebar-count">(12)</span></span>
+                            </label>
+                            <label class="sidebar-checkbox-label">
+                                <input type="checkbox" id="outstock-check" onchange="applyFilters()">
+                                <span>Out Of Stock<span class="sidebar-count">(0)</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">PRICE</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <div class="price-range-wrap">
+                                <input type="range" id="price-min-range" min="0" max="10000" value="0"
+                                    class="price-range-slider" oninput="syncPriceInputs()">
+                                <input type="range" id="price-max-range" min="0" max="10000" value="8150"
+                                    class="price-range-slider" oninput="syncPriceInputs()">
+                            </div>
+                            <div class="price-inputs">
+                                <span class="price-input-group">&#8377; <input type="number" id="price-min-val"
+                                        value="0" min="0" max="10000" oninput="syncPriceSliders()"></span>
+                                <span class="price-sep">to</span>
+                                <span class="price-input-group">&#8377; <input type="number" id="price-max-val"
+                                        value="8150" min="0" max="10000" oninput="syncPriceSliders()"></span>
+                            </div>
+                            <button class="price-apply-btn" onclick="applyFilters()">APPLY</button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Products Section -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header" onclick="toggleSection(this)">
+                            <span class="sidebar-section-title">FEATURED PRODUCTS</span>
+                            <span class="sidebar-section-toggle">&#8743;</span>
+                        </div>
+                        <div class="sidebar-section-body">
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
+                                    alt="Abby" onclick="openProductDetail('abby')">
+                                <div class="featured-product-info">
+                                    <span class="featured-product-name">Abby</span>
+                                    <span class="featured-product-price">From Rs. 3,100</span>
+                                </div>
+                            </div>
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Belgian Chocolate" onclick="openProductDetail('raspberry-vintage')">
+                                <div class="featured-product-info">
+                                    <span class="featured-product-name">Belgian Chocolate Cake</span>
+                                    <span class="featured-product-price">From Rs. 2,100</span>
+                                </div>
+                            </div>
+                            <div class="featured-product-item">
+                                <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                    alt="Birthday Ballon Bento" onclick="openProductDetail('24k-teddy')">
+                                <div class="featured-product-info">
+                                    <span class="featured-product-name">Birthday Ballon Bento Cake</span>
+                                    <span class="featured-product-price">From Rs. 650</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </aside>
 
                 <!-- Grid -->
                 <div class="collection-main">
-                    <div class="collection-grid"
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                    <!-- Toolbar -->
+                    <div class="collection-toolbar">
+                        <div class="toolbar-left">
+                            <span class="toolbar-label">VIEW AS</span>
+                            <div class="view-as-btns">
+                                <button class="view-btn" id="view-list" onclick="setView('list')" title="List">
+                                    <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="2" y="3" width="16" height="3" rx="1" />
+                                        <rect x="2" y="9" width="16" height="3" rx="1" />
+                                        <rect x="2" y="15" width="16" height="3" rx="1" />
+                                    </svg>
+                                </button>
+                                <button class="view-btn" id="view-2col" onclick="setView('2col')" title="2 Columns">
+                                    <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="2" y="2" width="7" height="16" rx="1" />
+                                        <rect x="11" y="2" width="7" height="16" rx="1" />
+                                    </svg>
+                                </button>
+                                <button class="view-btn active" id="view-3col" onclick="setView('3col')"
+                                    title="3 Columns">
+                                    <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="1" y="2" width="5" height="16" rx="1" />
+                                        <rect x="7.5" y="2" width="5" height="16" rx="1" />
+                                        <rect x="14" y="2" width="5" height="16" rx="1" />
+                                    </svg>
+                                </button>
+                                <button class="view-btn" id="view-4col" onclick="setView('4col')" title="4 Columns">
+                                    <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                                        <rect x="1" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="5.5" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="10" y="2" width="3.5" height="16" rx="1" />
+                                        <rect x="14.5" y="2" width="3.5" height="16" rx="1" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <div class="toolbar-control">
+                                <label class="toolbar-label" for="items-per-page">ITEMS PER PAGE</label>
+                                <select id="items-per-page" class="toolbar-select" onchange="applyFilters()">
+                                    <option value="12">12</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="40">40</option>
+                                    <option value="100">All</option>
+                                </select>
+                            </div>
+                            <div class="toolbar-control">
+                                <label class="toolbar-label" for="sort-by">SORT BY</label>
+                                <select id="sort-by" class="toolbar-select" onchange="applyFilters()">
+                                    <option value="best">Best selling</option>
+                                    <option value="price-asc">Price, low to high</option>
+                                    <option value="price-desc">Price, high to low</option>
+                                    <option value="az">Alphabetically, A-Z</option>
+                                    <option value="za">Alphabetically, Z-A</option>
+                                    <option value="newest">Date, new to old</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="collection-grid" id="product-grid">
                         <a href="javascript:void(0)" class="product-card" id="abby" data-category="abby"
-                            onclick="openProductDetail('abby')">
+                            data-price="3100" data-new="true" onclick="openProductDetail('abby')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                     alt="Abby"></div>
@@ -195,7 +331,9 @@
                             <div class="product-card-price">From Rs. 3,100</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="art-of-orchids"
-                            data-category="art-of-orchids" onclick="openProductDetail('hello-gorgeous')">
+                            data-category="art-of-orchids" data-price="3600" data-new="true"
+                            onclick="openProductDetail('hello-gorgeous')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
                                     alt="Art of Orchids"></div>
@@ -204,7 +342,7 @@
                             <div class="product-card-price">From Rs. 3,600</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="astronaut" data-category="astronaut"
-                            onclick="openProductDetail('pink-bows')">
+                            data-price="2800" onclick="openProductDetail('pink-bows')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
                                     alt="Astronaut"></div>
@@ -213,7 +351,8 @@
                             <div class="product-card-price">From Rs. 2,800</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="birthday-cake"
-                            data-category="birthday-cake" onclick="openProductDetail('golden-couple')">
+                            data-category="birthday-cake" data-price="2400"
+                            onclick="openProductDetail('golden-couple')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                     alt="Birthday Cake"></div>
@@ -222,7 +361,7 @@
                             <div class="product-card-price">From Rs. 2,400</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="bed-of-blossom"
-                            data-category="bed-of-blossom" onclick="openProductDetail('classic-lv')">
+                            data-category="bed-of-blossom" data-price="2500" onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                     alt="Bed of Blossom"></div>
@@ -231,7 +370,9 @@
                             <div class="product-card-price">From Rs. 2,500</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="belgian-chocolate"
-                            data-category="belgian-chocolate" onclick="openProductDetail('raspberry-vintage')">
+                            data-category="belgian-chocolate" data-price="2100" data-new="true"
+                            onclick="openProductDetail('raspberry-vintage')">
+                            <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
                                     alt="Belgian Chocolate Cake"></div>
@@ -240,7 +381,8 @@
                             <div class="product-card-price">From Rs. 2,100</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="birthday-ballon-bento"
-                            data-category="birthday-ballon-bento" onclick="openProductDetail('24k-teddy')">
+                            data-category="birthday-ballon-bento" data-price="650"
+                            onclick="openProductDetail('24k-teddy')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
                                     alt="Birthday Ballon Bento Cake"></div>
@@ -249,7 +391,8 @@
                             <div class="product-card-price">From Rs. 650</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="birthday-cake-bento"
-                            data-category="birthday-cake-bento" onclick="openProductDetail('classic-lv')">
+                            data-category="birthday-cake-bento" data-price="700"
+                            onclick="openProductDetail('classic-lv')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                     alt="Birthday Cake Bento"></div>
@@ -258,7 +401,8 @@
                             <div class="product-card-price">From Rs. 700</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="birthday-candles-bento"
-                            data-category="birthday-candles-bento" onclick="openProductDetail('golden-couple')">
+                            data-category="birthday-candles-bento" data-price="750"
+                            onclick="openProductDetail('golden-couple')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                     alt="Birthday Candles Bento Cake"></div>
@@ -267,16 +411,16 @@
                             <div class="product-card-price">From Rs. 750</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="black-gold" data-category="black-gold"
-                            onclick="openProductDetail('hello-gorgeous')">
+                            data-price="4200" onclick="openProductDetail('hello-gorgeous')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
-                                    alt="Black & Gold"></div>
+                                    alt="Black &amp; Gold"></div>
                             <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Black & Gold</h3>
+                            <h3 class="product-card-title">Black &amp; Gold</h3>
                             <div class="product-card-price">From Rs. 4,200</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="black-forest" data-category="black-forest"
-                            onclick="openProductDetail('abby')">
+                            data-price="1900" onclick="openProductDetail('abby')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                     alt="Black Forest Cake"></div>
@@ -285,7 +429,7 @@
                             <div class="product-card-price">From Rs. 1,900</div>
                         </a>
                         <a href="javascript:void(0)" class="product-card" id="blueberry" data-category="blueberry"
-                            onclick="openProductDetail('pink-bows')">
+                            data-price="2200" onclick="openProductDetail('pink-bows')">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
                                     alt="Blueberry Cake"></div>
@@ -425,6 +569,343 @@
     <div id="search-modal" class="modal-overlay"></div>
     <div id="cart-drawer" class="cart-drawer"></div>
 
+    <style>
+        /* ===== SIDEBAR SECTIONS ===== */
+        .sidebar-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 0;
+        }
+
+        .sidebar-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--color-text, #ddd);
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-toggle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted, #aaa);
+            transition: transform 0.25s;
+            line-height: 1;
+        }
+
+        .sidebar-section-toggle.collapsed {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-section-body {
+            padding-bottom: 14px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s;
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .sidebar-section-body.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-bottom: 0;
+        }
+
+        /* ===== AVAILABILITY ===== */
+        .sidebar-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .sidebar-checkbox-label input[type="checkbox"] {
+            accent-color: #6c1d45;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .sidebar-count {
+            color: var(--color-text-muted, #888);
+            margin-left: 3px;
+            font-size: 0.8em;
+        }
+
+        /* ===== PRICE RANGE ===== */
+        .price-range-wrap {
+            position: relative;
+            height: 20px;
+            margin-bottom: 12px;
+        }
+
+        .price-range-slider {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .price-range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6c1d45;
+            pointer-events: all;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .price-range-slider::-webkit-slider-runnable-track {
+            background: rgba(255, 255, 255, 0.15);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .price-inputs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .price-input-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.82rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .price-input-group input {
+            width: 65px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 0.82rem;
+            color: var(--color-text, #ddd);
+            outline: none;
+        }
+
+        .price-sep {
+            font-size: 0.8rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        .price-apply-btn {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .price-apply-btn:hover {
+            background: #6c1d45;
+        }
+
+        /* ===== FEATURED PRODUCTS ===== */
+        .featured-product-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .featured-product-item:last-child {
+            border-bottom: none;
+        }
+
+        .featured-product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .featured-product-item img:hover {
+            opacity: 0.8;
+        }
+
+        .featured-product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .featured-product-name {
+            font-size: 0.8rem;
+            color: var(--color-text, #ddd);
+            line-height: 1.3;
+        }
+
+        .featured-product-price {
+            font-size: 0.75rem;
+            color: var(--color-text-muted, #aaa);
+        }
+
+        /* ===== TOOLBAR ===== */
+        .collection-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 0 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--color-text-muted, #aaa);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .toolbar-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text, #ddd);
+            padding: 5px 28px 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            outline: none;
+        }
+
+        .view-as-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text-muted, #aaa);
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: rgba(108, 29, 69, 0.3);
+            border-color: #6c1d45;
+            color: #fff;
+        }
+
+        /* ===== NEW BADGE ===== */
+        .product-badge-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #6c1d45;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 2px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .product-card {
+            position: relative;
+        }
+
+        /* ===== GRID VIEW MODES ===== */
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            transition: all 0.3s;
+        }
+
+        #product-grid.view-list {
+            grid-template-columns: 1fr;
+        }
+
+        #product-grid.view-list .product-card {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        #product-grid.view-list .product-card-image-wrap {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        #product-grid.view-2col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #product-grid.view-3col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        #product-grid.view-4col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    </style>
+
     <script>
         const productData = {
             'raspberry-vintage': {
@@ -506,37 +987,97 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Variety Filtering Logic
-        function filterProducts(category) {
-            const cards = document.querySelectorAll('.product-card');
-            const links = document.querySelectorAll('#category-filter a');
+        // ===== SIDEBAR COLLAPSE =====
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.sidebar-section-toggle');
+            body.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
 
-            links.forEach(link => {
-                if (link.getAttribute('data-filter') === category) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
+        // ===== PRICE RANGE SYNC =====
+        function syncPriceInputs() {
+            const minR = document.getElementById('price-min-range');
+            const maxR = document.getElementById('price-max-range');
+            let minVal = parseInt(minR.value);
+            let maxVal = parseInt(maxR.value);
+            if (minVal > maxVal) { minR.value = maxVal; minVal = maxVal; }
+            document.getElementById('price-min-val').value = minVal;
+            document.getElementById('price-max-val').value = maxVal;
+        }
+        function syncPriceSliders() {
+            const minV = parseInt(document.getElementById('price-min-val').value) || 0;
+            const maxV = parseInt(document.getElementById('price-max-val').value) || 10000;
+            document.getElementById('price-min-range').value = minV;
+            document.getElementById('price-max-range').value = maxV;
+        }
+
+        // ===== VIEW AS =====
+        function setView(mode) {
+            const grid = document.getElementById('product-grid');
+            grid.className = 'view-' + mode;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + mode).classList.add('active');
+        }
+
+        // ===== MAIN FILTER + SORT + PAGINATION =====
+        let currentCategory = 'all';
+
+        function applyFilters() {
+            const cards = Array.from(document.querySelectorAll('.product-card'));
+            const minPrice = parseInt(document.getElementById('price-min-val').value) || 0;
+            const maxPrice = parseInt(document.getElementById('price-max-val').value) || 10000;
+            const sortBy = document.getElementById('sort-by').value;
+            const perPage = parseInt(document.getElementById('items-per-page').value);
+
+            // Filter
+            let visible = cards.filter(card => {
+                const cat = card.getAttribute('data-category');
+                const price = parseInt(card.getAttribute('data-price')) || 0;
+                const catMatch = currentCategory === 'all' || cat === currentCategory;
+                const priceMatch = price >= minPrice && price <= maxPrice;
+                return catMatch && priceMatch;
             });
 
-            cards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                if (category === 'all' || cardCategory === category) {
-                    card.style.display = 'block';
-                    card.style.opacity = '0';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                    }, 50);
-                } else {
-                    card.style.display = 'none';
-                }
+            // Sort
+            visible.sort((a, b) => {
+                const priceA = parseInt(a.getAttribute('data-price')) || 0;
+                const priceB = parseInt(b.getAttribute('data-price')) || 0;
+                const nameA = a.querySelector('.product-card-title')?.innerText || '';
+                const nameB = b.querySelector('.product-card-title')?.innerText || '';
+                if (sortBy === 'price-asc') return priceA - priceB;
+                if (sortBy === 'price-desc') return priceB - priceA;
+                if (sortBy === 'az') return nameA.localeCompare(nameB);
+                if (sortBy === 'za') return nameB.localeCompare(nameA);
+                return 0;
             });
 
-            const visibleCount = document.querySelectorAll('.product-card[style*="display: block"]').length;
+            // Hide all
+            cards.forEach(c => { c.style.display = 'none'; });
+
+            // Show paginated
+            const toShow = visible.slice(0, perPage);
+            toShow.forEach((card, i) => {
+                card.style.display = '';
+                card.style.opacity = '0';
+                setTimeout(() => { card.style.opacity = '1'; }, i * 30);
+            });
+
+            // Update progress
             const progressText = document.querySelector('.progress-text');
             if (progressText) {
-                progressText.innerText = `Showing 1 - ${visibleCount} of 210 products`;
+                progressText.innerText = `Showing 1 - ${toShow.length} of ${visible.length} products`;
             }
+
+            // Update category filter highlight
+            document.querySelectorAll('#category-filter a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-filter') === currentCategory);
+            });
+        }
+
+        function filterProducts(category) {
+            currentCategory = category;
+            applyFilters();
         }
 
         window.addEventListener('hashchange', () => {
