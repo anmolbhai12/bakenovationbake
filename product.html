@@ -115,10 +115,29 @@
                     <div id="detail-price" class="detail-price">Rs. 0</div>
 
                     <div class="product-options">
-                        <div class="option-group">
-                            <label class="toolbar-label">Select Weight</label>
+                        <div id="option-main-group" class="option-group">
+                            <label id="main-option-label" class="toolbar-label">Select Weight</label>
                             <div id="detail-weight-options" class="weight-options">
-                                <!-- Weight chips -->
+                                <!-- Weight/Packets chips -->
+                            </div>
+                        </div>
+
+                        <!-- Only for Cakes -->
+                        <div id="cake-specific-options" style="display: none;">
+                            <div class="option-group">
+                                <label class="toolbar-label">Number of Tiers</label>
+                                <div id="detail-tiers-options" class="weight-options">
+                                    <div class="weight-chip active" onclick="selectChip(this, 'tiers')">1 Tier</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'tiers')">2 Tiers</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'tiers')">3 Tiers</div>
+                                </div>
+                            </div>
+                            <div class="option-group">
+                                <label class="toolbar-label">Include Fake Tier?</label>
+                                <div id="detail-fake-tier-options" class="weight-options">
+                                    <div class="weight-chip active" onclick="selectChip(this, 'fake-tier')">No</div>
+                                    <div class="weight-chip" onclick="selectChip(this, 'fake-tier')">Yes</div>
+                                </div>
                             </div>
                         </div>
 
@@ -138,6 +157,20 @@
                             <label class="toolbar-label">Delivery Date</label>
                             <input type="date" id="delivery-date" class="luxury-input"
                                 style="width: 100%; border-radius: 4px;">
+                            <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">* Minimum 2 days notice required
+                            </p>
+                        </div>
+
+                        <div class="option-group">
+                            <label class="toolbar-label">Delivery Time Slot</label>
+                            <div id="time-slot-options" class="weight-options"
+                                style="grid-template-columns: 1fr 1fr; gap: 10px; display: grid;">
+                                <div class="weight-chip active" onclick="selectChip(this, 'time')">Morning (10AM - 1PM)
+                                </div>
+                                <div class="weight-chip" onclick="selectChip(this, 'time')">Afternoon (1PM - 4PM)</div>
+                                <div class="weight-chip" onclick="selectChip(this, 'time')">Evening (4PM - 7PM)</div>
+                                <div class="weight-chip" onclick="selectChip(this, 'time')">Night (7PM - 10PM)</div>
+                            </div>
                         </div>
 
                         <div class="option-group">
@@ -239,10 +272,27 @@
             if (productId && product) {
                 renderProduct(product);
                 document.getElementById('product-content-wrap').style.display = 'flex';
+                setupDateConstraints();
             } else {
                 document.getElementById('error-message').style.display = 'block';
             }
         });
+
+        function setupDateConstraints() {
+            const dateInput = document.getElementById('delivery-date');
+            const today = new Date();
+            // Add 2 days
+            const minDate = new Date(today);
+            minDate.setDate(today.getDate() + 2);
+
+            const yyyy = minDate.getFullYear();
+            const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(minDate.getDate()).padStart(2, '0');
+
+            const minStr = `${yyyy}-${mm}-${dd}`;
+            dateInput.setAttribute('min', minStr);
+            dateInput.value = minStr;
+        }
 
         function renderProduct(product) {
             document.title = `${product.title} | Bakenovation`;
@@ -266,14 +316,28 @@
                 thumbList.appendChild(thumb);
             });
 
-            // Weight Options
+            // Handle Categories (Cookies vs Cakes)
+            const mainOptionLabel = document.getElementById('main-option-label');
+            const cakeOptions = document.getElementById('cake-specific-options');
+
+            if (product.category === 'cookies') {
+                mainOptionLabel.innerText = 'Select Packets';
+                cakeOptions.style.display = 'none';
+                // Adjust cookie weights to packets
+                product.weights = product.weights || ['1 Packet', '2 Packets', '5 Packets'];
+            } else {
+                mainOptionLabel.innerText = 'Select Weight';
+                cakeOptions.style.display = 'block';
+            }
+
+            // Weight/Packets Options
             const weightWrap = document.getElementById('detail-weight-options');
             weightWrap.innerHTML = '';
             product.weights.forEach((w, index) => {
                 const chip = document.createElement('div');
                 chip.className = `weight-chip ${index === 0 ? 'active' : ''}`;
                 chip.innerText = w;
-                chip.onclick = () => selectWeight(chip);
+                chip.onclick = () => selectChip(chip, 'main');
                 weightWrap.appendChild(chip);
             });
         }
@@ -284,10 +348,16 @@
             thumbEl.classList.add('active');
         }
 
+        function selectChip(chip, type) {
+            // Unselect others in the same group
+            const parent = chip.parentElement;
+            parent.querySelectorAll('.weight-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        }
+
         function selectDiet(btn, value) {
             document.querySelectorAll('.diet-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            console.log('Dietary Preference Selected:', value);
         }
 
         function updateQty(delta) {

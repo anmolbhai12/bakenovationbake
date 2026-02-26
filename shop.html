@@ -402,8 +402,8 @@
                             <h3 class="product-card-title">Minimalist Heart Bento</h3>
                             <div class="product-card-price">From Rs. 750</div>
                         </a>
-                        <a href="product.html?id=stars-and-sprinkles-bento-cake" class="product-card" id="stars-sprinkles"
-                            data-category="stars-sprinkles" data-price="850">
+                        <a href="product.html?id=stars-and-sprinkles-bento-cake" class="product-card"
+                            id="stars-sprinkles" data-category="stars-sprinkles" data-price="850">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
                                     alt="Stars and Sprinkles Bento Cake"></div>
@@ -528,8 +528,9 @@
 
         // ===== MAIN FILTER + SORT + PAGINATION =====
         let currentCategory = 'all';
+        let displayedItems = 0;
 
-        function applyFilters() {
+        function applyFilters(isShowMore = false) {
             const cards = Array.from(document.querySelectorAll('.product-card'));
             const minPrice = parseInt(document.getElementById('price-min-val').value) || 0;
             const maxPrice = parseInt(document.getElementById('price-max-val').value) || 10000;
@@ -558,21 +559,42 @@
                 return 0;
             });
 
+            if (!isShowMore) {
+                displayedItems = perPage;
+            } else {
+                displayedItems += perPage;
+            }
+
             // Hide all
             cards.forEach(c => { c.style.display = 'none'; });
 
             // Show paginated
-            const toShow = visible.slice(0, perPage);
+            const toShow = visible.slice(0, displayedItems);
             toShow.forEach((card, i) => {
                 card.style.display = '';
-                card.style.opacity = '0';
-                setTimeout(() => { card.style.opacity = '1'; }, i * 30);
+                if (!isShowMore || i >= displayedItems - perPage) {
+                    card.style.opacity = '0';
+                    setTimeout(() => { card.style.opacity = '1'; }, (i % perPage) * 30);
+                } else {
+                    card.style.opacity = '1';
+                }
             });
 
             // Update progress
             const progressText = document.querySelector('.progress-text');
+            const progressFill = document.querySelector('.progress-bar-fill');
             if (progressText) {
                 progressText.innerText = `Showing 1 - ${toShow.length} of ${visible.length} products`;
+            }
+            if (progressFill) {
+                const percent = (toShow.length / visible.length) * 100;
+                progressFill.style.width = percent + '%';
+            }
+
+            // Show/Hide "Show More" button
+            const showMoreBtn = document.querySelector('.btn-show-more');
+            if (showMoreBtn) {
+                showMoreBtn.style.display = toShow.length < visible.length ? 'block' : 'none';
             }
 
             // Update category filter highlight
@@ -580,6 +602,10 @@
                 link.classList.toggle('active', link.getAttribute('data-filter') === currentCategory);
             });
         }
+
+        document.querySelector('.btn-show-more')?.addEventListener('click', () => {
+            applyFilters(true);
+        });
 
         function filterProducts(category) {
             currentCategory = category;
