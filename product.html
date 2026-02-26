@@ -405,6 +405,7 @@
                 time: document.querySelector('#time-slot-options .weight-chip.active')?.innerText,
                 message: document.getElementById('cake-message').value,
                 diet: document.querySelector('.diet-btn.active')?.innerText.trim(),
+                img: currentProduct.imgs[0],
                 tiers: currentProduct.category === 'cakes' ? document.querySelector('#detail-tiers-options .weight-chip.active')?.innerText : null,
                 fakeTier: currentProduct.category === 'cakes' ? document.querySelector('#detail-fake-tier-options .weight-chip.active')?.innerText : null,
                 whichFake: document.getElementById('which-fake-tier-group').style.display === 'block' ? document.querySelector('#detail-which-fake-options .weight-chip.active')?.innerText : null

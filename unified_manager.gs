@@ -74,14 +74,23 @@ function aiGenerateProxy(data) {
 function createOrder(data) {
   const sheet = getSheet(ORDER_SHEET_NAME, HEADERS);
   const orderId = 'ORD' + Date.now();
+  
+  // Dynamic details based on product type
   const details = {
-    shape: data.shape || 'N/A',
-    flavor: data.flavor || 'N/A',
-    tiers: data.tiers || 'N/A',
-    address: data.address || '',
+    product: data.title || 'Product',
+    price: data.price || '0',
+    weight: data.weight || 'N/A',
+    qty: data.qty || '1',
+    diet: data.diet || 'N/A',
+    deliveryDate: data.date || 'N/A',
+    deliveryTime: data.time || 'N/A',
     message: data.message || '',
-    extra: data.extra_description || '',
-    design: data.ordered_design || ''
+    address: data.address || '',
+    pincode: data.pincode || '',
+    tiers: data.tiers || null,
+    fakeTier: data.fakeTier || null,
+    whichFake: data.whichFake || null,
+    img: data.img || ''
   };
 
   const row = [
@@ -91,21 +100,57 @@ function createOrder(data) {
     data.phone || '',
     data.email || '',
     JSON.stringify(details),
-    '', // Amount
-    '', // DeliveryDate
-    '', // DeliveryTime
-    'Pending', // Status
+    data.price || '', // Amount
+    data.date || '', // DeliveryDate
+    data.time || '', // DeliveryTime
+    data.status || 'Pending', // Status
     'START' // BotState
   ];
 
   sheet.appendRow(row);
 
-  // GMAIL NOTIFICATION
+  // GMAIL NOTIFICATION (MODERN & RICH)
   try {
     const adminEmail = Session.getEffectiveUser().getEmail();
     const subject = `🎂 NEW ORDER: ${data.name} [${orderId}]`;
-    const body = `You have a new Bespoke Order!\n\nClient: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\nAddress: ${data.address}\n\nDetails: ${JSON.stringify(details, null, 2)}`;
-    GmailApp.sendEmail(adminEmail, subject, body);
+    
+    let htmlBody = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;">
+        <h2 style="color: #630d21; border-bottom: 2px solid #630d21; padding-bottom: 10px;">New Order Received!</h2>
+        <p><strong>Order ID:</strong> ${orderId}</p>
+        <p><strong>Customer:</strong> ${data.name}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Address:</strong> ${data.address}, ${data.pincode}</p>
+        
+        <div style="background: #fdf5f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #630d21;">Order Details:</h3>
+          <p><strong>Product:</strong> ${details.product}</p>
+          <p><strong>Quantity:</strong> ${details.qty}</p>
+          <p><strong>Weight/Packets:</strong> ${details.weight}</p>
+          <p><strong>Diet:</strong> ${details.diet}</p>
+          ${details.tiers ? `<p><strong>Tiers:</strong> ${details.tiers}</p>` : ''}
+          ${details.fakeTier === 'Yes' ? `<p><strong>Fake Tier:</strong> Yes (${details.whichFake})</p>` : ''}
+          ${details.message ? `<p><strong>Message:</strong> "${details.message}"</p>` : ''}
+          <p><strong>Delivery:</strong> ${details.deliveryDate} | ${details.deliveryTime}</p>
+          <p style="font-size: 1.2rem; color: #630d21;"><strong>Total Amount: Rs. ${details.price}</strong></p>
+        </div>
+
+        ${details.img ? `
+        <div style="text-align: center; margin-top: 20px;">
+          <p><strong>Product Image:</strong></p>
+          <img src="${details.img}" style="max-width: 100%; border-radius: 10px; border: 1px solid #ddd;" />
+          <p style="font-size: 0.8rem;"><a href="${details.img}">Click here to view full image</a></p>
+        </div>` : ''}
+        
+        <p style="margin-top: 30px; font-size: 0.9rem; color: #888;">Order placed via Bakenovation Direct Payment System.</p>
+      </div>
+    `;
+
+    GmailApp.sendEmail(adminEmail, subject, "", {
+      htmlBody: htmlBody,
+      name: "Bakenovation Notifications"
+    });
+    
   } catch (e) {
     Logger.log("Email failed: " + e.toString());
   }
