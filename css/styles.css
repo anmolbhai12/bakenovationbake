@@ -55,8 +55,8 @@ body {
     width: 100%;
     height: 100vh;
     z-index: -1;
-    background: url('../assets/silk-bg-premium.png') center/130% no-repeat;
-    /* Zoomed out (130% instead of cover) to show more detail */
+    background: url('../assets/silk-bg-premium.png') center top/100% auto no-repeat;
+    /* Zoomed out (100% instead of cover/130%) to show more detail */
     /* Removed brightness filter to show raw texture */
 }
 
