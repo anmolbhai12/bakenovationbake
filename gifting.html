@@ -350,63 +350,70 @@
     </footer>
 
     <!-- Standard Cake Detail Modal -->
+    <!-- Standard Cake Detail Modal -->
     <div id="cake-detail-modal" class="modal-overlay">
-        <div class="glass-panel modal-content"
-            style="max-width: 900px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap; padding: 3rem;">
+        <div class="product-detail-wrap">
             <button class="modal-close detail-close">&times;</button>
-            <div class="detail-image" style="flex: 1; min-width: 300px;">
-                <img id="detail-img" src="" alt="Cake Detail"
-                    style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-            </div>
-            <div class="detail-info" style="flex: 1; min-width: 300px;">
-                <h2 id="detail-title" class="text-orchid"
-                    style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 2rem;">Cake Name</h2>
-                <div
-                    style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
-                    <span><strong>Servings:</strong> <span id="detail-servings">12-15</span></span>
-                    <span><strong>Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
+
+            <!-- Left: Media Gallery -->
+            <div class="detail-media-gallery">
+                <div class="main-image-container">
+                    <img id="detail-img" src="" alt="Cake Detail">
                 </div>
-                <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
-                    Description goes here.</p>
+                <div id="thumbnail-list" class="thumbnail-list">
+                    <!-- Thumbnails populated by JS -->
+                </div>
+            </div>
 
-                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">PREMIUM
-                    INGREDIENTS</h4>
-                <ul id="detail-ingredients"
-                    style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
-                </ul>
+            <!-- Right: Info Panel -->
+            <div class="detail-info-panel">
+                <div class="detail-vendor">FLEURONS</div>
+                <h1 id="detail-title" class="detail-title">Cake Name</h1>
+                <div id="detail-price" class="detail-price">Rs. 0</div>
 
-                <div class="product-options" style="margin-bottom: 2rem;">
-                    <div class="option-group" style="margin-bottom: 1.5rem;">
-                        <label
-                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
-                            Weight</label>
-                        <select id="detail-weight-select" class="luxury-input" style="padding: 0.8rem;">
-                            <option value="0.5">0.5 kg</option>
-                            <option value="1.0">1.0 kg</option>
-                            <option value="1.5">1.5 kg</option>
-                            <option value="2.0">2.0 kg</option>
-                            <option value="2.5">2.5 kg</option>
-                        </select>
+                <div class="product-options">
+                    <div class="option-group">
+                        <label class="toolbar-label">Select Weight</label>
+                        <div id="detail-weight-options" class="weight-options">
+                            <!-- Weight chips populated by JS -->
+                        </div>
                     </div>
                 </div>
 
-                <div class="product-info-accordions">
+                <div class="qty-buy-wrap">
+                    <div class="quantity-picker">
+                        <button class="qty-btn minus" onclick="updateQty(-1)">&minus;</button>
+                        <input type="number" id="detail-qty" class="qty-input" value="1" min="1">
+                        <button class="qty-btn plus" onclick="updateQty(1)">&plus;</button>
+                    </div>
+                    <button class="btn-buynow">Buy it now</button>
+                </div>
+
+                <button class="btn-addcart">Add to Cart</button>
+
+                <div class="detail-accordions">
                     <details class="luxury-accordion" open>
+                        <summary>Description</summary>
+                        <div id="detail-desc" class="accordion-content">
+                            Description goes here.
+                        </div>
+                    </details>
+                    <details class="luxury-accordion">
                         <summary>Delivery Information</summary>
                         <div class="accordion-content">
-                            <ul
-                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
+                            <ul style="padding-left: 1.2rem;">
                                 <li>The delivered product might vary slightly from the image shown.</li>
                                 <li>Delivery will take place between 12pm - 7pm only.</li>
+                                <li>This product is perishable; delivery will be attempted only once.</li>
                             </ul>
                         </div>
                     </details>
-                </div>
-
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button class="btn-luxury" style="flex: 1;">Add to Cart</button>
-                    <button class="btn-luxury"
-                        style="flex: 1; background: var(--color-orchid); color: var(--color-bg);">Order Now</button>
+                    <details class="luxury-accordion">
+                        <summary>Care Instructions</summary>
+                        <div id="detail-care" class="accordion-content">
+                            Store in a cool, dry place. Best consumed within 24 hours.
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>
@@ -520,40 +527,77 @@
             'golden-couple': {
                 title: 'Golden Couple Anniversary Cake',
                 desc: 'A sophisticated choice for celebrating love. Featuring elegant gold details and a timeless aesthetic.',
-                img: 'https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750',
-                servings: '15-20',
-                weight: '3.0 kg',
-                ingredients: ['24K Gold Leaf', 'Dark Chocolate Ganache', 'Champagne Essence', 'Gold Dust']
+                price: 2200,
+                imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750'],
+                weights: ['1.0 kg', '1.5 kg', '2.0 kg', '3.0 kg'],
+                care: 'Keep refrigerated until serving.'
             },
             '24k-teddy': {
                 title: '24K Teddy',
                 desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
-                img: 'https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210',
-                servings: '15-20',
-                weight: '2.5 kg',
-                ingredients: ['Dark Chocolate Ganache', '24K Edible Gold', 'Sugar Pearls', 'Fondant Accents']
+                price: 4500,
+                imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210'],
+                weights: ['1.0 kg', '1.5 kg', '2.5 kg'],
+                care: 'Edible gold is delicate. Keep away from direct sunlight.'
             }
         };
 
         function openProductDetail(id) {
             const product = productData[id];
             if (!product) return;
-            document.getElementById('detail-title').innerText = product.title;
-            document.getElementById('detail-desc').innerText = product.desc;
-            document.getElementById('detail-img').src = product.img;
-            document.getElementById('detail-servings').innerText = product.servings;
-            document.getElementById('detail-weight').innerText = product.weight;
 
-            const ingredientsList = document.getElementById('detail-ingredients');
-            ingredientsList.innerHTML = '';
-            product.ingredients.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span style="color: #6c1d45; margin-right: 10px;">&bull;</span> ${item}`;
-                ingredientsList.appendChild(li);
+            // Basic Info
+            document.getElementById('detail-title').innerText = product.title;
+            document.getElementById('detail-price').innerText = 'Rs. ' + product.price;
+            document.getElementById('detail-desc').innerText = product.desc;
+            document.getElementById('detail-care').innerText = product.care || 'Store in a cool place.';
+            document.getElementById('detail-qty').value = 1;
+
+            // Gallery
+            const mainImg = document.getElementById('detail-img');
+            mainImg.src = product.imgs[0];
+            const thumbList = document.getElementById('thumbnail-list');
+            thumbList.innerHTML = '';
+            product.imgs.forEach((url, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumb-item ${index === 0 ? 'active' : ''}`;
+                thumb.innerHTML = `<img src="${url}" alt="Thumbnail">`;
+                thumb.onclick = () => changeMainImage(url, thumb);
+                thumbList.appendChild(thumb);
+            });
+
+            // Weight Options
+            const weightWrap = document.getElementById('detail-weight-options');
+            weightWrap.innerHTML = '';
+            product.weights.forEach((w, index) => {
+                const chip = document.createElement('div');
+                chip.className = `weight-chip ${index === 0 ? 'active' : ''}`;
+                chip.innerText = w;
+                chip.onclick = () => selectWeight(chip);
+                weightWrap.appendChild(chip);
             });
 
             document.getElementById('cake-detail-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        function changeMainImage(url, thumbEl) {
+            document.getElementById('detail-img').src = url;
+            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+            thumbEl.classList.add('active');
+        }
+
+        function selectWeight(chipEl) {
+            document.querySelectorAll('.weight-chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
+        }
+
+        function updateQty(delta) {
+            const qtyInput = document.getElementById('detail-qty');
+            let val = parseInt(qtyInput.value) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            qtyInput.value = val;
         }
 
         // ===== SIDEBAR COLLAPSE =====
