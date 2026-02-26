@@ -1,6 +1,8 @@
 :root {
-    --color-gold: #e6c888;
+    --color-gold: #d4af37;
+    /* Royal Gold */
     --color-gold-light: #f5e4bc;
+    --color-gold-deep: #aa771c;
     --color-purple: #8e1c9e;
     /* More vibrant magenta-purple from reference */
     /* Deep Silk Purple */
@@ -14,6 +16,7 @@
     --color-text: #ffffff;
     --color-text-muted: #e6dee9;
     --color-border: rgba(230, 222, 233, 0.2);
+    --color-royal-gold: linear-gradient(135deg, #BF953F, #FCF6BA, #d4af37, #FBF5B7, #AA771C);
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Raleway', sans-serif;
@@ -52,7 +55,8 @@ body {
     width: 100%;
     height: 100vh;
     z-index: -1;
-    background: url('../assets/silk-bg-premium.png') center/cover no-repeat;
+    background: url('../assets/silk-bg-premium.png') center/130% no-repeat;
+    /* Zoomed out (130% instead of cover) to show more detail */
     /* Removed brightness filter to show raw texture */
 }
 
@@ -75,12 +79,13 @@ h4 {
 
 .text-gold {
     color: var(--color-gold);
-    background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+    background: var(--color-royal-gold);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 200% auto;
     animation: shine 5s linear infinite;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .text-orchid {
