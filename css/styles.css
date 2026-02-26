@@ -1,11 +1,12 @@
 :root {
     --color-gold: #e6c888;
     --color-gold-light: #f5e4bc;
-    --color-purple: #421054;
+    --color-purple: #8e1c9e;
+    /* More vibrant magenta-purple from reference */
     /* Deep Silk Purple */
-    --color-purple-dark: #2d0b3a;
+    --color-purple-dark: #3a0b3e;
     --color-lavender: #be93e4;
-    --color-silk-bg: #1a0b1f;
+    --color-silk-bg: #1a0822;
     /* Dark Purple Base */
     --color-green: #2d5a27;
 
@@ -51,7 +52,21 @@ body {
     width: 100%;
     height: 100vh;
     z-index: -1;
-    background: linear-gradient(135deg, #1a0b1f 0%, #421054 50%, #2d0b3a 100%);
+    background: url('../assets/silk-bg-premium.png') center/cover no-repeat;
+    /* Removed brightness filter to show raw texture */
+}
+
+/* Add a subtle overlay to ensure readability if background is too vibrant */
+/* Subtle overlay removed to let raw texture shine */
+.bg-fixed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 8, 34, 0.1);
+    /* Minimal darkening */
 }
 
 h1,
@@ -77,7 +92,8 @@ h4 {
 }
 
 .text-orchid {
-    color: var(--color-orchid);
+    color: #e6c888;
+    /* Changed to gold for better contrast on purple silk */
 }
 
 .bg-orchid {
@@ -156,7 +172,9 @@ h4 {
     left: 0;
     width: 100%;
     z-index: 1100;
-    background: #1b7639;
+    background: rgba(27, 118, 57, 0.85);
+    /* Translucent Green */
+    backdrop-filter: blur(5px);
     color: #fff;
     text-align: center;
     font-family: var(--font-body);
@@ -172,8 +190,11 @@ h4 {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: var(--color-purple);
-    border-bottom: none;
+    background: rgba(58, 11, 62, 0.75);
+    /* Translucent brand purple */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     height: 80px;
     display: flex;
     align-items: center;
@@ -257,8 +278,11 @@ h4 {
     left: 0;
     width: 100%;
     z-index: 999;
-    background: #ffffff;
-    border-bottom: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.08);
+    /* Translucent light overlay */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .fleurons-nav-links {
@@ -275,15 +299,17 @@ h4 {
     display: flex;
     align-items: center;
     gap: 4px;
-    color: #000000;
+    color: #ffffff;
+    /* Contrast against background */
     text-decoration: none;
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     padding: 1.2rem 1.8rem;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
     text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .fleurons-nav-links>li>a:hover {
@@ -310,15 +336,18 @@ h4 {
     position: absolute;
     top: 100%;
     left: 0;
-    background: #fff;
+    background: rgba(26, 8, 34, 0.95);
+    /* Deep purple translucent */
+    backdrop-filter: blur(20px);
     min-width: 220px;
     max-height: 450px;
     overflow-y: auto;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-    border-top: 3px solid #4a0a2e;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    border-top: 3px solid var(--color-purple);
     list-style: none;
     padding: 0.5rem 0;
     z-index: 9999;
+    border-radius: 0 0 8px 8px;
 }
 
 /* Custom Scrollbar for Dropdown */
