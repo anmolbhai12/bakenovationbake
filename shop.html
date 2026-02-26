@@ -231,20 +231,25 @@
                         </div>
                         <div class="sidebar-section-body">
                             <div class="featured-product-item">
-                                <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
-                                    alt="Abby" onclick="openProductDetail('abby')">
-                                <div class="featured-product-info">
-                                    <span class="featured-product-name">Abby</span>
-                                    <span class="featured-product-price">From Rs. 3,100</span>
-                                </div>
+                                <a href="product.html?id=abby" style="display: flex; gap: 10px; text-decoration: none;">
+                                    <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
+                                        alt="Abby">
+                                    <div class="featured-product-info">
+                                        <span class="featured-product-name">Abby</span>
+                                        <span class="featured-product-price">From Rs. 3,100</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="featured-product-item">
-                                <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
-                                    alt="Belgian Chocolate" onclick="openProductDetail('raspberry-vintage')">
-                                <div class="featured-product-info">
-                                    <span class="featured-product-name">Belgian Chocolate Cake</span>
-                                    <span class="featured-product-price">From Rs. 2,100</span>
-                                </div>
+                                <a href="product.html?id=raspberry-vintage"
+                                    style="display: flex; gap: 10px; text-decoration: none;">
+                                    <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                        alt="Belgian Chocolate">
+                                    <div class="featured-product-info">
+                                        <span class="featured-product-name">Belgian Chocolate Cake</span>
+                                        <span class="featured-product-price">From Rs. 2,100</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="featured-product-item">
                                 <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
@@ -321,138 +326,118 @@
                     </div>
 
                     <div class="collection-grid" id="product-grid">
-                        <a href="javascript:void(0)" class="product-card" id="abby" data-category="abby"
-                            data-price="3100" data-new="true" onclick="openProductDetail('abby')">
-                            <span class="product-badge-new">New</span>
+                        <a href="product.html?id=raspberry-vintage" class="product-card" id="raspberry-vintage"
+                            data-category="raspberry-vintage" data-price="1800">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
+                                    alt="Raspberry Vintage Cake"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Raspberry Vintage Cake</h3>
+                            <div class="product-card-price">From Rs. 1,800</div>
+                        </a>
+                        <a href="product.html?id=24k-teddy" class="product-card" id="24k-teddy"
+                            data-category="24k-teddy" data-price="4500">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
+                                    alt="24K Teddy"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">24K Teddy</h3>
+                            <div class="product-card-price">From Rs. 4,500</div>
+                        </a>
+                        <a href="product.html?id=classic-lv" class="product-card" id="classic-lv"
+                            data-category="classic-lv" data-price="2200">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
+                                    alt="Classic LV"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Classic LV</h3>
+                            <div class="product-card-price">From Rs. 2,200</div>
+                        </a>
+                        <a href="product.html?id=golden-couple" class="product-card" id="golden-couple"
+                            data-category="golden-couple" data-price="2200">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
+                                    alt="Golden Couple Anniversary Cake"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Golden Couple Anniversary Cake</h3>
+                            <div class="product-card-price">From Rs. 2,200</div>
+                        </a>
+                        <a href="product.html?id=hello-gorgeous" class="product-card" id="hello-gorgeous"
+                            data-category="hello-gorgeous" data-price="2200">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
+                                    alt="Hello Gorgeous"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Hello Gorgeous</h3>
+                            <div class="product-card-price">From Rs. 2,200</div>
+                        </a>
+                        <a href="product.html?id=abby" class="product-card" id="abby" data-category="abby"
+                            data-price="1800">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                     alt="Abby"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Abby</h3>
-                            <div class="product-card-price">From Rs. 3,100</div>
+                            <div class="product-card-price">From Rs. 1,800</div>
                         </a>
-                        <a href="javascript:void(0)" class="product-card" id="art-of-orchids"
-                            data-category="art-of-orchids" data-price="3600" data-new="true"
-                            onclick="openProductDetail('hello-gorgeous')">
-                            <span class="product-badge-new">New</span>
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
-                                    alt="Art of Orchids"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Art of Orchids</h3>
-                            <div class="product-card-price">From Rs. 3,600</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="astronaut" data-category="astronaut"
-                            data-price="2800" onclick="openProductDetail('pink-bows')">
+                        <a href="product.html?id=pink-bows" class="product-card" id="pink-bows"
+                            data-category="pink-bows" data-price="1500">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
-                                    alt="Astronaut"></div>
+                                    alt="Vintage All Pink & Bows Cake"></div>
                             <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Astronaut Cake</h3>
-                            <div class="product-card-price">From Rs. 2,800</div>
+                            <h3 class="product-card-title">Vintage All Pink & Bows Cake</h3>
+                            <div class="product-card-price">From Rs. 1,500</div>
                         </a>
-                        <a href="javascript:void(0)" class="product-card" id="birthday-cake"
-                            data-category="birthday-cake" data-price="2400"
-                            onclick="openProductDetail('golden-couple')">
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
-                                    alt="Birthday Cake"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Birthday Cake</h3>
-                            <div class="product-card-price">From Rs. 2,400</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="bed-of-blossom"
-                            data-category="bed-of-blossom" data-price="2500" onclick="openProductDetail('classic-lv')">
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
-                                    alt="Bed of Blossom"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Bed of Blossom</h3>
-                            <div class="product-card-price">From Rs. 2,500</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="belgian-chocolate"
-                            data-category="belgian-chocolate" data-price="2100" data-new="true"
-                            onclick="openProductDetail('raspberry-vintage')">
-                            <span class="product-badge-new">New</span>
+                        <!-- Duplicated/Dummy items for layout parity -->
+                        <a href="product.html?id=minimalist-heart" class="product-card" id="minimalist-heart"
+                            data-category="minimalist-heart" data-price="750">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
-                                    alt="Belgian Chocolate Cake"></div>
+                                    alt="Minimalist Heart Bento"></div>
                             <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Belgian Chocolate Cake</h3>
-                            <div class="product-card-price">From Rs. 2,100</div>
+                            <h3 class="product-card-title">Minimalist Heart Bento</h3>
+                            <div class="product-card-price">From Rs. 750</div>
                         </a>
-                        <a href="javascript:void(0)" class="product-card" id="birthday-ballon-bento"
-                            data-category="birthday-ballon-bento" data-price="650"
-                            onclick="openProductDetail('24k-teddy')">
+                        <a href="product.html?id=stars-sprinkles" class="product-card" id="stars-sprinkles"
+                            data-category="stars-sprinkles" data-price="850">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
-                                    alt="Birthday Ballon Bento Cake"></div>
+                                    alt="Stars and Sprinkles Bento Cake"></div>
                             <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Birthday Ballon Bento Cake</h3>
-                            <div class="product-card-price">From Rs. 650</div>
+                            <h3 class="product-card-title">Stars and Sprinkles Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 850</div>
                         </a>
-                        <a href="javascript:void(0)" class="product-card" id="birthday-cake-bento"
-                            data-category="birthday-cake-bento" data-price="700"
-                            onclick="openProductDetail('classic-lv')">
+                        <a href="product.html?id=pearls-bento" class="product-card" id="pearls-bento"
+                            data-category="pearls-bento" data-price="2200">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
-                                    alt="Birthday Cake Bento"></div>
+                                    alt="Pearls Bento Cake"></div>
                             <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Birthday Cake Bento</h3>
-                            <div class="product-card-price">From Rs. 700</div>
+                            <h3 class="product-card-title">Pearls Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 2,200</div>
                         </a>
-                        <a href="javascript:void(0)" class="product-card" id="birthday-candles-bento"
-                            data-category="birthday-candles-bento" data-price="750"
-                            onclick="openProductDetail('golden-couple')">
+                        <a href="product.html?id=ombre-bento" class="product-card" id="ombre-bento"
+                            data-category="ombre-bento" data-price="2200">
                             <div class="product-card-image-wrap"><img
                                     src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
+                                    alt="Ombre Bento Cake"></div>
+                            <span class="product-card-vendor">FLEURONS</span>
+                            <h3 class="product-card-title">Ombre Bento Cake</h3>
+                            <div class="product-card-price">From Rs. 2,200</div>
+                        </a>
+                        <a href="product.html?id=birthday-candles" class="product-card" id="birthday-candles"
+                            data-category="birthday-candles" data-price="2200">
+                            <div class="product-card-image-wrap"><img
+                                    src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
                                     alt="Birthday Candles Bento Cake"></div>
                             <span class="product-card-vendor">FLEURONS</span>
                             <h3 class="product-card-title">Birthday Candles Bento Cake</h3>
-                            <div class="product-card-price">From Rs. 750</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="black-gold" data-category="black-gold"
-                            data-price="4200" onclick="openProductDetail('hello-gorgeous')">
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
-                                    alt="Black &amp; Gold"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Black &amp; Gold</h3>
-                            <div class="product-card-price">From Rs. 4,200</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="black-forest" data-category="black-forest"
-                            data-price="1900" onclick="openProductDetail('abby')">
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
-                                    alt="Black Forest Cake"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Black Forest Cake</h3>
-                            <div class="product-card-price">From Rs. 1,900</div>
-                        </a>
-                        <a href="javascript:void(0)" class="product-card" id="blueberry" data-category="blueberry"
-                            data-price="2200" onclick="openProductDetail('pink-bows')">
-                            <div class="product-card-image-wrap"><img
-                                    src="https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436"
-                                    alt="Blueberry Cake"></div>
-                            <span class="product-card-vendor">FLEURONS</span>
-                            <h3 class="product-card-title">Blueberry Cake</h3>
                             <div class="product-card-price">From Rs. 2,200</div>
                         </a>
                     </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination-section">
-                        <div class="pagination-progress">
-                            <span class="progress-text">Showing 1 - 7 of 210 products</span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar-fill" style="width: 3.3%;"></div>
-                            </div>
-                        </div>
-                        <button class="btn-show-more">Show More</button>
-                    </div>
                 </div>
             </div>
-        </div>
     </main>
 
     <footer class="fleurons-footer">
@@ -498,202 +483,13 @@
         </div>
     </footer>
 
-    <!-- Standard Cake Detail Modal -->
-    <!-- Standard Cake Detail Modal -->
-    <!-- Standard Cake Detail Modal -->
-    <div id="cake-detail-modal" class="modal-overlay">
-        <div class="product-detail-wrap">
-            <button class="modal-close detail-close">&times;</button>
-
-            <!-- Left: Media Gallery -->
-            <div class="detail-media-gallery">
-                <div class="main-image-container">
-                    <img id="detail-img" src="" alt="Cake Detail">
-                </div>
-                <div id="thumbnail-list" class="thumbnail-list">
-                    <!-- Thumbnails populated by JS -->
-                </div>
-            </div>
-
-            <!-- Right: Info Panel -->
-            <div class="detail-info-panel">
-                <div class="detail-vendor">FLEURONS</div>
-                <h1 id="detail-title" class="detail-title">Cake Name</h1>
-                <div id="detail-price" class="detail-price">Rs. 0</div>
-
-                <div class="product-options">
-                    <div class="option-group">
-                        <label class="toolbar-label">Select Weight</label>
-                        <div id="detail-weight-options" class="weight-options">
-                            <!-- Weight chips populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="qty-buy-wrap">
-                    <div class="quantity-picker">
-                        <button class="qty-btn minus" onclick="updateQty(-1)">&minus;</button>
-                        <input type="number" id="detail-qty" class="qty-input" value="1" min="1">
-                        <button class="qty-btn plus" onclick="updateQty(1)">&plus;</button>
-                    </div>
-                    <button class="btn-buynow">Buy it now</button>
-                </div>
-
-                <button class="btn-addcart">Add to Cart</button>
-
-                <div class="detail-accordions">
-                    <details class="luxury-accordion" open>
-                        <summary>Description</summary>
-                        <div id="detail-desc" class="accordion-content">
-                            Description goes here.
-                        </div>
-                    </details>
-                    <details class="luxury-accordion">
-                        <summary>Delivery Information</summary>
-                        <div class="accordion-content">
-                            <ul style="padding-left: 1.2rem;">
-                                <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>Delivery will take place between 12pm - 7pm only.</li>
-                                <li>This product is perishable; delivery will be attempted only once.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    <details class="luxury-accordion">
-                        <summary>Care Instructions</summary>
-                        <div id="detail-care" class="accordion-content">
-                            Store in a cool, dry place. Best consumed within 24 hours.
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modals for Full Parity -->
     <div id="auth-modal" class="modal-overlay"></div>
     <div id="search-modal" class="modal-overlay"></div>
     <div id="cart-drawer" class="cart-drawer"></div>
 
-
-
+    <script src="js/products.js"></script>
     <script>
-        const productData = {
-            'raspberry-vintage': {
-                title: 'Raspberry Vintage Cake',
-                desc: 'Topped with imported raspberries, and ribbons, this cake is a must for 2025-2026 celebrations. Perfect for those Pinteresty birthdays, and anniversaries, for the perfect vintage aesthetic era.',
-                price: 1800,
-                imgs: ['https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972.jpg?v=1711617436'],
-                weights: ['0.5 kg', '1.0 kg', '1.5 kg', '2.0 kg'],
-                care: 'Store in refrigerator. Best consumed within 24 hours of delivery.'
-            },
-            '24k-teddy': {
-                title: '24K Teddy',
-                desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
-                price: 4500,
-                imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210'],
-                weights: ['1.0 kg', '1.5 kg', '2.5 kg'],
-                care: 'Edible gold is delicate. Keep away from direct sunlight.'
-            },
-            'classic-lv': {
-                title: 'Classic LV',
-                desc: 'Non-Fondant cake, topped with golden buds, and handcrafted sugar peonies and leaves. Stencilling in Louis Vuitton pattern.',
-                price: 2200,
-                imgs: ['https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118.jpg?v=1748428764'],
-                weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-                care: 'Handle with care to preserve the stencilled design.'
-            },
-            'golden-couple': {
-                title: 'Golden Couple Anniversary Cake',
-                desc: 'Featuring golden buds and handcrafted sugar flowers, this cake is a sophisticated choice for celebrating love.',
-                price: 2200,
-                imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750'],
-                weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-                care: 'Keep refrigerated until serving.'
-            },
-            'hello-gorgeous': {
-                title: 'Hello Gorgeous',
-                desc: 'Layered with shades of purple cream, adorned with edible pearls, chocolate spheres and edible wafer paper flowers.',
-                price: 2200,
-                imgs: ['https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC.jpg?v=1748428843'],
-                weights: ['1.0 kg', '1.5 kg'],
-                care: 'Wafer paper is sensitive to humidity.'
-            },
-            'abby': {
-                title: 'Abby',
-                desc: 'Tall cake created in a shade of light grey, decorated with edible gold leaf, imported sprinkles, and chocolate balls.',
-                price: 1800,
-                imgs: ['https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1.jpg?v=1748428924'],
-                weights: ['1.0 kg', '1.5 kg', '2.0 kg'],
-                care: 'A tall cake requires careful transport.'
-            },
-            'pink-bows': {
-                title: 'Vintage All Pink & Bows Cake',
-                desc: 'Feminine, elegant and everything pink! Adorned with delicate bows for a truly vintage aesthetic.',
-                price: 1500,
-                imgs: ['https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436'],
-                weights: ['0.5 kg', '1.0 kg'],
-                care: 'Bows are made of icing, handle gently.'
-            }
-        };
-
-        function openProductDetail(id) {
-            const product = productData[id];
-            if (!product) return;
-
-            // Basic Info
-            document.getElementById('detail-title').innerText = product.title;
-            document.getElementById('detail-price').innerText = 'Rs. ' + product.price;
-            document.getElementById('detail-desc').innerText = product.desc;
-            document.getElementById('detail-care').innerText = product.care || 'Store in a cool place.';
-            document.getElementById('detail-qty').value = 1;
-
-            // Gallery
-            const mainImg = document.getElementById('detail-img');
-            mainImg.src = product.imgs[0];
-            const thumbList = document.getElementById('thumbnail-list');
-            thumbList.innerHTML = '';
-            product.imgs.forEach((url, index) => {
-                const thumb = document.createElement('div');
-                thumb.className = `thumb-item ${index === 0 ? 'active' : ''}`;
-                thumb.innerHTML = `<img src="${url}" alt="Thumbnail">`;
-                thumb.onclick = () => changeMainImage(url, thumb);
-                thumbList.appendChild(thumb);
-            });
-
-            // Weight Options
-            const weightWrap = document.getElementById('detail-weight-options');
-            weightWrap.innerHTML = '';
-            product.weights.forEach((w, index) => {
-                const chip = document.createElement('div');
-                chip.className = `weight-chip ${index === 0 ? 'active' : ''}`;
-                chip.innerText = w;
-                chip.onclick = () => selectWeight(chip);
-                weightWrap.appendChild(chip);
-            });
-
-            document.getElementById('cake-detail-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function changeMainImage(url, thumbEl) {
-            document.getElementById('detail-img').src = url;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            thumbEl.classList.add('active');
-        }
-
-        function selectWeight(chipEl) {
-            document.querySelectorAll('.weight-chip').forEach(c => c.classList.remove('active'));
-            chipEl.classList.add('active');
-        }
-
-        function updateQty(delta) {
-            const qtyInput = document.getElementById('detail-qty');
-            let val = parseInt(qtyInput.value) || 1;
-            val += delta;
-            if (val < 1) val = 1;
-            qtyInput.value = val;
-        }
-
         // ===== SIDEBAR COLLAPSE =====
         function toggleSection(header) {
             const body = header.nextElementSibling;
@@ -796,13 +592,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             const hash = window.location.hash.replace('#', '') || 'all';
             filterProducts(hash);
-        });
-
-        document.querySelectorAll('.detail-close').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.getElementById('cake-detail-modal').classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
         });
     </script>
 </body>

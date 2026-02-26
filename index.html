@@ -177,8 +177,7 @@
                 <div class="collection-grid" id="collection-grid"
                     style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
                     <!-- 1. Raspberry Vintage Cake -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('raspberry-vintage')">
+                    <a href="product.html?id=raspberry-vintage" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972_165x.jpg?v=1763106149"
                                 alt="Raspberry Vintage Cake">
@@ -189,8 +188,7 @@
                     </a>
 
                     <!-- 2. 24K Teddy -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('24k-teddy')">
+                    <a href="product.html?id=24k-teddy" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
                                 alt="24K Teddy">
@@ -201,8 +199,7 @@
                     </a>
 
                     <!-- 3. Classic LV -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('classic-lv')">
+                    <a href="product.html?id=classic-lv" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118_165x.jpg?v=1748428764"
                                 alt="Classic LV">
@@ -213,8 +210,7 @@
                     </a>
 
                     <!-- 4. Golden Couple -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('golden-couple')">
+                    <a href="product.html?id=golden-couple" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
                                 alt="Golden Couple Anniversary Cake">
@@ -225,8 +221,7 @@
                     </a>
 
                     <!-- 5. Hello Gorgeous -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('hello-gorgeous')">
+                    <a href="product.html?id=hello-gorgeous" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC_165x.jpg?v=1748428843"
                                 alt="Hello Gorgeous">
@@ -237,8 +232,7 @@
                     </a>
 
                     <!-- 6. Abby -->
-                    <a href="javascript:void(0)" class="product-card reveal-on-scroll"
-                        onclick="openProductDetail('abby')">
+                    <a href="product.html?id=abby" class="product-card reveal-on-scroll">
                         <div class="product-card-image-wrap">
                             <img src="https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1_165x.jpg?v=1748428924"
                                 alt="Abby">
@@ -673,104 +667,6 @@
         </div>
     </div>
 
-    <!-- Cake Detail Modal -->
-    <div id="cake-detail-modal" class="modal-overlay">
-        <div class="glass-panel modal-content"
-            style="max-width: 900px; display: flex; gap: 2rem; align-items: start; flex-wrap: wrap; padding: 3rem;">
-            <button class="modal-close detail-close">&times;</button>
-            <div class="detail-image" style="flex: 1; min-width: 300px;">
-                <img id="detail-img" src="" alt="Cake Detail"
-                    style="width: 100%; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
-            </div>
-            <div class="detail-info" style="flex: 1; min-width: 300px;">
-                <h2 id="detail-title" class="text-orchid"
-                    style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 2rem;">Cake Name</h2>
-
-                <div
-                    style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-orchid);">
-                    <span><strong>Servings:</strong> <span id="detail-servings">12-15</span></span>
-                    <span><strong>Weight:</strong> <span id="detail-weight">2.5 kg</span></span>
-                </div>
-
-                <p id="detail-desc" style="color: var(--color-text-muted); margin-bottom: 1.5rem; line-height: 1.6;">
-                    Description goes here.</p>
-
-                <h4 class="text-orchid" style="font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.1em;">PREMIUM
-                    INGREDIENTS</h4>
-                <ul id="detail-ingredients"
-                    style="list-style: none; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem; padding-left: 0;">
-                    <!-- Populated by JS -->
-                </ul>
-
-                <div class="product-options" style="margin-bottom: 2rem;">
-                    <div class="option-group" style="margin-bottom: 1.5rem;">
-                        <label
-                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
-                            Weight</label>
-                        <select id="detail-weight-select" class="luxury-input" style="padding: 0.8rem;">
-                            <option value="0.5">0.5 kg</option>
-                            <option value="1.0">1.0 kg</option>
-                            <option value="1.5">1.5 kg</option>
-                            <option value="2.0">2.0 kg</option>
-                            <option value="2.5">2.5 kg</option>
-                        </select>
-                    </div>
-                    <div class="option-group">
-                        <label
-                            style="display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--color-orchid); margin-bottom: 0.5rem;">Select
-                            Type</label>
-                        <div style="display: flex; gap: 1rem;">
-                            <label class="luxury-radio">
-                                <input type="radio" name="cake-type" value="eggless" checked>
-                                <span>Eggless</span>
-                            </label>
-                            <label class="luxury-radio">
-                                <input type="radio" name="cake-type" value="egg">
-                                <span>With Egg</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-info-accordions">
-                    <details class="luxury-accordion" open>
-                        <summary>Delivery Information</summary>
-                        <div class="accordion-content">
-                            <ul
-                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>This product is perishable; delivery will be attempted only once.</li>
-                                <li>Delivery cannot be redirected to any other address.</li>
-                                <li>Delivery will take place between 12pm - 7pm only.</li>
-                                <li>For specific time delivery, additional charges apply.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    <details class="luxury-accordion">
-                        <summary>Care Instructions</summary>
-                        <div class="accordion-content">
-                            <ul
-                                style="padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6; color: var(--color-text-muted);">
-                                <li>Store in an airtight container in the refrigerator.</li>
-                                <li>The cake should be consumed on the same day for best taste.</li>
-                                <li>Slice and serve at room temperature.</li>
-                                <li>Sculptural elements may contain wire or wood supports.</li>
-                                <li style="color: #6c1d45; font-weight: 500;">Note: Intense food coloring may cause
-                                    temporary staining.</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
-
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button class="btn-luxury" id="detail-add-to-cart-btn" style="flex: 1;">Add to Cart</button>
-                    <button class="btn-luxury" id="detail-direct-order-btn"
-                        style="flex: 1; background: var(--color-orchid); color: var(--color-bg);">Order Now</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Cart Drawer -->
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-drawer-content glass-panel">
@@ -925,144 +821,9 @@
     <!-- AI SOVEREIGN ENGINE V36 (CORS-KILLER PROXY) -->
     <script src="sovereign-v36/main.js?v=36"></script>
 
+    <script src="js/products.js"></script>
     <script>
-        // Fleurons Product Data
-        const productData = {
-            'raspberry-vintage': {
-                title: 'Raspberry Vintage Cake',
-                desc: 'Topped with imported raspberries, and ribbons, this cake is a must for 2025-2026 celebrations. Perfect for those Pinteresty birthdays, and anniversaries, for the perfect vintage aesthetic era.',
-                img: 'https://fleurons.in/cdn/shop/files/8BD589CA-D5A9-47A7-AEB9-7593FB0DA972.jpg?v=1711617436',
-                servings: '12-15',
-                weight: '1.5 kg',
-                ingredients: ['Imported Raspberries', 'Premium Vanilla', 'Artisanal Ribbons', 'Silk Cream']
-            },
-            '24k-teddy': {
-                title: '24K Teddy',
-                desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
-                img: 'https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210',
-                servings: '15-20',
-                weight: '2.5 kg',
-                ingredients: ['Dark Chocolate Ganache', '24K Edible Gold', 'Sugar Pearls', 'Fondant Accents']
-            },
-            'classic-lv': {
-                title: 'Classic LV',
-                desc: 'Non-Fondant cake, topped with golden buds, and handcrafted sugar peonies and leaves. Stencilling in Louis Vuitton pattern.',
-                img: 'https://fleurons.in/cdn/shop/files/8E7557F2-A85F-4E08-B0DA-92270D97D118.jpg?v=1748428764',
-                servings: '12-15',
-                weight: '1.5 kg',
-                ingredients: ['Chocolate Sponge', 'Buttercream Stencilling', 'Sugar Peonies', 'Gold Buds']
-            },
-            'golden-couple': {
-                title: 'Golden Couple Anniversary Cake',
-                desc: 'Featuring golden buds and handcrafted sugar flowers, this cake is a sophisticated choice for celebrating love.',
-                img: 'https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750',
-                servings: '12-15',
-                weight: '1.5 kg',
-                ingredients: ['Classic Vanilla', 'Gold Accents', 'Sugar Flowers', 'Silk Finish']
-            },
-            'hello-gorgeous': {
-                title: 'Hello Gorgeous',
-                desc: 'Layered with shades of purple cream, adorned with edible pearls, chocolate spheres and edible wafer paper flowers.',
-                img: 'https://fleurons.in/cdn/shop/files/7249C4DE-0C86-4C86-A1B9-6AC077E292FC.jpg?v=1748428843',
-                servings: '12-15',
-                weight: '1.5 kg',
-                ingredients: ['Purple Cream Layers', 'Edible Pearls', 'Wafer Flowers', 'LED Ring Ready']
-            },
-            'abby': {
-                title: 'Abby',
-                desc: 'Tall cake created in a shade of light grey, decorated with edible gold leaf, imported sprinkles, and chocolate balls.',
-                img: 'https://fleurons.in/cdn/shop/files/11A50BD4-518C-4B86-9D83-DE2525BB38E1.jpg?v=1748428924',
-                servings: '15-20',
-                weight: '1.5 kg+',
-                ingredients: ['Grey Silk Frosting', 'Gold Leaf', 'Gourmet Sprinkles', 'Pampas Grass Ready']
-            },
-            'pink-bows': {
-                title: 'Vintage All Pink & Bows Cake',
-                desc: 'Feminine, elegant and everything pink! Adorned with delicate bows for a truly vintage aesthetic.',
-                img: 'https://fleurons.in/cdn/shop/files/VintageAllPink_BowsCake_1.jpg?v=1711617436',
-                servings: '10-12',
-                weight: '1.0 kg',
-                ingredients: ['Strawberry Sponge', 'Pink Ribbon Bows', 'Vintage Piping', 'Pearl Dust']
-            },
-            'minimalist-heart': {
-                title: 'Minimalist Heart Bento',
-                desc: 'The perfect mini cake for a sweet gesture. Simple, elegant heart design with smooth frosting.',
-                img: 'https://fleurons.in/cdn/shop/products/minimalist-heart-bento.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Velvet Sponge', 'Choice of Frosting', 'Signature Heart Topper']
-            },
-            'stars-sprinkles': {
-                title: 'Stars and Sprinkles Bento Cake',
-                desc: 'A festive and fun mini cake covered in whimsical stars and colorful sprinkles.',
-                img: 'https://fleurons.in/cdn/shop/products/stars-and-sprinkles.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Vanilla Sponge', 'Rainbow Sprinkles', 'Sugar Stars']
-            },
-            'pearls-bento': {
-                title: 'Pearls Bento Cake',
-                desc: 'Chic and sophisticated, decorated with delicate edible pearls for a touch of class.',
-                img: 'https://fleurons.in/cdn/shop/products/pearls-bento-cake.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['White Chocolate Sponge', 'Edible Pearls', 'Silk Frosting']
-            },
-            'ombre-bento': {
-                title: 'Ombre Bento Cake',
-                desc: 'A beautiful gradient of colors, making it the perfect "Thinking of You" mini gift.',
-                img: 'https://fleurons.in/cdn/shop/products/ombre-cake.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Gradient Frosting', 'Light Sponge', 'Natural Extracts']
-            },
-            'birthday-candles': {
-                title: 'Birthday Candles Bento Cake',
-                desc: 'Classic birthday celebration in a box, complete with miniature candles and festive decor.',
-                img: 'https://fleurons.in/cdn/shop/products/birthday-candles-bento.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Confetti Sponge', 'Mini Candles', 'Happy Birthday Plaque']
-            },
-            'te-amo': {
-                title: 'Te Amo Bento Cake',
-                desc: 'Express your love with this romantic mini cake, perfectly sized for a couple.',
-                img: 'https://fleurons.in/cdn/shop/products/te-amo-bento-cake.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Red Velvet Sponge', 'Te Amo Script', 'Heart Sprinkles']
-            },
-            'minimalist-bento': {
-                title: 'Minimalist Bento Cake',
-                desc: 'Simple and clean design, focusing on high-quality frosting and light sponge.',
-                img: 'https://fleurons.in/cdn/shop/products/minimalist-bento-cake.jpg?v=1711617436',
-                servings: '1-2',
-                weight: '0.5 kg',
-                ingredients: ['Classic Sponge', 'Whipped Frosting', 'Minimalist Decor']
-            }
-        };
-
-        function openProductDetail(id) {
-            const product = productData[id];
-            if (!product) return;
-
-            document.getElementById('detail-title').innerText = product.title;
-            document.getElementById('detail-desc').innerText = product.desc;
-            document.getElementById('detail-img').src = product.img;
-            document.getElementById('detail-servings').innerText = product.servings;
-            document.getElementById('detail-weight').innerText = product.weight;
-
-            const ingredientsList = document.getElementById('detail-ingredients');
-            ingredientsList.innerHTML = '';
-            product.ingredients.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span style="color: #6c1d45; margin-right: 10px;">&bull;</span> ${item}`;
-                ingredientsList.appendChild(li);
-            });
-
-            document.getElementById('cake-detail-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        // LEGACY MODAL LOGIC REMOVED
 
         // Search Toggle
         document.getElementById('search-trigger-btn').addEventListener('click', () => {

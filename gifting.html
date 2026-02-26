@@ -279,8 +279,8 @@
                     </div>
                     <div class="collection-grid" id="product-grid">
                         <!-- Golden Couple (Gifting Highlight) -->
-                        <a href="javascript:void(0)" class="product-card" id="festive" data-category="festive"
-                            data-price="2400" data-new="true" onclick="openProductDetail('golden-couple')">
+                        <a href="product.html?id=golden-couple" class="product-card" id="festive"
+                            data-category="festive" data-price="2400" data-new="true">
                             <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/IMG_0617_165x.jpg?v=1748428750"
@@ -292,8 +292,8 @@
                         </a>
 
                         <!-- 24K Teddy (Gifting Highlight) -->
-                        <a href="javascript:void(0)" class="product-card" id="hampers" data-category="hampers"
-                            data-price="2400" data-new="true" onclick="openProductDetail('24k-teddy')">
+                        <a href="product.html?id=24k-teddy" class="product-card" id="hampers" data-category="hampers"
+                            data-price="2400" data-new="true">
                             <span class="product-badge-new">New</span>
                             <div class="product-card-image-wrap">
                                 <img src="https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795_165x.jpg?v=1762252210"
@@ -349,257 +349,107 @@
         </div>
     </footer>
 
-    <!-- Standard Cake Detail Modal -->
-    <!-- Standard Cake Detail Modal -->
-    <div id="cake-detail-modal" class="modal-overlay">
-        <div class="product-detail-wrap">
-            <button class="modal-close detail-close">&times;</button>
-
-            <!-- Left: Media Gallery -->
-            <div class="detail-media-gallery">
-                <div class="main-image-container">
-                    <img id="detail-img" src="" alt="Cake Detail">
-                </div>
-                <div id="thumbnail-list" class="thumbnail-list">
-                    <!-- Thumbnails populated by JS -->
-                </div>
-            </div>
-
-            <!-- Right: Info Panel -->
-            <div class="detail-info-panel">
-                <div class="detail-vendor">FLEURONS</div>
-                <h1 id="detail-title" class="detail-title">Cake Name</h1>
-                <div id="detail-price" class="detail-price">Rs. 0</div>
-
-                <div class="product-options">
-                    <div class="option-group">
-                        <label class="toolbar-label">Select Weight</label>
-                        <div id="detail-weight-options" class="weight-options">
-                            <!-- Weight chips populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="qty-buy-wrap">
-                    <div class="quantity-picker">
-                        <button class="qty-btn minus" onclick="updateQty(-1)">&minus;</button>
-                        <input type="number" id="detail-qty" class="qty-input" value="1" min="1">
-                        <button class="qty-btn plus" onclick="updateQty(1)">&plus;</button>
-                    </div>
-                    <button class="btn-buynow">Buy it now</button>
-                </div>
-
-                <button class="btn-addcart">Add to Cart</button>
-
-                <div class="detail-accordions">
-                    <details class="luxury-accordion" open>
-                        <summary>Description</summary>
-                        <div id="detail-desc" class="accordion-content">
-                            Description goes here.
-                        </div>
-                    </details>
-                    <details class="luxury-accordion">
-                        <summary>Delivery Information</summary>
-                        <div class="accordion-content">
-                            <ul style="padding-left: 1.2rem;">
-                                <li>The delivered product might vary slightly from the image shown.</li>
-                                <li>Delivery will take place between 12pm - 7pm only.</li>
-                                <li>This product is perishable; delivery will be attempted only once.</li>
-                            </ul>
-                        </div>
-                    </details>
-                    <details class="luxury-accordion">
-                        <summary>Care Instructions</summary>
-                        <div id="detail-care" class="accordion-content">
-                            Store in a cool, dry place. Best consumed within 24 hours.
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modals Placeholder -->
     <div id="auth-modal" class="modal-overlay"></div>
     <div id="search-modal" class="modal-overlay"></div>
     <div id="cart-drawer" class="cart-drawer"></div>
 
+    <script src="js/products.js"></script>
+    <style>
+        .toolbar-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text, #ddd);
+            padding: 5px 28px 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            outline: none;
+        }
 
-    }
+        .view-as-btns {
+            display: flex;
+            gap: 4px;
+        }
 
-    .toolbar-select {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--color-text, #ddd);
-    padding: 5px 28px 5px 10px;
-    font-size: 0.8rem;
-    border-radius: 3px;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0
-    0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    outline: none;
-    }
+        .view-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-text-muted, #aaa);
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
 
-    .view-as-btns {
-    display: flex;
-    gap: 4px;
-    }
+        .view-btn:hover,
+        .view-btn.active {
+            background: rgba(108, 29, 69, 0.3);
+            border-color: #6c1d45;
+            color: #fff;
+        }
 
-    .view-btn {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--color-text-muted, #aaa);
-    padding: 5px 8px;
-    cursor: pointer;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-    }
+        .product-badge-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #6c1d45;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 3px 8px;
+            border-radius: 2px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
 
-    .view-btn:hover,
-    .view-btn.active {
-    background: rgba(108, 29, 69, 0.3);
-    border-color: #6c1d45;
-    color: #fff;
-    }
+        .product-card {
+            position: relative;
+        }
 
-    .product-badge-new {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #6c1d45;
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border-radius: 2px;
-    z-index: 2;
-    text-transform: uppercase;
-    }
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            transition: all 0.3s;
+        }
 
-    .product-card {
-    position: relative;
-    }
+        #product-grid.view-list {
+            grid-template-columns: 1fr;
+        }
 
-    #product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    transition: all 0.3s;
-    }
+        #product-grid.view-list .product-card {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-    #product-grid.view-list {
-    grid-template-columns: 1fr;
-    }
+        #product-grid.view-list .product-card-image-wrap {
+            width: 120px;
+            flex-shrink: 0;
+        }
 
-    #product-grid.view-list .product-card {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    }
+        #product-grid.view-2col {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
-    #product-grid.view-list .product-card-image-wrap {
-    width: 120px;
-    flex-shrink: 0;
-    }
+        #product-grid.view-3col {
+            grid-template-columns: repeat(3, 1fr);
+        }
 
-    #product-grid.view-2col {
-    grid-template-columns: repeat(2, 1fr);
-    }
-
-    #product-grid.view-3col {
-    grid-template-columns: repeat(3, 1fr);
-    }
-
-    #product-grid.view-4col {
-    grid-template-columns: repeat(4, 1fr);
-    }
+        #product-grid.view-4col {
+            grid-template-columns: repeat(4, 1fr);
+        }
     </style>
-
     <script>
-        const productData = {
-            'golden-couple': {
-                title: 'Golden Couple Anniversary Cake',
-                desc: 'A sophisticated choice for celebrating love. Featuring elegant gold details and a timeless aesthetic.',
-                price: 2200,
-                imgs: ['https://fleurons.in/cdn/shop/files/IMG_0617.jpg?v=1748428750'],
-                weights: ['1.0 kg', '1.5 kg', '2.0 kg', '3.0 kg'],
-                care: 'Keep refrigerated until serving.'
-            },
-            '24k-teddy': {
-                title: '24K Teddy',
-                desc: 'A cake decorated with 24K gold, large edible pearls, handcrafted fondant teddy & deer and roses along with gold dusted chocolate balls.',
-                price: 4500,
-                imgs: ['https://fleurons.in/cdn/shop/files/E8B3C2BE-3D7A-440F-BE05-4FC8C9A0E795.jpg?v=1762252210'],
-                weights: ['1.0 kg', '1.5 kg', '2.5 kg'],
-                care: 'Edible gold is delicate. Keep away from direct sunlight.'
-            }
-        };
-
-        function openProductDetail(id) {
-            const product = productData[id];
-            if (!product) return;
-
-            // Basic Info
-            document.getElementById('detail-title').innerText = product.title;
-            document.getElementById('detail-price').innerText = 'Rs. ' + product.price;
-            document.getElementById('detail-desc').innerText = product.desc;
-            document.getElementById('detail-care').innerText = product.care || 'Store in a cool place.';
-            document.getElementById('detail-qty').value = 1;
-
-            // Gallery
-            const mainImg = document.getElementById('detail-img');
-            mainImg.src = product.imgs[0];
-            const thumbList = document.getElementById('thumbnail-list');
-            thumbList.innerHTML = '';
-            product.imgs.forEach((url, index) => {
-                const thumb = document.createElement('div');
-                thumb.className = `thumb-item ${index === 0 ? 'active' : ''}`;
-                thumb.innerHTML = `<img src="${url}" alt="Thumbnail">`;
-                thumb.onclick = () => changeMainImage(url, thumb);
-                thumbList.appendChild(thumb);
-            });
-
-            // Weight Options
-            const weightWrap = document.getElementById('detail-weight-options');
-            weightWrap.innerHTML = '';
-            product.weights.forEach((w, index) => {
-                const chip = document.createElement('div');
-                chip.className = `weight-chip ${index === 0 ? 'active' : ''}`;
-                chip.innerText = w;
-                chip.onclick = () => selectWeight(chip);
-                weightWrap.appendChild(chip);
-            });
-
-            document.getElementById('cake-detail-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function changeMainImage(url, thumbEl) {
-            document.getElementById('detail-img').src = url;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            thumbEl.classList.add('active');
-        }
-
-        function selectWeight(chipEl) {
-            document.querySelectorAll('.weight-chip').forEach(c => c.classList.remove('active'));
-            chipEl.classList.add('active');
-        }
-
-        function updateQty(delta) {
-            const qtyInput = document.getElementById('detail-qty');
-            let val = parseInt(qtyInput.value) || 1;
-            val += delta;
-            if (val < 1) val = 1;
-            qtyInput.value = val;
-        }
-
         // ===== SIDEBAR COLLAPSE =====
         function toggleSection(header) {
             const body = header.nextElementSibling;
@@ -623,34 +473,77 @@
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + mode).classList.add('active');
         }
+
+        // ===== MAIN FILTER + SORT + PAGINATION =====
         let currentCategory = 'all';
+
         function applyFilters() {
             const cards = Array.from(document.querySelectorAll('.product-card'));
             const minPrice = parseInt(document.getElementById('price-min-val').value) || 0;
-            const maxPrice = parseInt(document.getElementById('price-max-val').value) || 5000;
+            const maxPrice = parseInt(document.getElementById('price-max-val').value) || 10000;
             const sortBy = document.getElementById('sort-by').value;
             const perPage = parseInt(document.getElementById('items-per-page').value);
+
+            // Filter
             let visible = cards.filter(card => {
-                const cat = card.getAttribute('data-category'), price = parseInt(card.getAttribute('data-price')) || 0;
-                return (currentCategory === 'all' || cat === currentCategory) && price >= minPrice && price <= maxPrice;
+                const cat = card.getAttribute('data-category');
+                const price = parseInt(card.getAttribute('data-price')) || 0;
+                const catMatch = currentCategory === 'all' || cat === currentCategory;
+                const priceMatch = price >= minPrice && price <= maxPrice;
+                return catMatch && priceMatch;
             });
+
+            // Sort
             visible.sort((a, b) => {
-                const pA = parseInt(a.getAttribute('data-price')) || 0, pB = parseInt(b.getAttribute('data-price')) || 0;
-                const nA = a.querySelector('.product-card-title')?.innerText || '', nB = b.querySelector('.product-card-title')?.innerText || '';
-                if (sortBy === 'price-asc') return pA - pB; if (sortBy === 'price-desc') return pB - pA;
-                if (sortBy === 'az') return nA.localeCompare(nB); if (sortBy === 'za') return nB.localeCompare(nA);
+                const priceA = parseInt(a.getAttribute('data-price')) || 0;
+                const priceB = parseInt(b.getAttribute('data-price')) || 0;
+                const nameA = a.querySelector('.product-card-title')?.innerText || '';
+                const nameB = b.querySelector('.product-card-title')?.innerText || '';
+                if (sortBy === 'price-asc') return priceA - priceB;
+                if (sortBy === 'price-desc') return priceB - priceA;
+                if (sortBy === 'az') return nameA.localeCompare(nameB);
+                if (sortBy === 'za') return nameB.localeCompare(nameA);
                 return 0;
             });
+
+            // Hide all
             cards.forEach(c => { c.style.display = 'none'; });
-            visible.slice(0, perPage).forEach((card, i) => { card.style.display = ''; card.style.opacity = '0'; setTimeout(() => { card.style.opacity = '1'; }, i * 30); });
+
+            // Show paginated
+            const toShow = visible.slice(0, perPage);
+            toShow.forEach((card, i) => {
+                card.style.display = '';
+                card.style.opacity = '0';
+                setTimeout(() => { card.style.opacity = '1'; }, i * 30);
+            });
+
+            // Update progress
             const progressText = document.querySelector('.progress-text');
-            if (progressText) progressText.innerText = `Showing 1 - ${Math.min(perPage, visible.length)} of ${visible.length} products`;
-            document.querySelectorAll('#category-filter a').forEach(link => { link.classList.toggle('active', link.getAttribute('data-filter') === currentCategory); });
+            if (progressText) {
+                progressText.innerText = `Showing 1 - ${toShow.length} of ${visible.length} products`;
+            }
+
+            // Update category filter highlight
+            document.querySelectorAll('#category-filter a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-filter') === currentCategory);
+            });
         }
-        function filterProducts(category) { currentCategory = category; applyFilters(); }
-        window.addEventListener('hashchange', () => { const h = window.location.hash.replace('#', '') || 'all'; filterProducts(h); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-        window.addEventListener('DOMContentLoaded', () => { filterProducts(window.location.hash.replace('#', '') || 'all'); });
-        document.querySelectorAll('.detail-close').forEach(btn => { btn.addEventListener('click', () => { document.getElementById('cake-detail-modal').classList.remove('active'); document.body.style.overflow = 'auto'; }); });
+
+        function filterProducts(category) {
+            currentCategory = category;
+            applyFilters();
+        }
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '') || 'all';
+            filterProducts(hash);
+        });
     </script>
 </body>
 
