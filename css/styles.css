@@ -390,17 +390,16 @@ h4 {
 }
 
 .fleurons-sub-nav {
-    position: fixed;
+    position: sticky;
     top: 138px;
-    /* 28px top banner + 110px main header */
+    /* 28px top banner + 110px header */
     left: 0;
     width: 100%;
     z-index: 999;
-    background: rgba(26, 8, 34, 0.3);
-    /* Unified dark glass */
+    background: transparent;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .fleurons-nav-links {
@@ -435,15 +434,15 @@ h4 {
 }
 
 .fleurons-highlight>a {
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: none !important;
     color: var(--color-gold) !important;
-    border-radius: 20px;
-    padding: 0.6rem 1.2rem !important;
-    margin: 0.6rem 0.6rem;
-    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
+    border-radius: 0;
+    padding: 1.2rem 1.8rem !important;
+    margin: 0;
+    box-shadow: none !important;
 }
 
 .fleurons-highlight>a:hover {
@@ -459,20 +458,19 @@ h4 {
     position: absolute;
     top: 100%;
     left: 0;
-    background: rgba(45, 12, 50, 0.9);
-    /* Luxurious translucent Royale purple */
+    background: rgba(26, 8, 34, 0.98);
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: none !important;
+    border-top: 2px solid var(--color-gold) !important;
     min-width: 220px;
     max-height: 450px;
     overflow-y: auto;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
-    border-top: 3px solid var(--color-gold);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     list-style: none;
     padding: 0.5rem 0;
     z-index: 9999;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0;
 }
 
 /* Custom Scrollbar for Dropdown */
