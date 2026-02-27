@@ -1395,18 +1395,22 @@ h4 {
 
 .luxury-input {
     width: 100%;
-    padding: 1rem;
-    background: rgba(74, 10, 46, 0.05);
-    border: 1px solid rgba(74, 10, 46, 0.2);
-    color: var(--color-text);
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--color-gold);
     font-family: var(--font-body);
     font-size: 1rem;
     margin-bottom: 0.5rem;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
 }
 
 .luxury-input:focus {
-    border-color: var(--color-orchid);
+    border-color: var(--color-gold);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
     outline: none;
 }
 

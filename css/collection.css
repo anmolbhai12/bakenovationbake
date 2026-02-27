@@ -15,12 +15,13 @@
 .collection-sidebar {
     position: sticky;
     top: 170px;
-    background: rgba(26, 11, 31, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-glass-dark);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }
 
 .sidebar-section {
@@ -97,7 +98,7 @@
     display: block;
     padding: 6px 0;
     font-size: 0.82rem;
-    color: #555;
+    color: var(--color-gold-light);
     text-decoration: none;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 0.04em;
@@ -108,15 +109,15 @@
 }
 
 .filter-item a:hover {
-    color: #4a0a2e;
-    border-left-color: #4a0a2e;
-    background: #fdf6f9;
+    color: var(--color-gold);
+    border-left-color: var(--color-gold);
+    background: var(--color-glass-white);
 }
 
 .filter-item a.active {
-    color: #4a0a2e;
-    border-left-color: #641f3a;
-    background: #fdf0f5;
+    color: var(--color-gold);
+    border-left-color: var(--color-gold);
+    background: var(--color-glass-white);
     font-weight: 600;
 }
 
@@ -128,17 +129,17 @@
     padding: 6px 0;
     cursor: pointer;
     font-size: 0.82rem;
-    color: #555;
+    color: var(--color-gold-light);
     font-family: 'Raleway', sans-serif;
     transition: color 0.2s;
 }
 
 .sidebar-checkbox-label:hover {
-    color: #4a0a2e;
+    color: var(--color-gold);
 }
 
 .sidebar-checkbox-label input[type="checkbox"] {
-    accent-color: #641f3a;
+    accent-color: var(--color-gold);
     width: 14px;
     height: 14px;
     border-radius: 3px;
@@ -166,7 +167,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: #ead5e0;
+    background: var(--color-glass-white);
     border-radius: 2px;
     transform: translateY(-50%);
     pointer-events: none;
@@ -175,7 +176,7 @@
 .price-range-fill {
     position: absolute;
     height: 3px;
-    background: linear-gradient(90deg, #641f3a, #c5a059);
+    background: var(--color-royal-gold);
     border-radius: 2px;
     top: 50%;
     transform: translateY(-50%);
@@ -203,11 +204,11 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #641f3a;
+    background: var(--color-gold);
     pointer-events: all;
     cursor: pointer;
-    border: 2px solid #fff;
-    box-shadow: 0 1px 6px rgba(100, 31, 58, 0.35);
+    border: 2px solid var(--color-gold-light);
+    box-shadow: 0 1px 6px rgba(212, 175, 55, 0.35);
     transition: transform 0.15s;
 }
 
@@ -232,12 +233,12 @@
     align-items: center;
     gap: 3px;
     font-size: 0.78rem;
-    color: #4a0a2e;
+    color: var(--color-gold);
     font-weight: 600;
     font-family: 'Raleway', sans-serif;
     flex: 1;
-    background: #fdf6f9;
-    border: 1px solid #e8d0da;
+    background: var(--color-glass-white);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     padding: 5px 8px;
 }
@@ -263,9 +264,9 @@
 .price-apply-btn {
     width: 100%;
     padding: 10px;
-    background: #4a0a2e;
-    color: #fff;
-    border: none;
+    background: var(--color-glass-white);
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -287,7 +288,7 @@
     gap: 10px;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #f5ecf0;
+    border-bottom: 1px solid var(--color-border);
     transition: background 0.2s;
 }
 
@@ -296,7 +297,7 @@
 }
 
 .featured-product-item:hover {
-    background: #fdf6f9;
+    background: var(--color-glass-white);
     margin: 0 -18px;
     padding: 10px 18px;
 }
@@ -326,7 +327,7 @@
 
 .featured-product-name {
     font-size: 0.78rem;
-    color: #2c2c2c;
+    color: var(--color-gold) !important;
     line-height: 1.35;
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
@@ -335,7 +336,7 @@
 
 .featured-product-price {
     font-size: 0.72rem;
-    color: #4a0a2e;
+    color: var(--color-gold-light) !important;
     font-weight: 700;
     font-family: 'Raleway', sans-serif;
 }
@@ -379,7 +380,7 @@
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.14em;
-    color: #4a0a2e;
+    color: var(--color-gold) !important;
     text-transform: uppercase;
     white-space: nowrap;
     font-family: 'Raleway', sans-serif;
@@ -392,16 +393,16 @@
 }
 
 .toolbar-select {
-    background: #fdf6f9;
-    border: 1px solid #e8d0da;
-    color: #2c2c2c;
+    background: var(--color-glass-white) !important;
+    border: 1px solid var(--color-border);
+    color: var(--color-gold) !important;
     padding: 6px 30px 6px 10px;
     font-size: 0.78rem;
     border-radius: 4px;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23641f3a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 9px center;
     outline: none;
@@ -411,7 +412,7 @@
 }
 
 .toolbar-select:focus {
-    border-color: #641f3a;
+    border-color: var(--color-gold);
 }
 
 /* View-as buttons */
@@ -422,8 +423,8 @@
 
 .view-btn {
     background: transparent;
-    border: 1px solid #e8d0da;
-    color: #888;
+    border: 1px solid var(--color-border);
+    color: var(--color-gold-light);
     padding: 6px 8px;
     cursor: pointer;
     border-radius: 4px;
@@ -433,15 +434,15 @@
 }
 
 .view-btn:hover {
-    background: #fdf0f5;
-    border-color: #641f3a;
-    color: #641f3a;
+    background: var(--color-glass-white);
+    border-color: var(--color-gold);
+    color: var(--color-gold) !important;
 }
 
 .view-btn.active {
-    background: #4a0a2e;
-    border-color: #4a0a2e;
-    color: #fff;
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-text-dark) !important;
 }
 
 /* ---------- PRODUCT GRID ---------- */
@@ -499,8 +500,8 @@
 
 .product-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 48px rgba(74, 10, 46, 0.14);
-    border-color: #d4a0b8;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    border-color: var(--color-gold);
 }
 
 /* Shimmer sweep on hover */
@@ -555,7 +556,7 @@
 .product-card-title {
     font-size: 0.88rem;
     font-family: 'Playfair Display', serif;
-    color: #2c2c2c;
+    color: var(--color-gold) !important;
     font-weight: 400;
     line-height: 1.4;
     padding: 0 14px 4px;
@@ -564,7 +565,7 @@
 
 .product-card-price {
     font-size: 0.8rem;
-    color: #4a0a2e;
+    color: var(--color-gold-light) !important;
     font-weight: 700;
     font-family: 'Raleway', sans-serif;
     padding: 0 14px 14px;
@@ -602,8 +603,8 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background: linear-gradient(135deg, #641f3a, #9e2d5a);
-    color: #fff;
+    background: var(--color-royal-gold);
+    color: var(--color-text-dark) !important;
     font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -612,38 +613,38 @@
     z-index: 3;
     text-transform: uppercase;
     font-family: 'Raleway', sans-serif;
-    box-shadow: 0 2px 8px rgba(100, 31, 58, 0.4);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
 }
 
 /* ---------- BREADCRUMB ---------- */
 .breadcrumb {
     font-size: 0.75rem;
-    color: #aaa;
+    color: var(--color-gold-light) !important;
     margin-bottom: 1.5rem;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 0.06em;
 }
 
 .breadcrumb a {
-    color: #888;
+    color: var(--color-gold) !important;
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .breadcrumb a:hover {
-    color: #4a0a2e;
+    color: var(--color-gold-light) !important;
 }
 
 .breadcrumb span {
     margin: 0 6px;
-    color: #ccc;
+    color: var(--color-gold) !important;
 }
 
 /* ---------- COLLECTION HEADER ---------- */
 .collection-header h1 {
     font-size: 2.6rem;
     font-family: 'Playfair Display', serif;
-    color: #4a0a2e;
+    color: var(--color-gold) !important;
     font-weight: 400;
     letter-spacing: 0.06em;
     margin-bottom: 0.5rem;
@@ -677,7 +678,7 @@
     width: 100%;
     max-width: 300px;
     height: 3px;
-    background: #f0e0e8;
+    background: var(--color-glass-white);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -685,16 +686,16 @@
 .progress-bar-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #641f3a, #c5a059);
+    background: var(--color-royal-gold);
     border-radius: 2px;
     transition: width 0.5s ease;
 }
 
 .load-more-btn {
     padding: 12px 40px;
-    background: transparent;
-    border: 1px solid #641f3a;
-    color: #641f3a;
+    background: var(--color-glass-white);
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold) !important;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -706,8 +707,8 @@
 }
 
 .load-more-btn:hover {
-    background: #641f3a;
-    color: #fff;
+    background: var(--color-gold);
+    color: var(--color-text-dark) !important;
     transform: translateY(-2px);
 }
 
@@ -898,13 +899,13 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    color: #333;
+    color: var(--color-gold) !important;
 }
 
 .detail-vendor {
     font-size: 0.75rem;
     letter-spacing: 0.2em;
-    color: #888;
+    color: var(--color-gold-light) !important;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -912,7 +913,7 @@
 .detail-title {
     font-family: 'Playfair Display', serif;
     font-size: 2.2rem;
-    color: #641f3a;
+    color: var(--color-gold) !important;
     margin: 0;
     line-height: 1.2;
 }
@@ -920,7 +921,7 @@
 .detail-price {
     font-size: 1.4rem;
     font-weight: 500;
-    color: #333;
+    color: var(--color-gold) !important;
 }
 
 .weight-options {
@@ -931,22 +932,30 @@
 }
 
 .weight-chip {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-gold-light) !important;
+    text-align: center;
+    backdrop-filter: blur(10px);
 }
 
 .weight-chip:hover {
-    border-color: #641f3a;
+    border-color: var(--color-gold);
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateY(-2px);
 }
 
 .weight-chip.active {
-    background: #641f3a;
-    color: #fff;
-    border-color: #641f3a;
+    background: var(--color-gold);
+    color: var(--color-silk-bg) !important;
+    border-color: var(--color-gold);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    font-weight: 600;
 }
 
 .qty-buy-wrap {
@@ -978,6 +987,9 @@
     text-align: center;
     border: none;
     font-weight: 600;
+    background: transparent !important;
+    color: var(--color-gold) !important;
+    appearance: textfield;
     -moz-appearance: textfield;
 }
 
@@ -1001,7 +1013,7 @@
 }
 
 .btn-buynow:hover {
-    background: #333;
+    background: var(--color-gold-deep);
 }
 
 /* ---------- PRODUCT DETAIL PAGE (DYNAMIC) ---------- */
@@ -1085,7 +1097,7 @@
 .detail-price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #4a0a2e;
+    color: var(--color-gold) !important;
     margin-bottom: 30px;
 }
 
@@ -1100,22 +1112,7 @@
     margin-top: 8px;
 }
 
-.weight-chip {
-    padding: 10px 20px;
-    border: 1px solid #e8d0da;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: #fff;
-    color: #555;
-}
-
-.weight-chip.active {
-    background: #4a0a2e;
-    color: #fff;
-    border-color: #4a0a2e;
-}
+/* Legacy chips removed for Royale Unified Styling */
 
 /* Dietary Selector */
 .dietary-selector {
@@ -1148,37 +1145,56 @@
 }
 
 .luxury-input {
-    border: 1px solid #e8d0da;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    color: var(--color-gold) !important;
     padding: 12px 15px !important;
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.9rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
     margin-top: 8px;
     outline: none;
-    transition: border-color 0.2s;
-    border-radius: 4px;
+    transition: all 0.3s ease;
+    border-radius: 6px !important;
 }
 
 .luxury-input:focus {
-    border-color: #4a0a2e;
+    border-color: var(--color-gold) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+}
+
+/* Date input specific handling */
+input[type="date"].luxury-input {
+    color-scheme: dark;
+    text-align: left;
 }
 
 .quantity-picker {
     display: flex;
     align-items: center;
-    border: 1px solid #e8d0da;
-    border-radius: 4px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
     overflow: hidden;
     width: fit-content;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .qty-btn {
-    width: 40px;
+    width: 45px;
     height: 45px;
-    background: #fdf6f9;
+    background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
-    color: #4a0a2e;
+    font-size: 1.4rem;
+    color: var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.qty-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .qty-input {
@@ -1186,11 +1202,13 @@
     height: 45px;
     text-align: center !important;
     border: none !important;
-    border-left: 1px solid #e8d0da !important;
-    border-right: 1px solid #e8d0da !important;
+    border-left: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-right: 1px solid rgba(212, 175, 55, 0.3) !important;
     font-weight: 600;
     margin: 0 !important;
-    background: #fff !important;
+    background: transparent !important;
+    color: var(--color-gold) !important;
+    font-size: 1rem;
     padding: 0 !important;
 }
 
