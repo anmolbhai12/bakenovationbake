@@ -906,8 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (loadingMsg) loadingMsg.innerText = loadingText;
 
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.style.filter = 'blur(15px) brightness(0.7)';
-                        aiGeneratedImage.style.opacity = '0.5';
+                        aiGeneratedImage.classList.add('sketching');
                     }
 
                     const safetyTimeout = setTimeout(() => {
@@ -919,18 +918,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }, 18000);
 
-                    // --- SOVEREIGN PROMPT EXPANSION V34 ---
-                    // This logic "thinks" for the user. It turns simple inputs into elite cake instructions.
+                    // --- V37 EXPERT SPECIALIST PROMPT EXPANSION ---
                     const expandPrompt = (input) => {
-                        const base = "A hyper-realistic, high-end edible cake masterpiece. Professional food photography, 8k, studio lighting, white background.";
-                        const cakeTraits = "fondant sculpture, edible modeling chocolate, sugar-art details, luxury bakery finish, no plastic, 100% edible materials.";
+                        const styleContext = snapState.style.toUpperCase();
+                        const occasionContext = snapState.type.toUpperCase();
+                        const colorContext = snapState.color.toUpperCase();
 
-                        if (!input) return `Elite bespoke ${snapState.color} ${snapState.style} ${snapState.type} luxury cake art. Signature atelier design. ${base} ${cakeTraits}. seed:${uniqueRef}`;
+                        const expertAdjectives = [
+                            "master-crafted", "award-winning couture", "architectural",
+                            "hyper-realistic edible sculpture", "gastronomic masterpiece",
+                            "museum-quality sugar art", "couture patisserie"
+                        ];
+                        const randomExpertAdjective = expertAdjectives[Math.floor(Math.random() * expertAdjectives.length)];
 
-                        // AGENTIC EXPANSION: Detect key terms and build a world around them
-                        let expanded = `A stunning custom cake expertly sculpted and SHAPED EXACTLY LIKE A "${input}". `;
-                        expanded += `The entire structure is an edible cake creation with realistic ${input} textures rendered in fondant and chocolate. `;
-                        expanded += `Luxury patisserie style, award-winning sugar artistry. ${base} ${cakeTraits}. unique:${uniqueRef}`;
+                        const base = `A ${randomExpertAdjective} cake creation. Professional food photography, 8k, cinematic lighting, sharp focus, white studio background, masterpiece level detail.`;
+                        const cakeTraits = `Intricate fondant detailing, realistic edible textures, subsurface scattering on sugar petals, 100% edible materials, luxury bakery polish, zero plastic.`;
+
+                        if (!input) {
+                            return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${base} ${cakeTraits}. seed:${uniqueRef}`;
+                        }
+
+                        // V37 SPECIALIST LOGIC: Transform raw user input into a thematic technical prompt
+                        let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO PERFECTLY REPRESENT "${input}". `;
+                        expanded += `The entire physics-defying structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
+                        expanded += `Incorporate "${input}" as the central design theme using advanced 3D sugar-modeling techniques. `;
+                        expanded += `Ensure common traits of "${input}" are rendered with high-fidelity edible textures. `;
+                        expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. ${base} ${cakeTraits}. unique:${uniqueRef}`;
+
                         return expanded;
                     };
 
@@ -938,10 +952,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const uniqueRef = atomicSeed.toString(36);
                     const finalPrompt = expandPrompt(rawUserText);
 
-                    // CONSOLE TRACE: SOVEREIGN MODE
-                    console.log('%c🔱 AI SOVEREIGN ENGINE v34 — ACTIVE', 'color:#d4af37;font-weight:bold;font-size:16px;text-shadow: 1px 1px 2px black;');
-                    console.log('📤 Expanding Prompt:', finalPrompt);
-                    console.log('🌱 Seed:', atomicSeed);
+                    // CONSOLE TRACE: V37 EXPERT SPECIALIST
+                    console.log('%c🔱 AI SOVEREIGN ENGINE v37 — EXPERT MODE', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                    console.log('%cExpert Expansion:', 'color:#f5e4bc;', finalPrompt);
 
                     // --- STEALTH SOVEREIGN RELAY V34 ---
                     const getHFToken = () => {
