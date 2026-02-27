@@ -125,7 +125,7 @@ h4 {
 
 .btn-luxury:hover {
     background: var(--color-gold);
-    color: #4a0a2e;
+    color: var(--color-gold);
     transform: none;
     box-shadow: none;
 }
@@ -264,7 +264,7 @@ h4 {
 
 .fleurons-cart-badge {
     background: var(--color-orchid);
-    color: #2d004d;
+    color: var(--color-gold);
     font-size: 0.65rem;
     font-weight: 700;
     border-radius: 50%;
@@ -318,7 +318,7 @@ h4 {
 }
 
 .fleurons-nav-links>li>a:hover {
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .fleurons-highlight>a {
@@ -380,7 +380,7 @@ h4 {
 
 .dropdown-menu li a:hover {
     background: #f8f0ff;
-    color: #4a0a2e;
+    color: var(--color-gold);
 }
 
 .fleurons-dropdown:hover .dropdown-menu {
@@ -542,7 +542,7 @@ h4 {
     line-height: 1.2;
     margin-bottom: 2rem;
     font-weight: 400;
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .hero-background {
@@ -2538,7 +2538,7 @@ h4 {
 }
 
 .footer-links a:hover {
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .newsletter-text {
@@ -2587,7 +2587,7 @@ h4 {
 }
 
 .social-icon:hover {
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .footer-bottom {
@@ -2643,7 +2643,7 @@ h4 {
 }
 
 .breadcrumb a:hover {
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .breadcrumb span {
@@ -2702,7 +2702,7 @@ h4 {
 }
 
 .view-toggle-btn.active {
-    color: var(--color-purple);
+    color: var(--color-gold);
 }
 
 .toolbar-select {
