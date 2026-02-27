@@ -457,18 +457,20 @@ h4 {
     position: absolute;
     top: 100%;
     left: 0;
-    background: rgba(26, 8, 34, 0.95);
-    /* Deep purple translucent */
-    backdrop-filter: blur(20px);
+    background: rgba(45, 12, 50, 0.9);
+    /* Luxurious translucent Royale purple */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     min-width: 220px;
     max-height: 450px;
     overflow-y: auto;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-    border-top: 3px solid var(--color-purple);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+    border-top: 3px solid var(--color-gold);
     list-style: none;
     padding: 0.5rem 0;
     z-index: 9999;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 12px 12px;
 }
 
 /* Custom Scrollbar for Dropdown */
@@ -481,7 +483,8 @@ h4 {
 }
 
 .dropdown-menu::-webkit-scrollbar-thumb {
-    background: #4a0a2e;
+    background: var(--color-gold);
+    border-radius: 4px;
 }
 
 .dropdown-menu li a {
