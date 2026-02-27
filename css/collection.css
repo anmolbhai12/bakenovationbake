@@ -951,11 +951,21 @@
 }
 
 .weight-chip.active {
-    background: var(--color-gold);
-    color: var(--color-silk-bg) !important;
-    border-color: var(--color-gold);
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-    font-weight: 600;
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--color-gold) !important;
+    border: 2px solid var(--color-gold);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    font-weight: 700;
+    transform: translateY(-2px);
+}
+
+.weight-chip:active,
+.btn-luxury:active,
+.btn-addcart:active,
+.btn-buynow:active,
+.qty-btn:active {
+    transform: scale(0.96);
+    transition: transform 0.1s;
 }
 
 .qty-buy-wrap {
@@ -1208,8 +1218,13 @@ input[type="date"].luxury-input {
     margin: 0 !important;
     background: transparent !important;
     color: var(--color-gold) !important;
-    font-size: 1rem;
+    font-size: 1.1rem;
     padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 45px;
+    /* Matches height for perfect vertical centering */
 }
 
 .btn-addcart,
