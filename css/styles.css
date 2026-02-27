@@ -56,9 +56,9 @@ body {
     width: 100%;
     height: 100vh;
     z-index: -1;
-    background: url('../assets/silk-bg-final.jpg') center/100% auto no-repeat;
+    background: url('../assets/silk-bg.png') center/100% auto no-repeat;
     background-attachment: fixed;
-    /* Clarity & Quality Fixes */
+    /* Clarity & Quality Fixes from Royale Plan */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: high-quality;
     filter: contrast(1.05) brightness(0.95);
@@ -240,7 +240,8 @@ h4 {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    height: 80px;
+    height: 110px;
+    /* Increased to fit Royale Medallion */
     display: flex;
     align-items: center;
 }
