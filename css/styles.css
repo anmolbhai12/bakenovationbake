@@ -288,14 +288,12 @@ h4 {
     width: 100%;
     z-index: 1100;
     background: var(--color-gold);
-    /* Back to Gold for premium feel */
     color: var(--color-deep-purple);
     text-align: center;
     font-family: var(--font-body);
     font-size: 0.75rem;
     letter-spacing: 0.15em;
     padding: 0.5rem 0;
-    /* Slightly more padding for visibility */
     text-transform: uppercase;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
