@@ -152,9 +152,10 @@ h4 {
 }
 
 .glass-panel {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(26, 8, 34, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
     border-bottom: 1px solid rgba(74, 10, 46, 0.08);
 }
 
@@ -792,7 +793,9 @@ h4 {
 }
 
 .journal-card {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--color-border);
     border-radius: 0;
     /* SQUARE CORNERS */
@@ -844,7 +847,9 @@ h4 {
 /* Branding Banner */
 .branding-banner-section {
     padding: 6rem 0;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     text-align: center;
 }
 
@@ -945,7 +950,9 @@ h4 {
     /* SQUARE CORNERS */
     overflow: hidden;
     cursor: pointer;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--color-border);
     transition: all var(--transition-medium);
 }
@@ -2632,8 +2639,8 @@ h4 {
     font-family: var(--font-body);
     font-size: 0.85rem;
     border-radius: 0;
-    background: #fff;
-    color: #000;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-gold-light);
 }
 
 .footer-btn {
@@ -2669,10 +2676,12 @@ h4 {
     color: var(--color-text-muted);
 }
 
-/* Branding Banner */
+/* Branding Banner (duplicate rule) */
 .branding-banner-section {
     padding: 6rem 0;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     text-align: center;
 }
 
@@ -2991,9 +3000,9 @@ h4 {
 }
 
 .btn-show-more {
-    background: #fff;
-    border: 1px solid #000;
-    color: #000;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--color-gold-light);
     padding: 0.8rem 3rem;
     font-size: 0.75rem;
     text-transform: uppercase;
