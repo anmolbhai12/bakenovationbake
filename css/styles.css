@@ -108,8 +108,9 @@ h4 {
 .btn-luxury {
     display: inline-block;
     padding: 0.8rem 2.5rem;
-    background: var(--color-purple);
-    border: 1px solid var(--color-purple);
+    background: #4a0a2e;
+    /* Deeper royal purple for button bg */
+    border: 1px solid var(--color-gold);
     color: var(--color-gold);
     font-family: var(--font-body);
     font-weight: 500;
@@ -123,8 +124,8 @@ h4 {
 }
 
 .btn-luxury:hover {
-    background: #ffffff;
-    color: var(--color-purple);
+    background: var(--color-gold);
+    color: #4a0a2e;
     transform: none;
     box-shadow: none;
 }
