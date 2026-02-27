@@ -12,6 +12,9 @@
     /* Dark Purple Base */
     --color-green: #2d5a27;
 
+    /* PRECISE NUMERICAL FONTS */
+    --font-numbers: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
     --color-bg: var(--color-silk-bg);
     --color-text: var(--color-gold);
     /* Global Gold Text */
@@ -3035,12 +3038,14 @@ h4 {
 }
 
 .product-card-price {
-    font-size: 0.95rem;
+    font-family: var(--font-numbers) !important;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--color-gold-light) !important;
     padding: 0 1rem 1.5rem;
     display: block;
-    font-variant-numeric: lining-nums;
-    font-weight: 600;
+    font-variant-numeric: lining-nums tabular-nums !important;
+    letter-spacing: 0;
 }
 
 /* Pagination / Show More */

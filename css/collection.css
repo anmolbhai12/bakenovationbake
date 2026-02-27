@@ -564,13 +564,13 @@
 }
 
 .product-card-price {
-    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.9rem;
     color: var(--color-gold-light) !important;
     font-weight: 700;
-    font-family: 'Raleway', sans-serif;
     padding: 0 14px 14px;
     margin-top: auto;
-    font-variant-numeric: lining-nums;
+    font-variant-numeric: lining-nums tabular-nums !important;
 }
 
 /* "Quick add" hover overlay */
@@ -920,10 +920,11 @@
 }
 
 .detail-price {
-    font-size: 1.4rem;
-    font-weight: 500;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 1.6rem;
+    font-weight: 600;
     color: var(--color-gold) !important;
-    font-variant-numeric: lining-nums;
+    font-variant-numeric: lining-nums tabular-nums !important;
 }
 
 .weight-options {
