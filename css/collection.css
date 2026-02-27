@@ -1099,8 +1099,8 @@
 
 .detail-title {
     font-size: 2.4rem;
-    font-family: 'Playfair Display', serif;
-    color: #4a0a2e;
+    font-family: var(--font-heading);
+    color: var(--color-gold);
     margin-bottom: 10px;
 }
 
@@ -1134,30 +1134,32 @@
 .diet-btn {
     flex: 1;
     padding: 12px;
-    border: 1px solid #e8d0da;
-    background: #fff;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    font-family: 'Raleway', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.85rem;
-    border-radius: 4px;
+    color: var(--color-gold-light);
+    border-radius: 6px;
     transition: all 0.2s;
 }
 
 .diet-btn.active {
-    border-color: #4a0a2e;
-    background: #fdf6f9;
-    color: #4a0a2e;
-    font-weight: 600;
+    border-color: var(--color-gold);
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--color-gold) !important;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
 .luxury-input {
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    color: var(--color-gold) !important;
+    color: var(--color-gold-light) !important;
     padding: 12px 15px !important;
     font-family: var(--font-body);
     font-size: 1rem;
@@ -1165,6 +1167,11 @@
     outline: none;
     transition: all 0.3s ease;
     border-radius: 6px !important;
+    display: block;
+    line-height: normal;
+    box-sizing: border-box;
+    height: 48px;
+    /* Fixed height for consistent alignment */
 }
 
 .luxury-input:focus {
@@ -1218,13 +1225,12 @@ input[type="date"].luxury-input {
     margin: 0 !important;
     background: transparent !important;
     color: var(--color-gold) !important;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     padding: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 45px;
-    /* Matches height for perfect vertical centering */
 }
 
 .btn-addcart,
@@ -1241,14 +1247,14 @@ input[type="date"].luxury-input {
 }
 
 .btn-addcart {
-    background: #fff;
-    border: 1px solid #4a0a2e;
-    color: #4a0a2e;
+    background: transparent;
+    border: 1px solid var(--color-gold);
+    color: var(--color-gold);
 }
 
 .btn-addcart:hover {
-    background: #4a0a2e;
-    color: #fff;
+    background: var(--color-gold);
+    color: var(--color-silk-bg) !important;
 }
 
 .btn-buynow:hover {
@@ -1281,7 +1287,7 @@ input[type="date"].luxury-input {
 .luxury-accordion summary::after {
     content: '+';
     font-size: 1.2rem;
-    color: #641f3a;
+    color: var(--color-gold);
 }
 
 .luxury-accordion[open] summary::after {
