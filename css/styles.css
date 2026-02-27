@@ -2777,8 +2777,31 @@ h4 {
 /* Fix for unclosed media query and legacy styles */
 @media (max-width: 768px) {
     .fleurons-sub-nav {
-        top: 138px;
+        top: 108px;
+        /* Adjusted for smaller mobile header */
         position: fixed;
+    }
+
+    .fleurons-main-header {
+        height: 80px !important;
+    }
+
+    .brand-logo-text img {
+        height: 40px !important;
+    }
+
+    .brand-logo-text span:first-of-type {
+        font-size: 1.2rem !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    .brand-logo-text span:last-of-type {
+        font-size: 0.6rem !important;
+    }
+
+    .fleurons-nav-links>li>a {
+        padding: 0.8rem 1rem !important;
+        font-size: 0.7rem !important;
     }
 }
 
