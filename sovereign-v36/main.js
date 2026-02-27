@@ -880,25 +880,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
                 const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startHyperResonanceV25 = async () => {
+                const startSovereignEngineV38 = async () => {
                     const btnText = aiGenerateBtn.querySelector('.btn-text');
                     const spinner = aiGenerateBtn.querySelector('.spinner');
                     const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
 
                     const rawUserText = aiPrompt.value.trim();
-                    const userDetails = rawUserText.toLowerCase();
-                    const isCustomShape = userDetails.length > 0 && (
-                        userDetails.includes('car') || userDetails.includes('shape') ||
-                        userDetails.includes('bottle') || userDetails.includes('box') ||
-                        userDetails.includes('sculpture') || userDetails.includes('truck') ||
-                        userDetails.includes('animal') || userDetails.includes('book') ||
-                        userDetails.includes('guitar') || userDetails.includes('phone') ||
-                        userDetails.includes('shoe') || userDetails.includes('bag') ||
-                        userDetails.includes('house') || userDetails.includes('castle') ||
-                        true // ALWAYS treat custom text as a shape override
-                    );
+                    const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
 
-                    const loadingText = rawUserText ? "⚡ Architecting your sculpture..." : "Chef is sculpting your masterpiece...";
                     if (btnText) btnText.style.display = 'none';
                     if (spinner) spinner.style.display = 'block';
                     aiGenerateBtn.disabled = true;
@@ -909,150 +898,78 @@ document.addEventListener('DOMContentLoaded', () => {
                         aiGeneratedImage.classList.add('sketching');
                     }
 
-                    const safetyTimeout = setTimeout(() => {
-                        console.warn("⚠️ AI Engine Timeout - Forcing UI Reset");
-                        resetLoadingState();
-                        if (aiGeneratedImage) {
-                            aiGeneratedImage.style.filter = 'none';
-                            aiGeneratedImage.style.opacity = '1';
-                        }
-                    }, 18000);
+                    // --- V38 HYPER-RESONANCE PROMPT EXPANSION ---
+                    const atomicSeed = Math.floor(Math.random() * 99999999);
+                    const uniqueRef = atomicSeed.toString(36);
 
-                    // --- V37 EXPERT SPECIALIST PROMPT EXPANSION ---
                     const expandPrompt = (input) => {
                         const styleContext = snapState.style.toUpperCase();
                         const occasionContext = snapState.type.toUpperCase();
                         const colorContext = snapState.color.toUpperCase();
 
-                        const expertAdjectives = [
-                            "master-crafted", "award-winning couture", "architectural",
-                            "hyper-realistic edible sculpture", "gastronomic masterpiece",
-                            "museum-quality sugar art", "couture patisserie"
-                        ];
-                        const randomExpertAdjective = expertAdjectives[Math.floor(Math.random() * expertAdjectives.length)];
-
-                        const base = `A ${randomExpertAdjective} cake creation. Professional food photography, 8k, cinematic lighting, sharp focus, white studio background, masterpiece level detail.`;
-                        const cakeTraits = `Intricate fondant detailing, realistic edible textures, subsurface scattering on sugar petals, 100% edible materials, luxury bakery polish, zero plastic.`;
+                        const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
+                        const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, architectural cake layers.`;
 
                         if (!input) {
-                            return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${base} ${cakeTraits}. seed:${uniqueRef}`;
+                            return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
                         }
 
-                        // V37 SPECIALIST LOGIC: Transform raw user input into a thematic technical prompt
-                        let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO PERFECTLY REPRESENT "${input}". `;
-                        expanded += `The entire physics-defying structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
-                        expanded += `Incorporate "${input}" as the central design theme using advanced 3D sugar-modeling techniques. `;
-                        expanded += `Ensure common traits of "${input}" are rendered with high-fidelity edible textures. `;
-                        expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. ${base} ${cakeTraits}. unique:${uniqueRef}`;
+                        // V38 SPECIALIST LOGIC: Transform raw user input into a thematic cake sculpture
+                        let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO REPRESENT "${input}". `;
+                        expanded += `The entire physics-defying 3D structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
+                        expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. `;
+                        expanded += `Render as a high-end bakery masterpiece, not a simple object. ${coreBase} ${materialTraits} seed:${uniqueRef}`;
 
                         return expanded;
                     };
 
-                    const atomicSeed = (Math.floor(Math.random() * 99999999) ^ Date.now()) >>> 0;
-                    const uniqueRef = atomicSeed.toString(36);
                     const finalPrompt = expandPrompt(rawUserText);
 
-                    // CONSOLE TRACE: V37 EXPERT SPECIALIST
-                    console.log('%c🔱 AI SOVEREIGN ENGINE v37 — EXPERT MODE', 'color:#d4af37;font-weight:bold;font-size:16px;');
-                    console.log('%cExpert Expansion:', 'color:#f5e4bc;', finalPrompt);
+                    console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                    console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                    // --- STEALTH SOVEREIGN RELAY V34 ---
-                    const getHFToken = () => {
-                        // Multi-variable stealth merge to bypass GitHub security scanners
-                        const h = "hf" + "_";
-                        const k = "hQscerF" + "QhbKGEf";
-                        const s = "AeFIASIf" + "KrUZXtg" + "hydLV";
-                        return h + k + s;
-                    };
+                    // --- DIRECT ENGINE DISPATCH (POLLINATIONS FLUX PRO) ---
+                    try {
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true&enhance=true&model=flux`;
 
-                    const tryTier = async (tierIndex = 0) => {
-                        const HF_MODELS = [
-                            'black-forest-labs/FLUX.1-schnell',
-                            'stabilityai/stable-diffusion-xl-base-1.0',
-                            'runwayml/stable-diffusion-v1-5'
-                        ];
+                        // Prefetch to ensure image is ready before showing
+                        const tempImage = new Image();
+                        tempImage.onload = () => {
+                            if (aiGeneratedImage) {
+                                aiGeneratedImage.src = imageUrl;
+                                aiGeneratedImage.classList.remove('sketching');
+                                snapState.currentImageUrl = imageUrl;
+                                addToGallery(imageUrl, finalPrompt);
 
-                        // SOVEREIGN PROXY RELAY V36 (Bypasses Browser CORS Blocks)
-                        if (tierIndex < HF_MODELS.length) {
-                            const model = HF_MODELS[tierIndex];
-                            const token = getHFToken();
-
-                            console.log(`🤗 Sovereign Proxy Tier ${tierIndex + 1}: Routing through Google...`);
-
-                            try {
-                                // Instead of direct HF call (blocked by CORS), we use our Unified Proxy
-                                const proxyUrl = UNIFIED_GAS_URL;
-                                const response = await fetch(proxyUrl, {
-                                    method: 'POST',
-                                    body: JSON.stringify({
-                                        action: 'ai_generate',
-                                        model: model,
-                                        token: token,
-                                        prompt: finalPrompt,
-                                        seed: atomicSeed
-                                    })
-                                });
-
-                                const result = await response.json();
-
-                                if (result.status === 'success' && result.image) {
-                                    applyImage(result.image);
-                                } else {
-                                    console.warn(`Proxy Tier ${tierIndex + 1} failed:`, result.message || result.body);
-                                    return tryTier(tierIndex + 1);
-                                }
-
-                            } catch (err) {
-                                console.warn(`Proxy Tier ${tierIndex + 1} unexpected error:`, err);
-                                tryTier(tierIndex + 1);
-                            }
-                        }
-                        // TIER 3: Pollinations (Zero Token Backup)
-                        else {
-                            console.log(`📡 Tier 3 (Backup): Calling Pollinations...`);
-                            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true&enhance=true&model=flux`;
-
-                            const tempImage = new Image();
-                            tempImage.onload = () => applyImage(imageUrl);
-                            tempImage.onerror = () => {
-                                clearTimeout(safetyTimeout);
+                                gsap.fromTo(aiGeneratedImage,
+                                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                                );
                                 resetLoadingState();
-                            };
-                            tempImage.src = imageUrl;
-                        }
-                    };
-
-                    const applyImage = (url) => {
-                        clearTimeout(safetyTimeout);
-                        if (aiGeneratedImage) {
-                            aiGeneratedImage.src = url;
-                            aiGeneratedImage.classList.remove('sketching');
-                            snapState.currentImageUrl = url;
-                            addToGallery(url, finalPrompt);
-                            gsap.fromTo(aiGeneratedImage,
-                                { opacity: 0, scale: 0.97, filter: "blur(10px)" },
-                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }
-                            );
+                            }
+                        };
+                        tempImage.onerror = () => {
+                            showAlert("Chef is taking a moment. Please try generating again.");
                             resetLoadingState();
-                        }
-                    };
+                        };
+                        tempImage.src = imageUrl;
 
-                    const resetLoadingState = () => {
-                        console.log("🔱 Sovereign UI Resetting...");
+                    } catch (err) {
+                        console.error("Sovereign Engine Error:", err);
+                        showAlert("AI Sync Error. Please try again.");
+                        resetLoadingState();
+                    }
+
+                    function resetLoadingState() {
                         if (aiLoading) aiLoading.style.display = 'none';
                         if (btnText) btnText.style.display = 'inline';
                         if (spinner) spinner.style.display = 'none';
                         aiGenerateBtn.disabled = false;
-                        if (aiGeneratedImage) {
-                            aiGeneratedImage.classList.remove('sketching');
-                        }
-                    };
-
-                    tryTier(0);
-
+                        if (aiGeneratedImage) aiGeneratedImage.classList.remove('sketching');
+                    }
                 };
 
-                startHyperResonanceV25();
+                startSovereignEngineV38();
             });
         });
     }

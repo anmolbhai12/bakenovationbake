@@ -28,7 +28,7 @@ function handleRequest(e) {
 
     // Internal Route Map
     if (action === 'create_order') return createOrder(data);
-    if (action === 'ai_generate') return aiGenerateProxy(data);
+
     if (action === 'list_orders') return listOrders();
     if (action === 'update_order') return updateOrder(data);
     if (action === 'get_order') return getOrder(data);
@@ -43,33 +43,6 @@ function handleRequest(e) {
   }
 }
 
-function aiGenerateProxy(data) {
-  const model = data.model || 'black-forest-labs/FLUX.1-schnell';
-  const token = data.token;
-  const prompt = data.prompt;
-  const seed = data.seed || Math.floor(Math.random() * 1000000);
-
-  if (!token || !prompt) return jsonResponse({ status: 'error', message: 'Missing token/prompt' });
-
-  try {
-    const response = UrlFetchApp.fetch('https://api-inference.huggingface.co/models/' + model, {
-      method: 'post',
-      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-      payload: JSON.stringify({ inputs: prompt, parameters: { num_inference_steps: 4, seed: seed } }),
-      muteHttpExceptions: true
-    });
-
-    if (response.getResponseCode() !== 200) {
-      return jsonResponse({ status: 'error', code: response.getResponseCode(), body: response.getContentText() });
-    }
-
-    const blob = response.getBlob();
-    const base64 = Utilities.base64Encode(blob.getBytes());
-    return jsonResponse({ status: 'success', image: 'data:image/jpeg;base64,' + base64 });
-  } catch (e) {
-    return jsonResponse({ status: 'error', message: e.toString() });
-  }
-}
 
 function createOrder(data) {
   const sheet = getSheet(ORDER_SHEET_NAME, HEADERS);
