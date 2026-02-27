@@ -763,10 +763,11 @@
                     <p id="otp-message">We've sent a code to your Gmail</p>
                 </div>
                 <form id="otp-form" class="auth-form">
-                    <div class="control-group">
-                        <label>6-Digit Code</label>
-                        <input type="text" id="otp-input" required class="luxury-input text-center" placeholder="123456"
+                    <div class="control-group text-center">
+                        <label class="otp-hint-text">Enter 6-Digit Code</label>
+                        <input type="text" id="otp-input" required class="otp-luxury-input" placeholder="000 000"
                             maxlength="6">
+                        <p class="otp-hint-text">Expires in 1:59</p>
                     </div>
                     <button type="submit" class="btn-luxury w-100">Verify & Create Account</button>
                     <p class="auth-switch text-center">Didn't get it? <a href="#" id="resend-otp"
