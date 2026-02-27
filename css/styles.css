@@ -282,36 +282,34 @@ h4 {
 }
 
 .fleurons-top-banner {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1100;
-    background: rgba(27, 118, 57, 0.4);
-    /* Glass Green */
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    color: var(--color-gold);
+    background: var(--color-gold);
+    /* Back to Gold for premium feel */
+    color: var(--color-deep-purple);
     text-align: center;
     font-family: var(--font-body);
     font-size: 0.75rem;
     letter-spacing: 0.15em;
-    padding: 0.4rem 0;
+    padding: 0.5rem 0;
+    /* Slightly more padding for visibility */
     text-transform: uppercase;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .fleurons-main-header {
-    position: fixed;
-    top: 28px;
-    left: 0;
-    width: 100%;
+    height: 90px;
+    background: var(--color-deep-purple);
+    position: sticky;
+    top: 31px;
+    /* Offset by top banner height */
     z-index: 1000;
-    background: var(--color-glass-dark) !important;
+    border-bottom: 1px solid var(--color-border);
     backdrop-filter: blur(15px) !important;
     -webkit-backdrop-filter: blur(15px) !important;
-    border-bottom: 1px solid var(--color-border) !important;
-    height: 110px;
     display: flex;
     align-items: center;
 }
@@ -398,8 +396,8 @@ h4 {
 
 .fleurons-sub-nav {
     position: sticky;
-    top: 138px;
-    /* 28px top banner + 110px header */
+    top: 90px;
+    /* Reduced from 138px */
     left: 0;
     width: 100%;
     z-index: 999;
@@ -424,13 +422,13 @@ h4 {
     align-items: center;
     gap: 4px;
     color: var(--color-gold);
-    /* Contrast against background */
     text-decoration: none;
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.12em;
-    padding: 1.2rem 1.8rem;
+    padding: 0.8rem 1.8rem;
+    /* Reduced from 1.2rem */
     transition: color 0.2s, background 0.2s;
     text-transform: uppercase;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -3121,13 +3119,17 @@ h4 {
 
 .product-card-price {
     font-family: var(--font-numbers) !important;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    /* Slightly larger for visibility */
+    font-weight: 700;
     color: var(--color-gold-light) !important;
     padding: 0 1rem 1.5rem;
-    display: block;
+    display: flex;
+    justify-content: center;
+    /* Center prices */
+    align-items: center;
     font-variant-numeric: lining-nums tabular-nums !important;
-    letter-spacing: 0;
+    letter-spacing: 0.02em;
 }
 
 /* Pagination / Show More */

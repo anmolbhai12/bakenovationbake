@@ -362,24 +362,12 @@
                             <!-- 1. Cake Type -->
                             <div class="control-group">
                                 <label class="snap-label">Occasion</label>
-                                .snap-chip {
-                                background: transparent;
-                                border: 1px solid rgba(255, 255, 255, 0.2);
-                                color: var(--color-text);
-                                padding: 0.6rem 1.2rem;
-                                border-radius: 50px;
-                                cursor: pointer;
-                                transition: all var(--transition-medium);
-                                font-size: 0.85rem;
-                                font-family: var(--font-body);
-                                }
-
-                                .snap-chip:hover,
-                                .snap-chip.active {
-                                background: var(--color-orchid);
-                                border-color: var(--color-orchid);
-                                color: var(--color-deep-purple);
-                                }
+                                <div class="snap-chips-wrapper">
+                                    <button class="snap-chip active" data-type="wedding">Wedding</button>
+                                    <button class="snap-chip" data-type="anniversary">Anniversary</button>
+                                    <button class="snap-chip" data-type="birthday">Birthday</button>
+                                    <button class="snap-chip" data-type="corporate">Corporate</button>
+                                </div>
                             </div>
 
                             <!-- 2. Aesthetic / Style -->
@@ -433,7 +421,7 @@
                                     alt="AI Generated Cake Design">
                                 <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
                                     <div class="loader-snap"></div>
-                                    <p>Chef is sketchng your masterpiece...</p>
+                                    <p>Chef is sketching your masterpiece...</p>
                                 </div>
                             </div>
                             <div class="product-info-accordions"
