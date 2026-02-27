@@ -3035,6 +3035,8 @@ h4 {
     color: var(--color-gold-light) !important;
     padding: 0 1rem 1.5rem;
     display: block;
+    font-variant-numeric: lining-nums;
+    font-weight: 600;
 }
 
 /* Pagination / Show More */

@@ -570,6 +570,7 @@
     font-family: 'Raleway', sans-serif;
     padding: 0 14px 14px;
     margin-top: auto;
+    font-variant-numeric: lining-nums;
 }
 
 /* "Quick add" hover overlay */
@@ -922,6 +923,7 @@
     font-size: 1.4rem;
     font-weight: 500;
     color: var(--color-gold) !important;
+    font-variant-numeric: lining-nums;
 }
 
 .weight-options {
