@@ -619,6 +619,8 @@ h4 {
     line-height: 1.1;
     margin-bottom: 2.5rem;
     font-weight: 400;
+    color: var(--color-gold) !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
 .hero-subtitle {
@@ -2919,16 +2921,19 @@ h4 {
 }
 
 .product-card-title {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    line-height: 1.4;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 1.2rem 1rem 0.6rem;
+    color: var(--color-gold) !important;
+    letter-spacing: 0.05em;
 }
 
 .product-card-price {
-    font-size: 0.9rem;
-    color: var(--color-text);
+    font-size: 0.95rem;
+    color: var(--color-gold-light) !important;
+    padding: 0 1rem 1.5rem;
+    display: block;
 }
 
 /* Pagination / Show More */
