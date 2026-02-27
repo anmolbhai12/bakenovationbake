@@ -2786,6 +2786,11 @@ h4 {
         height: 80px !important;
     }
 
+    .royale-logo-container {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
     .brand-logo-text img {
         height: 40px !important;
     }
