@@ -1026,8 +1026,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         clearTimeout(safetyTimeout);
                         if (aiGeneratedImage) {
                             aiGeneratedImage.src = url;
-                            aiGeneratedImage.style.filter = 'none';
-                            aiGeneratedImage.style.opacity = '1';
+                            aiGeneratedImage.classList.remove('sketching');
                             snapState.currentImageUrl = url;
                             addToGallery(url, finalPrompt);
                             gsap.fromTo(aiGeneratedImage,
@@ -1045,8 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (spinner) spinner.style.display = 'none';
                         aiGenerateBtn.disabled = false;
                         if (aiGeneratedImage) {
-                            aiGeneratedImage.style.filter = 'none';
-                            aiGeneratedImage.style.opacity = '1';
+                            aiGeneratedImage.classList.remove('sketching');
                         }
                     };
 
