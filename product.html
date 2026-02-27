@@ -12,18 +12,52 @@
         href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css?v=12">
-    <link rel="stylesheet" href="css/collection.css?v=1">
+    <link rel="stylesheet" href="css/collection.css?v=2">
     <style>
         .product-page-main {
             padding-top: 200px;
             padding-bottom: 50px;
         }
 
+        /* FORCED ROYALE VISIBILITY - NO EXCEPTIONS */
+        .accordion-content,
+        .accordion-content *,
+        #detail-desc,
+        #detail-care {
+            color: #f5e4bc !important;
+            /* Creamy Royale Gold */
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .btn-buynow {
+            background: #d4af37 !important;
+            /* Pure Gold */
+            color: #1a0822 !important;
+            /* Deep Purple Black */
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
+        }
+
+        .btn-buynow:hover {
+            background: #f5e4bc !important;
+            /* Bright Gold Hover */
+            color: #1a0822 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .luxury-accordion summary {
+            color: #d4af37 !important;
+            /* Header Gold */
+        }
+
         .error-message {
             text-align: center;
             padding: 50px;
             font-size: 1.5rem;
-            color: var(--color-maroon);
+            color: #d4af37;
         }
     </style>
 </head>

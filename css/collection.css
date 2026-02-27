@@ -1259,8 +1259,10 @@ input[type="date"].luxury-input {
 
 .btn-buynow {
     background: var(--color-gold) !important;
-    color: var(--color-silk-bg) !important;
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+    color: #1a0822 !important;
+    /* Deepest Purple for perfect contrast */
+    box-shadow: 0 4px 25px rgba(212, 175, 55, 0.5) !important;
+    font-weight: 800 !important;
 }
 
 .btn-buynow:hover {
@@ -1306,9 +1308,14 @@ input[type="date"].luxury-input {
     padding-top: 1rem;
     font-size: 0.95rem;
     line-height: 1.7;
-    color: var(--color-gold-light);
-    /* Highly readable gold text */
-    opacity: 0.9;
+    color: var(--color-gold-light) !important;
+    /* FORCED GOLD Light */
+    opacity: 1 !important;
+}
+
+.accordion-content * {
+    color: var(--color-gold-light) !important;
+    /* FORCED GOLD for any children */
 }
 
 /* Responsiveness for Modal */
