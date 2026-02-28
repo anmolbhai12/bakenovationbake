@@ -941,15 +941,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
                     }
 
-                    // --- THE UNBREAKABLE BASE64 AI ENGINE V5 ---
-                    // Since standard Image URLs and Redirects are frequently blocked by strict browsers/AdBlockers,
-                    // we will directly call HuggingFace's Inference API, receive the raw binary image Blob, 
-                    // compress it into a Base64 data string locally, and assign the pure data to the image.
-                    // This is mathematically impossible for an adblocker or CORS policy to block.
+                    // --- THE UNBREAKABLE BASE64 AI ENGINE V6 (PROXIED) ---
+                    // By routing the Pollinations request through a public CORS proxy,
+                    // we completely hide the 302 redirect from strict adblockers,
+                    // allowing us to fetch the raw image blob and convert to Base64 natively.
 
-                    const hfToken = ""; // Anonymous public inference
-                    // Using a dedicated food/luxury model or high-speed general model
-                    const hfModelUrl = "https://api-inference.huggingface.co/models/prompthero/openjourney";
+                    const imageSeed = Math.floor(Math.random() * 9999999);
+                    const pollinationsRawUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
+                    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(pollinationsRawUrl)}`;
 
                     let masterTimeout;
                     let isFallbackTriggered = false;
@@ -958,7 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (isFallbackTriggered) return;
                         isFallbackTriggered = true;
                         clearTimeout(masterTimeout);
-                        console.warn("AI Engine: Primary API failed/timed out. Falling back to Cache.");
+                        console.warn("AI Engine: Proxied API failed/timed out. Falling back to Cache.");
                         const emergencyCakes = [
                             "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
                             "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
@@ -982,44 +981,42 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     };
 
-                    // Strict 20s global timeout
+                    // Strict 25s global timeout (Pollinations can be slow)
                     masterTimeout = setTimeout(() => {
                         triggerEmergencyFallback();
-                    }, 20000);
+                    }, 25000);
 
-                    // Execute HuggingFace API
-                    async function fetchBase64AI() {
+                    // Execute Proxied API Fetch
+                    async function fetchProxiedBase64AI() {
                         try {
-                            const response = await fetch(hfModelUrl, {
-                                method: "POST",
-                                body: JSON.stringify({ inputs: finalPrompt }),
-                            });
+                            console.log("AI Engine: Requesting Proxied Generation...");
+                            const response = await fetch(proxyUrl);
 
                             if (!response.ok) {
-                                throw new Error("HuggingFace API Reject");
+                                throw new Error("CORS Proxy or API Reject");
                             }
 
                             const blob = await response.blob();
 
-                            // Convert Blob directly to Base64 String to bypass all CORS/Image restrictions
+                            // Convert Blob directly to Base64 String to bypass all browser image restrictions
                             const reader = new FileReader();
                             reader.readAsDataURL(blob);
                             reader.onloadend = function () {
                                 const base64data = reader.result;
                                 clearTimeout(masterTimeout);
                                 if (!isFallbackTriggered) {
-                                    console.log("AI Engine: Base64 Render Success");
+                                    console.log("AI Engine: Base64 Proxied Render Success");
                                     renderFinalImage(base64data);
                                 }
                             }
                         } catch (error) {
-                            console.error("AI Base64 Engine Failed:", error);
+                            console.error("AI Base64 Proxied Engine Failed:", error);
                             triggerEmergencyFallback();
                         }
                     }
 
                     // Ignite
-                    fetchBase64AI();
+                    fetchProxiedBase64AI();
 
 
 
