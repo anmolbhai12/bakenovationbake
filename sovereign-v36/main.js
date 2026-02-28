@@ -930,70 +930,55 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
                     console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                    // --- NEW AI ENGINE: LEXICA MASTERPIECE DISCOVERY ---
-                    // Since live generation APIs (Pollinations/HuggingFace) frequently rate-limit or timeout on free tiers,
-                    // we dynamically fetch from Lexica's massive database of pre-generated Stable Diffusion masterpieces.
-                    // This provides instant, hyper-realistic cake images with 100% reliability.
+                    // --- REVERT TO ACTUAL AI GENERATOR: POLLINATIONS (OPTIMIZED) ---
+                    // Lexica is a search engine, so it fails on unique/specific shapes (e.g. "car shape cake").
+                    // We must use a real AI generator. We will use Pollinations but with extreme optimization 
+                    // (very short prompts) to prevent the timeouts we saw earlier.
 
-                    async function discoverMasterpiece(prompt) {
-                        try {
-                            const response = await fetch(`https://lexica.art/api/v1/search?q=${encodeURIComponent(prompt)}`);
-                            if (!response.ok) throw new Error("Lexica offline");
+                    const imageSeed = Math.floor(Math.random() * 9999999);
 
-                            const data = await response.json();
-                            if (data && data.images && data.images.length > 0) {
-                                // Pick a random high-quality result from the top 5
-                                const randomIndex = Math.floor(Math.random() * Math.min(5, data.images.length));
-                                return data.images[randomIndex].src;
-                            }
-                            throw new Error("No masterpieces found");
-                        } catch (e) {
-                            console.log("Lexica failed. Using emergency luxury cache.");
-                            // EMERGENCY BULLETPROOF CACHE: 100% guaranteed luxury cake images if APIs go down.
-                            // The previous unsplash source URL was deprecated by Unsplash. These are hard links.
-                            const emergencyCakes = [
-                                "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
-                                "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
-                                "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
-                                "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
-                            ];
-                            return emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)];
-                        }
-                    }
-
-                    // A highly optimized search prompt for Lexica.
-                    // Lexica's engine can get confused by too many generic keywords like "luxury" or "8k" or random colors if a specific character is requested.
-                    let searchPrompt = "";
+                    let optimizedPrompt = "";
                     if (rawUserText && rawUserText.trim() !== '') {
-                        // If they typed something specific like "Batman" or "Spider Man", trust their input directly.
-                        searchPrompt = `${rawUserText.trim()} cake`;
+                        // User typed something specific! Force the AI to make EXACTLY that shape.
+                        optimizedPrompt = `A cake in the exact shape of ${rawUserText.trim()}, ${snapState.color || ''} colored, highly detailed 3D luxury cake, professional food photography, clean background`.trim();
                     } else {
-                        // If they only used the generic dropdowns, use the extensive prompt.
-                        searchPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
+                        optimizedPrompt = `Beautiful luxury ${snapState.color || ''} ${snapState.type || ''} cake, ${snapState.style || ''} style, masterpiece 8k, professional photography`.trim();
                     }
 
-                    discoverMasterpiece(searchPrompt).then((imageUrl) => {
-                        const tempImg = new Image();
-                        tempImg.onload = () => {
-                            if (aiGeneratedImage) {
-                                aiGeneratedImage.src = imageUrl;
-                                aiGeneratedImage.classList.remove('sketching');
-                                snapState.currentImageUrl = imageUrl;
-                                addToGallery(imageUrl, "AI Curated Masterpiece");
+                    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(optimizedPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true`;
 
-                                gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                                );
-                                resetLoadingState();
-                            }
-                        };
-                        tempImg.onerror = () => {
-                            showAlert("Display error. Please try generating again.", "error");
+                    const tempImg = new Image();
+
+                    // Add a strict 25-second timeout so the UI never hangs forever
+                    let timeoutId = setTimeout(() => {
+                        tempImg.src = ''; // Cancel loading
+                        showAlert("AI Servers are experiencing heavy traffic. Please click Generate again.", "info");
+                        resetLoadingState();
+                    }, 25000);
+
+                    tempImg.onload = () => {
+                        clearTimeout(timeoutId);
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.src = imageUrl;
+                            aiGeneratedImage.classList.remove('sketching');
+                            snapState.currentImageUrl = imageUrl;
+                            addToGallery(imageUrl, "AI Generated Masterpiece");
+
+                            gsap.fromTo(aiGeneratedImage,
+                                { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                            );
                             resetLoadingState();
-                        };
-                        tempImg.src = imageUrl;
-                    });
+                        }
+                    };
+                    tempImg.onerror = () => {
+                        clearTimeout(timeoutId);
+                        showAlert("Chef is taking a moment. Please try generating again.", "error");
+                        resetLoadingState();
+                    };
+
+                    // Start generating!
+                    tempImg.src = imageUrl;
 
                     function resetLoadingState() {
                         if (aiLoading) aiLoading.style.display = 'none';
