@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNavArea = document.getElementById('user-nav-area');
 
     // Unified Google Apps Script URL
-    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbywRuixOpaQXuAiSLAWvlfIMrHVy4U41EGmdUWmMQAnrjbWeb7U0qO5wZTJfsYsCq64rw/exec';
+    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbw4X7mhW8bgdLxL39xQqJff5A0n_LrrpG0EsVNOx8hMwG_98vEijUZp0bgNMvt6qJEYww/exec';
 
     const EMAIL_PROXY_URL = UNIFIED_GAS_URL;
     const EMAIL_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
@@ -563,6 +563,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return new Promise((resolve) => {
             console.log("--- POWER-SYNC DISPATCHING ---");
+            console.log("Target URL:", finalUrl);
+            console.log("Data:", data);
             const iframeName = 'sync_frame_' + Date.now();
             const iframe = document.createElement('iframe');
             iframe.name = iframeName;

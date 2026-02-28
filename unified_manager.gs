@@ -212,23 +212,103 @@ function syncSignup(data) {
 function sendEmailOTP(data) {
   const to = data.to_email || data.email;
   const otp = data.otp_code || data.otp;
-  if (!to || !otp) return jsonResponse({ status: 'error', message: 'Missing email/otp' });
-  const html = `<div style="padding:20px; border:1px solid #d4af37; background:#0c0410; color:#fff;"><h1>Bakenovation</h1><p>Code: <b>${otp}</b></p></div>`;
-  GmailApp.sendEmail(to, `🔐 Verification Code: ${otp}`, "", { htmlBody: html, name: "Bakenovation Studio" });
-  return jsonResponse({ status: 'success' });
-}
+  const userName = data.user_name || "Valued Customer";
 
-function sendWhatsAppOTP(data) {
-  if (!data.phone || !data.message) return jsonResponse({ status: 'error', message: 'Missing phone/msg' });
+  if (!to || !otp) return jsonResponse({ status: 'error', message: 'Missing email/otp' });
+
+  // PREMIUM LUXURY TEMPLATE (V2)
+  const subject = `🔐 Bakenovation Studio | Secure Verification Code: ${otp}`;
+  const htmlBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #0c0410;">
+      <div style="font-family: 'Garamond', Georgia, serif; max-width: 600px; margin: 40px auto; background-color: #0c0410; border: 1px solid #2d1b33; overflow: hidden;">
+        
+        <!-- BRAND HEADER -->
+        <div style="padding: 60px 40px; text-align: center; background: linear-gradient(180deg, #15081a 0%, #0c0410 100%);">
+          <h1 style="color: #d4af37; font-size: 32px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; margin: 0; padding: 0;">Bakenovation</h1>
+          <div style="color: rgba(212, 175, 55, 0.6); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-top: 15px;">Official Signature Verification</div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div style="padding: 50px 40px; background-color: #0c0410; color: #ffffff; border-top: 1px solid #2d1b33;">
+          <p style="font-size: 18px; color: #d4af37; margin-bottom: 30px;">Dear ${userName},</p>
+          
+          <p style="font-size: 16px; line-height: 1.8; color: #d1ced1; margin-bottom: 40px; font-family: 'Verdana', sans-serif;">
+            For your account security, please use the following unique verification code to complete your access to the Atelier.
+          </p>
+
+          <!-- OTP DISPLAY -->
+          <div style="margin: 40px 0; padding: 40px 20px; background: rgba(212, 175, 55, 0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 2px; text-align: center;">
+            <div style="color: rgba(212, 175, 55, 0.5); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">Your Secure Code</div>
+            <div style="font-size: 48px; font-weight: 700; color: #d4af37; letter-spacing: 12px; font-family: 'Courier New', Courier, monospace;">
+              ${otp}
+            </div>
+          </div>
+
+          <p style="font-size: 13px; color: #5c5561; line-height: 1.6; font-style: italic; margin-top: 40px; font-family: 'Verdana', sans-serif;">
+            This code will expire in 10 minutes. If you did not request this, please ignore this communication or contact Bakenovation Studio.
+          </p>
+        </div>
+
+        <!-- LUXURY FOOTER -->
+        <div style="padding: 40px; background-color: #08020a; text-align: center; border-top: 1px solid #1a0b1f;">
+          <div style="margin-bottom: 25px;">
+            <a href="https://bakenovation.com" style="color: #d4af37; text-decoration: none; margin: 0 15px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Atelier</a>
+            <a href="#" style="color: #d4af37; text-decoration: none; margin: 0 15px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Gallery</a>
+            <a href="#" style="color: #d4af37; text-decoration: none; margin: 0 15px; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Support</a>
+          </div>
+          
+          <p style="color: #443c4a; font-size: 11px; letter-spacing: 1px; margin: 0;">© 2026 BAKENOVATION STUDIO. ALL RIGHTS RESERVED.</p>
+          <p style="color: #332b38; font-size: 9px; margin-top: 10px; text-transform: uppercase;">Handcrafted with precision and passion.</p>
+        </div>
+
+      </div>
+    </body>
+    </html>
+  `;
+
   try {
-    UrlFetchApp.fetch(WHATSAPP_BOT_URL + '/send-message', {
-      method: 'post', contentType: 'application/json',
-      payload: JSON.stringify({ phone: data.phone, message: data.message }),
-      muteHttpExceptions: true
+    GmailApp.sendEmail(to, subject, "", {
+      htmlBody: htmlBody,
+      name: "Bakenovation Studio"
     });
     return jsonResponse({ status: 'success' });
   } catch (e) {
-    return jsonResponse({ status: 'success', warning: 'Bot offline' });
+    return jsonResponse({ status: 'error', message: "Email failed: " + e.toString() });
+  }
+}
+
+function sendWhatsAppOTP(data) {
+  const phone = data.phone;
+  const message = data.message;
+  if (!phone || !message) return jsonResponse({ status: 'error', message: 'Missing phone/msg' });
+
+  // Sanitize phone for the bot
+  let cleanPhone = phone.replace(/\D/g, '');
+  if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+  if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+  try {
+    // Calling the correct /send-otp endpoint on Alwaysdata
+    const response = UrlFetchApp.fetch(WHATSAPP_BOT_URL + '/send-otp', {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ phone: cleanPhone, message: message }),
+      muteHttpExceptions: true
+    });
+    
+    const result = JSON.parse(response.getContentText());
+    if (result.status === 'success') {
+      return jsonResponse({ status: 'success' });
+    } else {
+      return jsonResponse({ status: 'error', message: result.message || 'Bot error' });
+    }
+  } catch (e) {
+    return jsonResponse({ status: 'error', message: 'Connection to bot failed' });
   }
 }
 
