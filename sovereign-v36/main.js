@@ -942,10 +942,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // RESTORED CORRECT IMAGE API ENDPOINT AND FLUX MODEL
-                    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
+                    const pollinationsUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
 
                     const engineImg = new Image();
-                    engineImg.crossOrigin = "Anonymous";
                     let currentLayer = 1;
 
                     let masterTimeout = setTimeout(() => {
