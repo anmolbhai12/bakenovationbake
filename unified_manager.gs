@@ -179,13 +179,9 @@ function updateOrder(data) {
 function syncSignup(data) {
   const method = data.method || 'email';
   if (method === 'whatsapp') {
-    // Log to WhatsApp Logins sheet
-    const sheet = getSheet(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS);
-    sheet.appendRow([new Date(), data.name || '', data.identifier || '', data.dob || '', data.type || 'Signup']);
+    recordUniqueLogin(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS, data.name, data.identifier, data.dob, data.type || 'Signup');
   } else {
-    // Log to Email Logins sheet
-    const sheet = getSheet(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS);
-    sheet.appendRow([new Date(), data.name || '', data.identifier || '', data.dob || '', data.type || 'Signup']);
+    recordUniqueLogin(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS, data.name, data.identifier, data.dob, data.type || 'Signup');
   }
   return jsonResponse({ status: 'success' });
 }
@@ -199,11 +195,8 @@ function sendEmailOTP(data) {
 
   if (!to || !otp) return jsonResponse({ status: 'error', message: 'Missing email/otp' });
 
-  // Log to Email Logins sheet
-  try {
-    const sheet = getSheet(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS);
-    sheet.appendRow([new Date(), userName, to, '', 'OTP Sent']);
-  } catch(e) {}
+  // Log to Email Logins sheet only if new user
+  recordUniqueLogin(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS, userName, to, '', 'OTP Sent');
 
   const subject = `🔐 Bakenovation Studio | Secure Verification Code: ${otp}`;
   const htmlBody = `
@@ -252,11 +245,8 @@ function sendWhatsAppOTP(data) {
   if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
 
-  // Log to WhatsApp Logins sheet
-  try {
-    const sheet = getSheet(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS);
-    sheet.appendRow([new Date(), userName, cleanPhone, '', 'OTP Sent']);
-  } catch(e) {}
+  // Log to WhatsApp Logins sheet only if new user
+  recordUniqueLogin(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS, userName, cleanPhone, '', 'OTP Sent');
 
   try {
     const response = UrlFetchApp.fetch(WHATSAPP_BOT_URL + '/send-otp', {
@@ -275,6 +265,23 @@ function sendWhatsAppOTP(data) {
 }
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
+
+function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
+  try {
+    const sheet = getSheet(sheetName, headers);
+    const data = sheet.getDataRange().getValues();
+    if (data.length > 1) {
+      for (let i = 1; i < data.length; i++) {
+        // Identifier (Email/Phone) is always the 3rd column (index 2)
+        if (data[i][2] && data[i][2].toString().toLowerCase().trim() === identifier.toString().toLowerCase().trim()) {
+          return; // User already exists! Do not record a duplicate.
+        }
+      }
+    }
+    // New user, append them
+    sheet.appendRow([new Date(), name || '', identifier || '', dob || '', type || '']);
+  } catch(e) {}
+}
 
 function getSheet(name, headers) {
   let ss = null;

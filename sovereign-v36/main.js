@@ -936,25 +936,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Prefetch to ensure image is ready before showing
                         const tempImage = new Image();
-                        tempImage.onload = () => {
-                            if (aiGeneratedImage) {
-                                aiGeneratedImage.src = imageUrl;
-                                aiGeneratedImage.classList.remove('sketching');
-                                snapState.currentImageUrl = imageUrl;
-                                addToGallery(imageUrl, finalPrompt);
+                        let retryCount = 0;
 
-                                gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                                );
-                                resetLoadingState();
-                            }
+                        const loadImage = (url) => {
+                            tempImage.onload = () => {
+                                if (aiGeneratedImage) {
+                                    aiGeneratedImage.src = url;
+                                    aiGeneratedImage.classList.remove('sketching');
+                                    snapState.currentImageUrl = url;
+                                    addToGallery(url, finalPrompt);
+
+                                    gsap.fromTo(aiGeneratedImage,
+                                        { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                                    );
+                                    resetLoadingState();
+                                }
+                            };
+                            tempImage.onerror = () => {
+                                if (retryCount < 2) {
+                                    retryCount++;
+                                    console.log("Retrying AI Generation...", retryCount);
+                                    const newSeed = Math.floor(Math.random() * 99999999);
+                                    // Drop 'enhance' and 'model' on retry for stability
+                                    const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${newSeed}&width=1024&height=1024&nologo=true`;
+                                    tempImage.src = fallbackUrl;
+                                } else {
+                                    showAlert("Chef is taking a moment. Please try generating again.");
+                                    resetLoadingState();
+                                }
+                            };
+                            tempImage.src = url;
                         };
-                        tempImage.onerror = () => {
-                            showAlert("Chef is taking a moment. Please try generating again.");
-                            resetLoadingState();
-                        };
-                        tempImage.src = imageUrl;
+
+                        loadImage(imageUrl);
 
                     } catch (err) {
                         console.error("Sovereign Engine Error:", err);
