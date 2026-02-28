@@ -930,70 +930,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
                     console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                    // --- DIRECT ENGINE DISPATCH (POLLINATIONS FLUX PRO) ---
-                    try {
-                        // Removed enhance=true and model=flux as they frequently cause timeouts on free tier
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true`;
+                    // --- DIRECT ENGINE DISPATCH (HUGGING FACE API) ---
+                    // Using a reliable free inference model (prompthero/openjourney)
 
-                        // Prefetch to ensure image is ready before showing
-                        const tempImage = new Image();
-                        let retryCount = 0;
-
-                        const loadImage = (url) => {
-                            tempImage.onload = () => {
-                                if (aiGeneratedImage) {
-                                    aiGeneratedImage.src = url;
-                                    aiGeneratedImage.classList.remove('sketching');
-                                    snapState.currentImageUrl = url;
-                                    addToGallery(url, finalPrompt);
-
-                                    gsap.fromTo(aiGeneratedImage,
-                                        { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                                    );
-                                    resetLoadingState();
+                    async function generateHuggingFaceImage(prompt) {
+                        try {
+                            const response = await fetch(
+                                "https://api-inference.huggingface.co/models/prompthero/openjourney",
+                                {
+                                    method: "POST",
+                                    body: JSON.stringify({ inputs: prompt }),
                                 }
-                            };
-                            tempImage.onerror = () => {
-                                if (retryCount === 0) {
-                                    retryCount++;
-                                    console.log("Retrying AI Generation...", retryCount);
-                                    const newSeed = Math.floor(Math.random() * 99999999);
-                                    const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt.substring(0, 150))}?seed=${newSeed}&width=800&height=800&nologo=true`;
-                                    tempImage.src = fallbackUrl;
-                                } else if (retryCount === 1) {
-                                    retryCount++;
-                                    console.log("AI Generation Failed. Using Emergency Cache...", retryCount);
-                                    // Extreme fallback: Unsplash source with specific cake keywords to guarantee an image
-                                    const styleKeywords = `${snapState.color || ''} ${snapState.type || ''} luxury cake`;
-                                    const finalFallbackUrl = `https://source.unsplash.com/800x800/?${encodeURIComponent(styleKeywords)}`;
+                            );
 
-                                    // Bypass further error checking for the final fallback to avoid infinite loops
-                                    if (aiGeneratedImage) {
-                                        aiGeneratedImage.src = finalFallbackUrl;
-                                        aiGeneratedImage.classList.remove('sketching');
-                                        snapState.currentImageUrl = finalFallbackUrl;
-                                        addToGallery(finalFallbackUrl, "Curated Gallery Image (AI Server Offline)");
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
 
-                                        gsap.fromTo(aiGeneratedImage,
-                                            { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                                        );
-                                        showAlert("AI servers are busy. A beautiful curated match was found from our gallery.", "success");
-                                        resetLoadingState();
-                                    }
-                                }
-                            };
-                            tempImage.src = url;
-                        };
-
-                        loadImage(imageUrl);
-
-                    } catch (err) {
-                        console.error("Sovereign Engine Error:", err);
-                        showAlert("AI Sync Error. Please try again.");
-                        resetLoadingState();
+                            const blob = await response.blob();
+                            return URL.createObjectURL(blob);
+                        } catch (e) {
+                            console.error("HuggingFace API failed.", e);
+                            throw e;
+                        }
                     }
+
+                    generateHuggingFaceImage(finalPrompt).then((imageUrl) => {
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.src = imageUrl;
+                            aiGeneratedImage.classList.remove('sketching');
+                            snapState.currentImageUrl = imageUrl;
+                            addToGallery(imageUrl, "AI Masterpiece Configuration");
+
+                            gsap.fromTo(aiGeneratedImage,
+                                { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                            );
+                            resetLoadingState();
+                        }
+                    }).catch((err) => {
+                        console.error("Sovereign Engine Error:", err);
+                        showAlert("Chef is taking a moment. Please try generating again.");
+                        resetLoadingState();
+                    });
 
                     function resetLoadingState() {
                         if (aiLoading) aiLoading.style.display = 'none';
