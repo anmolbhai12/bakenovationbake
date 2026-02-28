@@ -962,7 +962,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // A simplified, highly searchable prompt for Lexica
-                    const searchPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} masterpiece 8k`;
+                    // Crucially, we append the rawUserText so specific requests (e.g., "spider man", "batman") are searched properly
+                    const searchPrompt = `${rawUserText ? rawUserText + ' ' : ''}luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
 
                     discoverMasterpiece(searchPrompt).then((imageUrl) => {
                         const tempImg = new Image();
