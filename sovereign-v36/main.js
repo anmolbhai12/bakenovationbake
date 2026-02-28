@@ -876,160 +876,158 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            checkLoginAndProceed(() => {
+            const btnText = aiGenerateBtn.querySelector('.btn-text');
+            const spinner = aiGenerateBtn.querySelector('.spinner');
+            const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+            const originalLoadingMsg = "Chef is sketching your masterpiece...";
+
+            const startSovereignEngineV38 = async () => {
                 const btnText = aiGenerateBtn.querySelector('.btn-text');
                 const spinner = aiGenerateBtn.querySelector('.spinner');
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
-                const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-                const startSovereignEngineV38 = async () => {
-                    const btnText = aiGenerateBtn.querySelector('.btn-text');
-                    const spinner = aiGenerateBtn.querySelector('.spinner');
-                    const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+                const rawUserText = aiPrompt.value.trim();
+                const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
 
-                    const rawUserText = aiPrompt.value.trim();
-                    const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
+                if (btnText) btnText.style.display = 'none';
+                if (spinner) spinner.style.display = 'block';
+                aiGenerateBtn.disabled = true;
+                if (aiLoading) aiLoading.style.display = 'flex';
+                if (loadingMsg) loadingMsg.innerText = loadingText;
 
-                    if (btnText) btnText.style.display = 'none';
-                    if (spinner) spinner.style.display = 'block';
-                    aiGenerateBtn.disabled = true;
-                    if (aiLoading) aiLoading.style.display = 'flex';
-                    if (loadingMsg) loadingMsg.innerText = loadingText;
+                if (aiGeneratedImage) {
+                    aiGeneratedImage.classList.add('sketching');
+                }
 
+                // --- V38 HYPER-RESONANCE PROMPT EXPANSION ---
+                const atomicSeed = Math.floor(Math.random() * 99999999);
+                const uniqueRef = atomicSeed.toString(36);
+
+                const expandPrompt = (input) => {
+                    const styleContext = snapState.style.toUpperCase();
+                    const occasionContext = snapState.type.toUpperCase();
+                    const colorContext = snapState.color.toUpperCase();
+
+                    const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
+                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, architectural cake layers.`;
+
+                    if (!input) {
+                        return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
+                    }
+
+                    // V38 SPECIALIST LOGIC: Transform raw user input into a thematic cake sculpture
+                    let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO REPRESENT "${input}". `;
+                    expanded += `The entire physics-defying 3D structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
+                    expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. `;
+                    expanded += `Render as a high-end bakery masterpiece, not a simple object. ${coreBase} ${materialTraits} seed:${uniqueRef}`;
+
+                    return expanded;
+                };
+
+                const finalPrompt = expandPrompt(rawUserText);
+
+                console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
+
+                // --- THE ULTIMATE HYBRID AI ENGINE V4 (CORS/ADBLOCK IMMUNE) ---
+                // Using the highly detailed V38 finalPrompt and forcing the ultra-premium FLUX model.
+                const imageSeed = Math.floor(Math.random() * 9999999);
+
+                let lexicaPrompt = "";
+                if (rawUserText && rawUserText.trim() !== '') {
+                    lexicaPrompt = `${rawUserText.trim()} cake`;
+                } else {
+                    lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
+                }
+
+                // --- THE UNBREAKABLE BASE64 AI ENGINE V6 (PROXIED) ---
+                // By routing the Pollinations request through a public CORS proxy,
+                // we completely hide the 302 redirect from strict adblockers,
+                // allowing us to fetch the raw image blob and convert to Base64 natively.
+
+                const pollinationsRawUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
+                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(pollinationsRawUrl)}`;
+
+                let masterTimeout;
+                let isFallbackTriggered = false;
+
+                const triggerEmergencyFallback = () => {
+                    if (isFallbackTriggered) return;
+                    isFallbackTriggered = true;
+                    clearTimeout(masterTimeout);
+                    console.warn("AI Engine: Proxied API failed/timed out. Falling back to Cache.");
+                    const emergencyCakes = [
+                        "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
+                    ];
+                    renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
+                };
+
+                const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
-                        aiGeneratedImage.classList.add('sketching');
-                    }
-
-                    // --- V38 HYPER-RESONANCE PROMPT EXPANSION ---
-                    const atomicSeed = Math.floor(Math.random() * 99999999);
-                    const uniqueRef = atomicSeed.toString(36);
-
-                    const expandPrompt = (input) => {
-                        const styleContext = snapState.style.toUpperCase();
-                        const occasionContext = snapState.type.toUpperCase();
-                        const colorContext = snapState.color.toUpperCase();
-
-                        const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
-                        const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, architectural cake layers.`;
-
-                        if (!input) {
-                            return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
-                        }
-
-                        // V38 SPECIALIST LOGIC: Transform raw user input into a thematic cake sculpture
-                        let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO REPRESENT "${input}". `;
-                        expanded += `The entire physics-defying 3D structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
-                        expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. `;
-                        expanded += `Render as a high-end bakery masterpiece, not a simple object. ${coreBase} ${materialTraits} seed:${uniqueRef}`;
-
-                        return expanded;
-                    };
-
-                    const finalPrompt = expandPrompt(rawUserText);
-
-                    console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
-                    console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
-
-                    // --- THE ULTIMATE HYBRID AI ENGINE V4 (CORS/ADBLOCK IMMUNE) ---
-                    // Using the highly detailed V38 finalPrompt and forcing the ultra-premium FLUX model.
-                    const imageSeed = Math.floor(Math.random() * 9999999);
-
-                    let lexicaPrompt = "";
-                    if (rawUserText && rawUserText.trim() !== '') {
-                        lexicaPrompt = `${rawUserText.trim()} cake`;
-                    } else {
-                        lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
-                    }
-
-                    // --- THE UNBREAKABLE BASE64 AI ENGINE V6 (PROXIED) ---
-                    // By routing the Pollinations request through a public CORS proxy,
-                    // we completely hide the 302 redirect from strict adblockers,
-                    // allowing us to fetch the raw image blob and convert to Base64 natively.
-
-                    const pollinationsRawUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
-                    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(pollinationsRawUrl)}`;
-
-                    let masterTimeout;
-                    let isFallbackTriggered = false;
-
-                    const triggerEmergencyFallback = () => {
-                        if (isFallbackTriggered) return;
-                        isFallbackTriggered = true;
-                        clearTimeout(masterTimeout);
-                        console.warn("AI Engine: Proxied API failed/timed out. Falling back to Cache.");
-                        const emergencyCakes = [
-                            "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
-                            "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
-                            "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
-                            "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
-                        ];
-                        renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
-                    };
-
-                    const renderFinalImage = (srcData) => {
-                        if (aiGeneratedImage) {
-                            aiGeneratedImage.src = srcData;
-                            aiGeneratedImage.classList.remove('sketching');
-                            snapState.currentImageUrl = srcData;
-                            addToGallery(srcData, "AI Generated Masterpiece");
-                            gsap.fromTo(aiGeneratedImage,
-                                { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                            );
-                            resetLoadingState();
-                        }
-                    };
-
-                    // Strict 25s global timeout (Pollinations can be slow)
-                    masterTimeout = setTimeout(() => {
-                        triggerEmergencyFallback();
-                    }, 25000);
-
-                    // Execute Proxied API Fetch
-                    async function fetchProxiedBase64AI() {
-                        try {
-                            console.log("AI Engine: Requesting Proxied Generation...");
-                            const response = await fetch(proxyUrl);
-
-                            if (!response.ok) {
-                                throw new Error("CORS Proxy or API Reject");
-                            }
-
-                            const blob = await response.blob();
-
-                            // Convert Blob directly to Base64 String to bypass all browser image restrictions
-                            const reader = new FileReader();
-                            reader.readAsDataURL(blob);
-                            reader.onloadend = function () {
-                                const base64data = reader.result;
-                                clearTimeout(masterTimeout);
-                                if (!isFallbackTriggered) {
-                                    console.log("AI Engine: Base64 Proxied Render Success");
-                                    renderFinalImage(base64data);
-                                }
-                            }
-                        } catch (error) {
-                            console.error("AI Base64 Proxied Engine Failed:", error);
-                            triggerEmergencyFallback();
-                        }
-                    }
-
-                    // Ignite
-                    fetchProxiedBase64AI();
-
-
-
-                    function resetLoadingState() {
-                        if (aiLoading) aiLoading.style.display = 'none';
-                        if (btnText) btnText.style.display = 'inline';
-                        if (spinner) spinner.style.display = 'none';
-                        aiGenerateBtn.disabled = false;
-                        if (aiGeneratedImage) aiGeneratedImage.classList.remove('sketching');
+                        aiGeneratedImage.src = srcData;
+                        aiGeneratedImage.classList.remove('sketching');
+                        snapState.currentImageUrl = srcData;
+                        addToGallery(srcData, "AI Generated Masterpiece");
+                        gsap.fromTo(aiGeneratedImage,
+                            { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                        );
+                        resetLoadingState();
                     }
                 };
 
-                startSovereignEngineV38();
-            });
+                // Strict 25s global timeout (Pollinations can be slow)
+                masterTimeout = setTimeout(() => {
+                    triggerEmergencyFallback();
+                }, 25000);
+
+                // Execute Proxied API Fetch
+                async function fetchProxiedBase64AI() {
+                    try {
+                        console.log("AI Engine: Requesting Proxied Generation...");
+                        const response = await fetch(proxyUrl);
+
+                        if (!response.ok) {
+                            throw new Error("CORS Proxy or API Reject");
+                        }
+
+                        const blob = await response.blob();
+
+                        // Convert Blob directly to Base64 String to bypass all browser image restrictions
+                        const reader = new FileReader();
+                        reader.readAsDataURL(blob);
+                        reader.onloadend = function () {
+                            const base64data = reader.result;
+                            clearTimeout(masterTimeout);
+                            if (!isFallbackTriggered) {
+                                console.log("AI Engine: Base64 Proxied Render Success");
+                                renderFinalImage(base64data);
+                            }
+                        }
+                    } catch (error) {
+                        console.error("AI Base64 Proxied Engine Failed:", error);
+                        triggerEmergencyFallback();
+                    }
+                }
+
+                // Ignite
+                fetchProxiedBase64AI();
+
+
+
+                function resetLoadingState() {
+                    if (aiLoading) aiLoading.style.display = 'none';
+                    if (btnText) btnText.style.display = 'inline';
+                    if (spinner) spinner.style.display = 'none';
+                    aiGenerateBtn.disabled = false;
+                    if (aiGeneratedImage) aiGeneratedImage.classList.remove('sketching');
+                }
+            };
+
+            startSovereignEngineV38();
         });
     }
 
