@@ -949,30 +949,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
                 }
 
-                // --- THE CLEAN DIRECT INJECTION ENGINE V7 ---
-                // We bypass all Fetch/CORS/Proxy complications by simply treating
-                // the AI endpoint exactly as a normal image, but handling
-                // the load event in JavaScript before swapping the DOM.
+                // --- THE TRIPLE-ENGINE FALLBACK ARCHITECTURE V8 ---
+                // Layer 1: Direct Pollinations Generation (image.pollinations.ai)
+                // Layer 2: Lexica API Search (Finds existing AI images if Pollinations is blocked by ISP)
+                // Layer 3: Emergency Cache
 
                 const timeStr = new Date().getTime(); // Absolute cache buster
-                const pollinationsDirectUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux&t=${timeStr}`;
+                // Use image.pollinations.ai to avoid 302 redirects which trigger strict CORS blocks
+                const pollinationsDirectUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux&t=${timeStr}`;
 
                 let masterTimeout;
                 let isFallbackTriggered = false;
-
-                const triggerEmergencyFallback = () => {
-                    if (isFallbackTriggered) return;
-                    isFallbackTriggered = true;
-                    clearTimeout(masterTimeout);
-                    console.warn("AI Engine: Direct API failed/timed out. Falling back to Cache.");
-                    const emergencyCakes = [
-                        "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
-                    ];
-                    renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
-                };
 
                 const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
@@ -988,31 +975,70 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                // Strict 25s global timeout (Pollinations can be slow)
-                masterTimeout = setTimeout(() => {
-                    triggerEmergencyFallback();
-                }, 25000);
+                const triggerLexicaFallback = async () => {
+                    if (isFallbackTriggered) return;
+                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (Lexica Search)...");
 
-                // Execute Direct Image Load
+                    try {
+                        const lexicaSecurePrompt = encodeURIComponent(`${rawUserText} object cake 3d realistic luxury`);
+                        const lexicaRes = await fetch(`https://lexica.art/api/v1/search?q=${lexicaSecurePrompt}`);
+                        const lexicaData = await lexicaRes.json();
+
+                        if (lexicaData && lexicaData.images && lexicaData.images.length > 0) {
+                            if (isFallbackTriggered) return;
+                            isFallbackTriggered = true;
+                            clearTimeout(masterTimeout);
+                            console.log("AI Engine: Layer 2 (Lexica) Success");
+                            // Pick a random high quality image from top 4 results
+                            const bestImages = lexicaData.images.slice(0, 4);
+                            const chosenImg = bestImages[Math.floor(Math.random() * bestImages.length)].src;
+                            renderFinalImage(chosenImg);
+                        } else {
+                            throw new Error("No Lexica results");
+                        }
+                    } catch (e) {
+                        console.error("AI Engine: Layer 2 Failed.", e);
+                        triggerEmergencyFallback();
+                    }
+                };
+
+                const triggerEmergencyFallback = () => {
+                    if (isFallbackTriggered) return;
+                    isFallbackTriggered = true;
+                    clearTimeout(masterTimeout);
+                    console.warn("AI Engine: All active layers failed. Falling back to Layer 3 (Cache).");
+                    const emergencyCakes = [
+                        "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
+                        "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
+                    ];
+                    renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
+                };
+
+                // Give Pollinations 15 seconds before failing over to Lexica
+                masterTimeout = setTimeout(() => {
+                    triggerLexicaFallback();
+                }, 15000);
+
+                // Execute Layer 1: Direct Image Load
                 function performDirectAILoad() {
                     console.log("AI Engine: Requesting Direct Image Injection...");
 
                     const imgPreloader = new Image();
 
-                    // Do NOT set crossOrigin="Anonymous" as this is what triggers strict CORS blocking.
-                    // We only want to display it, not read its pixel data via canvas.
-
                     imgPreloader.onload = () => {
-                        clearTimeout(masterTimeout);
                         if (!isFallbackTriggered) {
-                            console.log("AI Engine: Direct Render Success");
+                            clearTimeout(masterTimeout);
+                            isFallbackTriggered = true;
+                            console.log("AI Engine: Layer 1 Render Success");
                             renderFinalImage(pollinationsDirectUrl);
                         }
                     };
 
                     imgPreloader.onerror = (e) => {
                         console.error("AI Direct Engine Failed:", e);
-                        triggerEmergencyFallback();
+                        triggerLexicaFallback();
                     };
 
                     // Setting src triggers the browser request automatically
