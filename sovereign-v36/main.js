@@ -947,13 +947,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
                 }
 
-                // --- THE UNBREAKABLE BASE64 AI ENGINE V6 (PROXIED) ---
-                // By routing the Pollinations request through a public CORS proxy,
-                // we completely hide the 302 redirect from strict adblockers,
-                // allowing us to fetch the raw image blob and convert to Base64 natively.
+                // --- THE CLEAN DIRECT INJECTION ENGINE V7 ---
+                // We bypass all Fetch/CORS/Proxy complications by simply treating
+                // the AI endpoint exactly as a normal image, but handling
+                // the load event in JavaScript before swapping the DOM.
 
-                const pollinationsRawUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(pollinationsRawUrl)}`;
+                const timeStr = new Date().getTime(); // Absolute cache buster
+                const pollinationsDirectUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux&t=${timeStr}`;
 
                 let masterTimeout;
                 let isFallbackTriggered = false;
@@ -962,7 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isFallbackTriggered) return;
                     isFallbackTriggered = true;
                     clearTimeout(masterTimeout);
-                    console.warn("AI Engine: Proxied API failed/timed out. Falling back to Cache.");
+                    console.warn("AI Engine: Direct API failed/timed out. Falling back to Cache.");
                     const emergencyCakes = [
                         "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
                         "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
@@ -991,39 +991,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     triggerEmergencyFallback();
                 }, 25000);
 
-                // Execute Proxied API Fetch
-                async function fetchProxiedBase64AI() {
-                    try {
-                        console.log("AI Engine: Requesting Proxied Generation...");
-                        const response = await fetch(proxyUrl);
+                // Execute Direct Image Load
+                function performDirectAILoad() {
+                    console.log("AI Engine: Requesting Direct Image Injection...");
 
-                        if (!response.ok) {
-                            throw new Error("CORS Proxy or API Reject");
+                    const imgPreloader = new Image();
+
+                    // Do NOT set crossOrigin="Anonymous" as this is what triggers strict CORS blocking.
+                    // We only want to display it, not read its pixel data via canvas.
+
+                    imgPreloader.onload = () => {
+                        clearTimeout(masterTimeout);
+                        if (!isFallbackTriggered) {
+                            console.log("AI Engine: Direct Render Success");
+                            renderFinalImage(pollinationsDirectUrl);
                         }
+                    };
 
-                        const blob = await response.blob();
-
-                        // Convert Blob directly to Base64 String to bypass all browser image restrictions
-                        const reader = new FileReader();
-                        reader.readAsDataURL(blob);
-                        reader.onloadend = function () {
-                            const base64data = reader.result;
-                            clearTimeout(masterTimeout);
-                            if (!isFallbackTriggered) {
-                                console.log("AI Engine: Base64 Proxied Render Success");
-                                renderFinalImage(base64data);
-                            }
-                        }
-                    } catch (error) {
-                        console.error("AI Base64 Proxied Engine Failed:", error);
+                    imgPreloader.onerror = (e) => {
+                        console.error("AI Direct Engine Failed:", e);
                         triggerEmergencyFallback();
-                    }
+                    };
+
+                    // Setting src triggers the browser request automatically
+                    imgPreloader.src = pollinationsDirectUrl;
                 }
 
                 // Ignite
-                fetchProxiedBase64AI();
-
-
+                performDirectAILoad();
 
                 function resetLoadingState() {
                     if (aiLoading) aiLoading.style.display = 'none';
