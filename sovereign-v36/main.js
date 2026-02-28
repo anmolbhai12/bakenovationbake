@@ -813,15 +813,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
     if (aiAddToCartBtn) {
         aiAddToCartBtn.addEventListener('click', () => {
-            const userDetails = aiPrompt.value.trim();
-            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
+            if (aiPrompt) {
+                const userDetails = aiPrompt.value.trim();
+                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
-            addToCart({
-                name: 'Bespoke AI Design',
-                image: snapState.currentImageUrl,
-                details: smartPrompt,
-                price: 4500 // Prestige tier for AI designs
-            });
+                addToCart({
+                    name: 'Bespoke AI Design',
+                    image: snapState.currentImageUrl,
+                    details: smartPrompt,
+                    price: 4500 // Prestige tier for AI designs
+                });
+            }
         });
     }
 
@@ -885,6 +887,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const btnText = aiGenerateBtn.querySelector('.btn-text');
                 const spinner = aiGenerateBtn.querySelector('.spinner');
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+
+                if (!aiPrompt) {
+                    console.error("AI Prompt input field missing from DOM.");
+                    return;
+                }
 
                 const rawUserText = aiPrompt.value.trim();
                 const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
