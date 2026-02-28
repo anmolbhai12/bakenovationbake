@@ -980,7 +980,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (Lexica Search)...");
 
                     try {
-                        const lexicaSecurePrompt = encodeURIComponent(`${rawUserText} object cake 3d realistic luxury`);
+                        // Keep the Lexica search extremely focused on the user's text + "cake"
+                        const lexicaSecurePrompt = encodeURIComponent(`${rawUserText} cake highly detailed 8k photography`);
                         const lexicaRes = await fetch(`https://lexica.art/api/v1/search?q=${lexicaSecurePrompt}`);
                         const lexicaData = await lexicaRes.json();
 
