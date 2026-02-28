@@ -951,68 +951,59 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Reduced to 768x768 to improve generation speed and prevent timeouts
                     const pollinationsUrl = `https://pollinations.ai/p/${encodeURIComponent(optimizedPrompt)}?seed=${imageSeed}&width=768&height=768&nologo=true`;
 
-                    async function generateUltraRobustImage() {
-                        try {
-                            // Layer 1: Pollinations (with strict 12s fetch timeout)
-                            const controller = new AbortController();
-                            const timeoutId = setTimeout(() => controller.abort(), 12000);
+                    const engineImg = new Image();
+                    engineImg.crossOrigin = "Anonymous";
+                    let currentLayer = 1;
 
-                            const pollResponse = await fetch(pollinationsUrl, { signal: controller.signal });
-                            clearTimeout(timeoutId);
+                    let masterTimeout = setTimeout(() => {
+                        console.warn("AI EngineTimeout.");
+                        currentLayer = 3;
+                        engineImg.src = "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop";
+                    }, 15000);
 
-                            if (!pollResponse.ok) throw new Error("Pollinations failed");
-                            const blob = await pollResponse.blob();
-                            return URL.createObjectURL(blob);
-                        } catch (err) {
-                            console.warn("Layer 1 (Pollinations) failed, falling back to Lexica...", err);
-                            try {
-                                // Layer 2: Lexica
-                                const lexicaResponse = await fetch(`https://lexica.art/api/v1/search?q=${encodeURIComponent(lexicaPrompt)}`);
-                                if (!lexicaResponse.ok) throw new Error("Lexica failed");
-
-                                const data = await lexicaResponse.json();
-                                if (data && data.images && data.images.length > 0) {
-                                    const randomIndex = Math.floor(Math.random() * Math.min(5, data.images.length));
-                                    return data.images[randomIndex].src; // This is a regular URL
-                                }
-                                throw new Error("Lexica found no results");
-                            } catch (lexicaErr) {
-                                console.warn("Layer 2 (Lexica) failed, using Emergency Cache...", lexicaErr);
-                                // Layer 3: Emergency Cache (Bulletproof hard links)
-                                const emergencyCakes = [
-                                    "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
-                                    "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
-                                    "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
-                                    "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
-                                ];
-                                return emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)];
-                            }
-                        }
-                    }
-
-                    // Execute the hybrid engine
-                    generateUltraRobustImage().then((finalUrl) => {
-                        const tempImg = new Image();
-                        tempImg.onload = () => {
-                            if (aiGeneratedImage) {
-                                aiGeneratedImage.src = finalUrl;
-                                aiGeneratedImage.classList.remove('sketching');
-                                snapState.currentImageUrl = finalUrl;
-                                addToGallery(finalUrl, "AI Generated Masterpiece");
-
-                                gsap.fromTo(aiGeneratedImage,
-                                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                                );
-                                resetLoadingState();
-                            }
-                        };
-                        tempImg.onerror = () => {
-                            showAlert("Display error. Please try generating again.", "error");
+                    engineImg.onload = () => {
+                        clearTimeout(masterTimeout);
+                        if (aiGeneratedImage) {
+                            aiGeneratedImage.src = engineImg.src;
+                            aiGeneratedImage.classList.remove('sketching');
+                            snapState.currentImageUrl = engineImg.src;
+                            addToGallery(engineImg.src, "AI Generated Masterpiece");
+                            gsap.fromTo(aiGeneratedImage,
+                                { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                            );
                             resetLoadingState();
-                        };
-                        tempImg.src = finalUrl;
-                    });
+                        }
+                    };
+
+                    engineImg.onerror = async () => {
+                        if (currentLayer === 1) {
+                            currentLayer = 2;
+                            try {
+                                const lexRes = await fetch(`https://lexica.art/api/v1/search?q=${encodeURIComponent(lexicaPrompt)}`);
+                                const data = await lexRes.json();
+                                if (data && data.images && data.images.length > 0) {
+                                    engineImg.src = data.images[0].src;
+                                    return;
+                                }
+                                throw new Error("No images");
+                            } catch (e) {
+                                currentLayer = 3;
+                                engineImg.src = "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop";
+                            }
+                        } else if (currentLayer === 2) {
+                            currentLayer = 3;
+                            engineImg.src = "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop";
+                        } else {
+                            clearTimeout(masterTimeout);
+                            showAlert("Error.", "error");
+                            resetLoadingState();
+                        }
+                    };
+
+                    engineImg.src = pollinationsUrl;
+
+
 
                     function resetLoadingState() {
                         if (aiLoading) aiLoading.style.display = 'none';
