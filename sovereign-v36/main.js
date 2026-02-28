@@ -932,7 +932,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // --- DIRECT ENGINE DISPATCH (POLLINATIONS FLUX PRO) ---
                     try {
-                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true&enhance=true&model=flux`;
+                        // Removed enhance=true and model=flux as they frequently cause timeouts on free tier
+                        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${atomicSeed}&width=1024&height=1024&nologo=true`;
 
                         // Prefetch to ensure image is ready before showing
                         const tempImage = new Image();
@@ -958,8 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     retryCount++;
                                     console.log("Retrying AI Generation...", retryCount);
                                     const newSeed = Math.floor(Math.random() * 99999999);
-                                    // Drop 'enhance' and 'model' on retry for stability
-                                    const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${newSeed}&width=1024&height=1024&nologo=true`;
+                                    // Even simpler fallback URL for retry
+                                    const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt.substring(0, 150))}?seed=${newSeed}&width=800&height=800&nologo=true`;
                                     tempImage.src = fallbackUrl;
                                 } else {
                                     showAlert("Chef is taking a moment. Please try generating again.");
