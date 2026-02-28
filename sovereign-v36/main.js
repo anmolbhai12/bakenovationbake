@@ -946,7 +946,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     // we completely hide the 302 redirect from strict adblockers,
                     // allowing us to fetch the raw image blob and convert to Base64 natively.
 
-                    const imageSeed = Math.floor(Math.random() * 9999999);
                     const pollinationsRawUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
                     const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(pollinationsRawUrl)}`;
 
