@@ -922,11 +922,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
                     }
 
-                    // V38 SPECIALIST LOGIC: Transform raw user input into a thematic cake sculpture
-                    let expanded = `A revolutionary couture cake DESIGNED AND SCULPTED TO REPRESENT "${input}". `;
-                    expanded += `The entire physics-defying 3D structure is composed of premium edible sponge, ganache, and ${colorContext} colored fondant. `;
-                    expanded += `Style: ${styleContext}. Vibe: ${occasionContext}. `;
-                    expanded += `Render as a high-end bakery masterpiece, not a simple object. ${coreBase} ${materialTraits} seed:${uniqueRef}`;
+                    // V38 SPECIALIST LOGIC: If the user types a specific shape/object (e.g. "car shape cake"),
+                    // the AI must prioritize THAT exact shape above all other stylistic noise.
+                    let expanded = `[EXTREME CLOSEUP MACRO SHOT] Exact Subject: ${input}. `;
+                    expanded += `This is a highly realistic 3D sculpted cake shaped EXACTLY like the subject requested above. `;
+                    expanded += `The entire structure is made of flawless ${colorContext} fondant, airbrushed food coloring, and hyper-realistic sugar art. `;
+                    expanded += `Aesthetic: ${styleContext} | Occasion: ${occasionContext}. `;
+                    expanded += `Set in a bright, modern bakery studio. ${coreBase} seed:${uniqueRef}`;
 
                     return expanded;
                 };
