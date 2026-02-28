@@ -955,16 +955,33 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             };
                             tempImage.onerror = () => {
-                                if (retryCount < 2) {
+                                if (retryCount === 0) {
                                     retryCount++;
                                     console.log("Retrying AI Generation...", retryCount);
                                     const newSeed = Math.floor(Math.random() * 99999999);
-                                    // Even simpler fallback URL for retry
                                     const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt.substring(0, 150))}?seed=${newSeed}&width=800&height=800&nologo=true`;
                                     tempImage.src = fallbackUrl;
-                                } else {
-                                    showAlert("Chef is taking a moment. Please try generating again.");
-                                    resetLoadingState();
+                                } else if (retryCount === 1) {
+                                    retryCount++;
+                                    console.log("AI Generation Failed. Using Emergency Cache...", retryCount);
+                                    // Extreme fallback: Unsplash source with specific cake keywords to guarantee an image
+                                    const styleKeywords = `${snapState.color || ''} ${snapState.type || ''} luxury cake`;
+                                    const finalFallbackUrl = `https://source.unsplash.com/800x800/?${encodeURIComponent(styleKeywords)}`;
+
+                                    // Bypass further error checking for the final fallback to avoid infinite loops
+                                    if (aiGeneratedImage) {
+                                        aiGeneratedImage.src = finalFallbackUrl;
+                                        aiGeneratedImage.classList.remove('sketching');
+                                        snapState.currentImageUrl = finalFallbackUrl;
+                                        addToGallery(finalFallbackUrl, "Curated Gallery Image (AI Server Offline)");
+
+                                        gsap.fromTo(aiGeneratedImage,
+                                            { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                                        );
+                                        showAlert("AI servers are busy. A beautiful curated match was found from our gallery.", "success");
+                                        resetLoadingState();
+                                    }
                                 }
                             };
                             tempImage.src = url;
