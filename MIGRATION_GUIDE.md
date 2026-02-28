@@ -38,3 +38,12 @@ Once you have the new URL:
 ## 5. Reconnect WhatsApp
 1.  Visit [https://bakenovation-bot.alwaysdata.net/status](https://bakenovation-bot.alwaysdata.net/status).
 2.  Scan the QR code with your WhatsApp to link the bot.
+## 6. Transfer Old Data (Orders & Signups)
+If your new spreadsheet is empty and you want your old orders back:
+1.  In your old account (`japindersinghbhasin@gmail.com`), open the old spreadsheet.
+2.  Click **Share** and add **bakenovationbake@gmail.com** as an **Editor**.
+3.  Now, in your new Google Apps Script editor (the one where you pasted the code):
+    - Look at the top toolbar for a dropdown that says `doGet` or `doPost`.
+    - Click it and select `migrateDataFromOldSheet`.
+    - Click **Run**.
+4.  This will automatically pull all your old orders and signups into your new spreadsheet!
