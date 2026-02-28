@@ -961,9 +961,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // A simplified, highly searchable prompt for Lexica
-                    // Crucially, we append the rawUserText so specific requests (e.g., "spider man", "batman") are searched properly
-                    const searchPrompt = `${rawUserText ? rawUserText + ' ' : ''}luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
+                    // A highly optimized search prompt for Lexica.
+                    // Lexica's engine can get confused by too many generic keywords like "luxury" or "8k" or random colors if a specific character is requested.
+                    let searchPrompt = "";
+                    if (rawUserText && rawUserText.trim() !== '') {
+                        // If they typed something specific like "Batman" or "Spider Man", trust their input directly.
+                        searchPrompt = `${rawUserText.trim()} cake`;
+                    } else {
+                        // If they only used the generic dropdowns, use the extensive prompt.
+                        searchPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
+                    }
 
                     discoverMasterpiece(searchPrompt).then((imageUrl) => {
                         const tempImg = new Image();
