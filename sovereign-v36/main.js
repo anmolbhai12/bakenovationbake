@@ -930,26 +930,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
                     console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                    // --- THE ULTIMATE HYBRID AI ENGINE V3 ---
-                    // Layer 1: Pollinations AI (On-the-fly generation for highly specific prompts)
-                    // Layer 2: Lexica API (Search existing masterpieces if generation fails/timeouts)
-                    // Layer 3: Emergency Cache (Guaranteed luxury images if all APIs are blocked)
-
+                    // --- THE ULTIMATE HYBRID AI ENGINE V4 (CORS/ADBLOCK IMMUNE) ---
+                    // Using the highly detailed V38 finalPrompt and forcing the ultra-premium FLUX model.
                     const imageSeed = Math.floor(Math.random() * 9999999);
 
-                    let optimizedPrompt = "";
                     let lexicaPrompt = "";
                     if (rawUserText && rawUserText.trim() !== '') {
-                        // User typed something specific! Force the AI to make EXACTLY that shape.
-                        optimizedPrompt = `A cake in the exact shape of ${rawUserText.trim()}, ${snapState.color || ''} colored, highly detailed 3D luxury cake, professional food photography, clean background`.trim();
                         lexicaPrompt = `${rawUserText.trim()} cake`;
                     } else {
-                        optimizedPrompt = `Beautiful luxury ${snapState.color || ''} ${snapState.type || ''} cake, ${snapState.style || ''} style, masterpiece 8k, professional photography`.trim();
                         lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
                     }
 
-                    // Reduced to 768x768 to improve generation speed and prevent timeouts
-                    const pollinationsUrl = `https://pollinations.ai/p/${encodeURIComponent(optimizedPrompt)}?seed=${imageSeed}&width=768&height=768&nologo=true`;
+                    // RESTORED CORRECT IMAGE API ENDPOINT AND FLUX MODEL
+                    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux`;
 
                     const engineImg = new Image();
                     engineImg.crossOrigin = "Anonymous";
