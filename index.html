@@ -634,9 +634,8 @@
                 <input type="hidden" name="shape" id="modal-shape">
                 <input type="hidden" name="flavor" id="modal-flavor">
                 <input type="hidden" name="tiers" id="modal-tiers">
-                <!-- New: Hidden input for direct order design name -->
-                <input type="hidden" name="ordered_design" id="modal-ordered-design">
                 <input type="hidden" name="image_references" id="modal-image-references">
+                <input type="hidden" name="img" id="modal-img">
 
                 <div class="control-group">
                     <label>Full Name</label>
@@ -664,7 +663,7 @@
 
                 <div class="control-group">
                     <label>Additional Notes / Inscription</label>
-                    <textarea name="message" class="luxury-input" rows="2"
+                    <textarea name="message" id="order-message" class="luxury-input" rows="2"
                         placeholder="Any specific requests?"></textarea>
                 </div>
 
@@ -873,7 +872,7 @@
                 e.target.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
-    });
+        });
     </script>
 </body>
 

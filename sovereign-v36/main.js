@@ -818,13 +818,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Open the formal order modal with AI context
                     const modal = document.getElementById('order-modal');
                     if (modal) {
-                        const flavorInput = modal.querySelector('#order-flavor');
-                        const weightInput = modal.querySelector('#order-weight');
-                        const msgInput = modal.querySelector('#order-msg');
+                        const flavorInput = modal.querySelector('#modal-flavor');
+                        const weightInput = modal.querySelector('#modal-tiers'); // Matches index.html's tiers/size field
+                        const msgInput = modal.querySelector('#order-message');
+                        const imgInput = modal.querySelector('#modal-img');
 
                         if (flavorInput) flavorInput.value = snapState.flavor;
                         if (weightInput) weightInput.value = snapState.size;
                         if (msgInput) msgInput.value = `[AI DESIGN] ${smartDetails} | Image: ${snapState.currentImageUrl}`;
+                        if (imgInput) imgInput.value = snapState.currentImageUrl;
 
                         modal.classList.add('active');
                     }
