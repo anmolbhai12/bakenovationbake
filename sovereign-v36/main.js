@@ -950,15 +950,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // --- THE TRIPLE-ENGINE FALLBACK ARCHITECTURE V8 ---
-                // Layer 1: Direct Pollinations Generation (image.pollinations.ai)
-                // Layer 2: Lexica API Search (Finds existing AI images if Pollinations is blocked by ISP)
-                // Layer 3: Emergency Cache
-
-                // --- THE UNBLOCKABLE LOCAL GOOGLE PROXY ---
-                // We use your Google Apps Script Web App to securely fetch the image and return it as Base64.
-                const GOOGLE_PROXY_URL = "https://script.google.com/macros/s/AKfycbyDRr-3Mn0zyKeGmBoe5DdaDjYpV3yIK06cjSKhAulHn0ELYWWTak0L5ztCZWgJQo9Z/exec";
+                // Layer 1: Airforce Flux API (Direct to bypass localized pollinations.ai ISP blocks)
+                // Layer 2: Smart Local Vault
                 const timeStr = new Date().getTime(); // Absolute cache buster
-                const proxyFetchUrl = `${GOOGLE_PROXY_URL}?prompt=${encodeURIComponent(finalPrompt)}&t=${timeStr}`;
+                const localPrompt = encodeURIComponent(finalPrompt);
+                const airforceDirectUrl = `https://api.airforce/v1/imagine2?model=flux&prompt=${localPrompt}&t=${timeStr}`;
 
                 let masterTimeout;
                 let isFallbackTriggered = false;
@@ -1041,35 +1037,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     triggerLocalSmartFallback();
                 }, 15000);
 
-                // Execute Layer 1: Secure Google Proxy (Unblockable)
-                async function performDirectAILoad() {
-                    console.log("AI Engine: Requesting Unblockable Google Proxy Injection...");
+                // Execute Layer 1: Direct Airforce Image Load
+                function performDirectAILoad() {
+                    console.log("AI Engine: Requesting Direct Airforce Flux Injection...");
 
-                    if (GOOGLE_PROXY_URL === "YOUR_GOOGLE_WEB_APP_URL_HERE") {
-                        console.warn("AI Engine: Google Proxy not configured yet. Skipping to Layer 2.");
-                        triggerLocalSmartFallback();
-                        return;
-                    }
-
-                    try {
-                        const response = await fetch(proxyFetchUrl);
-                        const data = await response.json();
-
-                        if (data && data.image_base64) {
-                            if (!isFallbackTriggered) {
-                                clearTimeout(masterTimeout);
-                                isFallbackTriggered = true;
-                                console.log("AI Engine: Layer 1 Proxy Render Success");
-                                const base64ImageObj = "data:image/jpeg;base64," + data.image_base64;
-                                renderFinalImage(base64ImageObj);
-                            }
-                        } else {
-                            throw new Error("Invalid Base64 Payload from Proxy");
+                    const imgPreloader = new Image();
+                    imgPreloader.onload = () => {
+                        if (!isFallbackTriggered) {
+                            clearTimeout(masterTimeout);
+                            isFallbackTriggered = true;
+                            console.log("AI Engine: Layer 1 Airforce Render Success");
+                            renderFinalImage(airforceDirectUrl);
                         }
-                    } catch (e) {
-                        console.error("AI Proxy Engine Failed:", e);
+                    };
+                    imgPreloader.onerror = (e) => {
+                        console.error("AI Direct Engine Failed on Airforce API:", e);
                         triggerLocalSmartFallback();
-                    }
+                    };
+                    imgPreloader.src = airforceDirectUrl;
                 }
 
                 // Ignite
