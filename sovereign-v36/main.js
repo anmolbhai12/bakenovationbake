@@ -951,64 +951,50 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // --- PURE POLLINATIONS ENGINE V5 (FLUX OPTIMIZED) ---
-                const atomicSeed = Math.floor(Math.random() * 99999999);
-                const uniqueRef = atomicSeed.toString(36);
+                // --- PURE POLLINATIONS ENGINE V6 (SHORT PROMPT + DIRECT LOAD) ---
+                const imageSeed = Math.floor(Math.random() * 9999999);
+                const timeStr = Date.now();
 
                 const expandPrompt = (input) => {
-                    const styleContext = snapState.style.toUpperCase();
-                    const occasionContext = snapState.type.toUpperCase();
-                    const flavorContext = snapState.flavor.toUpperCase();
-                    const sizeContext = snapState.size;
+                    const style = snapState.style;       // luxury, modern, rustic, minimalist
+                    const occasion = snapState.type;     // wedding, birthday, anniversary, corporate
+                    const flavor = snapState.flavor;     // chocolate, vanilla, red velvet, pineapple
+                    const size = snapState.size;         // 1kg, 2kg, 3kg, 5kg+
 
-                    // Flavor-specific visual sensory modifiers
-                    let flavorTraits = "";
-                    if (flavorContext === 'CHOCOLATE') flavorTraits = "Rich dark chocolate ganache, velvety cocoa textures, chocolate curls.";
-                    if (flavorContext === 'VANILLA') flavorTraits = "Creamy vanilla bean frosting, smooth ivory textures, delicate sugar pearls.";
-                    if (flavorContext === 'RED VELVET') flavorTraits = "Signature deep red sponge peeking through, cream cheese frosting swirls, red velvet crumbs.";
-                    if (flavorContext === 'PINEAPPLE') flavorTraits = "Zesty pineapple glazes, tropical yellow accents, candied pineapple rings.";
-
-                    const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
-                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${snapState.color.toUpperCase()} fondant textures, artisanal bakery craftsmanship, ${flavorTraits}`;
-
-                    let finalExpanded = `An elite ${sizeContext} ${snapState.color.toUpperCase()} ${styleContext} themed ${occasionContext} cake with ${flavorContext} flavor. ${coreBase} ${materialTraits}`;
-
+                    // Keep prompts short to avoid Cloudflare/Weserv URL-length limits
                     if (input) {
-                        // V38 SPECIALIST LOGIC: Merge user input with royal context
-                        finalExpanded = `A hyper-realistic 3D sculpted ${sizeContext} cake shaped EXACTLY like ${input}. Theme: ${styleContext} | Occasion: ${occasionContext}. Flavor: ${flavorContext}. This is a masterpiece couture cake creation. ${coreBase} ${materialTraits}`;
+                        return `${input} cake, ${style} ${occasion} theme, ${flavor} flavor, ${size}, masterpiece food photography, 8k`;
                     }
-
-                    return `${finalExpanded} seed:${uniqueRef}`;
+                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, food photography, 8k`;
                 };
 
                 const finalPrompt = expandPrompt(rawUserText);
-
-                console.log('%c🔱 PURE POLLINATIONS ENGINE v5 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
-                console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
-
-                // --- DIRECT POLLINATIONS ROUTING (ONLY) ---
-                const timeStr = new Date().getTime();
                 const safePrompt = encodeURIComponent(finalPrompt);
-                const imageSeed = Math.floor(Math.random() * 9999999);
 
-                // Strategy A: Weserv Proxy — must double-encode target URL params so Weserv
-                // passes them to Pollinations instead of parsing them as its own query params.
-                const pollinationsParams = encodeURIComponent(`?model=flux&nologo=true&seed=${imageSeed}`);
-                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsParams}&t=${timeStr}`;
+                console.log('%c🔱 PURE POLLINATIONS ENGINE v6 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                // Strategy B: Picsum proxy through wsrv.nl (a Weserv mirror, same CDN)
-                const wsrvTunnel = `https://wsrv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsParams}&t=${timeStr}`;
+                // Build Pollinations URL (short prompt = no 530 / WAF block)
+                const pollinationsCore = `image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768`;
 
-                // Strategy C: Direct Pollinations (works on most networks without ISP blocks)
-                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&t=${timeStr}`;
+                // Strategy A: Weserv CDN proxy — double-encode params for Weserv's URL parser
+                const pollinationsEncoded = encodeURIComponent(`?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768`);
+                const weservUrl = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsEncoded}&output=jpg&t=${timeStr}`;
 
-                let isFallbackTriggered = false;
+                // Strategy B: wsrv.nl (Weserv mirror)
+                const wsrvUrl = `https://wsrv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsEncoded}&output=jpg&t=${timeStr}`;
+
+                // Strategy C: Direct Pollinations
+                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768&t=${timeStr}`;
+
+                let layerAttempt = 0;
+                const layers = [weservUrl, wsrvUrl, directUrl];
 
                 const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
+                        snapState.currentImageUrl = srcData;
                         aiGeneratedImage.src = srcData;
                         aiGeneratedImage.classList.remove('sketching');
-                        snapState.currentImageUrl = srcData;
                         addToGallery(srcData, "AI Generated Masterpiece");
                         gsap.fromTo(aiGeneratedImage,
                             { opacity: 0, scale: 0.98, filter: "blur(15px)" },
@@ -1026,42 +1012,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 const performPurePollinationsLoad = (url, attempt = 1) => {
-                    console.log(`%cPure Pollinations: Attempting Layer ${attempt}...`, 'color:#d4af37;');
+                    console.log(`%cPure Pollinations: Attempting Layer ${attempt} (${url.split('/')[2]})...`, 'color:#d4af37;');
 
                     const imgPreloader = new Image();
-                    // NOTE: DO NOT set crossOrigin here.
-                    // Setting crossOrigin = 'anonymous' triggers a CORS preflight request.
-                    // Pollinations does not send 'Access-Control-Allow-Origin' headers,
-                    // causing every single layer to fail. <img> tags load cross-origin
-                    // images just fine without this attribute.
+                    // No crossOrigin attribute — setting it triggers CORS preflight that blocks Pollinations
 
                     imgPreloader.onload = () => {
-                        if (isFallbackTriggered) return;
-                        isFallbackTriggered = true; // prevent double-renders
-                        snapState.currentImageUrl = url;
+                        if (layerAttempt >= layers.length) return; // prevent double-renders
+                        layerAttempt = layers.length; // mark as done
                         renderFinalImage(url);
-                        console.log(`%cPure Pollinations: Layer ${attempt} SUCCESS!`, 'color:#2ecc71;font-weight:bold;');
+                        console.log(`%c✅ Pure Pollinations Layer ${attempt} SUCCESS!`, 'color:#2ecc71;font-weight:bold;');
                     };
 
                     imgPreloader.onerror = () => {
-                        if (isFallbackTriggered) return;
-                        if (attempt === 1) {
-                            console.log('%cLayer 1 (Weserv) failed, trying Layer 2 (wsrv.nl)...', 'color:#e67e22;');
-                            performPurePollinationsLoad(wsrvTunnel, 2);
-                        } else if (attempt === 2) {
-                            console.log('%cLayer 2 (wsrv.nl) failed, trying Layer 3 (Direct)...', 'color:#e67e22;');
-                            performPurePollinationsLoad(directUrl, 3);
+                        layerAttempt++;
+                        if (layerAttempt < layers.length) {
+                            console.log(`%c⚠️ Layer ${attempt} failed. Trying Layer ${attempt + 1}...`, 'color:#e67e22;');
+                            performPurePollinationsLoad(layers[layerAttempt], attempt + 1);
                         } else {
-                            console.error("AI Engine: All Pollinations layers failed.");
+                            console.error('❌ All Pollinations layers failed.');
                             resetLoadingState();
-                            showAlert("Pollinations AI is temporarily unavailable. Please try again in a moment! 🎂", "warning");
+                            showAlert('Pollinations AI is busy. Please try again in a moment! 🎂', 'warning');
                         }
                     };
 
                     imgPreloader.src = url;
                 };
 
-                performPurePollinationsLoad(weservTunnel, 1);
+                performPurePollinationsLoad(layers[0], 1);
             };
 
             startSovereignEngineV38();
