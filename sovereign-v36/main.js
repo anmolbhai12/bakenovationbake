@@ -991,13 +991,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const safePrompt = encodeURIComponent(finalPrompt);
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
-                // Strategy A: Weserv Image Proxy (Highly reliable)
-                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&t=${timeStr}`;
+                // Strategy A: Weserv Proxy — must double-encode target URL params so Weserv
+                // passes them to Pollinations instead of parsing them as its own query params.
+                const pollinationsParams = encodeURIComponent(`?model=flux&nologo=true&seed=${imageSeed}`);
+                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsParams}&t=${timeStr}`;
 
-                // Strategy B: WordPress i0.wp.com Proxy (Fallback)
-                const wpTunnel = `https://i0.wp.com/image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}`;
+                // Strategy B: Picsum proxy through wsrv.nl (a Weserv mirror, same CDN)
+                const wsrvTunnel = `https://wsrv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsParams}&t=${timeStr}`;
 
-                // Strategy C: Direct Pollinations (Fallback)
+                // Strategy C: Direct Pollinations (works on most networks without ISP blocks)
                 const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&t=${timeStr}`;
 
                 let isFallbackTriggered = false;
@@ -1027,10 +1029,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(`%cPure Pollinations: Attempting Layer ${attempt}...`, 'color:#d4af37;');
 
                     const imgPreloader = new Image();
-                    imgPreloader.crossOrigin = "anonymous";
+                    // NOTE: DO NOT set crossOrigin here.
+                    // Setting crossOrigin = 'anonymous' triggers a CORS preflight request.
+                    // Pollinations does not send 'Access-Control-Allow-Origin' headers,
+                    // causing every single layer to fail. <img> tags load cross-origin
+                    // images just fine without this attribute.
 
                     imgPreloader.onload = () => {
                         if (isFallbackTriggered) return;
+                        isFallbackTriggered = true; // prevent double-renders
                         snapState.currentImageUrl = url;
                         renderFinalImage(url);
                         console.log(`%cPure Pollinations: Layer ${attempt} SUCCESS!`, 'color:#2ecc71;font-weight:bold;');
@@ -1039,13 +1046,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     imgPreloader.onerror = () => {
                         if (isFallbackTriggered) return;
                         if (attempt === 1) {
-                            performPurePollinationsLoad(wpTunnel, 2);
+                            console.log('%cLayer 1 (Weserv) failed, trying Layer 2 (wsrv.nl)...', 'color:#e67e22;');
+                            performPurePollinationsLoad(wsrvTunnel, 2);
                         } else if (attempt === 2) {
+                            console.log('%cLayer 2 (wsrv.nl) failed, trying Layer 3 (Direct)...', 'color:#e67e22;');
                             performPurePollinationsLoad(directUrl, 3);
                         } else {
                             console.error("AI Engine: All Pollinations layers failed.");
                             resetLoadingState();
-                            showAlert("Pollinations AI is currently sketching elsewhere. Please try again in a moment.", "warning");
+                            showAlert("Pollinations AI is temporarily unavailable. Please try again in a moment! 🎂", "warning");
                         }
                     };
 
