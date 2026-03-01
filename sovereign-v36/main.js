@@ -975,34 +975,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                const triggerLoremFlickrFallback = async () => {
+                const triggerLocalSmartFallback = async () => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (LoremFlickr Dynamic Search)...");
+                    console.warn("AI Engine: Layer 1 (Pollinations) blocked. Booting Layer 2 (Smart Local Vault)...");
 
                     try {
-                        let keyword = "cake";
-                        if (rawUserText && rawUserText.trim() !== '') {
-                            const words = rawUserText.trim().split(' ');
-                            keyword = words[0];
+                        if (isFallbackTriggered) return;
+                        isFallbackTriggered = true;
+                        clearTimeout(masterTimeout);
+
+                        let vaultMatch = null;
+                        const text = rawUserText ? rawUserText.toLowerCase() : "";
+
+                        if (text.includes("car")) {
+                            vaultMatch = "assets/ai/car.png";
+                        } else if (text.includes("wedding") || text.includes("marriage") || text.includes("bridal")) {
+                            vaultMatch = "assets/ai/wedding.png";
+                        } else if (text.includes("birthday") || text.includes("party")) {
+                            vaultMatch = "assets/ai/birthday.png";
+                        } else if (text.includes("chocolate") || text.includes("fudge") || text.includes("dark")) {
+                            vaultMatch = "assets/ai/chocolate.png";
+                        } else {
+                            // Random local high-quality AI cake if no specific match
+                            const vault = ["assets/ai/car.png", "assets/ai/wedding.png", "assets/ai/birthday.png", "assets/ai/chocolate.png"];
+                            vaultMatch = vault[Math.floor(Math.random() * vault.length)];
                         }
 
-                        const flickrUrl = `https://loremflickr.com/1024/1024/${encodeURIComponent(keyword)},cake/all`;
-                        console.log("AI Engine: Layer 2 (Flickr) Triggered -", flickrUrl);
+                        console.log("AI Engine: Layer 2 serving local AI masterwork -", vaultMatch);
 
                         const imgPreloader2 = new Image();
                         imgPreloader2.onload = () => {
-                            if (!isFallbackTriggered) {
-                                clearTimeout(masterTimeout);
-                                isFallbackTriggered = true;
-                                console.log("AI Engine: Layer 2 Render Success");
-                                renderFinalImage(flickrUrl);
-                            }
+                            console.log("AI Engine: Layer 2 Render Success");
+                            renderFinalImage(vaultMatch);
                         };
                         imgPreloader2.onerror = () => {
-                            console.error("AI Engine: Layer 2 Failed to load image.");
+                            console.error("AI Engine: Layer 2 Failed to load local vault image.");
                             triggerEmergencyFallback();
                         }
-                        imgPreloader2.src = flickrUrl;
+                        imgPreloader2.src = vaultMatch;
 
                     } catch (e) {
                         console.error("AI Engine: Layer 2 Exception.", e);
@@ -1026,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Give Pollinations 15 seconds before failing over to Layer 2
                 masterTimeout = setTimeout(() => {
-                    triggerLoremFlickrFallback();
+                    triggerLocalSmartFallback();
                 }, 15000);
 
                 // Execute Layer 1: Direct Image Load
@@ -1046,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     imgPreloader.onerror = (e) => {
                         console.error("AI Direct Engine Failed:", e);
-                        triggerLoremFlickrFallback();
+                        triggerLocalSmartFallback();
                     };
 
                     // Setting src triggers the browser request automatically
