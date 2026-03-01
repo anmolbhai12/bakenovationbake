@@ -956,8 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // --- THE UNBLOCKABLE LOCAL GOOGLE PROXY ---
                 // We use your Google Apps Script Web App to securely fetch the image and return it as Base64.
-                // You must deploy ai_proxy.gs and paste the Web App URL here!
-                const GOOGLE_PROXY_URL = "YOUR_GOOGLE_WEB_APP_URL_HERE";
+                const GOOGLE_PROXY_URL = "https://script.google.com/macros/s/AKfycbyDRr-3Mn0zyKeGmBoe5DdaDjYpV3yIK06cjSKhAulHn0ELYWWTak0L5ztCZWgJQo9Z/exec";
                 const timeStr = new Date().getTime(); // Absolute cache buster
                 const proxyFetchUrl = `${GOOGLE_PROXY_URL}?prompt=${encodeURIComponent(finalPrompt)}&t=${timeStr}`;
 
