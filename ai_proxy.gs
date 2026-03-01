@@ -2,20 +2,49 @@ function doGet(e) {
   try {
     var prompt = e.parameter.prompt;
     if (!prompt) {
-      return ContentService.createTextOutput("Missing prompt parameter").setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput(JSON.stringify({"error": "Missing prompt parameter"})).setMimeType(ContentService.MimeType.JSON);
     }
     
-    var timeBust = new Date().getTime() + Math.floor(Math.random() * 1000000);
-    // Fetch from pollinations
-    var targetUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=1024&height=1024&nologo=true&seed=' + timeBust;
+    // Fallback Engine List
+    // 1. api.airforce (Highly reliable FLUX model, allows Google IPs)
+    // 2. image.pollinations.ai (Currently throwing 530 Cloudflare errors from Google IPs, but kept as backup)
+    var engines = [
+      'https://api.airforce/v1/imagine2?model=flux&prompt=',
+      'https://image.pollinations.ai/prompt/'
+    ];
+
+    for (var i = 0; i < engines.length; i++) {
+        try {
+            var timeBust = new Date().getTime() + Math.random().toString().substring(2,8);
+            var targetUrl = engines[i] + encodeURIComponent(prompt) + (i === 1 ? ('?width=1024&height=1024&nologo=true&seed=' + timeBust) : '');
+            
+            var options = {
+                'muteHttpExceptions': true,
+                'followRedirects': true
+            };
+            
+            var response = UrlFetchApp.fetch(targetUrl, options);
+            var code = response.getResponseCode();
+            
+            if (code === 200 || code === 301 || code === 302 || code === 308) {
+                var blob = response.getBlob();
+                
+                // Validate that we actually got an image back, not an HTML error page
+                var contentType = blob.getContentType();
+                if (contentType && contentType.indexOf('image') !== -1) {
+                     var base64Text = Utilities.base64Encode(blob.getBytes());
+                     return ContentService.createTextOutput(JSON.stringify({ 
+                         "image_base64": base64Text, 
+                         "engine": i 
+                     })).setMimeType(ContentService.MimeType.JSON);
+                }
+            }
+        } catch(e) {
+            // Move to next engine silently
+        }
+    }
     
-    var response = UrlFetchApp.fetch(targetUrl);
-    var blob = response.getBlob();
-    var base64Text = Utilities.base64Encode(blob.getBytes());
-    
-    // Return Base64 JSON safely
-    var jsonMap = { "image_base64": base64Text };
-    return ContentService.createTextOutput(JSON.stringify(jsonMap)).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({"error": "All Proxy Backend Engines Failed"})).setMimeType(ContentService.MimeType.JSON);
     
   } catch(err) {
     return ContentService.createTextOutput(JSON.stringify({"error": err.toString()})).setMimeType(ContentService.MimeType.JSON);
