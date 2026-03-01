@@ -951,9 +951,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // --- PURE POLLINATIONS ENGINE V7 (FREE MODEL) ---
+                // === AI HORDE ENGINE V8 (STABLE DIFFUSION COMMUNITY CLUSTER) ===
+                // Pollinations is currently down globally (530). AI Horde is free,
+                // requires no API key, and works worldwide.
                 const imageSeed = Math.floor(Math.random() * 9999999);
-                const timeStr = Date.now();
 
                 const expandPrompt = (input) => {
                     const style = snapState.style;
@@ -961,32 +962,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const flavor = snapState.flavor;
                     const size = snapState.size;
                     if (input) {
-                        return `${input} cake, ${style} ${occasion}, ${flavor} flavor, ${size}, luxury bakery, food photography`;
+                        return `${input} cake, ${style} ${occasion}, ${flavor} flavor, ${size}, luxury bakery, hyperrealistic food photography, 8k, studio lighting`;
                     }
-                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, food photography`;
+                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, hyperrealistic food photography, 8k, studio lighting`;
                 };
 
                 const finalPrompt = expandPrompt(rawUserText);
-                const safePrompt = encodeURIComponent(finalPrompt);
-
-                console.log('%c🔱 PURE POLLINATIONS ENGINE v7 — FREE MODEL', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%c🔱 AI HORDE ENGINE v8 — STABLE DIFFUSION', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
-
-                // Pollinations free model — no model=flux (that needs premium access)
-                // Always include https:// in proxy URLs so the CDN can connect
-                const pollinationsTarget = `https%3A%2F%2Fimage.pollinations.ai%2Fprompt%2F${safePrompt}%3Fnologo%3Dtrue%26seed%3D${imageSeed}%26width%3D768%26height%3D768`;
-
-                // Strategy A: images.weserv.nl CDN proxy
-                const weservUrl = `https://images.weserv.nl/?url=${pollinationsTarget}&output=jpg&t=${timeStr}`;
-
-                // Strategy B: wsrv.nl (Weserv mirror proxy)
-                const wsrvUrl = `https://wsrv.nl/?url=${pollinationsTarget}&output=jpg&t=${timeStr}`;
-
-                // Strategy C: Direct Pollinations (works on unblocked networks)
-                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}&width=768&height=768&t=${timeStr}`;
-
-                let layerAttempt = 0;
-                const layers = [weservUrl, wsrvUrl, directUrl];
 
                 const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
@@ -1009,35 +992,91 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (spinner) spinner.style.display = 'none';
                 };
 
-                const performPurePollinationsLoad = (url, attempt = 1) => {
-                    console.log(`%cPure Pollinations: Attempting Layer ${attempt} (${url.split('/')[2]})...`, 'color:#d4af37;');
+                // Step 1: Submit generation job to AI Horde
+                const submitHordeJob = async () => {
+                    try {
+                        const response = await fetch('https://stablehorde.net/api/v2/generate/async', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'apikey': '0000000000',  // Anonymous key — no signup needed
+                                'Client-Agent': 'bakenovation:1.0:anmolbhai12@github'
+                            },
+                            body: JSON.stringify({
+                                prompt: finalPrompt,
+                                params: {
+                                    sampler_name: 'k_euler_a',
+                                    cfg_scale: 7.5,
+                                    seed: imageSeed.toString(),
+                                    height: 512,
+                                    width: 512,
+                                    steps: 30,
+                                    n: 1
+                                },
+                                models: ['ICBINP - I Can\'t Believe It\'s Not Photography'],
+                                r2: false,
+                                shared: false,
+                                nsfw: false,
+                                censor_nsfw: true
+                            })
+                        });
 
-                    const imgPreloader = new Image();
-                    // No crossOrigin attribute — setting it triggers CORS preflight that blocks Pollinations
+                        if (!response.ok) throw new Error(`Horde submit error: ${response.status}`);
+                        const data = await response.json();
+                        const jobId = data.id;
+                        console.log(`%c✅ AI Horde job submitted! ID: ${jobId}`, 'color:#2ecc71;');
 
-                    imgPreloader.onload = () => {
-                        if (layerAttempt >= layers.length) return; // prevent double-renders
-                        layerAttempt = layers.length; // mark as done
-                        renderFinalImage(url);
-                        console.log(`%c✅ Pure Pollinations Layer ${attempt} SUCCESS!`, 'color:#2ecc71;font-weight:bold;');
-                    };
+                        // Step 2: Poll until done
+                        let polls = 0;
+                        const maxPolls = 23; // ~90 seconds timeout
+                        const pollInterval = setInterval(async () => {
+                            polls++;
+                            if (polls > maxPolls) {
+                                clearInterval(pollInterval);
+                                console.error('AI Horde: Generation timed out.');
+                                resetLoadingState();
+                                showAlert('AI generation is taking too long. Please try again! 🎂', 'warning');
+                                return;
+                            }
 
-                    imgPreloader.onerror = () => {
-                        layerAttempt++;
-                        if (layerAttempt < layers.length) {
-                            console.log(`%c⚠️ Layer ${attempt} failed. Trying Layer ${attempt + 1}...`, 'color:#e67e22;');
-                            performPurePollinationsLoad(layers[layerAttempt], attempt + 1);
-                        } else {
-                            console.error('❌ All Pollinations layers failed.');
-                            resetLoadingState();
-                            showAlert('Pollinations AI is busy. Please try again in a moment! 🎂', 'warning');
-                        }
-                    };
+                            try {
+                                const checkRes = await fetch(`https://stablehorde.net/api/v2/generate/check/${jobId}`, {
+                                    headers: { 'apikey': '0000000000' }
+                                });
+                                const check = await checkRes.json();
+                                console.log(`%cAI Horde: Queue position ${check.queue_position}, ETA ${check.wait_time}s`, 'color:#a0a0a0;font-size:11px;');
 
-                    imgPreloader.src = url;
+                                if (check.done) {
+                                    clearInterval(pollInterval);
+
+                                    // Step 3: Fetch completed image
+                                    const statusRes = await fetch(`https://stablehorde.net/api/v2/generate/status/${jobId}`, {
+                                        headers: { 'apikey': '0000000000' }
+                                    });
+                                    const status = await statusRes.json();
+                                    if (status.generations && status.generations[0]) {
+                                        const imgData = status.generations[0].img;
+                                        // AI Horde returns a URL or base64
+                                        const imgSrc = imgData.startsWith('http') ? imgData : `data:image/webp;base64,${imgData}`;
+                                        console.log(`%c✅ AI Horde: Image ready!`, 'color:#2ecc71;font-weight:bold;');
+                                        renderFinalImage(imgSrc);
+                                    } else {
+                                        throw new Error('No image in Horde response');
+                                    }
+                                }
+                            } catch (pollErr) {
+                                console.error('AI Horde poll error:', pollErr);
+                            }
+                        }, 4000);
+
+                    } catch (err) {
+                        console.error('AI Horde engine error:', err);
+                        resetLoadingState();
+                        showAlert('AI Studio is experiencing high demand. Please try again! 🎂', 'warning');
+                    }
                 };
 
-                performPurePollinationsLoad(layers[0], 1);
+                submitHordeJob();
             };
 
             startSovereignEngineV38();
