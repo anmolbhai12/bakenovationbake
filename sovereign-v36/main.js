@@ -975,28 +975,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                const triggerLexicaFallback = async () => {
+                const triggerUnsplashFallback = async () => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (Lexica Search)...");
+                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (Unsplash Dynamic Search)...");
 
                     try {
-                        // Keep the Lexica search extremely focused on the user's text + "cake"
-                        const lexicaSecurePrompt = encodeURIComponent(`${rawUserText} cake highly detailed 8k photography`);
-                        const lexicaRes = await fetch(`https://lexica.art/api/v1/search?q=${lexicaSecurePrompt}`);
-                        const lexicaData = await lexicaRes.json();
-
-                        if (lexicaData && lexicaData.images && lexicaData.images.length > 0) {
-                            if (isFallbackTriggered) return;
-                            isFallbackTriggered = true;
-                            clearTimeout(masterTimeout);
-                            console.log("AI Engine: Layer 2 (Lexica) Success");
-                            // Pick a random high quality image from top 4 results
-                            const bestImages = lexicaData.images.slice(0, 4);
-                            const chosenImg = bestImages[Math.floor(Math.random() * bestImages.length)].src;
-                            renderFinalImage(chosenImg);
-                        } else {
-                            throw new Error("No Lexica results");
+                        // Extract keyword, prioritize the first noun/adjective (e.g. 'car' from 'car shape cake')
+                        let keyword = "luxury cake";
+                        if (rawUserText && rawUserText.trim() !== '') {
+                            const words = rawUserText.trim().split(' ');
+                            keyword = words[0] + " cake";
                         }
+
+                        if (isFallbackTriggered) return;
+                        isFallbackTriggered = true;
+                        clearTimeout(masterTimeout);
+
+                        // Unsplash source URL dynamically fetches a random image matching the keyword
+                        const unsplashUrl = `https://source.unsplash.com/1024x1024/?${encodeURIComponent(keyword)}`;
+                        console.log("AI Engine: Layer 2 (Unsplash) Triggered -", unsplashUrl);
+                        renderFinalImage(unsplashUrl);
+
                     } catch (e) {
                         console.error("AI Engine: Layer 2 Failed.", e);
                         triggerEmergencyFallback();
@@ -1017,9 +1016,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
                 };
 
-                // Give Pollinations 15 seconds before failing over to Lexica
+                // Give Pollinations 15 seconds before failing over to Unsplash Layer 2
                 masterTimeout = setTimeout(() => {
-                    triggerLexicaFallback();
+                    triggerUnsplashFallback();
                 }, 15000);
 
                 // Execute Layer 1: Direct Image Load
@@ -1039,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     imgPreloader.onerror = (e) => {
                         console.error("AI Direct Engine Failed:", e);
-                        triggerLexicaFallback();
+                        triggerUnsplashFallback();
                     };
 
                     // Setting src triggers the browser request automatically
