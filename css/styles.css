@@ -1150,6 +1150,22 @@ h4 {
     color: var(--color-deep-purple);
 }
 
+.bg-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #f5e4bc 50%, #d4af37 100%) !important;
+    color: var(--color-deep-purple) !important;
+    border: none !important;
+}
+
+.premium-disclaimer {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    opacity: 0.7;
+    line-height: 1.4;
+    text-align: center;
+}
+
 .control-group label {
     display: block;
     font-family: var(--font-heading);

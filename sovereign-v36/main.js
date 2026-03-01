@@ -806,6 +806,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // AI Buy Now Button Logic
+    const aiBuyNowBtn = document.getElementById('ai-buy-now-btn');
+    if (aiBuyNowBtn) {
+        aiBuyNowBtn.addEventListener('click', () => {
+            if (aiPrompt) {
+                const userDetails = aiPrompt.value.trim();
+                const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
+
+                checkLoginAndProceed(() => {
+                    // Open the formal order modal with AI context
+                    const modal = document.getElementById('order-modal');
+                    if (modal) {
+                        const flavorInput = modal.querySelector('#order-flavor');
+                        const weightInput = modal.querySelector('#order-weight');
+                        const msgInput = modal.querySelector('#order-msg');
+
+                        if (flavorInput) flavorInput.value = snapState.flavor;
+                        if (weightInput) weightInput.value = snapState.size;
+                        if (msgInput) msgInput.value = `[AI DESIGN] ${smartDetails} | Image: ${snapState.currentImageUrl}`;
+
+                        modal.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+
     // --- CAKE DETAIL MODAL LOGIC REMOVED FOR DEDICATED PAGES ---
     // (Legacy modal code removed as we now use product.html)
 
@@ -839,6 +866,8 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'wedding',
         style: 'luxury',
         color: 'white',
+        flavor: 'chocolate', // Default flavor
+        size: '1kg', // Default weight
         currentImageUrl: 'assets/wedding_cake.png'
     };
 
@@ -858,6 +887,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update State
             if (chip.dataset.type) snapState.type = chip.dataset.type;
             if (chip.dataset.style) snapState.style = chip.dataset.style;
+            if (chip.dataset.flavor) snapState.flavor = chip.dataset.flavor;
+            if (chip.dataset.size) snapState.size = chip.dataset.size;
         });
     });
 
@@ -906,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // --- V38 HYPER-RESONANCE PROMPT EXPANSION ---
+                // --- V38 HYPER-RESONANCE PROMPT EXPANSION V4 ---
                 const atomicSeed = Math.floor(Math.random() * 99999999);
                 const uniqueRef = atomicSeed.toString(36);
 
@@ -914,17 +945,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     const styleContext = snapState.style.toUpperCase();
                     const occasionContext = snapState.type.toUpperCase();
                     const colorContext = snapState.color.toUpperCase();
+                    const flavorContext = snapState.flavor.toUpperCase();
+                    const sizeContext = snapState.size;
+
+                    // Flavor-specific visual sensory modifiers
+                    let flavorTraits = "";
+                    if (flavorContext === 'CHOCOLATE') flavorTraits = "Rich dark chocolate ganache, velvety cocoa textures, chocolate curls.";
+                    if (flavorContext === 'VANILLA') flavorTraits = "Creamy vanilla bean frosting, smooth ivory textures, delicate sugar pearls.";
+                    if (flavorContext === 'RED VELVET') flavorTraits = "Signature deep red sponge peeking through, cream cheese frosting swirls, red velvet crumbs.";
+                    if (flavorContext === 'PINEAPPLE') flavorTraits = "Zesty pineapple glazes, tropical yellow accents, candied pineapple rings.";
 
                     const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
-                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, architectural cake layers.`;
+                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, ${flavorTraits}`;
 
                     if (!input) {
-                        return `An elite ${colorContext} ${styleContext} themed ${occasionContext} cake. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
+                        return `An elite ${sizeContext} ${colorContext} ${styleContext} themed ${occasionContext} cake with ${flavorContext} flavor. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
                     }
 
                     // V38 SPECIALIST LOGIC: If the user types a specific shape/object (e.g. "car shape cake"),
                     // the AI must prioritize THAT exact shape above all other stylistic noise.
-                    const expandedPrompt = `A hyper-realistic 3D sculpted cake shaped EXACTLY like the ${input}. This is a masterpiece couture cake creation, shown in a clean, professional wide shot. The entire structure is made of flawless WHITE fondant, airbrushed food coloring, and hyper-realistic sugar art. Aesthetic: LUXURY | Occasion: WEDDING. Professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean background.`;
+                    const expandedPrompt = `A hyper-realistic 3D sculpted ${sizeContext} cake shaped EXACTLY like the ${input}. Flavor: ${flavorContext}. This is a masterpiece couture cake creation, shown in a clean, professional wide shot. The entire structure is made of flawless WHITE fondant, airbrushed food coloring, and hyper-realistic sugar art. Aesthetic: LUXURY | Occasion: WEDDING. Professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean background. Seed:${uniqueRef}`;
                     return expandedPrompt;
                 };
 
@@ -933,23 +973,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                // --- THE ULTIMATE HYBRID AI ENGINE V4 (CORS/ADBLOCK IMMUNE) ---
-                // Using the highly detailed V38 finalPrompt and forcing the ultra-premium FLUX model.
+                // --- THE ULTIMATE HYBRID AI ENGINE V4 (FIREWALL BYPASS) ---
+                // We tunnel through high-trust CDNs to bypass ISP domain blocks.
+                const timeStr = new Date().getTime();
+                const safePrompt = encodeURIComponent(finalPrompt);
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
-                let lexicaPrompt = "";
-                if (rawUserText && rawUserText.trim() !== '') {
-                    lexicaPrompt = `${rawUserText.trim()} cake`;
-                } else {
-                    lexicaPrompt = `luxury ${snapState.color || ''} ${snapState.type || ''} cake ${snapState.style || ''} 8k`.trim();
-                }
+                // Strategy A: Weserv Image Proxy (High Trust)
+                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}&t=${timeStr}`;
 
-                // --- THE TRIPLE-ENGINE FALLBACK ARCHITECTURE V8 ---
-                // Layer 1: Airforce Flux API (Direct to bypass localized pollinations.ai ISP blocks)
-                // Layer 2: Smart Local Vault
-                const timeStr = new Date().getTime(); // Absolute cache buster
-                const localPrompt = encodeURIComponent(finalPrompt);
-                const airforceDirectUrl = `https://api.airforce/v1/imagine2?model=flux&prompt=${localPrompt}&t=${timeStr}`;
+                // Strategy B: WordPress i0.wp.com Proxy (Fallback Bypass)
+                const wpTunnel = `https://i0.wp.com/image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}`;
+
+                // Strategy C: Direct Airforce (Fallback for non-blocked regions)
+                const airforceUrl = `https://api.airforce/v1/imagine2?model=flux&prompt=${safePrompt}&t=${timeStr}`;
 
                 let masterTimeout;
                 let isFallbackTriggered = false;
@@ -968,17 +1005,54 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                const triggerLocalSmartFallback = async () => {
+                const airforceDirectUrl = airforceUrl;
+
+                const resetLoadingState = () => {
+                    if (aiLoading) aiLoading.style.display = 'none';
+                    if (aiGenerateBtn) aiGenerateBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'block';
+                    if (spinner) spinner.style.display = 'none';
+                };
+
+                const performBypassLoad = (url, attempt = 1) => {
+                    console.log(`%cAI Engine: Attempting Bypass Layer ${attempt}...`, 'color:#d4af37;');
+
+                    const imgPreloader = new Image();
+                    imgPreloader.crossOrigin = "anonymous";
+
+                    imgPreloader.onload = () => {
+                        if (isFallbackTriggered) return;
+                        clearTimeout(masterTimeout);
+                        snapState.currentImageUrl = url;
+                        renderFinalImage(url);
+                        console.log(`%cAI Engine: Layer ${attempt} SUCCESS! Live AI Restored.`, 'color:#2ecc71;font-weight:bold;');
+                    };
+
+                    imgPreloader.onerror = () => {
+                        if (isFallbackTriggered) return;
+                        if (attempt === 1) {
+                            performBypassLoad(wpTunnel, 2);
+                        } else if (attempt === 2) {
+                            performBypassLoad(airforceUrl, 3);
+                        } else {
+                            triggerLocalSmartFallback(rawUserText || finalPrompt);
+                        }
+                    };
+
+                    if (!isFallbackTriggered) {
+                        imgPreloader.src = url;
+                    }
+                };
+
+                const triggerLocalSmartFallback = async (promptForVault) => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Airforce/Live) blocked. Booting Layer 2 (Smart Local Vault V3.0)...");
+                    isFallbackTriggered = true;
+                    clearTimeout(masterTimeout);
+                    console.warn("AI Engine: All Live Layers Blocked. Booting Smart Local Vault V3.0...");
 
                     try {
-                        if (isFallbackTriggered) return;
-                        isFallbackTriggered = true;
-                        clearTimeout(masterTimeout);
-
                         let vaultMatch = null;
-                        const text = rawUserText ? rawUserText.toLowerCase() : "";
+                        const text = promptForVault ? promptForVault.toLowerCase() : "";
 
                         // Smart Randomized Local Vault V2.0 (Full-View Masterworks)
                         if (text.includes("car") || text.includes("vehicle") || text.includes("automobile")) {
@@ -1035,41 +1109,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
                 };
 
-                // Give Pollinations 15 seconds before failing over to Layer 2
+                // Master Timeout: 35 seconds to allow for deep generation
                 masterTimeout = setTimeout(() => {
-                    triggerLocalSmartFallback();
-                }, 15000);
-
-                // Execute Layer 1: Direct Airforce Image Load
-                function performDirectAILoad() {
-                    console.log("AI Engine: Requesting Direct Airforce Flux Injection...");
-
-                    const imgPreloader = new Image();
-                    imgPreloader.onload = () => {
-                        if (!isFallbackTriggered) {
-                            clearTimeout(masterTimeout);
-                            isFallbackTriggered = true;
-                            console.log("AI Engine: Layer 1 Airforce Render Success");
-                            renderFinalImage(airforceDirectUrl);
-                        }
-                    };
-                    imgPreloader.onerror = (e) => {
-                        console.error("AI Direct Engine Failed on Airforce API:", e);
-                        triggerLocalSmartFallback();
-                    };
-                    imgPreloader.src = airforceDirectUrl;
-                }
-
-                // Ignite
-                performDirectAILoad();
-
-                function resetLoadingState() {
-                    if (aiLoading) aiLoading.style.display = 'none';
-                    if (btnText) btnText.style.display = 'inline';
-                    if (spinner) spinner.style.display = 'none';
-                    aiGenerateBtn.disabled = false;
-                    if (aiGeneratedImage) aiGeneratedImage.classList.remove('sketching');
-                }
+                    triggerLocalSmartFallback(rawUserText || finalPrompt);
+                }, 35000);
             };
 
             startSovereignEngineV38();

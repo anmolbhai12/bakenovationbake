@@ -382,101 +382,111 @@
                             </div>
 
 
-                            <!-- 4. Color Palette -->
-                            <div class="control-group">
-                                <label class="snap-label">Color Palette</label>
-                                <div class="snap-colors-grid">
-                                    <button class="snap-color active" style="background: #ffffff;"
-                                        data-color="white"></button>
-                                    <button class="snap-color" style="background: #f5f5dc;" data-color="cream"></button>
-                                    <button class="snap-color" style="background: #ffb6c1;" data-color="pink"></button>
-                                    <button class="snap-color" style="background: #e6e6fa;"
-                                        data-color="lavender"></button>
-                                    <button class="snap-color" style="background: #87ceeb;" data-color="blue"></button>
-                                    <button class="snap-color" style="background: #98fb98;" data-color="mint"></button>
-                                    <button class="snap-color" style="background: #dfc5fe;"
-                                        data-color="orchid"></button>
-                                    <button class="snap-color" style="background: #1a0b1f;" data-color="dark"></button>
-                                </div>
-                            </div>
-
-                            <!-- 5. Prompt Input -->
-                            <div class="control-group">
-                                <label class="snap-label">Specific Details</label>
-                                <textarea id="ai-prompt" class="snap-input" rows="2"
-                                    placeholder="E.g., with cascading sugar flowers and gold leaf details..."></textarea>
-                            </div>
-
-                            <!-- Generate Button -->
-                            <button id="ai-generate-btn" class="btn-snap-primary bg-orchid">
-                                <span class="btn-text">Generate Design</span>
-                                <span class="spinner" style="display: none;">✨</span>
-                            </button>
-                        </div>
-
-                        <!-- Right Column: Preview -->
-                        <div class="snap-preview">
-                            <div class="snap-result-frame">
-                                <img id="ai-generated-image" src="assets/wedding_cake.png"
-                                    alt="AI Generated Cake Design">
-                                <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
-                                    <div class="loader-snap"></div>
-                                    <p>Chef is sketching your masterpiece...</p>
-                                </div>
-                            </div>
-                            <div class="product-info-accordions"
-                                style="margin-top: 2rem; width: 100%; text-align: left;">
-                                <details class="luxury-accordion">
-                                    <summary>Delivery Information</summary>
-                                    <div class="accordion-content">
-                                        <p>All our creations are hand-delivered in temperature-controlled vehicles
-                                            across Delhi NCR to ensure pristine condition upon arrival.</p>
-                                    </div>
-                                </details>
-                                <details class="luxury-accordion">
-                                    <summary>Care Instructions</summary>
-                                    <div class="accordion-content">
-                                        <ul
-                                            style="padding-left: 1.2rem; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.6;">
-                                            <li>Store in an air-conditioned environment.</li>
-                                            <li>Avoid direct sunlight and heat sources.</li>
-                                            <li>Consume within 48 hours for optimal taste.</li>
-                                        </ul>
-                                    </div>
-                                </details>
-                            </div>
-                            <div class="snap-actions">
-                                <button id="ai-add-to-cart-btn" class="btn-snap-secondary">Add Design to Cart</button>
-                            </div>
+                            <button class="snap-color" style="background: #1a0b1f;" data-color="dark"></button>
                         </div>
                     </div>
 
-                    <!-- Recent Generations Gallery -->
-                    <div class="recent-generations-header" style="margin-top: 5rem;">
-                        <h3 class="text-orchid">Recent Concepts</h3>
-                        <p class="section-subtitle">Your session history of AI designs.</p>
+                    <!-- 6. Flavor Selection -->
+                    <div class="control-group">
+                        <label class="snap-label">Flavor</label>
+                        <div class="snap-chips-wrapper">
+                            <button class="snap-chip active" data-flavor="chocolate">Chocolate</button>
+                            <button class="snap-chip" data-flavor="vanilla">Vanilla</button>
+                            <button class="snap-chip" data-flavor="red velvet">Red Velvet</button>
+                            <button class="snap-chip" data-flavor="pineapple">Pineapple</button>
+                        </div>
                     </div>
-                    <div id="recent-generations-grid" class="recent-generations-grid"></div>
+
+                    <!-- 7. Size Selection -->
+                    <div class="control-group">
+                        <label class="snap-label">Size (Weight)</label>
+                        <div class="snap-chips-wrapper">
+                            <button class="snap-chip active" data-size="1kg">1kg</button>
+                            <button class="snap-chip" data-size="2kg">2kg</button>
+                            <button class="snap-chip" data-size="3kg">3kg</button>
+                            <button class="snap-chip" data-size="5kg+">5kg+</button>
+                        </div>
+                    </div>
+
+                    <!-- 5. Prompt Input -->
+                    <div class="control-group">
+                        <label class="snap-label">Specific Details</label>
+                        <textarea id="ai-prompt" class="snap-input" rows="2"
+                            placeholder="E.g., with cascading sugar flowers and gold leaf details..."></textarea>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="ai-generate-btn" class="btn-snap-primary bg-orchid">
+                        <span class="btn-text">Generate Design</span>
+                        <span class="spinner" style="display: none;">✨</span>
+                    </button>
                 </div>
 
-                <div class="order-quick-details"
-                    style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left;">
-                    <div class="section-header text-center">
-                        <h3 class="text-orchid">Bring Your Vision to Life</h3>
-                        <p class="section-subtitle">Have a reference image for your bespoke cake? Upload it here.</p>
+                <!-- Right Column: Preview -->
+                <div class="snap-preview">
+                    <div class="snap-result-frame">
+                        <img id="ai-generated-image" src="assets/wedding_cake.png" alt="AI Generated Cake Design">
+                        <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
+                            <div class="loader-snap"></div>
+                            <p>Chef is sketching your masterpiece...</p>
+                        </div>
                     </div>
-
-                    <div class="order-info-grid" style="display: flex; justify-content: center;">
-                        <div class="control-group full-width" style="max-width: 600px; width: 100%;">
-                            <label class="snap-label">Upload Your Design</label>
-                            <div class="luxury-file-upload">
-                                <input type="file" id="main-upload" name="attachment" accept="image/*"
-                                    class="file-input-luxury">
-                                <p class="file-hint">Select a reference image from your device.</p>
+                    <div class="product-info-accordions" style="margin-top: 2rem; width: 100%; text-align: left;">
+                        <details class="luxury-accordion">
+                            <summary>Delivery Information</summary>
+                            <div class="accordion-content">
+                                <p>All our creations are hand-delivered in temperature-controlled vehicles
+                                    across Delhi NCR to ensure pristine condition upon arrival.</p>
                             </div>
+                        </details>
+                        <details class="luxury-accordion">
+                            <summary>Care Instructions</summary>
+                            <div class="accordion-content">
+                                <ul
+                                    style="padding-left: 1.2rem; color: var(--color-text-muted); font-size: 0.85rem; line-height: 1.6;">
+                                    <li>Store in an air-conditioned environment.</li>
+                                    <li>Avoid direct sunlight and heat sources.</li>
+                                    <li>Consume within 48 hours for optimal taste.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="snap-actions">
+                        <button id="ai-add-to-cart-btn" class="btn-snap-secondary">Add Design to Cart</button>
+                        <button id="ai-buy-now-btn" class="btn-snap-primary bg-gold" style="margin-top: 0.5rem;">Buy &
+                            Order This Design</button>
+                    </div>
+                    <p class="premium-disclaimer">Design by AI. Handcrafted by Bakenovation. Final textures and colors
+                        may vary slightly as each cake is an artisanal creation.</p>
+                </div>
+            </div>
+
+            <!-- Recent Generations Gallery -->
+            <div class="recent-generations-header" style="margin-top: 5rem;">
+                <h3 class="text-orchid">Recent Concepts</h3>
+                <p class="section-subtitle">Your session history of AI designs.</p>
+            </div>
+            <div id="recent-generations-grid" class="recent-generations-grid"></div>
+            </div>
+
+            <div class="order-quick-details"
+                style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: left;">
+                <div class="section-header text-center">
+                    <h3 class="text-orchid">Bring Your Vision to Life</h3>
+                    <p class="section-subtitle">Have a reference image for your bespoke cake? Upload it here.</p>
+                </div>
+
+                <div class="order-info-grid" style="display: flex; justify-content: center;">
+                    <div class="control-group full-width" style="max-width: 600px; width: 100%;">
+                        <label class="snap-label">Upload Your Design</label>
+                        <div class="luxury-file-upload">
+                            <input type="file" id="main-upload" name="attachment" accept="image/*"
+                                class="file-input-luxury">
+                            <p class="file-hint">Select a reference image from your device.</p>
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
 
         </section>
@@ -823,7 +833,7 @@
     <div id="notification-container" class="notification-container"></div>
 
     <!-- AI SOVEREIGN ENGINE V36 (CORS-KILLER PROXY) -->
-    <script src="sovereign-v36/main.js?v=41"></script>
+    <script src="sovereign-v36/main.js?v=42"></script>
 
     <script src="js/products.js"></script>
     <script>
@@ -863,7 +873,7 @@
                 e.target.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
-        });
+    });
     </script>
 </body>
 
