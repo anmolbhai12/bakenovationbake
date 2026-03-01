@@ -951,41 +951,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // --- PURE POLLINATIONS ENGINE V6 (SHORT PROMPT + DIRECT LOAD) ---
+                // --- PURE POLLINATIONS ENGINE V7 (FREE MODEL) ---
                 const imageSeed = Math.floor(Math.random() * 9999999);
                 const timeStr = Date.now();
 
                 const expandPrompt = (input) => {
-                    const style = snapState.style;       // luxury, modern, rustic, minimalist
-                    const occasion = snapState.type;     // wedding, birthday, anniversary, corporate
-                    const flavor = snapState.flavor;     // chocolate, vanilla, red velvet, pineapple
-                    const size = snapState.size;         // 1kg, 2kg, 3kg, 5kg+
-
-                    // Keep prompts short to avoid Cloudflare/Weserv URL-length limits
+                    const style = snapState.style;
+                    const occasion = snapState.type;
+                    const flavor = snapState.flavor;
+                    const size = snapState.size;
                     if (input) {
-                        return `${input} cake, ${style} ${occasion} theme, ${flavor} flavor, ${size}, masterpiece food photography, 8k`;
+                        return `${input} cake, ${style} ${occasion}, ${flavor} flavor, ${size}, luxury bakery, food photography`;
                     }
-                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, food photography, 8k`;
+                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, food photography`;
                 };
 
                 const finalPrompt = expandPrompt(rawUserText);
                 const safePrompt = encodeURIComponent(finalPrompt);
 
-                console.log('%c🔱 PURE POLLINATIONS ENGINE v6 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%c🔱 PURE POLLINATIONS ENGINE v7 — FREE MODEL', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                // Build Pollinations URL (short prompt = no 530 / WAF block)
-                const pollinationsCore = `image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768`;
+                // Pollinations free model — no model=flux (that needs premium access)
+                // Always include https:// in proxy URLs so the CDN can connect
+                const pollinationsTarget = `https%3A%2F%2Fimage.pollinations.ai%2Fprompt%2F${safePrompt}%3Fnologo%3Dtrue%26seed%3D${imageSeed}%26width%3D768%26height%3D768`;
 
-                // Strategy A: Weserv CDN proxy — double-encode params for Weserv's URL parser
-                const pollinationsEncoded = encodeURIComponent(`?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768`);
-                const weservUrl = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsEncoded}&output=jpg&t=${timeStr}`;
+                // Strategy A: images.weserv.nl CDN proxy
+                const weservUrl = `https://images.weserv.nl/?url=${pollinationsTarget}&output=jpg&t=${timeStr}`;
 
-                // Strategy B: wsrv.nl (Weserv mirror)
-                const wsrvUrl = `https://wsrv.nl/?url=image.pollinations.ai/prompt/${safePrompt}${pollinationsEncoded}&output=jpg&t=${timeStr}`;
+                // Strategy B: wsrv.nl (Weserv mirror proxy)
+                const wsrvUrl = `https://wsrv.nl/?url=${pollinationsTarget}&output=jpg&t=${timeStr}`;
 
-                // Strategy C: Direct Pollinations
-                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&width=768&height=768&t=${timeStr}`;
+                // Strategy C: Direct Pollinations (works on unblocked networks)
+                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}&width=768&height=768&t=${timeStr}`;
 
                 let layerAttempt = 0;
                 const layers = [weservUrl, wsrvUrl, directUrl];
