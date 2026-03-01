@@ -961,14 +961,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     const occasion = snapState.type;
                     const flavor = snapState.flavor;
                     const size = snapState.size;
+
+                    // SD best practice: most important thing FIRST, use () for emphasis
                     if (input) {
-                        return `${input} cake, ${style} ${occasion}, ${flavor} flavor, ${size}, luxury bakery, hyperrealistic food photography, 8k, studio lighting`;
+                        // User typed something specific like "doll" or "car" or "unicorn"
+                        // Don't add "cake" if already in input, wrap key detail in parens
+                        const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
+                        return `(${subject}:1.4), ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, (hyperrealistic food photography:1.2), studio lighting, 8k, sharp focus, clean white background`;
                     }
-                    return `${style} ${occasion} cake, ${flavor} flavor, ${size}, luxury couture bakery, hyperrealistic food photography, 8k, studio lighting`;
+                    return `(${style} ${occasion} cake:1.3), ${flavor} flavored, ${size}, luxury couture bakery, (hyperrealistic food photography:1.2), studio lighting, 8k, bokeh, sharp focus`;
                 };
 
+                // Negative prompt — critical for SD quality
+                const negativePrompt = 'ugly, blurry, deformed, low quality, bad anatomy, watermark, text, logo, cartoon, anime, drawing, sketch, painting, unrealistic, plastic, boring, generic, out of frame, extra fingers, duplicate';
+
                 const finalPrompt = expandPrompt(rawUserText);
-                console.log('%c🔱 AI HORDE ENGINE v8 — STABLE DIFFUSION', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%c🔱 AI HORDE ENGINE v9 — STABLE DIFFUSION', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
                 const renderFinalImage = (srcData) => {
@@ -999,18 +1007,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'apikey': '0000000000',  // Anonymous key — no signup needed
+                                'apikey': '0000000000',
                                 'Client-Agent': 'bakenovation:1.0:anmolbhai12@github'
                             },
                             body: JSON.stringify({
-                                prompt: finalPrompt,
+                                // SD uses "prompt ### negative" format for combined prompts
+                                prompt: `${finalPrompt} ### ${negativePrompt}`,
                                 params: {
                                     sampler_name: 'k_euler_a',
-                                    cfg_scale: 7.5,
+                                    cfg_scale: 9.5,      // Higher = stronger prompt adherence
                                     seed: imageSeed.toString(),
                                     height: 512,
                                     width: 512,
-                                    steps: 30,
+                                    steps: 35,           // More = more detail
                                     n: 1
                                 },
                                 models: ['ICBINP - I Can\'t Believe It\'s Not Photography'],
