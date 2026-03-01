@@ -816,17 +816,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 checkLoginAndProceed(() => {
                     // Open the formal order modal with AI context
-                    const modal = document.getElementById('order-modal');
                     if (modal) {
                         const flavorInput = modal.querySelector('#modal-flavor');
-                        const weightInput = modal.querySelector('#modal-tiers'); // Matches index.html's tiers/size field
+                        const weightInput = modal.querySelector('#modal-tiers');
                         const msgInput = modal.querySelector('#order-message');
                         const imgInput = modal.querySelector('#modal-img');
+                        const dateInput = modal.querySelector('#modal-date');
 
                         if (flavorInput) flavorInput.value = snapState.flavor;
                         if (weightInput) weightInput.value = snapState.size;
-                        if (msgInput) msgInput.value = `[AI DESIGN] ${smartDetails} | Image: ${snapState.currentImageUrl}`;
+                        if (msgInput) msgInput.value = userDetails; // Keep user prompt separate
                         if (imgInput) imgInput.value = snapState.currentImageUrl;
+
+                        // Set minimum 2 days for date input
+                        if (dateInput) {
+                            const today = new Date();
+                            const minDate = new Date(today);
+                            minDate.setDate(today.getDate() + 2);
+                            const yyyy = minDate.getFullYear();
+                            const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+                            const dd = String(minDate.getDate()).padStart(2, '0');
+                            dateInput.min = `${yyyy}-${mm}-${dd}`;
+                            dateInput.value = `${yyyy}-${mm}-${dd}`;
+                        }
 
                         modal.classList.add('active');
                     }
@@ -1035,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (attempt === 1) {
                             performBypassLoad(wpTunnel, 2);
                         } else if (attempt === 2) {
-                            performBypassLoad(airforceUrl, 3);
+                            performBypassLoad(airforceUrl + '&v=43', 3); // Updated cache buster
                         } else {
                             triggerLocalSmartFallback(rawUserText || finalPrompt);
                         }
@@ -1230,7 +1242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // REMOVED DUPLICATE LISTENER
 
     // ===================================================
-    // FLEURONS HEADER: Wire up all buttons
+    // BAKENOVATION HEADER: Wire up all buttons
     // ===================================================
 
     // --- SEARCH BUTTON ---
@@ -1305,9 +1317,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- ORDER MODAL CLOSE LOGIC ---
+    const orderModal = document.getElementById('order-modal');
+    const orderCloseButtons = document.querySelectorAll('.order-close');
+    orderCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (orderModal) orderModal.classList.remove('active');
+        });
+    });
+    if (orderModal) {
+        orderModal.addEventListener('click', (e) => {
+            if (e.target === orderModal) orderModal.classList.remove('active');
+        });
+    }
+
+    // --- AI ORDER FORM SUBMISSION ---
+    orderForm = document.getElementById('order-form');
+    if (orderForm) {
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderData = {
+                title: 'Bespoke AI Design',
+                price: '4500', // Prestige tier
+                flavor: document.getElementById('modal-flavor').value,
+                weight: document.getElementById('modal-tiers').value,
+                diet: document.getElementById('modal-diet').value,
+                date: document.getElementById('modal-date').value,
+                time: document.getElementById('modal-time').value,
+                message: document.getElementById('order-message').value,
+                image: document.getElementById('modal-img').value,
+                qty: 1
+            };
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            window.location.href = 'checkout.html';
+        });
+    }
+
     // --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
     const menuToggle = document.getElementById('menu-toggle');
-    const subNav = document.querySelector('.fleurons-sub-nav');
+    const subNav = document.querySelector('.bake-sub-nav');
     if (menuToggle && subNav) {
         menuToggle.addEventListener('click', () => {
             subNav.classList.toggle('mobile-open');
