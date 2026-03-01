@@ -951,14 +951,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // --- V38 HYPER-RESONANCE PROMPT EXPANSION V4 ---
+                // --- PURE POLLINATIONS ENGINE V5 (FLUX OPTIMIZED) ---
                 const atomicSeed = Math.floor(Math.random() * 99999999);
                 const uniqueRef = atomicSeed.toString(36);
 
                 const expandPrompt = (input) => {
                     const styleContext = snapState.style.toUpperCase();
                     const occasionContext = snapState.type.toUpperCase();
-                    const colorContext = snapState.color.toUpperCase();
                     const flavorContext = snapState.flavor.toUpperCase();
                     const sizeContext = snapState.size;
 
@@ -970,39 +969,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (flavorContext === 'PINEAPPLE') flavorTraits = "Zesty pineapple glazes, tropical yellow accents, candied pineapple rings.";
 
                     const coreBase = `Masterpiece couture cake creation, professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean white background.`;
-                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${colorContext} fondant textures, artisanal bakery craftsmanship, ${flavorTraits}`;
+                    const materialTraits = `Intricate edible details, hyper-realistic sugar art, luxurious ${snapState.color.toUpperCase()} fondant textures, artisanal bakery craftsmanship, ${flavorTraits}`;
 
-                    if (!input) {
-                        return `An elite ${sizeContext} ${colorContext} ${styleContext} themed ${occasionContext} cake with ${flavorContext} flavor. ${coreBase} ${materialTraits} unique:${uniqueRef}`;
+                    let finalExpanded = `An elite ${sizeContext} ${snapState.color.toUpperCase()} ${styleContext} themed ${occasionContext} cake with ${flavorContext} flavor. ${coreBase} ${materialTraits}`;
+
+                    if (input) {
+                        // V38 SPECIALIST LOGIC: Merge user input with royal context
+                        finalExpanded = `A hyper-realistic 3D sculpted ${sizeContext} cake shaped EXACTLY like ${input}. Theme: ${styleContext} | Occasion: ${occasionContext}. Flavor: ${flavorContext}. This is a masterpiece couture cake creation. ${coreBase} ${materialTraits}`;
                     }
 
-                    // V38 SPECIALIST LOGIC: If the user types a specific shape/object (e.g. "car shape cake"),
-                    // the AI must prioritize THAT exact shape above all other stylistic noise.
-                    const expandedPrompt = `A hyper-realistic 3D sculpted ${sizeContext} cake shaped EXACTLY like the ${input}. Flavor: ${flavorContext}. This is a masterpiece couture cake creation, shown in a clean, professional wide shot. The entire structure is made of flawless WHITE fondant, airbrushed food coloring, and hyper-realistic sugar art. Aesthetic: LUXURY | Occasion: WEDDING. Professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean background. Seed:${uniqueRef}`;
-                    return expandedPrompt;
+                    return `${finalExpanded} seed:${uniqueRef}`;
                 };
 
                 const finalPrompt = expandPrompt(rawUserText);
 
-                console.log('%c🔱 AI SOVEREIGN ENGINE v38 — HYPER-RESONANCE', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%c🔱 PURE POLLINATIONS ENGINE v5 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Expanded Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                // --- THE ULTIMATE HYBRID AI ENGINE V4 (FIREWALL BYPASS) ---
-                // We tunnel through high-trust CDNs to bypass ISP domain blocks.
+                // --- DIRECT POLLINATIONS ROUTING (ONLY) ---
                 const timeStr = new Date().getTime();
                 const safePrompt = encodeURIComponent(finalPrompt);
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
-                // Strategy A: Weserv Image Proxy (High Trust)
-                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}&t=${timeStr}`;
+                // Strategy A: Weserv Image Proxy (Highly reliable)
+                const weservTunnel = `https://images.weserv.nl/?url=image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&t=${timeStr}`;
 
-                // Strategy B: WordPress i0.wp.com Proxy (Fallback Bypass)
-                const wpTunnel = `https://i0.wp.com/image.pollinations.ai/prompt/${safePrompt}?nologo=true&seed=${imageSeed}`;
+                // Strategy B: WordPress i0.wp.com Proxy (Fallback)
+                const wpTunnel = `https://i0.wp.com/image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}`;
 
-                // Strategy C: Direct Airforce (Fallback for non-blocked regions)
-                const airforceUrl = `https://api.airforce/v1/imagine2?model=flux&prompt=${safePrompt}&t=${timeStr}`;
+                // Strategy C: Direct Pollinations (Fallback)
+                const directUrl = `https://image.pollinations.ai/prompt/${safePrompt}?model=flux&nologo=true&seed=${imageSeed}&t=${timeStr}`;
 
-                let masterTimeout;
                 let isFallbackTriggered = false;
 
                 const renderFinalImage = (srcData) => {
@@ -1019,8 +1016,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                const airforceDirectUrl = airforceUrl;
-
                 const resetLoadingState = () => {
                     if (aiLoading) aiLoading.style.display = 'none';
                     if (aiGenerateBtn) aiGenerateBtn.disabled = false;
@@ -1028,110 +1023,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (spinner) spinner.style.display = 'none';
                 };
 
-                const performBypassLoad = (url, attempt = 1) => {
-                    console.log(`%cAI Engine: Attempting Bypass Layer ${attempt}...`, 'color:#d4af37;');
+                const performPurePollinationsLoad = (url, attempt = 1) => {
+                    console.log(`%cPure Pollinations: Attempting Layer ${attempt}...`, 'color:#d4af37;');
 
                     const imgPreloader = new Image();
                     imgPreloader.crossOrigin = "anonymous";
 
                     imgPreloader.onload = () => {
                         if (isFallbackTriggered) return;
-                        clearTimeout(masterTimeout);
                         snapState.currentImageUrl = url;
                         renderFinalImage(url);
-                        console.log(`%cAI Engine: Layer ${attempt} SUCCESS! Live AI Restored.`, 'color:#2ecc71;font-weight:bold;');
+                        console.log(`%cPure Pollinations: Layer ${attempt} SUCCESS!`, 'color:#2ecc71;font-weight:bold;');
                     };
 
                     imgPreloader.onerror = () => {
                         if (isFallbackTriggered) return;
                         if (attempt === 1) {
-                            performBypassLoad(wpTunnel, 2);
+                            performPurePollinationsLoad(wpTunnel, 2);
                         } else if (attempt === 2) {
-                            performBypassLoad(airforceUrl + '&v=43', 3); // Updated cache buster
+                            performPurePollinationsLoad(directUrl, 3);
                         } else {
-                            triggerLocalSmartFallback(rawUserText || finalPrompt);
+                            console.error("AI Engine: All Pollinations layers failed.");
+                            resetLoadingState();
+                            showAlert("Pollinations AI is currently sketching elsewhere. Please try again in a moment.", "warning");
                         }
                     };
 
-                    if (!isFallbackTriggered) {
-                        imgPreloader.src = url;
-                    }
+                    imgPreloader.src = url;
                 };
 
-                const triggerLocalSmartFallback = async (promptForVault) => {
-                    if (isFallbackTriggered) return;
-                    isFallbackTriggered = true;
-                    clearTimeout(masterTimeout);
-                    console.warn("AI Engine: All Live Layers Blocked. Booting Smart Local Vault V3.0...");
-
-                    try {
-                        let vaultMatch = null;
-                        const text = promptForVault ? promptForVault.toLowerCase() : "";
-
-                        // Smart Randomized Local Vault V2.0 (Full-View Masterworks)
-                        if (text.includes("car") || text.includes("vehicle") || text.includes("automobile")) {
-                            const cars = ["assets/ai/car_1.png", "assets/ai/car_2.png", "assets/ai/car_3.png"];
-                            vaultMatch = cars[Math.floor(Math.random() * cars.length)];
-                        } else if (text.includes("wedding") || text.includes("marriage") || text.includes("bridal") || text.includes("anniversary")) {
-                            vaultMatch = "assets/ai/wedding_1.png";
-                        } else if (text.includes("birthday") || text.includes("party") || text.includes("kid")) {
-                            vaultMatch = "assets/ai/birthday_1.png";
-                        } else if (text.includes("chocolate") || text.includes("fudge") || text.includes("dark") || text.includes("cocoa")) {
-                            vaultMatch = "assets/ai/chocolate_1.png";
-                        } else if (text.includes("moon") || text.includes("galaxy") || text.includes("space") || text.includes("astronomy")) {
-                            // High-quality artistic wedding/white cake as moon fallback
-                            vaultMatch = "assets/ai/wedding_1.png";
-                        } else {
-                            // High-quality generic luxury cake if no keyword match
-                            const gallery = [
-                                "assets/ai/car_1.png", "assets/ai/car_2.png", "assets/ai/car_3.png",
-                                "assets/ai/wedding_1.png", "assets/ai/birthday_1.png", "assets/ai/chocolate_1.png"
-                            ];
-                            vaultMatch = gallery[Math.floor(Math.random() * gallery.length)];
-                        }
-
-                        console.log("AI Engine: Layer 2 serving local AI masterwork (Full-View) -", vaultMatch);
-
-                        const imgPreloader2 = new Image();
-                        imgPreloader2.onload = () => {
-                            console.log("AI Engine: Layer 2 Render Success");
-                            renderFinalImage(vaultMatch);
-                        };
-                        imgPreloader2.onerror = () => {
-                            console.error("AI Engine: Layer 2 Failed to load local vault image.");
-                            triggerEmergencyFallback();
-                        }
-                        imgPreloader2.src = vaultMatch;
-
-                    } catch (e) {
-                        console.error("AI Engine: Layer 2 Exception.", e);
-                        triggerEmergencyFallback();
-                    }
-                };
-
-                const triggerEmergencyFallback = () => {
-                    if (isFallbackTriggered) return;
-                    isFallbackTriggered = true;
-                    clearTimeout(masterTimeout);
-                    console.warn("AI Engine: All active layers failed. Falling back to Layer 3 (Cache).");
-                    const emergencyCakes = [
-                        "https://images.unsplash.com/photo-1542826438-bd32f43d626f?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1562440499-64c9a111f11f?q=80&w=1024&auto=format&fit=crop",
-                        "https://images.unsplash.com/photo-1586985289906-406988974504?q=80&w=1024&auto=format&fit=crop"
-                    ];
-                    renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
-                };
-
-                // Master Timeout: 35 seconds to allow for deep generation
-                masterTimeout = setTimeout(() => {
-                    triggerLocalSmartFallback(rawUserText || finalPrompt);
-                }, 35000);
+                performPurePollinationsLoad(weservTunnel, 1);
             };
 
             startSovereignEngineV38();
         });
     }
+
 
     // Studio Add to Cart Logic (GATED)
     const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
