@@ -924,13 +924,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // V38 SPECIALIST LOGIC: If the user types a specific shape/object (e.g. "car shape cake"),
                     // the AI must prioritize THAT exact shape above all other stylistic noise.
-                    let expanded = `[EXTREME CLOSEUP MACRO SHOT] Exact Subject: ${input}. `;
-                    expanded += `This is a highly realistic 3D sculpted cake shaped EXACTLY like the subject requested above. `;
-                    expanded += `The entire structure is made of flawless ${colorContext} fondant, airbrushed food coloring, and hyper-realistic sugar art. `;
-                    expanded += `Aesthetic: ${styleContext} | Occasion: ${occasionContext}. `;
-                    expanded += `Set in a bright, modern bakery studio. ${coreBase} seed:${uniqueRef}`;
-
-                    return expanded;
+                    const expandedPrompt = `A hyper-realistic 3D sculpted cake shaped EXACTLY like the ${input}. This is a masterpiece couture cake creation, shown in a clean, professional wide shot. The entire structure is made of flawless WHITE fondant, airbrushed food coloring, and hyper-realistic sugar art. Aesthetic: LUXURY | Occasion: WEDDING. Professional high-end food photography, 8k resolution, cinematic studio lighting, sharp focus, clean background.`;
+                    return expandedPrompt;
                 };
 
                 const finalPrompt = expandPrompt(rawUserText);
@@ -975,7 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const triggerLocalSmartFallback = async () => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Pollinations) blocked. Booting Layer 2 (Smart Local Vault V2.0)...");
+                    console.warn("AI Engine: Layer 1 (Airforce/Live) blocked. Booting Layer 2 (Smart Local Vault V3.0)...");
 
                     try {
                         if (isFallbackTriggered) return;
@@ -995,6 +990,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             vaultMatch = "assets/ai/birthday_1.png";
                         } else if (text.includes("chocolate") || text.includes("fudge") || text.includes("dark") || text.includes("cocoa")) {
                             vaultMatch = "assets/ai/chocolate_1.png";
+                        } else if (text.includes("moon") || text.includes("galaxy") || text.includes("space") || text.includes("astronomy")) {
+                            // High-quality artistic wedding/white cake as moon fallback
+                            vaultMatch = "assets/ai/wedding_1.png";
                         } else {
                             // High-quality generic luxury cake if no keyword match
                             const gallery = [
