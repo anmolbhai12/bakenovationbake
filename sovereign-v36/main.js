@@ -954,9 +954,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Layer 2: Lexica API Search (Finds existing AI images if Pollinations is blocked by ISP)
                 // Layer 3: Emergency Cache
 
+                // --- THE UNBLOCKABLE LOCAL GOOGLE PROXY ---
+                // We use your Google Apps Script Web App to securely fetch the image and return it as Base64.
+                // You must deploy ai_proxy.gs and paste the Web App URL here!
+                const GOOGLE_PROXY_URL = "YOUR_GOOGLE_WEB_APP_URL_HERE";
                 const timeStr = new Date().getTime(); // Absolute cache buster
-                // Use image.pollinations.ai to avoid 302 redirects which trigger strict CORS blocks
-                const pollinationsDirectUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?seed=${imageSeed}&width=1024&height=1024&nologo=true&model=flux&t=${timeStr}`;
+                const proxyFetchUrl = `${GOOGLE_PROXY_URL}?prompt=${encodeURIComponent(finalPrompt)}&t=${timeStr}`;
 
                 let masterTimeout;
                 let isFallbackTriggered = false;
@@ -1039,28 +1042,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     triggerLocalSmartFallback();
                 }, 15000);
 
-                // Execute Layer 1: Direct Image Load
-                function performDirectAILoad() {
-                    console.log("AI Engine: Requesting Direct Image Injection...");
+                // Execute Layer 1: Secure Google Proxy (Unblockable)
+                async function performDirectAILoad() {
+                    console.log("AI Engine: Requesting Unblockable Google Proxy Injection...");
 
-                    const imgPreloader = new Image();
-
-                    imgPreloader.onload = () => {
-                        if (!isFallbackTriggered) {
-                            clearTimeout(masterTimeout);
-                            isFallbackTriggered = true;
-                            console.log("AI Engine: Layer 1 Render Success");
-                            renderFinalImage(pollinationsDirectUrl);
-                        }
-                    };
-
-                    imgPreloader.onerror = (e) => {
-                        console.error("AI Direct Engine Failed:", e);
+                    if (GOOGLE_PROXY_URL === "YOUR_GOOGLE_WEB_APP_URL_HERE") {
+                        console.warn("AI Engine: Google Proxy not configured yet. Skipping to Layer 2.");
                         triggerLocalSmartFallback();
-                    };
+                        return;
+                    }
 
-                    // Setting src triggers the browser request automatically
-                    imgPreloader.src = pollinationsDirectUrl;
+                    try {
+                        const response = await fetch(proxyFetchUrl);
+                        const data = await response.json();
+
+                        if (data && data.image_base64) {
+                            if (!isFallbackTriggered) {
+                                clearTimeout(masterTimeout);
+                                isFallbackTriggered = true;
+                                console.log("AI Engine: Layer 1 Proxy Render Success");
+                                const base64ImageObj = "data:image/jpeg;base64," + data.image_base64;
+                                renderFinalImage(base64ImageObj);
+                            }
+                        } else {
+                            throw new Error("Invalid Base64 Payload from Proxy");
+                        }
+                    } catch (e) {
+                        console.error("AI Proxy Engine Failed:", e);
+                        triggerLocalSmartFallback();
+                    }
                 }
 
                 // Ignite
