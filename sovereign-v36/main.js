@@ -975,29 +975,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                const triggerUnsplashFallback = async () => {
+                const triggerLoremFlickrFallback = async () => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (Unsplash Dynamic Search)...");
+                    console.warn("AI Engine: Layer 1 (Pollinations) failed. Booting Layer 2 (LoremFlickr Dynamic Search)...");
 
                     try {
-                        // Extract keyword, prioritize the first noun/adjective (e.g. 'car' from 'car shape cake')
-                        let keyword = "luxury cake";
+                        let keyword = "cake";
                         if (rawUserText && rawUserText.trim() !== '') {
                             const words = rawUserText.trim().split(' ');
-                            keyword = words[0] + " cake";
+                            keyword = words[0];
                         }
 
-                        if (isFallbackTriggered) return;
-                        isFallbackTriggered = true;
-                        clearTimeout(masterTimeout);
+                        const flickrUrl = `https://loremflickr.com/1024/1024/${encodeURIComponent(keyword)},cake/all`;
+                        console.log("AI Engine: Layer 2 (Flickr) Triggered -", flickrUrl);
 
-                        // Unsplash source URL dynamically fetches a random image matching the keyword
-                        const unsplashUrl = `https://source.unsplash.com/1024x1024/?${encodeURIComponent(keyword)}`;
-                        console.log("AI Engine: Layer 2 (Unsplash) Triggered -", unsplashUrl);
-                        renderFinalImage(unsplashUrl);
+                        const imgPreloader2 = new Image();
+                        imgPreloader2.onload = () => {
+                            if (!isFallbackTriggered) {
+                                clearTimeout(masterTimeout);
+                                isFallbackTriggered = true;
+                                console.log("AI Engine: Layer 2 Render Success");
+                                renderFinalImage(flickrUrl);
+                            }
+                        };
+                        imgPreloader2.onerror = () => {
+                            console.error("AI Engine: Layer 2 Failed to load image.");
+                            triggerEmergencyFallback();
+                        }
+                        imgPreloader2.src = flickrUrl;
 
                     } catch (e) {
-                        console.error("AI Engine: Layer 2 Failed.", e);
+                        console.error("AI Engine: Layer 2 Exception.", e);
                         triggerEmergencyFallback();
                     }
                 };
@@ -1016,9 +1024,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderFinalImage(emergencyCakes[Math.floor(Math.random() * emergencyCakes.length)]);
                 };
 
-                // Give Pollinations 15 seconds before failing over to Unsplash Layer 2
+                // Give Pollinations 15 seconds before failing over to Layer 2
                 masterTimeout = setTimeout(() => {
-                    triggerUnsplashFallback();
+                    triggerLoremFlickrFallback();
                 }, 15000);
 
                 // Execute Layer 1: Direct Image Load
@@ -1038,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     imgPreloader.onerror = (e) => {
                         console.error("AI Direct Engine Failed:", e);
-                        triggerUnsplashFallback();
+                        triggerLoremFlickrFallback();
                     };
 
                     // Setting src triggers the browser request automatically
