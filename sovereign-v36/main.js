@@ -975,7 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const triggerLocalSmartFallback = async () => {
                     if (isFallbackTriggered) return;
-                    console.warn("AI Engine: Layer 1 (Pollinations) blocked. Booting Layer 2 (Smart Local Vault)...");
+                    console.warn("AI Engine: Layer 1 (Pollinations) blocked. Booting Layer 2 (Smart Local Vault V2.0)...");
 
                     try {
                         if (isFallbackTriggered) return;
@@ -985,21 +985,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         let vaultMatch = null;
                         const text = rawUserText ? rawUserText.toLowerCase() : "";
 
-                        if (text.includes("car")) {
-                            vaultMatch = "assets/ai/car.png";
-                        } else if (text.includes("wedding") || text.includes("marriage") || text.includes("bridal")) {
-                            vaultMatch = "assets/ai/wedding.png";
-                        } else if (text.includes("birthday") || text.includes("party")) {
-                            vaultMatch = "assets/ai/birthday.png";
-                        } else if (text.includes("chocolate") || text.includes("fudge") || text.includes("dark")) {
-                            vaultMatch = "assets/ai/chocolate.png";
+                        // Smart Randomized Local Vault V2.0 (Full-View Masterworks)
+                        if (text.includes("car") || text.includes("vehicle") || text.includes("automobile")) {
+                            const cars = ["assets/ai/car_1.png", "assets/ai/car_2.png", "assets/ai/car_3.png"];
+                            vaultMatch = cars[Math.floor(Math.random() * cars.length)];
+                        } else if (text.includes("wedding") || text.includes("marriage") || text.includes("bridal") || text.includes("anniversary")) {
+                            vaultMatch = "assets/ai/wedding_1.png";
+                        } else if (text.includes("birthday") || text.includes("party") || text.includes("kid")) {
+                            vaultMatch = "assets/ai/birthday_1.png";
+                        } else if (text.includes("chocolate") || text.includes("fudge") || text.includes("dark") || text.includes("cocoa")) {
+                            vaultMatch = "assets/ai/chocolate_1.png";
                         } else {
-                            // Random local high-quality AI cake if no specific match
-                            const vault = ["assets/ai/car.png", "assets/ai/wedding.png", "assets/ai/birthday.png", "assets/ai/chocolate.png"];
-                            vaultMatch = vault[Math.floor(Math.random() * vault.length)];
+                            // High-quality generic luxury cake if no keyword match
+                            const gallery = [
+                                "assets/ai/car_1.png", "assets/ai/car_2.png", "assets/ai/car_3.png",
+                                "assets/ai/wedding_1.png", "assets/ai/birthday_1.png", "assets/ai/chocolate_1.png"
+                            ];
+                            vaultMatch = gallery[Math.floor(Math.random() * gallery.length)];
                         }
 
-                        console.log("AI Engine: Layer 2 serving local AI masterwork -", vaultMatch);
+                        console.log("AI Engine: Layer 2 serving local AI masterwork (Full-View) -", vaultMatch);
 
                         const imgPreloader2 = new Image();
                         imgPreloader2.onload = () => {
