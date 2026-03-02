@@ -53,7 +53,8 @@ function handleRequest(e) {
  */
 // ─── AI PROXY (GOOGLE IMAGEN 3) ─────────────────────────────────────────────
 
-const GEMINI_API_KEY = 'AIzaSyCzMpKbYF7QmtY3dFz5wKxJaecDC7DIv1Y';
+// --- AI CONFIGURATION (v62) ---
+// Note: Gemini API Key removed as we are now using the Flux Unbreakable Tunnel (Free).
 
 /**
  * AI PROXY TUNNEL (Official Flux Unbreakable v62)
