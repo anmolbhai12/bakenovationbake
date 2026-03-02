@@ -51,112 +51,62 @@ function handleRequest(e) {
  * AI PROXY TUNNEL
  * Bypasses local ISP blocks by fetching imagery via Google's infrastructure.
  */
+// ─── AI PROXY (GOOGLE IMAGEN 3) ─────────────────────────────────────────────
+
+const GEMINI_API_KEY = 'AIzaSyCzMpKbYF7QmtY3dFz5wKxJaecDC7DIv1Y';
+
+/**
+ * AI PROXY TUNNEL (Official Google Imagen 3)
+ * Bypasses all ISP blocks by using Google's backbone to generate images.
+ */
 function handleAIProxy(data) {
   try {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // Extreme Spoofing Headers to bypass Cloudflare 530 Blocks
-    const headers = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
+    // Official Google AI Studio Imagen 3 Endpoint
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${GEMINI_API_KEY}`;
+
+    const payload = {
+      "instances": [
+        { "prompt": prompt }
+      ],
+      "parameters": {
+        "sampleCount": 1,
+        "aspectRatio": "1:1",
+        "personGeneration": "allow_adult",
+        "outputMimeType": "image/jpeg"
+      }
     };
 
-    const engines = [
-      'https://api.airforce/v1/imagine2?model=flux&prompt=',
-      'https://image.pollinations.ai/prompt/',
-      'https://pollinations.ai/p/'
-    ];
-
-    let errorLog = [];
-
-    // --- ENGINES 1-3 (STILL TRYING POLLINATIONS/AIRFORCE) ---
-    for (let i = 0; i < engines.length; i++) {
-        try {
-            const timeBust = Date.now() + Math.floor(Math.random() * 1000);
-            const targetUrl = engines[i] + encodeURIComponent(prompt) + (i >= 1 ? (`?width=512&height=512&nologo=true&seed=${timeBust}`) : '');
-            
-            const response = UrlFetchApp.fetch(targetUrl, {
-                'method': 'get',
-                'headers': headers,
-                'muteHttpExceptions': true,
-                'followRedirects': true
-            });
-
-            const code = response.getResponseCode();
-            if (code === 200) {
-                const blob = response.getBlob();
-                const contentType = blob.getContentType();
-                if (contentType && contentType.indexOf('image') !== -1) {
-                    const base64Text = Utilities.base64Encode(blob.getBytes());
-                    return jsonResponse({ 
-                        status: 'success',
-                        image_base64: base64Text, 
-                        engine: ["Airforce", "Pollinations_v1", "Pollinations_v2"][i]
-                    });
-                }
-            }
-            errorLog.push(`Eng${i}: ${code}`);
-        } catch(e) {
-            errorLog.push(`Eng${i}: ${e.toString().substring(0,20)}`);
-        }
-    }
-
-    // --- ENGINE 4 (THE NUCLEAR OPTION: AI HORDE) ---
-    try {
-      const hordePayload = {
-        "prompt": prompt,
-        "params": { "n": 1, "steps": 20, "width": 512, "height": 512, "sampler_name": "k_euler_a" }
-      };
-      
-      const hordeStart = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/async', {
-        'method': 'post',
-        'contentType': 'application/json',
-        'headers': { 'apikey': '0000000000', 'Client-Agent': 'Bakenovation:1.0:Agent' },
-        'payload': JSON.stringify(hordePayload),
-        'muteHttpExceptions': true
-      });
-
-      if (hordeStart.getResponseCode() === 202) {
-        const id = JSON.parse(hordeStart.getContentText()).id;
-        // Poll for 15 seconds max
-        for (let attempt = 0; attempt < 10; attempt++) {
-          Utilities.sleep(1500);
-          const status = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/check/' + id, { 'muteHttpExceptions': true });
-          const res = JSON.parse(status.getContentText());
-          if (res.done) {
-            const final = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/status/' + id, { 'muteHttpExceptions': true });
-            const finalRes = JSON.parse(final.getContentText());
-            if (finalRes.generations && finalRes.generations[0]) {
-               // AI Horde returns a URL for images sometimes, or we need to download it
-               const imgUrl = finalRes.generations[0].img;
-               const imgBlob = UrlFetchApp.fetch(imgUrl).getBlob();
-               return jsonResponse({ 
-                 status: 'success', 
-                 image_base64: Utilities.base64Encode(imgBlob.getBytes()), 
-                 engine: "AI_Horde_Nuclear_Fallback" 
-               });
-            }
-          }
-        }
-        errorLog.push(`Horde: Timeout`);
-      } else {
-        errorLog.push(`Horde: ${hordeStart.getResponseCode()}`);
-      }
-    } catch(e) {
-      errorLog.push(`Horde_Err: ${e.toString().substring(0,20)}`);
-    }
-
-    return jsonResponse({ 
-        status: 'error', 
-        message: 'Extreme Service Blockade', 
-        details: errorLog.join(' | ') 
+    const response = UrlFetchApp.fetch(url, {
+      'method': 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload),
+      'muteHttpExceptions': true
     });
+
+    const resJson = JSON.parse(response.getContentText());
+    
+    if (response.getResponseCode() === 200 && resJson.predictions && resJson.predictions[0]) {
+      // Imagen 3 returns base64 in the bytesBase64Encoded field
+      const base64Content = resJson.predictions[0].bytesBase64Encoded;
+      
+      return jsonResponse({ 
+        status: 'success',
+        image_base64: base64Content, 
+        engine: "google_imagen_3_official"
+      });
+    } else {
+      const errorMsg = resJson.error ? resJson.error.message : "Google API Error";
+      return jsonResponse({ 
+        status: 'error', 
+        message: 'Google Engine Refused: ' + errorMsg,
+        details: response.getContentText()
+      });
+    }
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Global Proxy Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Imagen Exception: ' + e.toString() });
   }
 }
 

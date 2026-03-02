@@ -1000,112 +1000,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 // We expand the prompt and append it to the Pollinations URL.
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
-                // === POLLINATIONS AI ENGINE — HYPER-RESILIENT V56 ===
-                const domains = ['image.pollinations.ai/prompt', 'pollinations.ai/p'];
-                let currentDomainIndex = 0;
-                let fallbackStage = 1; // 1: Full, 2: Core Details, 3: Subject Only
-
+                // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
                 const tryGeneration = () => {
-                    const style = snapState.style;
-                    const occasion = snapState.type;
-                    const flavor = snapState.flavor;
-                    const size = snapState.size;
-                    const subject = rawUserText || "luxury cake";
+                    const finalPrompt = expandPrompt(rawUserText);
+                    console.log(`%c🚀 GENERATING WITH GOOGLE IMAGEN 3`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
+                    console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                    let promptToUse = "";
-                    if (fallbackStage === 1) {
-                        promptToUse = expandPrompt(rawUserText);
-                    } else if (fallbackStage === 2) {
-                        promptToUse = `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake`;
-                    } else {
-                        promptToUse = subject.toLowerCase().includes('cake') ? subject : `${subject} cake`;
-                    }
-
-                    const domain = domains[currentDomainIndex];
-                    const cacheBuster = `&t=${Date.now()}`;
-                    const pollinationsUrl = `https://${domain}/${encodeURIComponent(promptToUse)}?width=512&height=512&seed=${imageSeed}&nologo=true${cacheBuster}`;
-
-                    console.log(`%c🔱 POLLINATIONS [DOMAIN: ${currentDomainIndex + 1} | STAGE: ${fallbackStage}]`, 'color:#d4af37;font-weight:bold;');
-                    if (fallbackStage > 1) console.log(`%c⚠️ Using simplified fallback prompt: ${promptToUse}`, 'color:#ffa500; font-style:italic;');
-
-                    if (aiGeneratedImage) {
-                        aiGeneratedImage.onload = () => {
-                            console.log(`%c✅ Pollinations Ready! [Stage ${fallbackStage}]`, 'color:#2ecc71;font-weight:bold;');
-                            renderFinalImage(pollinationsUrl);
-                        };
-
-                        aiGeneratedImage.onerror = () => {
-                            console.warn(`Pollinations failed at Stage ${fallbackStage} on domain ${currentDomainIndex + 1}.`);
-
-                            // 1. Try next domain for SAME stage
-                            currentDomainIndex++;
-                            if (currentDomainIndex < domains.length) {
-                                console.log(`🔄 Trying alternative domain...`);
-                                tryGeneration();
-                                return;
-                            }
-
-                            // 2. Both domains failed for current stage, move to NEXT stage and reset domain
-                            currentDomainIndex = 0;
-                            fallbackStage++;
-
-                            if (fallbackStage <= 3) {
-                                console.log(`%c🔄 Falling back to Stage ${fallbackStage} (Simplifying prompt)...`, 'color:#e67e22; font-weight:bold;');
-                                tryGeneration();
-                            } else if (fallbackStage === 4) {
-                                console.log(`%c🚀 TRIGGERING STAGE 4: UNBREAKABLE GAS PROXY TUNNEL`, 'color:#9b59b6; font-weight:bold; font-size: 1.1em;');
-                                tryGasProxy(promptToUse);
-                            } else {
-                                console.error('All Pollinations stages and domains failed.');
-                                console.log('%cFinal Diagnostic URL:', 'color:#3498db;font-weight:bold;', pollinationsUrl);
-                                resetLoadingState();
-                                showAlert('AI Studio connection issue. Please check your internet or try again in a moment! 🎂', 'warning');
-                            }
-                        };
-
-                        aiGeneratedImage.src = pollinationsUrl;
-                    }
+                    tryGasProxy(finalPrompt);
                 };
 
                 const tryGasProxy = (prompt) => {
-                    const proxyUrl = UNIFIED_GAS_URL || 'https://script.google.com/macros/s/AKfycbxIBZDy9YAWsw2TEcmPytUIxEwaMtfxIrmdbNq6ABPo4yqaxiO_1ni5frvriGO1ey90/exec';
+                    const proxyUrl = UNIFIED_GAS_URL;
 
-                    console.log(`%c📡 Fetching from Unbreakable Proxy...`, 'color:#9b59b6;');
+                    console.log(`%c📡 Establishing Secure Google AI Tunnel...`, 'color:#9b59b6;');
 
                     fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
                         .then(response => {
-                            console.log(`%c📡 Proxy Response Header Code: ${response.status}`, 'color:#9b59b6;');
+                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
                             return response.json();
                         })
                         .then(data => {
-                            console.log('--- 🔍 UNBREAKABLE STAGE 4 DIAGNOSTICS ---');
-                            console.dir(data); // Log full data object for analysis
-
                             if (data.status === 'success' && data.image_base64) {
-                                console.log(`%c✅ Stage 4 Success! (${data.engine})`, 'color:#2ecc71; font-weight:bold;');
-                                const base64Url = `data:image/webp;base64,${data.image_base64}`;
+                                console.log(`%c✅ Google Imagen 3 Success!`, 'color:#2ecc71; font-weight:bold;');
+                                const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
-                                const errorMsg = data.details || data.message || data.error || 'Unspecified Proxy Fail';
+                                const errorMsg = data.message || data.error || 'Google Engine Timeout';
                                 throw new Error(errorMsg);
                             }
                         })
                         .catch(err => {
-                            console.error('❌ Stage 4 Critical Failure:', err);
+                            console.error('❌ Google AI Tunnel Failure:', err);
                             resetLoadingState();
 
-                            let userError = 'AI Studio connection issue.';
+                            let userError = 'AI Studio is currently experiencing high demand.';
                             if (err.message.includes('Unexpected token')) {
-                                userError = 'Your Google Proxy script is returning an error page instead of an image. Please check your script deployment!';
-                            } else if (err.message.includes('Proxy Engines Failed')) {
-                                userError = 'The AI engines are currently overloaded even for Google. Please try again in 1 minute!';
+                                userError = 'Your Google Proxy script needs to be re-deployed. Please check your Apps Script!';
+                            } else if (err.message.includes('Refused')) {
+                                userError = 'Google AI refused the prompt. Please try a simpler description! 🎂';
                             }
 
-                            showAlert(`${userError} 🎂`, 'warning');
+                            showAlert(`${userError}`, 'warning');
                         });
                 };
 
-                console.log('%cInitial Prompt:', 'color:#f5e4bc;', expandPrompt(rawUserText));
                 tryGeneration();
             };
 
