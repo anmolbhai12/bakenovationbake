@@ -951,9 +951,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // === AI HORDE ENGINE V8 (STABLE DIFFUSION COMMUNITY CLUSTER) ===
-                // Pollinations is currently down globally (530). AI Horde is free,
-                // requires no API key, and works worldwide.
+                // === POLLINATIONS AI ENGINE V9 (FLUX PRO) ===
+                // Pollinations is our primary engine for hyper-realistic cake design.
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
                 const expandPrompt = (input) => {
@@ -972,12 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `(${style} ${occasion} cake:1.3), ${flavor} flavored, ${size}, luxury couture bakery, (hyperrealistic food photography:1.2), studio lighting, 8k, bokeh, sharp focus`;
                 };
 
-                // Negative prompt — critical for SD quality
-                const negativePrompt = 'ugly, blurry, deformed, low quality, bad anatomy, watermark, text, logo, cartoon, anime, drawing, sketch, painting, unrealistic, plastic, boring, generic, out of frame, extra fingers, duplicate';
-
-                const finalPrompt = expandPrompt(rawUserText);
-                console.log('%c🔱 AI HORDE ENGINE v9 — STABLE DIFFUSION', 'color:#d4af37;font-weight:bold;font-size:16px;');
-                console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
+                // Expand and generate via Pollinations AI
 
                 const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
@@ -1000,92 +994,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (spinner) spinner.style.display = 'none';
                 };
 
-                // Step 1: Submit generation job to AI Horde
-                const submitHordeJob = async () => {
-                    try {
-                        const response = await fetch('https://stablehorde.net/api/v2/generate/async', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'apikey': '0000000000',
-                                'Client-Agent': 'bakenovation:1.0:anmolbhai12@github'
-                            },
-                            body: JSON.stringify({
-                                // SD uses "prompt ### negative" format for combined prompts
-                                prompt: `${finalPrompt} ### ${negativePrompt}`,
-                                params: {
-                                    sampler_name: 'k_euler_a',
-                                    cfg_scale: 9.5,      // Higher = stronger prompt adherence
-                                    seed: imageSeed.toString(),
-                                    height: 512,
-                                    width: 512,
-                                    steps: 35,           // More = more detail
-                                    n: 1
-                                },
-                                models: ['ICBINP - I Can\'t Believe It\'s Not Photography'],
-                                r2: false,
-                                shared: false,
-                                nsfw: false,
-                                censor_nsfw: true
-                            })
-                        });
+                // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
+                // Pollinations provides high-speed, direct image generation.
+                // We expand the prompt and append it to the Pollinations URL.
+                const finalPrompt = expandPrompt(rawUserText);
+                const encodedPrompt = encodeURIComponent(finalPrompt);
+                const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&model=flux&nologo=true`;
 
-                        if (!response.ok) throw new Error(`Horde submit error: ${response.status}`);
-                        const data = await response.json();
-                        const jobId = data.id;
-                        console.log(`%c✅ AI Horde job submitted! ID: ${jobId}`, 'color:#2ecc71;');
+                console.log('%c🔱 POLLINATIONS ENGINE v9 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                        // Step 2: Poll until done
-                        let polls = 0;
-                        const maxPolls = 23; // ~90 seconds timeout
-                        const pollInterval = setInterval(async () => {
-                            polls++;
-                            if (polls > maxPolls) {
-                                clearInterval(pollInterval);
-                                console.error('AI Horde: Generation timed out.');
-                                resetLoadingState();
-                                showAlert('AI generation is taking too long. Please try again! 🎂', 'warning');
-                                return;
-                            }
-
-                            try {
-                                const checkRes = await fetch(`https://stablehorde.net/api/v2/generate/check/${jobId}`, {
-                                    headers: { 'apikey': '0000000000' }
-                                });
-                                const check = await checkRes.json();
-                                console.log(`%cAI Horde: Queue position ${check.queue_position}, ETA ${check.wait_time}s`, 'color:#a0a0a0;font-size:11px;');
-
-                                if (check.done) {
-                                    clearInterval(pollInterval);
-
-                                    // Step 3: Fetch completed image
-                                    const statusRes = await fetch(`https://stablehorde.net/api/v2/generate/status/${jobId}`, {
-                                        headers: { 'apikey': '0000000000' }
-                                    });
-                                    const status = await statusRes.json();
-                                    if (status.generations && status.generations[0]) {
-                                        const imgData = status.generations[0].img;
-                                        // AI Horde returns a URL or base64
-                                        const imgSrc = imgData.startsWith('http') ? imgData : `data:image/webp;base64,${imgData}`;
-                                        console.log(`%c✅ AI Horde: Image ready!`, 'color:#2ecc71;font-weight:bold;');
-                                        renderFinalImage(imgSrc);
-                                    } else {
-                                        throw new Error('No image in Horde response');
-                                    }
-                                }
-                            } catch (pollErr) {
-                                console.error('AI Horde poll error:', pollErr);
-                            }
-                        }, 4000);
-
-                    } catch (err) {
-                        console.error('AI Horde engine error:', err);
+                // With Pollinations, we can just set the src directly and handle load event
+                if (aiGeneratedImage) {
+                    aiGeneratedImage.onload = () => {
+                        console.log(`%c✅ Pollinations: Image ready!`, 'color:#2ecc71;font-weight:bold;');
+                        renderFinalImage(pollinationsUrl);
+                    };
+                    aiGeneratedImage.onerror = () => {
+                        console.error('Pollinations engine error');
                         resetLoadingState();
                         showAlert('AI Studio is experiencing high demand. Please try again! 🎂', 'warning');
-                    }
-                };
-
-                submitHordeJob();
+                    };
+                    aiGeneratedImage.src = pollinationsUrl;
+                }
             };
 
             startSovereignEngineV38();
