@@ -49,91 +49,68 @@ function handleRequest(e) {
  */
 // ─── AI PROXY (GOOGLE IMAGEN 3) ─────────────────────────────────────────────
 
-// Securely fetch API Key from Script Properties (Prevents revocation via GitHub exposure)
-const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-
-/**
- * AI PROXY TUNNEL (Official Professional Google Imagen 3 v100)
- * Replaces unstable community servers with high-availability infrastructure.
- */
 function handleAIProxyV64(data) {
+  const diagnosticLog = [];
   try {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // 1. ATTEMPT PROFESSIONAL GOOGLE IMAGEN 3 (Shield 0)
-    try {
-      const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3:predict?key=${GEMINI_API_KEY}`;
-      const payload = {
-        "instances": [
-          { "prompt": prompt }
-        ],
-        "parameters": {
-          "sampleCount": 1
-        }
-      };
-
-      const googleResponse = UrlFetchApp.fetch(imagenUrl, {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(payload),
-        'muteHttpExceptions': true
-      });
-
-      if (googleResponse.getResponseCode() === 200) {
-        const result = JSON.parse(googleResponse.getContentText());
-        if (result.predictions && result.predictions[0] && result.predictions[0].bytesBase64Encoded) {
-          return jsonResponse({ 
-            status: 'success',
-            image_base64: result.predictions[0].bytesBase64Encoded, 
-            engine: "google_imagen_3_professional"
+    // 1. ATTEMPT PROFESSIONAL GOOGLE IMAGEN 3
+    if (!GEMINI_API_KEY) {
+        diagnosticLog.push("Google Error: GEMINI_API_KEY property is missing in Script Settings.");
+    } else {
+        try {
+          const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3:predict?key=${GEMINI_API_KEY}`;
+          const payload = { "instances": [{ "prompt": prompt }], "parameters": { "sampleCount": 1 } };
+          const googleResponse = UrlFetchApp.fetch(imagenUrl, {
+            'method': 'post', 'contentType': 'application/json', 'payload': JSON.stringify(payload), 'muteHttpExceptions': true
           });
+          
+          if (googleResponse.getResponseCode() === 200) {
+            const result = JSON.parse(googleResponse.getContentText());
+            if (result.predictions && result.predictions[0] && result.predictions[0].bytesBase64Encoded) {
+              return jsonResponse({ status: 'success', image_base64: result.predictions[0].bytesBase64Encoded, engine: "google_imagen_3_professional" });
+            }
+          } else {
+            diagnosticLog.push(`Google API Error (${googleResponse.getResponseCode()}): ${googleResponse.getContentText()}`);
+          }
+        } catch (e) { 
+          diagnosticLog.push("Google AI Studio Exception: " + e.toString());
         }
-      } else {
-        Logger.log("Google AI Studio Alert: " + googleResponse.getContentText());
-      }
-    } catch (googleError) {
-      Logger.log("Google Imagen Engine Exception: " + googleError.toString());
     }
 
-    // 2. EMERGENCY FALLBACK TO GRAND ATELIER (Shields 1-7)
+    // 2. EMERGENCY FALLBACK ENGINES
     const seed = Math.floor(Math.random() * 999999);
     const endpoints = [
-      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`,
-      `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux`,
-      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=search`,
-      `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}`
+      { name: "Shield 1", url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux` },
+      { name: "Shield 2", url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` },
+      { name: "Shield 3", url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` }
     ];
 
-    for (let i = 0; i < endpoints.length; i++) {
+    for (const endpoint of endpoints) {
       try {
-        const response = UrlFetchApp.fetch(endpoints[i], {
-          'method': 'get',
-          'muteHttpExceptions': true,
-          'followRedirects': true,
-          'timeoutInSeconds': 30
-        });
-
+        const response = UrlFetchApp.fetch(endpoint.url, { 'method': 'get', 'muteHttpExceptions': true, 'timeoutInSeconds': 20 });
         if (response.getResponseCode() === 200) {
           const blob = response.getBlob();
           if (blob.getContentType().indexOf('image') !== -1) {
-            return jsonResponse({ 
-              status: 'success',
-              image_base64: Utilities.base64Encode(blob.getBytes()), 
-              engine: "fallback_atelier_engine_" + (i+1)
-            });
+            return jsonResponse({ status: 'success', image_base64: Utilities.base64Encode(blob.getBytes()), engine: "fallback_" + endpoint.name });
           }
+        } else {
+            diagnosticLog.push(`${endpoint.name} Error (${response.getResponseCode()})`);
         }
-      } catch (e) {}
+      } catch (e) {
+          diagnosticLog.push(`${endpoint.name} Exception: ${e.toString()}`);
+      }
     }
 
     return jsonResponse({ 
       status: 'error', 
-      message: 'The Atelier is currently under heavy maintenance. Please try a simpler prompt or wait 30 seconds!' 
+      message: 'The Atelier is currently under heavy maintenance.',
+      diagnostics: diagnosticLog
     });
 
-  } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Master V90 Tunnel Exception: ' + e.toString() });
+  } catch(e) { 
+      return jsonResponse({ status: 'error', message: 'Critical Tunnel Exception', diagnostics: [e.toString()] }); 
   }
 }
 
