@@ -67,11 +67,22 @@ function handleAIProxyV64(data) {
 
     const seed = Math.floor(Math.random() * 999999);
     
-    // Engine 1: Pollinations (Standard)
+    // THE ULTIMATE MEGA-STABLE ENGINE LIST (v65)
     const endpoints = [
+      // 1. FLUX PRO (Pollinations)
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`,
+      
+      // 2. FLUX FAST (Airforce)
       `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux`,
-      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true`
+      
+      // 3. STABLE DIFFUSION (Standard)
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&seed=${seed}&nologo=true`,
+      
+      // 4. TURBO (Simplest URL)
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?nologo=true`,
+      
+      // 5. GLOBAL FALLBACK
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
     ];
 
     for (let i = 0; i < endpoints.length; i++) {
@@ -79,31 +90,34 @@ function handleAIProxyV64(data) {
         const response = UrlFetchApp.fetch(endpoints[i], {
           'method': 'get',
           'muteHttpExceptions': true,
-          'followRedirects': true
+          'followRedirects': true,
+          'timeoutInSeconds': 25
         });
 
         if (response.getResponseCode() === 200) {
           const blob = response.getBlob();
-          const base64Content = Utilities.base64Encode(blob.getBytes());
+          const contentType = blob.getContentType();
           
-          return jsonResponse({ 
-            status: 'success',
-            image_base64: base64Content, 
-            engine: "definitive_unbreakable_v64_engine_" + i
-          });
+          if (contentType && contentType.indexOf('image') !== -1) {
+            return jsonResponse({ 
+              status: 'success',
+              image_base64: Utilities.base64Encode(blob.getBytes()), 
+              engine: "mega_stable_v65_engine_" + (i+1)
+            });
+          }
         }
       } catch (e) {
-        Logger.log("Engine " + i + " failed: " + e.toString());
+        Logger.log("Engine " + i + " Alert: " + e.toString());
       }
     }
 
     return jsonResponse({ 
       status: 'error', 
-      message: 'All AI Tunnels are currently congested. Please try again in 30 seconds.'
+      message: 'The Bakenovation Atelier is currently over capacity. All 5 AI Tunnels are busy. Please wait 10 seconds and try again.'
     });
 
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Master v64 Tunnel Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Master V65 Tunnel Exception: ' + e.toString() });
   }
 }
 

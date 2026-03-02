@@ -1038,6 +1038,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 userError = 'Your Google Proxy script needs to be re-deployed. Please check your Apps Script!';
                             } else if (err.message.includes('Refused')) {
                                 userError = 'Google AI refused the prompt. Please try a simpler description! 🎂';
+                            } else if (err.message.includes('Atelier') || err.message.includes('congested')) {
+                                userError = err.message; // Use the specific message from GAS v65
                             }
 
                             showAlert(`${userError}`, 'warning');
