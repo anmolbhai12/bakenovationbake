@@ -1011,43 +1011,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec',
-                        'https://script.google.com/macros/s/AKfycb_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec'
+                        'https://script.google.com/macros/s/AKfycbz_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec',
+                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
                     ];
 
                     const seed = Math.floor(Math.random() * 1000000);
                     const encoded = encodeURIComponent(prompt);
 
-                    // PRIMARY DIRECT URL (Stable Flux)
-                    const directUrl = `https://pollinations.ai/prompt/${encoded}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`;
-                    const backupUrl = `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}`;
+                    // TRIPLE-SHIELD DIRECT FALLBACKS
+                    const shield1 = `https://pollinations.ai/prompt/${encoded}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;
+                    const shield2 = `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`;
+                    const shield3 = `https://image.pollinations.ai/prompt/${encoded}?nologo=true`;
 
-                    // 1. RENDER DIRECTLY (FAILSAFE)
-                    console.log("🚀 ACTIVATING BATTLE-HARDENED RENDERING...");
+                    console.log("🚀 ACTIVATING TRIPLE-SHIELD RESILIENCE (v80)...");
 
                     if (aiGeneratedImage) {
+                        let attempt = 0;
+                        const shields = [shield1, shield2, shield3];
+
                         aiGeneratedImage.onerror = function () {
-                            if (!this.dataset.tried) {
-                                this.dataset.tried = "1";
-                                console.warn("Primary failed. Trying backup...");
-                                this.src = backupUrl;
+                            attempt++;
+                            if (attempt < shields.length) {
+                                console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
+                                this.src = shields[attempt];
+                            } else {
+                                console.error("❌ All Shields Exhausted.");
+                                showAlert("Atelier is exceptionally busy. Please try a simpler prompt.", "error");
+                                resetLoadingState();
                             }
                         };
+
                         aiGeneratedImage.onload = function () {
+                            console.log(`%c✨ Masterpiece Rendered (Shield ${attempt + 1})`, 'color:#d4af37; font-weight:bold;');
                             this.classList.remove('sketching');
                             resetLoadingState();
+
+                            // Only after successful load, show the action buttons
+                            const resultActions = document.getElementById('ai-result-actions');
+                            if (resultActions) resultActions.style.display = 'flex';
+
+                            // Sync to Gallery
+                            addToGallery(this.src, "AI Masterpiece");
                         };
-                        aiGeneratedImage.src = directUrl;
+
+                        // Start the shield chain
+                        aiGeneratedImage.src = shield1;
                     }
 
-                    showAlert("Atelier is Hand-Sketching... 🎂", "success");
+                    showAlert("Chef is sketching your vision... 🎂", "success");
 
-                    // 2. BACKGROUND SYNC (PRESERVATION)
-                    for (let j = 0; j < GAS_URLS.length; j++) {
-                        try {
-                            fetch(`${GAS_URLS[j]}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
-                        } catch (e) { }
-                    }
+                    // SILENT BACKGROUND SYNC (PRESERVE IF POSSIBLE)
+                    GAS_URLS.forEach(url => {
+                        fetch(`${url}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
+                    });
                 };
 
                 tryGasProxy(finalPrompt);
