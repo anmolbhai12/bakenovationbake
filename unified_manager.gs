@@ -91,10 +91,13 @@ function handleAIProxyV64(data) {
 
     // 2. EMERGENCY FALLBACK ENGINES
     const seed = Math.floor(Math.random() * 999999);
+    // Extract key cake terms for Unsplash search
+    const searchTerms = prompt.split(',').slice(0,2).join(',').replace(/[^\w\s,]/g,'').trim();
     const endpoints = [
-      { name: "Shield 1", url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux` },
-      { name: "Shield 2", url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` },
-      { name: "Shield 3", url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` }
+      { name: "Shield 1 (Pollinations Flux)", url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux` },
+      { name: "Shield 2 (Airforce)", url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` },
+      { name: "Shield 3 (Hercai)", url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` },
+      { name: "Shield 4 (Unsplash Photos)", url: `https://source.unsplash.com/1024x1024/?luxury,cake,${encodeURIComponent(searchTerms)}` }
     ];
 
     for (const endpoint of endpoints) {
