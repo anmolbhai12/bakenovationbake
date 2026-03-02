@@ -1068,23 +1068,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 const tryGasProxy = (prompt) => {
-                    const proxyUrl = UNIFIED_GAS_URL || 'https://script.google.com/macros/s/AKfycbxyRviChlnkUCq-M8FsglbT0d4pbzrR8-G7oYac4GEPiTrBkkusbkXWwDmc0qx1OUfcbQ/exec';
+                    const proxyUrl = UNIFIED_GAS_URL || 'https://script.google.com/macros/s/AKfycbxIBZDy9YAWsw2TEcmPytUIxEwaMtfxIrmdbNq6ABPo4yqaxiO_1ni5frvriGO1ey90/exec';
+
+                    console.log(`%c📡 Fetching from Unbreakable Proxy...`, 'color:#9b59b6;');
 
                     fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
-                        .then(response => response.json())
+                        .then(response => {
+                            console.log(`%c📡 Proxy Response Header Code: ${response.status}`, 'color:#9b59b6;');
+                            return response.json();
+                        })
                         .then(data => {
+                            console.log('--- 🔍 UNBREAKABLE STAGE 4 DIAGNOSTICS ---');
+                            console.dir(data); // Log full data object for analysis
+
                             if (data.status === 'success' && data.image_base64) {
                                 console.log(`%c✅ Stage 4 Success! (${data.engine})`, 'color:#2ecc71; font-weight:bold;');
                                 const base64Url = `data:image/webp;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
-                                throw new Error(data.message || 'Proxy returned no image');
+                                const errorMsg = data.message || data.error || data.debug_log || 'Unspecified Proxy Fail';
+                                throw new Error(errorMsg);
                             }
                         })
                         .catch(err => {
-                            console.error('Stage 4 GAS Proxy failed:', err);
+                            console.error('❌ Stage 4 Critical Failure:', err);
                             resetLoadingState();
-                            showAlert('AI Studio is currently unreachable due to local network restrictions. Please try again later! 🎂', 'warning');
+
+                            let userError = 'AI Studio connection issue.';
+                            if (err.message.includes('Unexpected token')) {
+                                userError = 'Your Google Proxy script is returning an error page instead of an image. Please check your script deployment!';
+                            } else if (err.message.includes('Proxy Engines Failed')) {
+                                userError = 'The AI engines are currently overloaded even for Google. Please try again in 1 minute!';
+                            }
+
+                            showAlert(`${userError} 🎂`, 'warning');
                         });
                 };
 
