@@ -1009,42 +1009,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     tryGasProxy(finalPrompt);
                 };
 
-                const tryGasProxy = (prompt) => {
-                    const proxyUrl = UNIFIED_GAS_URL;
+                const tryGasProxy = async (prompt) => {
+                    const GAS_URLS = [
+                        'https://script.google.com/macros/s/AKfycb_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec',
+                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
+                    ];
 
                     console.log(`%c📡 Establishing Secure Google AI Tunnel...`, 'color:#9b59b6;');
 
-                    fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
-                        .then(response => {
-                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.status === 'success' && data.image_base64) {
-                                console.log(`%c✅ Grand Atelier Success (v66)!`, 'color:#2ecc71; font-weight:bold;');
-                                const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
-                                renderFinalImage(base64Url);
-                            } else {
-                                const errorMsg = data.message || data.error || 'Google Engine Timeout';
-                                throw new Error(errorMsg);
-                            }
-                        })
-                        .catch(err => {
-                            console.error('❌ Google AI Tunnel Failure:', err);
-                            resetLoadingState();
+                    for (let j = 0; j < GAS_URLS.length; j++) {
+                        try {
+                            console.log(`📡 Attempting Tunnel ${j + 1}...`);
+                            const response = await fetch(`${GAS_URLS[j]}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`);
 
-                            let userError = 'AI Studio is currently experiencing high demand.';
-                            if (err.message.includes('Unexpected token')) {
-                                userError = 'Your Google Proxy script needs to be re-deployed. Please check your Apps Script!';
-                            } else if (err.message.includes('Refused')) {
-                                userError = 'Google AI refused the prompt. Please try a simpler description! 🎂';
-                            } else if (err.message.includes('Atelier') || err.message.includes('congested')) {
-                                userError = err.message; // Use the specific message from GAS v65
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.status === 'success' && data.image_base64) {
+                                    console.log(`%c✅ Grand Atelier Success (v68)!`, 'color:#2ecc71; font-weight:bold;');
+                                    renderFinalImage(`data:image/jpeg;base64,${data.image_base64}`);
+                                    return;
+                                }
                             }
+                        } catch (e) {
+                            console.warn(`Tunnel ${j + 1} Error:`, e);
+                        }
+                    }
 
-                            showAlert(`${userError}`, 'warning');
-                        });
+                    // FINAL EMERGENCY FALLBACK: Direct Browser Loading (Bypasses Proxy)
+                    console.log("🔥 EMERGENCY PROTOCOL: Activating Direct Browser Fallback...");
+                    const directUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+
+                    renderFinalImage(directUrl);
+                    showAlert("Direct Fallback Active. Rendering now!", "success");
                 };
+
+                tryGasProxy(finalPrompt);
 
                 tryGeneration();
             };
