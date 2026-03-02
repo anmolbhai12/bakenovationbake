@@ -963,12 +963,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // SD best practice: most important thing FIRST, use () for emphasis
                     if (input) {
-                        // User typed something specific like "doll" or "car" or "unicorn"
-                        // Don't add "cake" if already in input, wrap key detail in parens
                         const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
-                        return `(${subject}:1.4), ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, (hyperrealistic food photography:1.2), studio lighting, 8k, sharp focus, clean white background`;
+                        return `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
                     }
-                    return `(${style} ${occasion} cake:1.3), ${flavor} flavored, ${size}, luxury couture bakery, (hyperrealistic food photography:1.2), studio lighting, 8k, bokeh, sharp focus`;
+                    return `${style} ${occasion} cake, ${flavor} flavored, ${size}, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
                 };
 
                 // Expand and generate via Pollinations AI
@@ -976,7 +974,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const renderFinalImage = (srcData) => {
                     if (aiGeneratedImage) {
                         snapState.currentImageUrl = srcData;
-                        aiGeneratedImage.src = srcData;
+                        // Avoid infinite loop: only set src if it's different
+                        if (aiGeneratedImage.src !== srcData) {
+                            aiGeneratedImage.src = srcData;
+                        }
                         aiGeneratedImage.classList.remove('sketching');
                         addToGallery(srcData, "AI Generated Masterpiece");
                         gsap.fromTo(aiGeneratedImage,
