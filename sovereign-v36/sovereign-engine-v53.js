@@ -1000,24 +1000,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 // We expand the prompt and append it to the Pollinations URL.
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
-                const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&model=turbo&nologo=true`;
+                // === POLLINATIONS AI ENGINE — MULTI-MODEL FALLBACK V52 ===
+                const models = ['turbo', 'flux', 'flux-realism', 'any']; // 'any' or empty means default
+                let currentModelIndex = 0;
 
-                console.log('%c🔱 POLLINATIONS ENGINE v9 — TURBO', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                const tryGeneration = () => {
+                    const model = models[currentModelIndex];
+                    const modelParam = model === 'any' ? '' : `&model=${model}`;
+                    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}${modelParam}&nologo=true`;
+
+                    const modelLabel = model.toUpperCase();
+                    console.log(`%c🔱 POLLINATIONS [${modelLabel}] — Attempt ${currentModelIndex + 1}`, 'color:#d4af37;font-weight:bold;');
+
+                    if (aiGeneratedImage) {
+                        aiGeneratedImage.onload = () => {
+                            console.log(`%c✅ Pollinations [${modelLabel}]: Image ready!`, 'color:#2ecc71;font-weight:bold;');
+                            renderFinalImage(pollinationsUrl);
+                        };
+
+                        aiGeneratedImage.onerror = () => {
+                            console.warn(`Pollinations [${modelLabel}] failed.`);
+                            currentModelIndex++;
+
+                            if (currentModelIndex < models.length) {
+                                console.log(`%c🔄 Falling back to next model...`, 'color:#ffa500;');
+                                tryGeneration();
+                            } else {
+                                console.error('All Pollinations models failed.');
+                                resetLoadingState();
+                                showAlert('AI Studio is experiencing very high demand. Please try again in a moment! 🎂', 'warning');
+                            }
+                        };
+
+                        aiGeneratedImage.src = pollinationsUrl;
+                    }
+                };
+
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
-
-                // With Pollinations, we can just set the src directly and handle load event
-                if (aiGeneratedImage) {
-                    aiGeneratedImage.onload = () => {
-                        console.log(`%c✅ Pollinations: Image ready!`, 'color:#2ecc71;font-weight:bold;');
-                        renderFinalImage(pollinationsUrl);
-                    };
-                    aiGeneratedImage.onerror = () => {
-                        console.error('Pollinations engine error');
-                        resetLoadingState();
-                        showAlert('AI Studio is experiencing high demand. Please try again! 🎂', 'warning');
-                    };
-                    aiGeneratedImage.src = pollinationsUrl;
-                }
+                tryGeneration();
             };
 
             startSovereignEngineV38();
