@@ -73,6 +73,7 @@ function handleAIProxy(data) {
 
     let errorLog = [];
 
+    // --- ENGINES 1-3 (STILL TRYING POLLINATIONS/AIRFORCE) ---
     for (let i = 0; i < engines.length; i++) {
         try {
             const timeBust = Date.now() + Math.floor(Math.random() * 1000);
@@ -96,20 +97,62 @@ function handleAIProxy(data) {
                         image_base64: base64Text, 
                         engine: ["Airforce", "Pollinations_v1", "Pollinations_v2"][i]
                     });
-                } else {
-                    errorLog.push(`Engine ${i} returned ${contentType}`);
                 }
-            } else {
-                errorLog.push(`Engine ${i} failed (Code ${code})`);
             }
+            errorLog.push(`Eng${i}: ${code}`);
         } catch(e) {
-            errorLog.push(`Engine ${i} error: ${e.toString()}`);
+            errorLog.push(`Eng${i}: ${e.toString().substring(0,20)}`);
         }
+    }
+
+    // --- ENGINE 4 (THE NUCLEAR OPTION: AI HORDE) ---
+    try {
+      const hordePayload = {
+        "prompt": prompt,
+        "params": { "n": 1, "steps": 20, "width": 512, "height": 512, "sampler_name": "k_euler_a" }
+      };
+      
+      const hordeStart = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/async', {
+        'method': 'post',
+        'contentType': 'application/json',
+        'headers': { 'apikey': '0000000000', 'Client-Agent': 'Bakenovation:1.0:Agent' },
+        'payload': JSON.stringify(hordePayload),
+        'muteHttpExceptions': true
+      });
+
+      if (hordeStart.getResponseCode() === 202) {
+        const id = JSON.parse(hordeStart.getContentText()).id;
+        // Poll for 15 seconds max
+        for (let attempt = 0; attempt < 10; attempt++) {
+          Utilities.sleep(1500);
+          const status = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/check/' + id, { 'muteHttpExceptions': true });
+          const res = JSON.parse(status.getContentText());
+          if (res.done) {
+            const final = UrlFetchApp.fetch('https://stablehorde.net/api/v2/generate/status/' + id, { 'muteHttpExceptions': true });
+            const finalRes = JSON.parse(final.getContentText());
+            if (finalRes.generations && finalRes.generations[0]) {
+               // AI Horde returns a URL for images sometimes, or we need to download it
+               const imgUrl = finalRes.generations[0].img;
+               const imgBlob = UrlFetchApp.fetch(imgUrl).getBlob();
+               return jsonResponse({ 
+                 status: 'success', 
+                 image_base64: Utilities.base64Encode(imgBlob.getBytes()), 
+                 engine: "AI_Horde_Nuclear_Fallback" 
+               });
+            }
+          }
+        }
+        errorLog.push(`Horde: Timeout`);
+      } else {
+        errorLog.push(`Horde: ${hordeStart.getResponseCode()}`);
+      }
+    } catch(e) {
+      errorLog.push(`Horde_Err: ${e.toString().substring(0,20)}`);
     }
 
     return jsonResponse({ 
         status: 'error', 
-        message: 'All Proxy Engines Blocked', 
+        message: 'Extreme Service Blockade', 
         details: errorLog.join(' | ') 
     });
   } catch(e) {
