@@ -1,5 +1,5 @@
 /**
- * Bakenovation Unified Manager - v63 (UNIVERSAL TUNNEL)
+ * Bakenovation Unified Manager - v64 (DEFINITIVE TUNNEL)
  * Account: bakenovationbake@gmail.com
  * Sheets:
  *   - "Orders"          → All cake order details
@@ -38,8 +38,8 @@ function handleRequest(e) {
     if (action === 'sync_signup') return syncSignup(data);
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
-    if (action === 'ai_proxy') return handleAIProxy(data);
-    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v63 is Live!' });
+    if (action === 'ai_proxy') return handleAIProxyV64(data);
+    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v64 is Live!' });
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {
@@ -57,10 +57,10 @@ function handleRequest(e) {
 // Note: Gemini API Key removed as we are now using the Flux Unbreakable Tunnel (Free).
 
 /**
- * AI PROXY TUNNEL (Official Universal Unbreakable v63)
- * Multi-Engine Fallback: Tries 3 different providers to ensure 100% uptime.
+ * AI PROXY TUNNEL (Official Definitive Unbreakable v64)
+ * Uses unique function naming to prevent namespace collisions.
  */
-function handleAIProxy(data) {
+function handleAIProxyV64(data) {
   try {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
@@ -89,7 +89,7 @@ function handleAIProxy(data) {
           return jsonResponse({ 
             status: 'success',
             image_base64: base64Content, 
-            engine: "universal_unbreakable_v63_engine_" + i
+            engine: "definitive_unbreakable_v64_engine_" + i
           });
         }
       } catch (e) {
@@ -103,7 +103,7 @@ function handleAIProxy(data) {
     });
 
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Master Tunnel Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Master v64 Tunnel Exception: ' + e.toString() });
   }
 }
 

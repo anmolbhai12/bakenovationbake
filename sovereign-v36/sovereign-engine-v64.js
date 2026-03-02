@@ -1,3 +1,6 @@
+alert("🚀 v64 DEFINITIVE TUNNEL ACTIVE");
+console.log("%c--- Bakenovation v64 Initialized ---", "background: #1a0b1f; color: #d4af37; font-size: 1.5em; padding: 10px;");
+
 // Initialize GSAP
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNavArea = document.getElementById('user-nav-area');
 
     // Unified Google Apps Script URL
-    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbyyDtWhJQA8EV7qJEi_VSTFsJ8RIb_aFIwHEkF8ePqWR_5GpnSFxvU4c3iAwjGul8Th/exec';
+    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycb_bqS3IdRkUS2Ncd-bixQEEzo2URIyNB3jv6OlSoW0tUMLGqbcFaU9syX2ysA6aG2j/exec';
 
     const EMAIL_PROXY_URL = UNIFIED_GAS_URL;
     const EMAIL_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
@@ -1003,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
                 const tryGeneration = () => {
                     const finalPrompt = expandPrompt(rawUserText);
-                    console.log(`%c🚀 GENERATING WITH FLUX-UNBREAKABLE TUNNEL`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
+                    console.log(`%c🚀 GENERATING WITH DEFINITIVE UNBREAKABLE TUNNEL (v64)`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
                     console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
                     tryGasProxy(finalPrompt);
@@ -1021,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                         .then(data => {
                             if (data.status === 'success' && data.image_base64) {
-                                console.log(`%c✅ Flux Unbreakable Success!`, 'color:#2ecc71; font-weight:bold;');
+                                console.log(`%c✅ Definitive Tunnel Success (v64)!`, 'color:#2ecc71; font-weight:bold;');
                                 const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
