@@ -35,7 +35,10 @@ function handleRequest(e) {
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
     if (action === 'ai_proxy') return handleAIProxyV64(data);
-    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Grand Atelier v95 (PROFESSIONAL) is Live!' });
+    if (action === 'debug') {
+      const key = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
+      return jsonResponse({ status: 'success', version: 'v101-DIAGNOSTIC', key_linked: !!key, key_prefix: key ? key.substring(0,8)+'...' : 'NOT FOUND' });
+    }
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {
