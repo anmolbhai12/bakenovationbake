@@ -951,8 +951,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     aiGeneratedImage.classList.add('sketching');
                 }
 
-                // === POLLINATIONS AI ENGINE V9 (FLUX PRO) ===
-                // Pollinations is our primary engine for hyper-realistic cake design.
+                // === POLLINATIONS AI ENGINE V9 (TURBO) ===
+                // Pollinations is our primary engine for fast, reliable cake design.
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
                 const expandPrompt = (input) => {
@@ -1002,7 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const encodedPrompt = encodeURIComponent(finalPrompt);
                 const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&model=turbo&nologo=true`;
 
-                console.log('%c🔱 POLLINATIONS ENGINE v9 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
+                console.log('%c🔱 POLLINATIONS ENGINE v9 — TURBO', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
                 // With Pollinations, we can just set the src directly and handle load event
