@@ -1015,20 +1015,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
                     ];
 
+                    // Clean prompt for reliability
+                    const cleanPrompt = prompt.replace(/[^\w\s,]/gi, '').substring(0, 1000);
+                    const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
-                    const encoded = encodeURIComponent(prompt);
 
-                    // TRIPLE-SHIELD DIRECT FALLBACKS
-                    const shield1 = `https://pollinations.ai/prompt/${encoded}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;
-                    const shield2 = `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`;
-                    const shield3 = `https://image.pollinations.ai/prompt/${encoded}?nologo=true`;
+                    // HYPER-RESILIENT SHIELD CHAIN
+                    const shields = [
+                        `https://pollinations.ai/prompt/${encoded}?model=flux&seed=${seed}&nologo=true`,
+                        `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`,
+                        `https://image.pollinations.ai/prompt/${encoded}?nologo=true`,
+                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}` // Independent Backup
+                    ];
 
-                    console.log("🚀 ACTIVATING TRIPLE-SHIELD RESILIENCE (v80)...");
+                    console.log("🚀 ACTIVATING HYPER-RESILIENT SHIELD (v82)...");
 
                     if (aiGeneratedImage) {
                         let attempt = 0;
-                        const shields = [shield1, shield2, shield3];
-
                         aiGeneratedImage.onerror = function () {
                             attempt++;
                             if (attempt < shields.length) {
@@ -1036,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 this.src = shields[attempt];
                             } else {
                                 console.error("❌ All Shields Exhausted.");
-                                showAlert("Atelier is exceptionally busy. Please try a simpler prompt.", "error");
+                                showAlert("Atelier is exceptionally busy. Please try again in 10 seconds.", "error");
                                 resetLoadingState();
                             }
                         };
@@ -1046,21 +1049,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             this.classList.remove('sketching');
                             resetLoadingState();
 
-                            // Only after successful load, show the action buttons
                             const resultActions = document.getElementById('ai-result-actions');
                             if (resultActions) resultActions.style.display = 'flex';
-
-                            // Sync to Gallery
                             addToGallery(this.src, "AI Masterpiece");
                         };
 
-                        // Start the shield chain
-                        aiGeneratedImage.src = shield1;
+                        // Start Chain
+                        aiGeneratedImage.src = shields[0];
                     }
 
-                    showAlert("Chef is sketching your vision... 🎂", "success");
+                    showAlert("Chef is sculpting your vision... 🎂", "success");
 
-                    // SILENT BACKGROUND SYNC (PRESERVE IF POSSIBLE)
+                    // Silent Background Sync
                     GAS_URLS.forEach(url => {
                         fetch(`${url}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
                     });
