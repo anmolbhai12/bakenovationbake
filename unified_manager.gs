@@ -46,11 +46,9 @@ function handleRequest(e) {
   }
 }
 
-/**
- * AI PROXY TUNNEL
- * Bypasses local ISP blocks by fetching imagery via Google's infrastructure.
- */
 // ─── AI PROXY (GOOGLE IMAGEN 3) ─────────────────────────────────────────────
+// NOTE: Do NOT call PropertiesService at global scope — it must be inside a function.
+
 
 function handleAIProxyV64(data) {
   const diagnosticLog = [];
@@ -59,11 +57,14 @@ function handleAIProxyV64(data) {
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
     // 1. ATTEMPT PROFESSIONAL GOOGLE IMAGEN 3
+    // Key must be read INSIDE the function — PropertiesService NOT allowed at global scope
+    const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
     if (!GEMINI_API_KEY) {
         diagnosticLog.push("Google Error: GEMINI_API_KEY property is missing in Script Settings.");
     } else {
         try {
-          const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3:predict?key=${GEMINI_API_KEY}`;
+          // Correct model name: imagen-3.0-generate-001
+          const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${GEMINI_API_KEY}`;
           const payload = { "instances": [{ "prompt": prompt }], "parameters": { "sampleCount": 1 } };
           const googleResponse = UrlFetchApp.fetch(imagenUrl, {
             'method': 'post', 'contentType': 'application/json', 'payload': JSON.stringify(payload), 'muteHttpExceptions': true
