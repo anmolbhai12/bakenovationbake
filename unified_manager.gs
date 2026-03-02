@@ -39,7 +39,7 @@ function handleRequest(e) {
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
     if (action === 'ai_proxy') return handleAIProxy(data);
-    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v2.0 (NEW ACCOUNT) is Live!' });
+    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v62 is Live!' });
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {
