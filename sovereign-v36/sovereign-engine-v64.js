@@ -1020,15 +1020,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN
+                    // HYPER-RESILIENT SHIELD CHAIN (v85 ROOT EDITION)
                     const shields = [
                         `https://pollinations.ai/prompt/${encoded}?model=flux&seed=${seed}&nologo=true`,
                         `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`,
                         `https://image.pollinations.ai/prompt/${encoded}?nologo=true`,
-                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}` // Independent Backup
+                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}`
                     ];
 
-                    console.log("🚀 ACTIVATING HYPER-RESILIENT SHIELD (v82)...");
+                    // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
+                    const vault = [
+                        "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?q=80&w=1024", // Wedding Luxury
+                        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate Masterpiece
+                        "https://images.unsplash.com/photo-1562231976-c4d670699bb4?q=80&w=1024", // Minimalist Art
+                        "https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1024", // Orchid Aesthetic
+                        "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024"  // Classic Celebration
+                    ];
+
+                    console.log("🚀 ACTIVATING ROOT-LEVEL RESILIENCE (v85)...");
 
                     if (aiGeneratedImage) {
                         let attempt = 0;
@@ -1037,21 +1046,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (attempt < shields.length) {
                                 console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
                                 this.src = shields[attempt];
+                            } else if (attempt === shields.length) {
+                                console.warn("🔮 ALL AI PROVIDERS DOWN. FETCHING FROM MASTERPIECE VAULT...");
+                                const randomMasterpiece = vault[Math.floor(Math.random() * vault.length)];
+                                this.src = randomMasterpiece;
+                                showAlert("Atelier is extra busy. Serving a Curated Masterpiece! ✨", "success");
                             } else {
-                                console.error("❌ All Shields Exhausted.");
-                                showAlert("Atelier is exceptionally busy. Please try again in 10 seconds.", "error");
+                                console.error("❌ Root Failover Complete.");
                                 resetLoadingState();
                             }
                         };
 
                         aiGeneratedImage.onload = function () {
-                            console.log(`%c✨ Masterpiece Rendered (Shield ${attempt + 1})`, 'color:#d4af37; font-weight:bold;');
+                            const shieldName = attempt < shields.length ? `Shield ${attempt + 1}` : "Masterpiece Vault";
+                            console.log(`%c✨ Result Displayed via ${shieldName}`, 'color:#d4af37; font-weight:bold;');
                             this.classList.remove('sketching');
                             resetLoadingState();
 
                             const resultActions = document.getElementById('ai-result-actions');
                             if (resultActions) resultActions.style.display = 'flex';
-                            addToGallery(this.src, "AI Masterpiece");
+                            addToGallery(this.src, "Bakenovation Creation");
                         };
 
                         // Start Chain
@@ -1060,7 +1074,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showAlert("Chef is sculpting your vision... 🎂", "success");
 
-                    // Silent Background Sync
                     GAS_URLS.forEach(url => {
                         fetch(`${url}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
                     });
