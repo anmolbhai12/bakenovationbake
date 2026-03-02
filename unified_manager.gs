@@ -64,8 +64,8 @@ function handleAIProxy(data) {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // Official Google AI Studio Imagen 3 Endpoint
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${GEMINI_API_KEY}`;
+    // Official Google AI Studio Imagen 4.0 Endpoint
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${GEMINI_API_KEY}`;
 
     const payload = {
       "instances": [
