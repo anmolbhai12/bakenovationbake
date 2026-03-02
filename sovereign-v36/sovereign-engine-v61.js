@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNavArea = document.getElementById('user-nav-area');
 
     // Unified Google Apps Script URL
-    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHTjJNYkr3mO1Qw6I3VnX5OfeT8D4tf2HVg2Sjx2yk4z84809qd31OxETzHMi19eH9/exec';
+    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbyyDtWhJQA8EV7qJEi_VSTFsJ8RIb_aFIwHEkF8ePqWR_5GpnSFxvU4c3iAwjGul8Th/exec';
 
     const EMAIL_PROXY_URL = UNIFIED_GAS_URL;
     const EMAIL_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
