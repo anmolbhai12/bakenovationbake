@@ -1015,10 +1015,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
                     ];
 
-                    const directUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+                    const seed = Math.floor(Math.random() * 1000000);
+                    // Use the most stable direct endpoint available
+                    const directUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true`;
 
-                    // 1. RENDER DIRECTLY FIRST (THE GUARANTEE)
-                    console.log("🚀 ACTIVATING DIRECT RENDERING (FAILSAFE)...");
+                    // 1. RENDER DIRECTLY FIRST (THE ABSOLUTE FAILSAFE)
+                    console.log("🚀 ACTIVATING SUPER-STABLE DIRECT RENDERING...");
                     renderFinalImage(directUrl);
                     showAlert("Atelier is Rendering... 🎂", "success");
 
