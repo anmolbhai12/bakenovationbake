@@ -1012,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
                         'https://script.google.com/macros/s/AKfycbz_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec',
-                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
+                        'https://script.google.com/macros/s/AKfycbz_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec'
                     ];
 
                     // Clean prompt for reliability
@@ -1020,7 +1020,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN (v85 ROOT EDITION)
+                    // HYPER-RESILIENT SHIELD CHAIN (v90 PROFESSIONAL EDITION)
+                    // Shield 0 is the Google Proxy (Imagen 3) - Handled separately via fetch
                     const shields = [
                         `https://pollinations.ai/prompt/${encoded}?model=flux&seed=${seed}&nologo=true`,
                         `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`,
@@ -1037,11 +1038,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024"  // Classic Celebration
                     ];
 
-                    console.log("🚀 ACTIVATING ROOT-LEVEL RESILIENCE (v85)...");
+                    console.log("🚀 ACTIVATING PROFESSIONAL GOOGLE IMAGEN 3 (v90)...");
 
                     if (aiGeneratedImage) {
                         let attempt = 0;
+                        let usingProxy = true; // Start with the Professional Proxy
+
                         aiGeneratedImage.onerror = function () {
+                            if (usingProxy) {
+                                usingProxy = false;
+                                console.warn("🛡️ Shield 0 (Google) Busy. Falling back to Community Shields...");
+                                this.src = shields[0];
+                                return;
+                            }
+
                             attempt++;
                             if (attempt < shields.length) {
                                 console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
@@ -1058,8 +1068,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         aiGeneratedImage.onload = function () {
-                            const shieldName = attempt < shields.length ? `Shield ${attempt + 1}` : "Masterpiece Vault";
-                            console.log(`%c✨ Result Displayed via ${shieldName}`, 'color:#d4af37; font-weight:bold;');
+                            let source = "Google Imagen 3";
+                            if (!usingProxy) {
+                                source = attempt < shields.length ? `Shield ${attempt + 1}` : "Masterpiece Vault";
+                            }
+                            console.log(`%c✨ Result Displayed via ${source}`, 'color:#d4af37; font-weight:bold;');
                             this.classList.remove('sketching');
                             resetLoadingState();
 
@@ -1068,15 +1081,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             addToGallery(this.src, "Bakenovation Creation");
                         };
 
-                        // Start Chain
-                        aiGeneratedImage.src = shields[0];
+                        // 1. START WITH PROFESSIONAL GOOGLE PROXY (Base64)
+                        const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
+
+                        fetch(primaryUrl)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status === 'success' && data.image_base64) {
+                                    aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
+                                } else {
+                                    throw new Error("Proxy response failed");
+                                }
+                            })
+                            .catch(() => {
+                                // Trigger the onerror chain if proxy fails to even respond correctly
+                                aiGeneratedImage.onerror();
+                            });
                     }
 
-                    showAlert("Chef is sculpting your vision... 🎂", "success");
-
-                    GAS_URLS.forEach(url => {
-                        fetch(`${url}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
-                    });
+                    showAlert("Chef Harmeet is sculpting your vision... 🎂", "success");
                 };
 
                 tryGasProxy(finalPrompt);
