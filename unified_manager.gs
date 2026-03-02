@@ -56,57 +56,41 @@ function handleRequest(e) {
 const GEMINI_API_KEY = 'AIzaSyCzMpKbYF7QmtY3dFz5wKxJaecDC7DIv1Y';
 
 /**
- * AI PROXY TUNNEL (Official Google Imagen 3)
- * Bypasses all ISP blocks by using Google's backbone to generate images.
+ * AI PROXY TUNNEL (Official Flux Unbreakable v62)
+ * Bypasses all ISP blocks by fetching high-quality Flux imagery via Google's backbone.
  */
 function handleAIProxy(data) {
   try {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // Official Google AI Studio Imagen 4.0 Endpoint
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${GEMINI_API_KEY}`;
-
-    const payload = {
-      "instances": [
-        { "prompt": prompt }
-      ],
-      "parameters": {
-        "sampleCount": 1,
-        "aspectRatio": "1:1",
-        "personGeneration": "allow_adult",
-        "outputMimeType": "image/jpeg"
-      }
-    };
+    // Switch to FLUX (highest quality free model) tunneled via GAS
+    const seed = Math.floor(Math.random() * 999999);
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`;
 
     const response = UrlFetchApp.fetch(url, {
-      'method': 'post',
-      'contentType': 'application/json',
-      'payload': JSON.stringify(payload),
+      'method': 'get',
       'muteHttpExceptions': true
     });
 
-    const resJson = JSON.parse(response.getContentText());
-    
-    if (response.getResponseCode() === 200 && resJson.predictions && resJson.predictions[0]) {
-      // Imagen 3 returns base64 in the bytesBase64Encoded field
-      const base64Content = resJson.predictions[0].bytesBase64Encoded;
+    if (response.getResponseCode() === 200) {
+      const blob = response.getBlob();
+      const base64Content = Utilities.base64Encode(blob.getBytes());
       
       return jsonResponse({ 
         status: 'success',
         image_base64: base64Content, 
-        engine: "google_imagen_3_official"
+        engine: "flux_unbreakable_v62"
       });
     } else {
-      const errorMsg = resJson.error ? resJson.error.message : "Google API Error";
       return jsonResponse({ 
         status: 'error', 
-        message: 'Google Engine Refused: ' + errorMsg,
-        details: response.getContentText()
+        message: 'Flux Engine Outage (530/CORS). Please try again in 1 minute.',
+        code: response.getResponseCode()
       });
     }
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Imagen Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Tunnel Exception: ' + e.toString() });
   }
 }
 
