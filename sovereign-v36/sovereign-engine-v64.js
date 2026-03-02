@@ -1011,33 +1011,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycb_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec',
-                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
+                        'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec',
+                        'https://script.google.com/macros/s/AKfycb_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec'
                     ];
 
                     const seed = Math.floor(Math.random() * 1000000);
-                    // Use the most stable direct endpoint available
-                    const directUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true`;
+                    const encoded = encodeURIComponent(prompt);
 
-                    // 1. RENDER DIRECTLY FIRST (THE ABSOLUTE FAILSAFE)
-                    console.log("🚀 ACTIVATING SUPER-STABLE DIRECT RENDERING...");
-                    renderFinalImage(directUrl);
-                    showAlert("Atelier is Rendering... 🎂", "success");
+                    // PRIMARY DIRECT URL (Stable Flux)
+                    const directUrl = `https://pollinations.ai/prompt/${encoded}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`;
+                    const backupUrl = `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}`;
 
-                    // 2. BACKGROUND PROXY SYNC (FOR PERSISTENCE)
+                    // 1. RENDER DIRECTLY (FAILSAFE)
+                    console.log("🚀 ACTIVATING BATTLE-HARDENED RENDERING...");
+
+                    if (aiGeneratedImage) {
+                        aiGeneratedImage.onerror = function () {
+                            if (!this.dataset.tried) {
+                                this.dataset.tried = "1";
+                                console.warn("Primary failed. Trying backup...");
+                                this.src = backupUrl;
+                            }
+                        };
+                        aiGeneratedImage.onload = function () {
+                            this.classList.remove('sketching');
+                            resetLoadingState();
+                        };
+                        aiGeneratedImage.src = directUrl;
+                    }
+
+                    showAlert("Atelier is Hand-Sketching... 🎂", "success");
+
+                    // 2. BACKGROUND SYNC (PRESERVATION)
                     for (let j = 0; j < GAS_URLS.length; j++) {
                         try {
-                            const response = await fetch(`${GAS_URLS[j]}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`);
-                            if (response.ok) {
-                                const data = await response.json();
-                                if (data.status === 'success' && data.image_base64) {
-                                    console.log(`%c✅ Background Sync Success (Tunnel ${j + 1})`, 'color:#2ecc71;');
-                                    return;
-                                }
-                            }
-                        } catch (e) {
-                            console.warn("Background Sync Skip:", e);
-                        }
+                            fetch(`${GAS_URLS[j]}?action=ai_proxy&prompt=${encoded}`).catch(() => { });
+                        } catch (e) { }
                     }
                 };
 
