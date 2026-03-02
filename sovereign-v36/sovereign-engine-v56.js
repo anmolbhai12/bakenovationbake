@@ -1073,12 +1073,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
                         .then(response => response.json())
                         .then(data => {
-                            if (data.image_base64) {
-                                console.log(`%c✅ Stage 4 Success! (Bypassed ISP Block via Google Proxy)`, 'color:#2ecc71; font-weight:bold;');
+                            if (data.status === 'success' && data.image_base64) {
+                                console.log(`%c✅ Stage 4 Success! (${data.engine})`, 'color:#2ecc71; font-weight:bold;');
                                 const base64Url = `data:image/webp;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
-                                throw new Error(data.error || 'Proxy returned no image');
+                                throw new Error(data.message || 'Proxy returned no image');
                             }
                         })
                         .catch(err => {

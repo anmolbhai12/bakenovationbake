@@ -61,28 +61,48 @@ function handleAIProxy(data) {
       'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
     };
 
-    const targetUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=512&height=512&nologo=true&seed=' + Date.now();
-    
-    const response = UrlFetchApp.fetch(targetUrl, {
-      'method': 'get',
-      'headers': headers,
-      'muteHttpExceptions': true,
-      'followRedirects': true
-    });
+    const engines = [
+      'https://api.airforce/v1/imagine2?model=flux&prompt=',
+      'https://image.pollinations.ai/prompt/'
+    ];
 
-    if (response.getResponseCode() === 200) {
-      const blob = response.getBlob();
-      const base64Text = Utilities.base64Encode(blob.getBytes());
-      return jsonResponse({ 
-        status: 'success',
-        image_base64: base64Text, 
-        engine: "pollinations_via_google_proxy"
-      });
-    } else {
-      return jsonResponse({ status: 'error', message: 'Target engine blocked: ' + response.getResponseCode() });
+    let lastError = "";
+
+    for (let i = 0; i < engines.length; i++) {
+        try {
+            const targetUrl = engines[i] + encodeURIComponent(prompt) + (i === 1 ? ('?width=512&height=512&nologo=true&seed=' + Date.now()) : '');
+            
+            const response = UrlFetchApp.fetch(targetUrl, {
+                'method': 'get',
+                'headers': headers,
+                'muteHttpExceptions': true,
+                'followRedirects': true
+            });
+
+            if (response.getResponseCode() === 200) {
+                const blob = response.getBlob();
+                const contentType = blob.getContentType();
+                if (contentType && contentType.indexOf('image') !== -1) {
+                    const base64Text = Utilities.base64Encode(blob.getBytes());
+                    return jsonResponse({ 
+                        status: 'success',
+                        image_base64: base64Text, 
+                        engine: i === 0 ? "airforce_flux" : "pollinations_cascade"
+                    });
+                } else {
+                    lastError = `Engine ${i} returned non-image: ${contentType}`;
+                }
+            } else {
+                lastError = `Engine ${i} failed with code: ${response.getResponseCode()}`;
+            }
+        } catch(e) {
+            lastError = `Engine ${i} error: ${e.toString()}`;
+        }
     }
+
+    return jsonResponse({ status: 'error', message: 'All Proxy Engines Failed: ' + lastError });
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Proxy Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Global Proxy Exception: ' + e.toString() });
   }
 }
 
