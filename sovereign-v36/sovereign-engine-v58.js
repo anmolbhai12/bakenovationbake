@@ -1086,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const base64Url = `data:image/webp;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
-                                const errorMsg = data.message || data.error || data.debug_log || 'Unspecified Proxy Fail';
+                                const errorMsg = data.details || data.message || data.error || 'Unspecified Proxy Fail';
                                 throw new Error(errorMsg);
                             }
                         })

@@ -56,21 +56,27 @@ function handleAIProxy(data) {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
+    // Extreme Spoofing Headers to bypass Cloudflare 530 Blocks
     const headers = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
     };
 
     const engines = [
       'https://api.airforce/v1/imagine2?model=flux&prompt=',
-      'https://image.pollinations.ai/prompt/'
+      'https://image.pollinations.ai/prompt/',
+      'https://pollinations.ai/p/'
     ];
 
-    let lastError = "";
+    let errorLog = [];
 
     for (let i = 0; i < engines.length; i++) {
         try {
-            const targetUrl = engines[i] + encodeURIComponent(prompt) + (i === 1 ? ('?width=512&height=512&nologo=true&seed=' + Date.now()) : '');
+            const timeBust = Date.now() + Math.floor(Math.random() * 1000);
+            const targetUrl = engines[i] + encodeURIComponent(prompt) + (i >= 1 ? (`?width=512&height=512&nologo=true&seed=${timeBust}`) : '');
             
             const response = UrlFetchApp.fetch(targetUrl, {
                 'method': 'get',
@@ -79,7 +85,8 @@ function handleAIProxy(data) {
                 'followRedirects': true
             });
 
-            if (response.getResponseCode() === 200) {
+            const code = response.getResponseCode();
+            if (code === 200) {
                 const blob = response.getBlob();
                 const contentType = blob.getContentType();
                 if (contentType && contentType.indexOf('image') !== -1) {
@@ -87,20 +94,24 @@ function handleAIProxy(data) {
                     return jsonResponse({ 
                         status: 'success',
                         image_base64: base64Text, 
-                        engine: i === 0 ? "airforce_flux" : "pollinations_cascade"
+                        engine: ["Airforce", "Pollinations_v1", "Pollinations_v2"][i]
                     });
                 } else {
-                    lastError = `Engine ${i} returned non-image: ${contentType}`;
+                    errorLog.push(`Engine ${i} returned ${contentType}`);
                 }
             } else {
-                lastError = `Engine ${i} failed with code: ${response.getResponseCode()}`;
+                errorLog.push(`Engine ${i} failed (Code ${code})`);
             }
         } catch(e) {
-            lastError = `Engine ${i} error: ${e.toString()}`;
+            errorLog.push(`Engine ${i} error: ${e.toString()}`);
         }
     }
 
-    return jsonResponse({ status: 'error', message: 'All Proxy Engines Failed: ' + lastError });
+    return jsonResponse({ 
+        status: 'error', 
+        message: 'All Proxy Engines Blocked', 
+        details: errorLog.join(' | ') 
+    });
   } catch(e) {
     return jsonResponse({ status: 'error', message: 'Global Proxy Exception: ' + e.toString() });
   }
