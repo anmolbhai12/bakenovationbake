@@ -38,11 +38,51 @@ function handleRequest(e) {
     if (action === 'sync_signup') return syncSignup(data);
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
+    if (action === 'ai_proxy') return handleAIProxy(data);
     if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v2.0 (NEW ACCOUNT) is Live!' });
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {
     return jsonResponse({ status: 'error', message: error.toString() });
+  }
+}
+
+/**
+ * AI PROXY TUNNEL
+ * Bypasses local ISP blocks by fetching imagery via Google's infrastructure.
+ */
+function handleAIProxy(data) {
+  try {
+    const prompt = data.prompt;
+    if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
+
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    };
+
+    const targetUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) + '?width=512&height=512&nologo=true&seed=' + Date.now();
+    
+    const response = UrlFetchApp.fetch(targetUrl, {
+      'method': 'get',
+      'headers': headers,
+      'muteHttpExceptions': true,
+      'followRedirects': true
+    });
+
+    if (response.getResponseCode() === 200) {
+      const blob = response.getBlob();
+      const base64Text = Utilities.base64Encode(blob.getBytes());
+      return jsonResponse({ 
+        status: 'success',
+        image_base64: base64Text, 
+        engine: "pollinations_via_google_proxy"
+      });
+    } else {
+      return jsonResponse({ status: 'error', message: 'Target engine blocked: ' + response.getResponseCode() });
+    }
+  } catch(e) {
+    return jsonResponse({ status: 'error', message: 'Proxy Exception: ' + e.toString() });
   }
 }
 

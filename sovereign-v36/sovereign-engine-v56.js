@@ -1052,6 +1052,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (fallbackStage <= 3) {
                                 console.log(`%c🔄 Falling back to Stage ${fallbackStage} (Simplifying prompt)...`, 'color:#e67e22; font-weight:bold;');
                                 tryGeneration();
+                            } else if (fallbackStage === 4) {
+                                console.log(`%c🚀 TRIGGERING STAGE 4: UNBREAKABLE GAS PROXY TUNNEL`, 'color:#9b59b6; font-weight:bold; font-size: 1.1em;');
+                                tryGasProxy(promptToUse);
                             } else {
                                 console.error('All Pollinations stages and domains failed.');
                                 console.log('%cFinal Diagnostic URL:', 'color:#3498db;font-weight:bold;', pollinationsUrl);
@@ -1062,6 +1065,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         aiGeneratedImage.src = pollinationsUrl;
                     }
+                };
+
+                const tryGasProxy = (prompt) => {
+                    const proxyUrl = UNIFIED_GAS_URL || 'https://script.google.com/macros/s/AKfycbxyRviChlnkUCq-M8FsglbT0d4pbzrR8-G7oYac4GEPiTrBkkusbkXWwDmc0qx1OUfcbQ/exec';
+
+                    fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.image_base64) {
+                                console.log(`%c✅ Stage 4 Success! (Bypassed ISP Block via Google Proxy)`, 'color:#2ecc71; font-weight:bold;');
+                                const base64Url = `data:image/webp;base64,${data.image_base64}`;
+                                renderFinalImage(base64Url);
+                            } else {
+                                throw new Error(data.error || 'Proxy returned no image');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Stage 4 GAS Proxy failed:', err);
+                            resetLoadingState();
+                            showAlert('AI Studio is currently unreachable due to local network restrictions. Please try again later! 🎂', 'warning');
+                        });
                 };
 
                 console.log('%cInitial Prompt:', 'color:#f5e4bc;', expandPrompt(rawUserText));
