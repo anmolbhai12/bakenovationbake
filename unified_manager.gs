@@ -56,32 +56,38 @@ function handleAIProxyV64(data) {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // 1. ATTEMPT PROFESSIONAL GOOGLE IMAGEN 3
-    // Key must be read INSIDE the function — PropertiesService NOT allowed at global scope
+    // 1. ATTEMPT GEMINI 2.0 FLASH IMAGE GENERATION (available via free AI Studio API key)
     const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
     if (!GEMINI_API_KEY) {
-        diagnosticLog.push("Google Error: GEMINI_API_KEY property is missing in Script Settings.");
+        diagnosticLog.push("Error: GEMINI_API_KEY missing in Script Properties.");
     } else {
         try {
-          // Correct model name: imagen-3.0-generate-001
-          const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${GEMINI_API_KEY}`;
-          const payload = { "instances": [{ "prompt": prompt }], "parameters": { "sampleCount": 1 } };
-          const googleResponse = UrlFetchApp.fetch(imagenUrl, {
+          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GEMINI_API_KEY}`;
+          const payload = {
+            "contents": [{"parts": [{"text": "Create a photorealistic, professional food photograph of: " + prompt + ". Clean white background, studio lighting, 8K quality."}]}],
+            "generationConfig": { "responseModalities": ["IMAGE"] }
+          };
+          const geminiResponse = UrlFetchApp.fetch(geminiUrl, {
             'method': 'post', 'contentType': 'application/json', 'payload': JSON.stringify(payload), 'muteHttpExceptions': true
           });
-          
-          if (googleResponse.getResponseCode() === 200) {
-            const result = JSON.parse(googleResponse.getContentText());
-            if (result.predictions && result.predictions[0] && result.predictions[0].bytesBase64Encoded) {
-              return jsonResponse({ status: 'success', image_base64: result.predictions[0].bytesBase64Encoded, engine: "google_imagen_3_professional" });
+          if (geminiResponse.getResponseCode() === 200) {
+            const result = JSON.parse(geminiResponse.getContentText());
+            const parts = result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts;
+            if (parts) {
+              for (const part of parts) {
+                if (part.inlineData && part.inlineData.data) {
+                  return jsonResponse({ status: 'success', image_base64: part.inlineData.data, engine: "gemini_flash_image_generation" });
+                }
+              }
             }
           } else {
-            diagnosticLog.push(`Google API Error (${googleResponse.getResponseCode()}): ${googleResponse.getContentText()}`);
+            diagnosticLog.push(`Gemini Flash Error (${geminiResponse.getResponseCode()}): ${geminiResponse.getContentText().substring(0, 200)}`);
           }
-        } catch (e) { 
-          diagnosticLog.push("Google AI Studio Exception: " + e.toString());
+        } catch (e) {
+          diagnosticLog.push("Gemini Flash Exception: " + e.toString());
         }
     }
+
 
     // 2. EMERGENCY FALLBACK ENGINES
     const seed = Math.floor(Math.random() * 999999);
