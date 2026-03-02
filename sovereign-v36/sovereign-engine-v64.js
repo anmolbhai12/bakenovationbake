@@ -1037,16 +1037,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024"  // Classic Celebration
                     ];
 
-                    console.log("🚀 ACTIVATING PROFESSIONAL GOOGLE IMAGEN 3 (v90)...");
+                    console.log("🚀 ACTIVATING SECURE PROFESSIONAL TUNNEL (v100)...");
 
                     if (aiGeneratedImage) {
                         let attempt = 0;
-                        let usingProxy = true; // Start with the Professional Proxy
+                        let usingProxy = true;
 
                         aiGeneratedImage.onerror = function () {
                             if (usingProxy) {
                                 usingProxy = false;
-                                console.warn("🛡️ Shield 0 (Google) Busy. Falling back to Community Shields...");
+                                console.warn("🛡️ Shield 0 (Google) revoking or busy. Falling back to Community Shields...");
                                 this.src = shields[0];
                                 return;
                             }
@@ -1080,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             addToGallery(this.src, "Bakenovation Creation");
                         };
 
-                        // 1. START WITH PROFESSIONAL GOOGLE PROXY (Base64)
+                        // 1. START WITH PROFESSIONAL GOOGLE PROXY
                         const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
 
                         fetch(primaryUrl)
@@ -1089,11 +1089,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 if (data.status === 'success' && data.image_base64) {
                                     aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
                                 } else {
-                                    throw new Error("Proxy response failed");
+                                    console.error("🏁 Proxy Error Output:", data);
+                                    throw new Error(data.message || "Proxy response failed");
                                 }
                             })
-                            .catch(() => {
-                                // Trigger the onerror chain if proxy fails to even respond correctly
+                            .catch(err => {
+                                console.error("🏁 Fetch/Logic Error:", err);
                                 aiGeneratedImage.onerror();
                             });
                     }

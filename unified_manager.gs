@@ -1,10 +1,6 @@
 /**
- * Bakenovation Unified Manager - v64 (DEFINITIVE TUNNEL)
+ * Bakenovation Unified Manager - v100 (SECURE ROOT SOLUTION)
  * Account: bakenovationbake@gmail.com
- * Sheets:
- *   - "Orders"          → All cake order details
- *   - "Email Logins"    → Users who sign up/login via Email OTP
- *   - "WhatsApp Logins" → Users who sign up/login via WhatsApp OTP
  */
 
 const SPREADSHEET_ID = '1kjEagCxbujXzdl00btRD87I8qpJlZiGeoBNPpWol1W8';
@@ -53,10 +49,11 @@ function handleRequest(e) {
  */
 // ─── AI PROXY (GOOGLE IMAGEN 3) ─────────────────────────────────────────────
 
-const GEMINI_API_KEY = 'AIzaSyCzMpKbYF7QmtY3dFz5wKxJaecDC7DIv1Y';
+// Securely fetch API Key from Script Properties (Prevents revocation via GitHub exposure)
+const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
 
 /**
- * AI PROXY TUNNEL (Official Professional Google Imagen 3 v90)
+ * AI PROXY TUNNEL (Official Professional Google Imagen 3 v100)
  * Replaces unstable community servers with high-availability infrastructure.
  */
 function handleAIProxyV64(data) {
