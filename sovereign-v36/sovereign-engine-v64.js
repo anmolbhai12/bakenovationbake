@@ -1021,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                         .then(data => {
                             if (data.status === 'success' && data.image_base64) {
-                                console.log(`%c✅ Definitive Tunnel Success (v64)!`, 'color:#2ecc71; font-weight:bold;');
+                                console.log(`%c✅ Grand Atelier Success (v66)!`, 'color:#2ecc71; font-weight:bold;');
                                 const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {

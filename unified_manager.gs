@@ -67,7 +67,7 @@ function handleAIProxyV64(data) {
 
     const seed = Math.floor(Math.random() * 999999);
     
-    // THE ULTIMATE MEGA-STABLE ENGINE LIST (v65)
+    // THE GRAND ATELIER - 7 ENGINE ULTRA TUNNEL (v66)
     const endpoints = [
       // 1. FLUX PRO (Pollinations)
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux`,
@@ -75,13 +75,19 @@ function handleAIProxyV64(data) {
       // 2. FLUX FAST (Airforce)
       `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux`,
       
-      // 3. STABLE DIFFUSION (Standard)
+      // 3. STABLE DIFFUSION (Couture)
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=search`,
+      
+      // 4. TURBO SPEED (Pollinations)
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&seed=${seed}&nologo=true`,
       
-      // 4. TURBO (Simplest URL)
+      // 5. AIRFORCE STANDARD
+      `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}`,
+      
+      // 6. POLLINATIONS PUBLIC (Universal)
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?nologo=true`,
       
-      // 5. GLOBAL FALLBACK
+      // 7. GLOBAL EMERGENCY FALLBACK
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
     ];
 
@@ -91,7 +97,7 @@ function handleAIProxyV64(data) {
           'method': 'get',
           'muteHttpExceptions': true,
           'followRedirects': true,
-          'timeoutInSeconds': 25
+          'timeoutInSeconds': 50 // MASSIVE TIMEOUT FOR V66
         });
 
         if (response.getResponseCode() === 200) {
@@ -102,22 +108,22 @@ function handleAIProxyV64(data) {
             return jsonResponse({ 
               status: 'success',
               image_base64: Utilities.base64Encode(blob.getBytes()), 
-              engine: "mega_stable_v65_engine_" + (i+1)
+              engine: "grand_atelier_v66_engine_" + (i+1)
             });
           }
         }
       } catch (e) {
-        Logger.log("Engine " + i + " Alert: " + e.toString());
+        Logger.log("Grand Atelier Engine " + (i+1) + " Alert: " + e.toString());
       }
     }
 
     return jsonResponse({ 
       status: 'error', 
-      message: 'The Bakenovation Atelier is currently over capacity. All 5 AI Tunnels are busy. Please wait 10 seconds and try again.'
+      message: 'The Bakenovation Atelier is exceptionally busy. All 7 Grand Tunnels are engaged. Please wait 15 seconds for a slot to open!'
     });
 
   } catch(e) {
-    return jsonResponse({ status: 'error', message: 'Master V65 Tunnel Exception: ' + e.toString() });
+    return jsonResponse({ status: 'error', message: 'Master V66 Tunnel Exception: ' + e.toString() });
   }
 }
 
