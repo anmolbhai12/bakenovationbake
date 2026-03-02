@@ -1000,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // We expand the prompt and append it to the Pollinations URL.
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
-                const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&model=flux&nologo=true`;
+                const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&model=turbo&nologo=true`;
 
                 console.log('%c🔱 POLLINATIONS ENGINE v9 — FLUX', 'color:#d4af37;font-weight:bold;font-size:16px;');
                 console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
