@@ -1000,22 +1000,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 // We expand the prompt and append it to the Pollinations URL.
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
-                // === POLLINATIONS AI ENGINE — DIRECT DEFAULT V54 ===
-                const tryGeneration = () => {
-                    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&nologo=true`;
+                // === POLLINATIONS AI ENGINE — MULTI-DOMAIN FALLBACK V55 ===
+                const domains = ['image.pollinations.ai/prompt', 'pollinations.ai/p'];
+                let currentDomainIndex = 0;
 
-                    console.log(`%c🔱 POLLINATIONS [DEFAULT ENGINE]`, 'color:#d4af37;font-weight:bold;');
+                const tryGeneration = () => {
+                    const domain = domains[currentDomainIndex];
+                    const pollinationsUrl = `https://${domain}/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&nologo=true`;
+
+                    console.log(`%c🔱 POLLINATIONS [DOMAIN: ${currentDomainIndex + 1}]`, 'color:#d4af37;font-weight:bold;');
 
                     if (aiGeneratedImage) {
                         aiGeneratedImage.onload = () => {
-                            console.log(`%c✅ Pollinations [DEFAULT]: Image ready!`, 'color:#2ecc71;font-weight:bold;');
+                            console.log(`%c✅ Pollinations Ready!`, 'color:#2ecc71;font-weight:bold;');
                             renderFinalImage(pollinationsUrl);
                         };
 
                         aiGeneratedImage.onerror = () => {
-                            console.error('Pollinations engine error');
-                            resetLoadingState();
-                            showAlert('AI Studio is experiencing high demand. Please try again! 🎂', 'warning');
+                            console.warn(`Pollinations domain ${currentDomainIndex + 1} failed.`);
+                            currentDomainIndex++;
+
+                            if (currentDomainIndex < domains.length) {
+                                console.log(`%c🔄 Trying alternative domain...`, 'color:#ffa500;');
+                                tryGeneration();
+                            } else {
+                                console.error('All Pollinations domains failed.');
+                                // Log the URL so user can test it manually
+                                console.log('%cTest this URL directly:', 'color:#3498db;font-weight:bold;', pollinationsUrl);
+                                resetLoadingState();
+                                showAlert('AI Studio is experiencing a connection issue. Try a hard refresh or check back in a minute! 🎂', 'warning');
+                            }
                         };
 
                         aiGeneratedImage.src = pollinationsUrl;
