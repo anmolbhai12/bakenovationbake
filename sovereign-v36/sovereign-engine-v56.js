@@ -1000,35 +1000,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 // We expand the prompt and append it to the Pollinations URL.
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
-                // === POLLINATIONS AI ENGINE — MULTI-DOMAIN FALLBACK V55 ===
+                // === POLLINATIONS AI ENGINE — HYPER-RESILIENT V56 ===
                 const domains = ['image.pollinations.ai/prompt', 'pollinations.ai/p'];
                 let currentDomainIndex = 0;
+                let fallbackStage = 1; // 1: Full, 2: Core Details, 3: Subject Only
 
                 const tryGeneration = () => {
-                    const domain = domains[currentDomainIndex];
-                    const pollinationsUrl = `https://${domain}/${encodedPrompt}?width=512&height=512&seed=${imageSeed}&nologo=true`;
+                    const style = snapState.style;
+                    const occasion = snapState.type;
+                    const flavor = snapState.flavor;
+                    const size = snapState.size;
+                    const subject = rawUserText || "luxury cake";
 
-                    console.log(`%c🔱 POLLINATIONS [DOMAIN: ${currentDomainIndex + 1}]`, 'color:#d4af37;font-weight:bold;');
+                    let promptToUse = "";
+                    if (fallbackStage === 1) {
+                        promptToUse = expandPrompt(rawUserText);
+                    } else if (fallbackStage === 2) {
+                        promptToUse = `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake`;
+                    } else {
+                        promptToUse = subject.toLowerCase().includes('cake') ? subject : `${subject} cake`;
+                    }
+
+                    const domain = domains[currentDomainIndex];
+                    const cacheBuster = `&t=${Date.now()}`;
+                    const pollinationsUrl = `https://${domain}/${encodeURIComponent(promptToUse)}?width=512&height=512&seed=${imageSeed}&nologo=true${cacheBuster}`;
+
+                    console.log(`%c🔱 POLLINATIONS [DOMAIN: ${currentDomainIndex + 1} | STAGE: ${fallbackStage}]`, 'color:#d4af37;font-weight:bold;');
+                    if (fallbackStage > 1) console.log(`%c⚠️ Using simplified fallback prompt: ${promptToUse}`, 'color:#ffa500; font-style:italic;');
 
                     if (aiGeneratedImage) {
                         aiGeneratedImage.onload = () => {
-                            console.log(`%c✅ Pollinations Ready!`, 'color:#2ecc71;font-weight:bold;');
+                            console.log(`%c✅ Pollinations Ready! [Stage ${fallbackStage}]`, 'color:#2ecc71;font-weight:bold;');
                             renderFinalImage(pollinationsUrl);
                         };
 
                         aiGeneratedImage.onerror = () => {
-                            console.warn(`Pollinations domain ${currentDomainIndex + 1} failed.`);
-                            currentDomainIndex++;
+                            console.warn(`Pollinations failed at Stage ${fallbackStage} on domain ${currentDomainIndex + 1}.`);
 
+                            // 1. Try next domain for SAME stage
+                            currentDomainIndex++;
                             if (currentDomainIndex < domains.length) {
-                                console.log(`%c🔄 Trying alternative domain...`, 'color:#ffa500;');
+                                console.log(`🔄 Trying alternative domain...`);
+                                tryGeneration();
+                                return;
+                            }
+
+                            // 2. Both domains failed for current stage, move to NEXT stage and reset domain
+                            currentDomainIndex = 0;
+                            fallbackStage++;
+
+                            if (fallbackStage <= 3) {
+                                console.log(`%c🔄 Falling back to Stage ${fallbackStage} (Simplifying prompt)...`, 'color:#e67e22; font-weight:bold;');
                                 tryGeneration();
                             } else {
-                                console.error('All Pollinations domains failed.');
-                                // Log the URL so user can test it manually
-                                console.log('%cTest this URL directly:', 'color:#3498db;font-weight:bold;', pollinationsUrl);
+                                console.error('All Pollinations stages and domains failed.');
+                                console.log('%cFinal Diagnostic URL:', 'color:#3498db;font-weight:bold;', pollinationsUrl);
                                 resetLoadingState();
-                                showAlert('AI Studio is experiencing a connection issue. Try a hard refresh or check back in a minute! 🎂', 'warning');
+                                showAlert('AI Studio connection issue. Please check your internet or try again in a moment! 🎂', 'warning');
                             }
                         };
 
@@ -1036,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
 
-                console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
+                console.log('%cInitial Prompt:', 'color:#f5e4bc;', expandPrompt(rawUserText));
                 tryGeneration();
             };
 
