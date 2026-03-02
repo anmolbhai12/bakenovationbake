@@ -1011,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycbzk3geoWDLB9gxYd-HDOt7xgRCrpYwjhIEOhlgSpoME2AmMYQ0eei2b5pSuDf29G3mB/exec'
+                        'https://script.google.com/macros/s/AKfycbwp3mJt_mcMD-6ihVcIU9oW83Xj44UtTvybibsMZUMLElXLMwI7uSnWWp0OIU9G1XXH/exec'
                     ];
 
                     // Clean prompt for reliability
@@ -1025,7 +1025,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         `https://pollinations.ai/prompt/${encoded}?model=flux&seed=${seed}&nologo=true`,
                         `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`,
                         `https://image.pollinations.ai/prompt/${encoded}?nologo=true`,
-                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}`
+                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}`,
+                        `https://source.unsplash.com/1024x1024/?luxury,cake,${encoded.split('%2C')[0].substring(0, 30)}`
                     ];
 
                     // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
