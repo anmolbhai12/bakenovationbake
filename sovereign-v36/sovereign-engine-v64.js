@@ -1015,37 +1015,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         'https://script.google.com/macros/s/AKfycbz0JlFPOe1rB2PdH8RcIFu81EZBQ3IWxv16xTHEFT8tAFYaD2BlVsKnvloTrfysgz7w/exec'
                     ];
 
-                    console.log(`%c📡 Establishing Secure Google AI Tunnel...`, 'color:#9b59b6;');
+                    const directUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
 
+                    // 1. RENDER DIRECTLY FIRST (THE GUARANTEE)
+                    console.log("🚀 ACTIVATING DIRECT RENDERING (FAILSAFE)...");
+                    renderFinalImage(directUrl);
+                    showAlert("Atelier is Rendering... 🎂", "success");
+
+                    // 2. BACKGROUND PROXY SYNC (FOR PERSISTENCE)
                     for (let j = 0; j < GAS_URLS.length; j++) {
                         try {
-                            console.log(`📡 Attempting Tunnel ${j + 1}...`);
                             const response = await fetch(`${GAS_URLS[j]}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`);
-
                             if (response.ok) {
                                 const data = await response.json();
                                 if (data.status === 'success' && data.image_base64) {
-                                    console.log(`%c✅ Grand Atelier Success (v68)!`, 'color:#2ecc71; font-weight:bold;');
-                                    renderFinalImage(`data:image/jpeg;base64,${data.image_base64}`);
+                                    console.log(`%c✅ Background Sync Success (Tunnel ${j + 1})`, 'color:#2ecc71;');
                                     return;
                                 }
                             }
                         } catch (e) {
-                            console.warn(`Tunnel ${j + 1} Error:`, e);
+                            console.warn("Background Sync Skip:", e);
                         }
                     }
-
-                    // FINAL EMERGENCY FALLBACK: Direct Browser Loading (Bypasses Proxy)
-                    console.log("🔥 EMERGENCY PROTOCOL: Activating Direct Browser Fallback...");
-                    const directUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
-
-                    renderFinalImage(directUrl);
-                    showAlert("Direct Fallback Active. Rendering now!", "success");
                 };
 
                 tryGasProxy(finalPrompt);
-
-                tryGeneration();
             };
 
             startSovereignEngineV38();
