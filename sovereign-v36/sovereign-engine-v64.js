@@ -1,6 +1,3 @@
-alert("🚀 v64 DEFINITIVE TUNNEL ACTIVE");
-console.log("%c--- Bakenovation v64 Initialized ---", "background: #1a0b1f; color: #d4af37; font-size: 1.5em; padding: 10px;");
-
 // Initialize GSAP
 gsap.registerPlugin(ScrollTrigger);
 
@@ -134,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNavArea = document.getElementById('user-nav-area');
 
     // Unified Google Apps Script URL
-    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycb_bqS3IdRkUS2Ncd-bixQEEzo2URIyNB3jv6OlSoW0tUMLGqbcFaU9syX2ysA6aG2j/exec';
+    const UNIFIED_GAS_URL = 'https://script.google.com/macros/s/AKfycbx_bqS3IdRkUS2Ncd-bixQEEzo2URIyNB3jv6OlSoW0tUMLGqbcFaU9syX2ysA6aG2j/exec';
 
     const EMAIL_PROXY_URL = UNIFIED_GAS_URL;
     const EMAIL_SIGNUP_SHEET_URL = UNIFIED_GAS_URL;
