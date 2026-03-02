@@ -1003,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
                 const tryGeneration = () => {
                     const finalPrompt = expandPrompt(rawUserText);
-                    console.log(`%c🚀 GENERATING WITH GOOGLE IMAGEN 3`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
+                    console.log(`%c🚀 GENERATING WITH GOOGLE IMAGEN 4`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
                     console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
                     tryGasProxy(finalPrompt);
@@ -1021,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                         .then(data => {
                             if (data.status === 'success' && data.image_base64) {
-                                console.log(`%c✅ Google Imagen 3 Success!`, 'color:#2ecc71; font-weight:bold;');
+                                console.log(`%c✅ Google Imagen 4 Success!`, 'color:#2ecc71; font-weight:bold;');
                                 const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
                                 renderFinalImage(base64Url);
                             } else {
