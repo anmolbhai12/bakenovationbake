@@ -39,7 +39,7 @@ function handleRequest(e) {
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
     if (action === 'ai_proxy') return handleAIProxyV64(data);
-    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Script v64 is Live!' });
+    if (action === 'debug') return jsonResponse({ status: 'success', info: 'Bakenovation Grand Atelier v95 (PROFESSIONAL) is Live!' });
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
   } catch (error) {

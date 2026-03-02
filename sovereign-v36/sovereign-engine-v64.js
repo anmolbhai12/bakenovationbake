@@ -1011,8 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycbz_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec',
-                        'https://script.google.com/macros/s/AKfycbz_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec'
+                        'https://script.google.com/macros/s/AKfycbzqnpnF5G9kxlp5JWnCvsGMwWTjRgLgUPqjBBHjB_OH58gExm7YTXyV41H2XVMgRN_R/exec'
                     ];
 
                     // Clean prompt for reliability
