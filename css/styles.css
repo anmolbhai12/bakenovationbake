@@ -1798,28 +1798,24 @@ h4 {
 }
 
 /* Input */
-.snap-input {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid rgba(74, 10, 46, 0.2);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.2);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    color: #f5f5f5;
-    outline: none;
-    resize: none;
+.snap-label {
+    color: var(--color-orchid) !important;
 }
 
-.snap-input:focus {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+.snap-chip {
+    color: #ffffff !important;
+}
+
+.snap-input,
+.luxury-input {
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.4) !important;
 }
 
 .snap-input::placeholder,
 .luxury-input::placeholder {
-    color: rgba(255, 255, 255, 0.4) !important;
-    opacity: 1;
+    color: rgba(255, 255, 255, 0.6) !important;
+    opacity: 1 !important;
 }
 
 /* Ensure artisan text is always visible */
