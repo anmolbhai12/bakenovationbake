@@ -1082,38 +1082,33 @@ document.addEventListener('DOMContentLoaded', () => {
                             addToGallery(this.src, "Bakenovation Creation");
                         };
 
-                        // 1. START WITH DIRECT AUTHENTICATED BROWSER CALL (Bypassing CORS/Proxy)
-                        const POLLINATIONS_KEY = "sk_aEqTh5naU3MIN8APqGNsiEmfIUonhu0y";
-                        const directUrl = `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;
+                        // 1. START WITH PROFESSIONAL ATOMIC PROXY (v90 - Convergence Edition)
+                        const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
 
-                        console.log("🛡️ ACTIVATING DIRECT AUTHENTICATED TUNNEL...");
+                        console.log("🛡️ ACTIVATING AUTHENTICATED CONVERGENCE TUNNEL...");
 
-                        fetch(directUrl, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${POLLINATIONS_KEY}`,
-                                'Accept': 'image/*'
-                            }
-                        })
-                            .then(res => {
-                                if (!res.ok) throw new Error("Direct Auth Throttled");
-                                return res.blob();
-                            })
-                            .then(blob => {
-                                const blobUrl = URL.createObjectURL(blob);
-                                aiGeneratedImage.src = blobUrl;
-                                // Update gallery with Blob URL (or Base64 if needed later)
-                                aiGeneratedImage.onload = function () {
-                                    console.log("%c✨ Result Displayed via Direct Auth Tunnel", 'color:#d4af37; font-weight:bold;');
-                                    this.classList.remove('sketching');
-                                    resetLoadingState();
-                                    const resultActions = document.getElementById('ai-result-actions');
-                                    if (resultActions) resultActions.style.display = 'flex';
-                                    addToGallery(this.src, "Bakenovation Creation");
-                                };
+                        // CRITICAL: NO CUSTOM HEADERS! This makes it a "Simple Request" to bypass CORS Preflight (OPTIONS)
+                        fetch(primaryUrl)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.status === 'success' && data.image_base64) {
+                                    aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
+                                    // Update gallery
+                                    aiGeneratedImage.onload = function () {
+                                        console.log("%c✨ Result Displayed via Authenticated Convergence Tunnel", 'color:#d4af37; font-weight:bold;');
+                                        this.classList.remove('sketching');
+                                        resetLoadingState();
+                                        const resultActions = document.getElementById('ai-result-actions');
+                                        if (resultActions) resultActions.style.display = 'flex';
+                                        addToGallery(this.src, "Bakenovation Creation");
+                                    };
+                                } else {
+                                    console.error("🏁 Convergence Tunnel Warning:", data.message);
+                                    throw new Error(data.message || "Tunnel throttled");
+                                }
                             })
                             .catch(err => {
-                                console.warn("🏁 Direct Auth Failed. Falling back to Community Shields...");
+                                console.warn("🏁 Convergence Tunnel Failed. Falling back to Community Shields...");
                                 usingProxy = false;
                                 aiGeneratedImage.onerror();
                             });
