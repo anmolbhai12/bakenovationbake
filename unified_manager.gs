@@ -56,74 +56,76 @@ function handleAIProxyV64(data) {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // 1. ATTEMPT GEMINI 2.0 FLASH IMAGE GENERATION (available via free AI Studio API key)
-    const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-    if (!GEMINI_API_KEY) {
-        diagnosticLog.push("Error: GEMINI_API_KEY missing in Script Properties.");
-    } else {
-        try {
-          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${GEMINI_API_KEY}`;
-          const payload = {
-            "contents": [{"parts": [{"text": "Create a photorealistic, professional food photograph of: " + prompt + ". Clean white background, studio lighting, 8K quality."}]}],
-            "generationConfig": { "responseModalities": ["IMAGE"] }
-          };
-          const geminiResponse = UrlFetchApp.fetch(geminiUrl, {
-            'method': 'post', 'contentType': 'application/json', 'payload': JSON.stringify(payload), 'muteHttpExceptions': true
-          });
-          if (geminiResponse.getResponseCode() === 200) {
-            const result = JSON.parse(geminiResponse.getContentText());
-            const parts = result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts;
-            if (parts) {
-              for (const part of parts) {
-                if (part.inlineData && part.inlineData.data) {
-                  return jsonResponse({ status: 'success', image_base64: part.inlineData.data, engine: "gemini_flash_image_generation" });
-                }
-              }
-            }
-          } else {
-            diagnosticLog.push(`Gemini Flash Error (${geminiResponse.getResponseCode()}): ${geminiResponse.getContentText().substring(0, 200)}`);
-          }
-        } catch (e) {
-          diagnosticLog.push("Gemini Flash Exception: " + e.toString());
-        }
-    }
-
-
-    // 2. EMERGENCY FALLBACK ENGINES
+    // ─── MEGA-TUNNEL: ZERO-KEY ARCHITECTURE ───
     const seed = Math.floor(Math.random() * 999999);
-    // Extract key cake terms for Unsplash search
     const searchTerms = prompt.split(',').slice(0,2).join(',').replace(/[^\w\s,]/g,'').trim();
+
     const endpoints = [
-      { name: "Shield 1 (Pollinations Flux)", url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux` },
-      { name: "Shield 2 (Airforce)", url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` },
-      { name: "Shield 3 (Hercai)", url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` },
-      { name: "Shield 4 (Unsplash Photos)", url: `https://source.unsplash.com/1024x1024/?luxury,cake,${encodeURIComponent(searchTerms)}` }
+      { 
+        name: "Prime Shield (Pollinations Flux)", 
+        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux` 
+      },
+      { 
+        name: "Rapid Shield (Pollinations Turbo)", 
+        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", high quality, studio lighting")}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo` 
+      },
+      { 
+        name: "Mirror Shield (Airforce AI)", 
+        url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` 
+      },
+      { 
+        name: "Stable Shield (Hercai)", 
+        url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` 
+      },
+      { 
+        name: "Ultimate Shield (Unsplash Pro)", 
+        url: `https://source.unsplash.com/1024x1024/?luxury,cake,bakery,${encodeURIComponent(searchTerms)}` 
+      }
     ];
 
     for (const endpoint of endpoints) {
       try {
-        const response = UrlFetchApp.fetch(endpoint.url, { 'method': 'get', 'muteHttpExceptions': true, 'timeoutInSeconds': 20 });
+        diagnosticLog.push(`Attempting ${endpoint.name}...`);
+        const response = UrlFetchApp.fetch(endpoint.url, { 
+          'method': 'get', 
+          'muteHttpExceptions': true, 
+          'followRedirects': true,
+          'timeoutInSeconds': 25 
+        });
+
         if (response.getResponseCode() === 200) {
           const blob = response.getBlob();
-          if (blob.getContentType().indexOf('image') !== -1) {
-            return jsonResponse({ status: 'success', image_base64: Utilities.base64Encode(blob.getBytes()), engine: "fallback_" + endpoint.name });
+          const bytes = blob.getBytes();
+          const type = blob.getContentType().toLowerCase();
+
+          // HEURISTIC: Check if image is actually valid (not a tiny error text or empty file)
+          if (type.indexOf('image') !== -1 && bytes.length > 2000) {
+            diagnosticLog.push(`${endpoint.name} SUCCESS! (${bytes.length} bytes)`);
+            return jsonResponse({ 
+              status: 'success', 
+              image_base64: Utilities.base64Encode(bytes), 
+              engine: "Zero-Key: " + endpoint.name,
+              logs: diagnosticLog 
+            });
+          } else {
+            diagnosticLog.push(`${endpoint.name} gave invalid data size: ${bytes.length} bytes. Skipping...`);
           }
         } else {
-            diagnosticLog.push(`${endpoint.name} Error (${response.getResponseCode()})`);
+          diagnosticLog.push(`${endpoint.name} failed with code: ${response.getResponseCode()}`);
         }
       } catch (e) {
-          diagnosticLog.push(`${endpoint.name} Exception: ${e.toString()}`);
+        diagnosticLog.push(`${endpoint.name} exception: ${e.toString()}`);
       }
     }
 
     return jsonResponse({ 
       status: 'error', 
-      message: 'The Atelier is currently under heavy maintenance.',
+      message: 'The Bakenovation Atelier is currently overwhelmed. Please try again in a few moments.',
       diagnostics: diagnosticLog
     });
 
   } catch(e) { 
-      return jsonResponse({ status: 'error', message: 'Critical Tunnel Exception', diagnostics: [e.toString()] }); 
+    return jsonResponse({ status: 'error', message: 'Critical Atelier Failure', diagnostics: [e.toString()] }); 
   }
 }
 

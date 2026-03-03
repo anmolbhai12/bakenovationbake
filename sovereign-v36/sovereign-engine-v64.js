@@ -1011,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tryGasProxy = async (prompt) => {
                     const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycbwp3mJt_mcMD-6ihVcIU9oW83Xj44UtTvybibsMZUMLElXLMwI7uSnWWp0OIU9G1XXH/exec'
+                        'https://script.google.com/macros/s/AKfycby5j_xuD2WO7S8H4HcEfqPUDUbokJE9IRFL3smRTVfPCKEMJ3zFawH1-2PS3Hv3xSep/exec'
                     ];
 
                     // Clean prompt for reliability
@@ -1019,14 +1019,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN (v90 PROFESSIONAL EDITION)
-                    // Shield 0 is the Google Proxy (Imagen 3) - Handled separately via fetch
+                    // HYPER-RESILIENT SHIELD CHAIN (v105 ZERO-KEY EDITION)
                     const shields = [
-                        `https://pollinations.ai/prompt/${encoded}?model=flux&seed=${seed}&nologo=true`,
-                        `https://pollinations.ai/prompt/${encoded}?model=turbo&seed=${seed}&nologo=true`,
-                        `https://image.pollinations.ai/prompt/${encoded}?nologo=true`,
-                        `https://hercai.onrender.com/v3/text2image?prompt=${encoded}`,
-                        `https://source.unsplash.com/1024x1024/?luxury,cake,${encoded.split('%2C')[0].substring(0, 30)}`
+                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux`,
+                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", high quality, professional photography")}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo`,
+                        `https://api.airforce/v1/image/generations?prompt=${encoded}&model=flux`,
+                        `https://source.unsplash.com/1024x1024/?luxury,cake,bakery,pattiserie,${encoded.split('%2C')[0].substring(0, 30)}`
                     ];
 
                     // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
@@ -1068,9 +1066,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
 
                         aiGeneratedImage.onload = function () {
-                            let source = "Google Imagen 3";
+                            let source = "Atelier Mega-Tunnel";
                             if (!usingProxy) {
-                                source = attempt < shields.length ? `Shield ${attempt + 1}` : "Masterpiece Vault";
+                                source = attempt < shields.length ? `Community Shield ${attempt + 1}` : "Masterpiece Vault";
                             }
                             console.log(`%c✨ Result Displayed via ${source}`, 'color:#d4af37; font-weight:bold;');
                             this.classList.remove('sketching');
