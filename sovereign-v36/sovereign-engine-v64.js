@@ -1082,21 +1082,39 @@ document.addEventListener('DOMContentLoaded', () => {
                             addToGallery(this.src, "Bakenovation Creation");
                         };
 
-                        // 1. START WITH PROFESSIONAL ATOMIC PROXY
-                        const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
+                        // 1. START WITH DIRECT AUTHENTICATED BROWSER CALL (Bypassing CORS/Proxy)
+                        const POLLINATIONS_KEY = "sk_aEqTh5naU3MIN8APqGNsiEmfIUonhu0y";
+                        const directUrl = `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;
 
-                        fetch(primaryUrl, { cache: "no-store", headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.status === 'success' && data.image_base64) {
-                                    aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
-                                } else {
-                                    console.error("🏁 Atomic Tunnel Warning:", data.message);
-                                    throw new Error(data.message || "Tunnel throttled");
-                                }
+                        console.log("🛡️ ACTIVATING DIRECT AUTHENTICATED TUNNEL...");
+
+                        fetch(directUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${POLLINATIONS_KEY}`,
+                                'Accept': 'image/*'
+                            }
+                        })
+                            .then(res => {
+                                if (!res.ok) throw new Error("Direct Auth Throttled");
+                                return res.blob();
+                            })
+                            .then(blob => {
+                                const blobUrl = URL.createObjectURL(blob);
+                                aiGeneratedImage.src = blobUrl;
+                                // Update gallery with Blob URL (or Base64 if needed later)
+                                aiGeneratedImage.onload = function () {
+                                    console.log("%c✨ Result Displayed via Direct Auth Tunnel", 'color:#d4af37; font-weight:bold;');
+                                    this.classList.remove('sketching');
+                                    resetLoadingState();
+                                    const resultActions = document.getElementById('ai-result-actions');
+                                    if (resultActions) resultActions.style.display = 'flex';
+                                    addToGallery(this.src, "Bakenovation Creation");
+                                };
                             })
                             .catch(err => {
-                                console.warn("🏁 Falling back to Direct Browser Shields...");
+                                console.warn("🏁 Direct Auth Failed. Falling back to Community Shields...");
+                                usingProxy = false;
                                 aiGeneratedImage.onerror();
                             });
                     }
