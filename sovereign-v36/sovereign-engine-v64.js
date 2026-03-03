@@ -877,7 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State Management for Sweet Snap
     const snapState = {
-        type: 'wedding',
+        type: 'birthday',
         style: 'luxury',
         color: 'white',
         size: '1kg',
@@ -1013,9 +1013,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // SD best practice: most important thing FIRST, use () for emphasis
             if (input) {
                 const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
-                return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasion}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
+                const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
+                return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasionStr}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
             }
-            return `${style} ${occasion} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
+            const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
+            return `${style} ${occasionStr} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
         };
 
         // Expand and generate via Pollinations AI
@@ -1169,251 +1171,246 @@ document.addEventListener('DOMContentLoaded', () => {
         tryGasProxy(finalPrompt);
     };
 
-    startSovereignEngineV38();
-});
+    // Studio Add to Cart Logic (GATED)
+    const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
+    if (detailAddToCartBtn) {
+        detailAddToCartBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+            const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+
+            addToCart({
+                name: detailTitle.innerText,
+                image: absoluteImgSrc,
+                details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
+                price: parseInt(detailWeight.innerText.replace(/\D/g, '')) * 1000 || 2500
+            });
+        });
     }
 
+    const detailDirectOrderBtn = document.getElementById('detail-direct-order-btn');
+    if (detailDirectOrderBtn) {
+        detailDirectOrderBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            checkLoginAndProceed(() => {
+                if (detailModal) detailModal.classList.remove('active');
+                if (modal) modal.classList.add('active');
 
-// Studio Add to Cart Logic (GATED)
-const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
-if (detailAddToCartBtn) {
-    detailAddToCartBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-        const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
-
-        addToCart({
-            name: detailTitle.innerText,
-            image: absoluteImgSrc,
-            details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
-            price: parseInt(detailWeight.innerText.replace(/\D/g, '')) * 1000 || 2500
-        });
-    });
-}
-
-const detailDirectOrderBtn = document.getElementById('detail-direct-order-btn');
-if (detailDirectOrderBtn) {
-    detailDirectOrderBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        checkLoginAndProceed(() => {
-            if (detailModal) detailModal.classList.remove('active');
-            if (modal) modal.classList.add('active');
-
-            const designName = detailTitle.innerText;
-            const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
-
-            const designInput = document.getElementById('modal-ordered-design');
-            const messageInput = modal.querySelector('textarea[name="message"]');
-
-            if (designInput) designInput.value = designName;
-            if (messageInput) {
-                messageInput.value = designDetails;
-            }
-
-            gsap.fromTo(modal.querySelector('.modal-content'),
-                { y: -50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4 }
-            );
-        });
-    });
-}
-
-// 4. Order Button Logic (GATED)
-if (aiOrderBtn) {
-    aiOrderBtn.addEventListener('click', () => {
-        checkLoginAndProceed(() => {
-            const userDetails = aiPrompt.value.trim();
-            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
-
-            const orderModal = document.getElementById('order-modal');
-            if (orderModal) {
-                orderModal.classList.add('active');
+                const designName = detailTitle.innerText;
+                const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
 
                 const designInput = document.getElementById('modal-ordered-design');
-                const messageInput = orderModal.querySelector('textarea[name="message"]');
+                const messageInput = modal.querySelector('textarea[name="message"]');
 
-                if (designInput) designInput.value = `Bespoke AI Created Design`;
+                if (designInput) designInput.value = designName;
                 if (messageInput) {
-                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
+                    messageInput.value = designDetails;
                 }
 
-                gsap.fromTo(orderModal.querySelector('.modal-content'),
+                gsap.fromTo(modal.querySelector('.modal-content'),
                     { y: -50, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.4 }
                 );
-            }
+            });
         });
-    });
-}
+    }
 
-// --- GALLERY LOGIC ---
-function addToGallery(url, prompt) {
-    const galleryContainer = document.getElementById('recent-generations-grid');
-    if (!galleryContainer) return;
+    // 4. Order Button Logic (GATED)
+    if (aiOrderBtn) {
+        aiOrderBtn.addEventListener('click', () => {
+            checkLoginAndProceed(() => {
+                const userDetails = aiPrompt.value.trim();
+                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
-    // Create item
-    const item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.style.opacity = '0';
-    item.innerHTML = `
+                const orderModal = document.getElementById('order-modal');
+                if (orderModal) {
+                    orderModal.classList.add('active');
+
+                    const designInput = document.getElementById('modal-ordered-design');
+                    const messageInput = orderModal.querySelector('textarea[name="message"]');
+
+                    if (designInput) designInput.value = `Bespoke AI Created Design`;
+                    if (messageInput) {
+                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
+                    }
+
+                    gsap.fromTo(orderModal.querySelector('.modal-content'),
+                        { y: -50, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4 }
+                    );
+                }
+            });
+        });
+    }
+
+    // --- GALLERY LOGIC ---
+    function addToGallery(url, prompt) {
+        const galleryContainer = document.getElementById('recent-generations-grid');
+        if (!galleryContainer) return;
+
+        // Create item
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.style.opacity = '0';
+        item.innerHTML = `
             <img src="${url}" alt="AI Concept">
             <div class="gallery-overlay">
                 <button class="btn-sm btn-luxury use-this-btn">Use This</button>
             </div>
         `;
 
-    // Add to start
-    galleryContainer.prepend(item);
+        // Add to start
+        galleryContainer.prepend(item);
 
-    // Animate appearance
-    gsap.to(item, { opacity: 1, duration: 0.5 });
+        // Animate appearance
+        gsap.to(item, { opacity: 1, duration: 0.5 });
 
-    // Use this button logic
-    const useBtn = item.querySelector('.use-this-btn');
-    useBtn.addEventListener('click', () => {
-        if (aiGeneratedImage) {
-            aiGeneratedImage.src = url;
-            gsap.fromTo(aiGeneratedImage, { scale: 0.95, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.3 });
-        }
-        // Scroll back up to preview
-        document.querySelector('.snap-result-frame').scrollIntoView({ behavior: 'smooth' });
-    });
-}
+        // Use this button logic
+        const useBtn = item.querySelector('.use-this-btn');
+        useBtn.addEventListener('click', () => {
+            if (aiGeneratedImage) {
+                aiGeneratedImage.src = url;
+                gsap.fromTo(aiGeneratedImage, { scale: 0.95, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.3 });
+            }
+            // Scroll back up to preview
+            document.querySelector('.snap-result-frame').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 
-// REMOVED DUPLICATE LISTENER
+    // REMOVED DUPLICATE LISTENER
 
-// ===================================================
-// BAKENOVATION HEADER: Wire up all buttons
-// ===================================================
+    // ===================================================
+    // BAKENOVATION HEADER: Wire up all buttons
+    // ===================================================
 
-// --- SEARCH BUTTON ---
-const searchModal = document.getElementById('search-modal');
-const searchTriggerBtn = document.getElementById('search-trigger-btn');
-const searchCloseButtons = document.querySelectorAll('.search-close');
-const searchForm = document.getElementById('search-form');
-const searchResults = document.getElementById('search-results');
+    // --- SEARCH BUTTON ---
+    const searchModal = document.getElementById('search-modal');
+    const searchTriggerBtn = document.getElementById('search-trigger-btn');
+    const searchCloseButtons = document.querySelectorAll('.search-close');
+    const searchForm = document.getElementById('search-form');
+    const searchResults = document.getElementById('search-results');
 
-if (searchTriggerBtn && searchModal) {
-    searchTriggerBtn.addEventListener('click', () => {
-        searchModal.classList.add('active');
-        setTimeout(() => {
-            const inp = document.getElementById('search-input');
-            if (inp) inp.focus();
-        }, 100);
+    if (searchTriggerBtn && searchModal) {
+        searchTriggerBtn.addEventListener('click', () => {
+            searchModal.classList.add('active');
+            setTimeout(() => {
+                const inp = document.getElementById('search-input');
+                if (inp) inp.focus();
+            }, 100);
+        });
+    }
+    searchCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (searchModal) searchModal.classList.remove('active');
+        });
     });
-}
-searchCloseButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (searchModal) searchModal.classList.remove('active');
-    });
-});
-if (searchModal) {
-    searchModal.addEventListener('click', (e) => {
-        if (e.target === searchModal) searchModal.classList.remove('active');
-    });
-}
-if (searchForm) {
-    searchForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const query = document.getElementById('search-input').value.toLowerCase().trim();
-        if (searchResults) {
-            searchResults.style.display = 'block';
-            // Basic keyword matching to collection items
-            const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
-            let found = 0;
-            cakes.forEach(cake => {
-                if (cake.textContent.toLowerCase().includes(query)) found++;
-            });
-            searchResults.innerHTML = found > 0
-                ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
-                : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
-            // Re-bind close buttons after innerHTML update
-            document.querySelectorAll('.search-close').forEach(b => {
-                b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
-            });
-        }
-    });
-}
+    if (searchModal) {
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) searchModal.classList.remove('active');
+        });
+    }
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (searchResults) {
+                searchResults.style.display = 'block';
+                // Basic keyword matching to collection items
+                const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
+                let found = 0;
+                cakes.forEach(cake => {
+                    if (cake.textContent.toLowerCase().includes(query)) found++;
+                });
+                searchResults.innerHTML = found > 0
+                    ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
+                    : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
+                // Re-bind close buttons after innerHTML update
+                document.querySelectorAll('.search-close').forEach(b => {
+                    b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
+                });
+            }
+        });
+    }
 
-// --- WISHLIST BUTTON ---
-const wishlistModal = document.getElementById('wishlist-modal');
-const wishlistTrigger = document.getElementById('wishlist-trigger');
-const wishlistCloseButtons = document.querySelectorAll('.wishlist-close');
+    // --- WISHLIST BUTTON ---
+    const wishlistModal = document.getElementById('wishlist-modal');
+    const wishlistTrigger = document.getElementById('wishlist-trigger');
+    const wishlistCloseButtons = document.querySelectorAll('.wishlist-close');
 
-if (wishlistTrigger && wishlistModal) {
-    wishlistTrigger.addEventListener('click', () => {
-        wishlistModal.classList.add('active');
+    if (wishlistTrigger && wishlistModal) {
+        wishlistTrigger.addEventListener('click', () => {
+            wishlistModal.classList.add('active');
+        });
+    }
+    wishlistCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (wishlistModal) wishlistModal.classList.remove('active');
+            // If "Explore Collection" is clicked, close and scroll
+            window.location.hash = '#collection';
+        });
     });
-}
-wishlistCloseButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (wishlistModal) wishlistModal.classList.remove('active');
-        // If "Explore Collection" is clicked, close and scroll
-        window.location.hash = '#collection';
-    });
-});
-if (wishlistModal) {
-    wishlistModal.addEventListener('click', (e) => {
-        if (e.target === wishlistModal) wishlistModal.classList.remove('active');
-    });
-}
+    if (wishlistModal) {
+        wishlistModal.addEventListener('click', (e) => {
+            if (e.target === wishlistModal) wishlistModal.classList.remove('active');
+        });
+    }
 
-// --- ORDER MODAL CLOSE LOGIC ---
-const orderModal = document.getElementById('order-modal');
-const orderCloseButtons = document.querySelectorAll('.order-close');
-orderCloseButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (orderModal) orderModal.classList.remove('active');
+    // --- ORDER MODAL CLOSE LOGIC ---
+    const orderModal = document.getElementById('order-modal');
+    const orderCloseButtons = document.querySelectorAll('.order-close');
+    orderCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (orderModal) orderModal.classList.remove('active');
+        });
     });
-});
-if (orderModal) {
-    orderModal.addEventListener('click', (e) => {
-        if (e.target === orderModal) orderModal.classList.remove('active');
-    });
-}
+    if (orderModal) {
+        orderModal.addEventListener('click', (e) => {
+            if (e.target === orderModal) orderModal.classList.remove('active');
+        });
+    }
 
-// --- AI ORDER FORM SUBMISSION ---
-orderForm = document.getElementById('order-form');
-if (orderForm) {
-    orderForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const orderData = {
-            title: 'Bespoke AI Design',
-            price: '4500', // Prestige tier
-            flavor: document.getElementById('modal-flavor').value,
-            weight: document.getElementById('modal-tiers').value,
-            diet: document.getElementById('modal-diet').value,
-            date: document.getElementById('modal-date').value,
-            time: document.getElementById('modal-time').value,
-            message: document.getElementById('order-message').value,
-            image: document.getElementById('modal-img').value,
-            qty: 1
-        };
-        localStorage.setItem('pendingOrder', JSON.stringify(orderData));
-        window.location.href = 'checkout.html';
-    });
-}
+    // --- AI ORDER FORM SUBMISSION ---
+    orderForm = document.getElementById('order-form');
+    if (orderForm) {
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderData = {
+                title: 'Bespoke AI Design',
+                price: '4500', // Prestige tier
+                flavor: document.getElementById('modal-flavor').value,
+                weight: document.getElementById('modal-tiers').value,
+                diet: document.getElementById('modal-diet').value,
+                date: document.getElementById('modal-date').value,
+                time: document.getElementById('modal-time').value,
+                message: document.getElementById('order-message').value,
+                image: document.getElementById('modal-img').value,
+                qty: 1
+            };
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            window.location.href = 'checkout.html';
+        });
+    }
 
-// --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
-const menuToggle = document.getElementById('menu-toggle');
-const subNav = document.querySelector('.bake-sub-nav');
-if (menuToggle && subNav) {
-    menuToggle.addEventListener('click', () => {
-        subNav.classList.toggle('mobile-open');
-    });
-}
+    // --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const subNav = document.querySelector('.bake-sub-nav');
+    if (menuToggle && subNav) {
+        menuToggle.addEventListener('click', () => {
+            subNav.classList.toggle('mobile-open');
+        });
+    }
 
-// --- RESPONSIVE: hide/show elements ---
-function applyResponsive() {
-    const w = window.innerWidth;
-    document.querySelectorAll('.hidden-mobile').forEach(el => {
-        el.style.display = w < 768 ? 'none' : 'flex';
-    });
-    document.querySelectorAll('.mobile-only').forEach(el => {
-        el.style.display = w < 768 ? 'flex' : 'none';
-    });
-}
-applyResponsive();
-window.addEventListener('resize', applyResponsive);
+    // --- RESPONSIVE: hide/show elements ---
+    function applyResponsive() {
+        const w = window.innerWidth;
+        document.querySelectorAll('.hidden-mobile').forEach(el => {
+            el.style.display = w < 768 ? 'none' : 'flex';
+        });
+        document.querySelectorAll('.mobile-only').forEach(el => {
+            el.style.display = w < 768 ? 'flex' : 'none';
+        });
+    }
+    applyResponsive();
+    window.addEventListener('resize', applyResponsive);
 
 });

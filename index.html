@@ -104,6 +104,45 @@
             color: #fff !important;
             border-color: #fff !important;
         }
+
+        /* Enhanced Selection Visibility & Alignment */
+        .snap-chip.active {
+            background: linear-gradient(135deg, #d4af37, #f5e4bc) !important;
+            color: #1a0b1f !important;
+            border: 1px solid #fff !important;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            font-weight: 700;
+        }
+
+        .snap-result-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 3rem;
+        }
+
+        .snap-result-frame {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1/1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .snap-preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s ease;
+        }
     </style>
 </head>
 
@@ -443,14 +482,14 @@
                         <!-- Left Column: Controls -->
                         <div class="snap-controls">
 
-                            <!-- 1. Cake Type -->
+                            <!-- 1. Cake Type / Occasion -->
                             <div class="control-group">
                                 <label class="snap-label">Occasion</label>
                                 <div class="snap-chips-wrapper">
-                                    <button class="snap-chip active" data-type="wedding">Wedding</button>
+                                    <button class="snap-chip active" data-type="birthday">Birthday</button>
                                     <button class="snap-chip" data-type="anniversary">Anniversary</button>
-                                    <button class="snap-chip" data-type="birthday">Birthday</button>
-                                    <button class="snap-chip" data-type="corporate">Corporate</button>
+                                    <button class="snap-chip" data-type="wedding">Wedding</button>
+                                    <button class="snap-chip" data-type="custom">Custom</button>
                                 </div>
                             </div>
 
@@ -525,10 +564,11 @@
                             </button>
                         </div>
 
-                        <!-- Right Column: Preview -->
-                        <div class="snap-preview">
+                        <!-- Right Column: Preview Area -->
+                        <div class="snap-preview-column">
                             <div class="snap-result-frame">
-                                <img id="ai-generated-image" src="assets/hero-cake.png" alt="AI Generated Cake Design">
+                                <img id="ai-generated-image" class="snap-preview-image" src="assets/hero-cake.png"
+                                    alt="AI Generated Cake Design">
                                 <div class="ai-loading-overlay" id="ai-loading" style="display: none;">
                                     <div class="loader-snap"></div>
                                     <p>Chef is sketching your masterpiece...</p>
