@@ -78,8 +78,8 @@ function handleAIProxyV64(data) {
 
     const endpoints = [
       { 
-        name: "Authenticated Prime (Pollinations)", 
-        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true` 
+        name: "Authenticated Flux Prime", 
+        url: `https://gen.pollinations.ai/image/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background, luxury cake design")}?width=1024&height=1024&seed=${seed}&nologo=true&model=flux&enhance=false` 
       },
       { 
         name: "Stability Shield (LoremFlickr)", 
