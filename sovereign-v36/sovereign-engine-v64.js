@@ -943,451 +943,477 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const artisanalModal = document.getElementById('artisanal-modal');
+    const btnAgree = document.getElementById('btn-artisanal-agree');
+    const btnCancelModal = document.getElementById('btn-artisanal-cancel');
+
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            const btnText = aiGenerateBtn.querySelector('.btn-text');
-            const spinner = aiGenerateBtn.querySelector('.spinner');
-            const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
-            const originalLoadingMsg = "Chef is sketching your masterpiece...";
+            if (artisanalModal) {
+                artisanalModal.style.display = 'flex';
+                // GSAP animation for the modal content
+                gsap.fromTo(".artisanal-content",
+                    { scale: 0.8, opacity: 0 },
+                    { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
+                );
+            } else {
+                // Fallback if modal is missing
+                initiateGeneration();
+            }
+        });
+    }
 
-            const startSovereignEngineV38 = async () => {
-                const btnText = aiGenerateBtn.querySelector('.btn-text');
-                const spinner = aiGenerateBtn.querySelector('.spinner');
-                const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+    if (btnAgree) {
+        btnAgree.addEventListener('click', () => {
+            if (artisanalModal) artisanalModal.style.display = 'none';
+            initiateGeneration();
+        });
+    }
 
-                if (!aiPrompt) {
-                    console.error("AI Prompt input field missing from DOM.");
-                    return;
+    if (btnCancelModal) {
+        btnCancelModal.addEventListener('click', () => {
+            if (artisanalModal) artisanalModal.style.display = 'none';
+        });
+    }
+
+    const initiateGeneration = async () => {
+        if (!aiPrompt) {
+            console.error("AI Prompt input field missing from DOM.");
+            return;
+        }
+
+        const btnText = aiGenerateBtn.querySelector('.btn-text');
+        const spinner = aiGenerateBtn.querySelector('.spinner');
+        const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+
+        const rawUserText = aiPrompt.value.trim();
+        const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
+
+        if (btnText) btnText.style.display = 'none';
+        if (spinner) spinner.style.display = 'block';
+        aiGenerateBtn.disabled = true;
+        if (aiLoading) aiLoading.style.display = 'flex';
+        if (loadingMsg) loadingMsg.innerText = loadingText;
+
+        if (aiGeneratedImage) {
+            aiGeneratedImage.classList.add('sketching');
+        }
+
+        // === POLLINATIONS AI ENGINE V9 (TURBO) ===
+        // Pollinations is our primary engine for fast, reliable cake design.
+        const imageSeed = Math.floor(Math.random() * 9999999);
+
+        const expandPrompt = (input) => {
+            const style = snapState.style;
+            const occasion = snapState.type;
+            const size = snapState.size;
+            const tiers = snapState.tiers;
+            const fake = snapState.fakeTier === 'yes' ? 'with a decorative fake base tier' : '';
+
+            // SD best practice: most important thing FIRST, use () for emphasis
+            if (input) {
+                const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
+                return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasion}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
+            }
+            return `${style} ${occasion} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
+        };
+
+        // Expand and generate via Pollinations AI
+
+        const renderFinalImage = (srcData) => {
+            if (aiGeneratedImage) {
+                snapState.currentImageUrl = srcData;
+                // Avoid infinite loop: only set src if it's different
+                if (aiGeneratedImage.src !== srcData) {
+                    aiGeneratedImage.src = srcData;
                 }
+                aiGeneratedImage.classList.remove('sketching');
+                addToGallery(srcData, "AI Generated Masterpiece");
+                gsap.fromTo(aiGeneratedImage,
+                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                );
+                resetLoadingState();
+            }
+        };
 
-                const rawUserText = aiPrompt.value.trim();
-                const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
+        const resetLoadingState = () => {
+            if (aiLoading) aiLoading.style.display = 'none';
+            if (aiGenerateBtn) aiGenerateBtn.disabled = false;
+            if (btnText) btnText.style.display = 'block';
+            if (spinner) spinner.style.display = 'none';
+        };
 
-                if (btnText) btnText.style.display = 'none';
-                if (spinner) spinner.style.display = 'block';
-                aiGenerateBtn.disabled = true;
-                if (aiLoading) aiLoading.style.display = 'flex';
-                if (loadingMsg) loadingMsg.innerText = loadingText;
+        // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
+        // Pollinations provides high-speed, direct image generation.
+        // We expand the prompt and append it to the Pollinations URL.
+        const finalPrompt = expandPrompt(rawUserText);
+        const encodedPrompt = encodeURIComponent(finalPrompt);
+        // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
+        const tryGeneration = () => {
+            const finalPrompt = expandPrompt(rawUserText);
+            console.log(`%c🚀 GENERATING WITH DEFINITIVE UNBREAKABLE TUNNEL (v64)`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
+            console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                if (aiGeneratedImage) {
-                    aiGeneratedImage.classList.add('sketching');
-                }
+            tryGasProxy(finalPrompt);
+        };
 
-                // === POLLINATIONS AI ENGINE V9 (TURBO) ===
-                // Pollinations is our primary engine for fast, reliable cake design.
-                const imageSeed = Math.floor(Math.random() * 9999999);
+        const tryGasProxy = async (prompt) => {
+            const GAS_URLS = [
+                'https://script.google.com/macros/s/AKfycbwGLgjOLNQffkrbM9-RmLk4fnGAceD1rXjYOkHxESoWzomNcWCvbaCeJWfPkLkXjrGC/exec'
+            ];
 
-                const expandPrompt = (input) => {
-                    const style = snapState.style;
-                    const occasion = snapState.type;
-                    const size = snapState.size;
-                    const tiers = snapState.tiers;
-                    const fake = snapState.fakeTier === 'yes' ? 'with a decorative fake base tier' : '';
+            // Clean prompt for reliability
+            const cleanPrompt = prompt.replace(/[^\w\s,]/gi, '').substring(0, 1000);
+            const encoded = encodeURIComponent(cleanPrompt);
+            const seed = Math.floor(Math.random() * 1000000);
 
-                    // SD best practice: most important thing FIRST, use () for emphasis
-                    if (input) {
-                        const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
-                        return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasion}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
+            // HYPER-RESILIENT SHIELD CHAIN (v150 KEY OF LIFE)
+            const shields = [
+                `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true`,
+                `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
+                `https://source.unsplash.com/1024x1024/?bakery,pattiserie,cake,${encoded.split('%2C')[0].substring(0, 20)}`
+            ];
+
+            // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
+            const vault = [
+                "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?q=80&w=1024", // Wedding Luxury
+                "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate Masterpiece
+                "https://images.unsplash.com/photo-1562231976-c4d670699bb4?q=80&w=1024", // Minimalist Art
+                "https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1024", // Orchid Aesthetic
+                "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024", // Classic Celebration
+                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1024", // Fruit Cake
+                "https://images.unsplash.com/photo-1464349095431-e9419cf748d5?q=80&w=1024", // Colorful Cake
+                "https://images.unsplash.com/photo-1535141192574-5d4897c825a0?q=80&w=1024", // Pink Aesthetic
+                "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024"  // Professional Layer
+            ];
+
+            console.log("🚀 ACTIVATING SECURE PROFESSIONAL TUNNEL (v100)...");
+
+            if (aiGeneratedImage) {
+                let attempt = 0;
+                let usingProxy = true;
+
+                aiGeneratedImage.onerror = function () {
+                    if (usingProxy) {
+                        usingProxy = false;
+                        console.warn("🛡️ Shield 0 (Google) revoking or busy. Falling back to Community Shields...");
+                        this.src = shields[0];
+                        return;
                     }
-                    return `${style} ${occasion} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
-                };
 
-                // Expand and generate via Pollinations AI
-
-                const renderFinalImage = (srcData) => {
-                    if (aiGeneratedImage) {
-                        snapState.currentImageUrl = srcData;
-                        // Avoid infinite loop: only set src if it's different
-                        if (aiGeneratedImage.src !== srcData) {
-                            aiGeneratedImage.src = srcData;
-                        }
-                        aiGeneratedImage.classList.remove('sketching');
-                        addToGallery(srcData, "AI Generated Masterpiece");
-                        gsap.fromTo(aiGeneratedImage,
-                            { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                        );
+                    attempt++;
+                    if (attempt < shields.length) {
+                        console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
+                        this.src = shields[attempt];
+                    } else if (attempt === shields.length) {
+                        console.warn("🔮 ALL AI PROVIDERS DOWN. FETCHING FROM MASTERPIECE VAULT...");
+                        const randomMasterpiece = vault[Math.floor(Math.random() * vault.length)];
+                        this.src = randomMasterpiece;
+                        showAlert("Atelier is extra busy. Serving a Curated Masterpiece! ✨", "success");
+                    } else {
+                        console.error("❌ Root Failover Complete.");
                         resetLoadingState();
                     }
                 };
 
-                const resetLoadingState = () => {
-                    if (aiLoading) aiLoading.style.display = 'none';
-                    if (aiGenerateBtn) aiGenerateBtn.disabled = false;
-                    if (btnText) btnText.style.display = 'block';
-                    if (spinner) spinner.style.display = 'none';
-                };
-
-                // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
-                // Pollinations provides high-speed, direct image generation.
-                // We expand the prompt and append it to the Pollinations URL.
-                const finalPrompt = expandPrompt(rawUserText);
-                const encodedPrompt = encodeURIComponent(finalPrompt);
-                // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
-                const tryGeneration = () => {
-                    const finalPrompt = expandPrompt(rawUserText);
-                    console.log(`%c🚀 GENERATING WITH DEFINITIVE UNBREAKABLE TUNNEL (v64)`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
-                    console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
-
-                    tryGasProxy(finalPrompt);
-                };
-
-                const tryGasProxy = async (prompt) => {
-                    const GAS_URLS = [
-                        'https://script.google.com/macros/s/AKfycbwGLgjOLNQffkrbM9-RmLk4fnGAceD1rXjYOkHxESoWzomNcWCvbaCeJWfPkLkXjrGC/exec'
-                    ];
-
-                    // Clean prompt for reliability
-                    const cleanPrompt = prompt.replace(/[^\w\s,]/gi, '').substring(0, 1000);
-                    const encoded = encodeURIComponent(cleanPrompt);
-                    const seed = Math.floor(Math.random() * 1000000);
-
-                    // HYPER-RESILIENT SHIELD CHAIN (v150 KEY OF LIFE)
-                    const shields = [
-                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true`,
-                        `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
-                        `https://source.unsplash.com/1024x1024/?bakery,pattiserie,cake,${encoded.split('%2C')[0].substring(0, 20)}`
-                    ];
-
-                    // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
-                    const vault = [
-                        "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?q=80&w=1024", // Wedding Luxury
-                        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate Masterpiece
-                        "https://images.unsplash.com/photo-1562231976-c4d670699bb4?q=80&w=1024", // Minimalist Art
-                        "https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1024", // Orchid Aesthetic
-                        "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024", // Classic Celebration
-                        "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1024", // Fruit Cake
-                        "https://images.unsplash.com/photo-1464349095431-e9419cf748d5?q=80&w=1024", // Colorful Cake
-                        "https://images.unsplash.com/photo-1535141192574-5d4897c825a0?q=80&w=1024", // Pink Aesthetic
-                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024"  // Professional Layer
-                    ];
-
-                    console.log("🚀 ACTIVATING SECURE PROFESSIONAL TUNNEL (v100)...");
-
-                    if (aiGeneratedImage) {
-                        let attempt = 0;
-                        let usingProxy = true;
-
-                        aiGeneratedImage.onerror = function () {
-                            if (usingProxy) {
-                                usingProxy = false;
-                                console.warn("🛡️ Shield 0 (Google) revoking or busy. Falling back to Community Shields...");
-                                this.src = shields[0];
-                                return;
-                            }
-
-                            attempt++;
-                            if (attempt < shields.length) {
-                                console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
-                                this.src = shields[attempt];
-                            } else if (attempt === shields.length) {
-                                console.warn("🔮 ALL AI PROVIDERS DOWN. FETCHING FROM MASTERPIECE VAULT...");
-                                const randomMasterpiece = vault[Math.floor(Math.random() * vault.length)];
-                                this.src = randomMasterpiece;
-                                showAlert("Atelier is extra busy. Serving a Curated Masterpiece! ✨", "success");
-                            } else {
-                                console.error("❌ Root Failover Complete.");
-                                resetLoadingState();
-                            }
-                        };
-
-                        aiGeneratedImage.onload = function () {
-                            let source = "Atelier Mega-Tunnel";
-                            if (!usingProxy) {
-                                source = attempt < shields.length ? `Community Shield ${attempt + 1}` : "Masterpiece Vault";
-                            }
-                            console.log(`%c✨ Result Displayed via ${source}`, 'color:#d4af37; font-weight:bold;');
-                            this.classList.remove('sketching');
-                            resetLoadingState();
-
-                            const resultActions = document.getElementById('ai-result-actions');
-                            if (resultActions) resultActions.style.display = 'flex';
-                            addToGallery(this.src, "Bakenovation Creation");
-                        };
-
-                        // 1. START WITH PROFESSIONAL ATOMIC PROXY (v90 - Convergence Edition)
-                        const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
-
-                        console.log("🛡️ ACTIVATING AUTHENTICATED CONVERGENCE TUNNEL...");
-
-                        // CRITICAL: NO CUSTOM HEADERS! This makes it a "Simple Request" to bypass CORS Preflight (OPTIONS)
-                        fetch(primaryUrl)
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.status === 'success' && data.image_base64) {
-                                    aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
-                                    // Update gallery
-                                    aiGeneratedImage.onload = function () {
-                                        console.log("%c✨ Result Displayed via Authenticated Convergence Tunnel", 'color:#d4af37; font-weight:bold;');
-                                        this.classList.remove('sketching');
-                                        resetLoadingState();
-                                        const resultActions = document.getElementById('ai-result-actions');
-                                        if (resultActions) resultActions.style.display = 'flex';
-                                        addToGallery(this.src, "Bakenovation Creation");
-                                    };
-                                } else {
-                                    console.error("🏁 Convergence Tunnel Warning:", data.message);
-                                    throw new Error(data.message || "Tunnel throttled");
-                                }
-                            })
-                            .catch(err => {
-                                console.warn("🏁 Convergence Tunnel Failed. Falling back to Community Shields...");
-                                usingProxy = false;
-                                aiGeneratedImage.onerror();
-                            });
+                aiGeneratedImage.onload = function () {
+                    let source = "Atelier Mega-Tunnel";
+                    if (!usingProxy) {
+                        source = attempt < shields.length ? `Community Shield ${attempt + 1}` : "Masterpiece Vault";
                     }
+                    console.log(`%c✨ Result Displayed via ${source}`, 'color:#d4af37; font-weight:bold;');
+                    this.classList.remove('sketching');
+                    resetLoadingState();
 
-                    showAlert("Chef Harmeet is sculpting your vision... 🎂", "success");
+                    const resultActions = document.getElementById('ai-result-actions');
+                    if (resultActions) resultActions.style.display = 'flex';
+                    addToGallery(this.src, "Bakenovation Creation");
                 };
 
-                tryGasProxy(finalPrompt);
-            };
+                // 1. START WITH PROFESSIONAL ATOMIC PROXY (v90 - Convergence Edition)
+                const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
 
-            startSovereignEngineV38();
-        });
+                console.log("🛡️ ACTIVATING AUTHENTICATED CONVERGENCE TUNNEL...");
+
+                // CRITICAL: NO CUSTOM HEADERS! This makes it a "Simple Request" to bypass CORS Preflight (OPTIONS)
+                fetch(primaryUrl)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success' && data.image_base64) {
+                            aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
+                            // Update gallery
+                            aiGeneratedImage.onload = function () {
+                                console.log("%c✨ Result Displayed via Authenticated Convergence Tunnel", 'color:#d4af37; font-weight:bold;');
+                                this.classList.remove('sketching');
+                                resetLoadingState();
+                                const resultActions = document.getElementById('ai-result-actions');
+                                if (resultActions) resultActions.style.display = 'flex';
+                                addToGallery(this.src, "Bakenovation Creation");
+                            };
+                        } else {
+                            console.error("🏁 Convergence Tunnel Warning:", data.message);
+                            throw new Error(data.message || "Tunnel throttled");
+                        }
+                    })
+                    .catch(err => {
+                        console.warn("🏁 Convergence Tunnel Failed. Falling back to Community Shields...");
+                        usingProxy = false;
+                        aiGeneratedImage.onerror();
+                    });
+            }
+
+            showAlert("Chef Harmeet is sculpting your vision... 🎂", "success");
+        };
+
+        tryGasProxy(finalPrompt);
+    };
+
+    startSovereignEngineV38();
+});
     }
 
 
-    // Studio Add to Cart Logic (GATED)
-    const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
-    if (detailAddToCartBtn) {
-        detailAddToCartBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-            const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
+// Studio Add to Cart Logic (GATED)
+const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
+if (detailAddToCartBtn) {
+    detailAddToCartBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+        const absoluteImgSrc = detailImg.src.startsWith('http') ? detailImg.src : baseUrl + detailImg.src;
 
-            addToCart({
-                name: detailTitle.innerText,
-                image: absoluteImgSrc,
-                details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
-                price: parseInt(detailWeight.innerText.replace(/\D/g, '')) * 1000 || 2500
-            });
+        addToCart({
+            name: detailTitle.innerText,
+            image: absoluteImgSrc,
+            details: `Ingredients: ${detailIngredients.innerText.substring(0, 50)}...`,
+            price: parseInt(detailWeight.innerText.replace(/\D/g, '')) * 1000 || 2500
         });
-    }
+    });
+}
 
-    const detailDirectOrderBtn = document.getElementById('detail-direct-order-btn');
-    if (detailDirectOrderBtn) {
-        detailDirectOrderBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            checkLoginAndProceed(() => {
-                if (detailModal) detailModal.classList.remove('active');
-                if (modal) modal.classList.add('active');
+const detailDirectOrderBtn = document.getElementById('detail-direct-order-btn');
+if (detailDirectOrderBtn) {
+    detailDirectOrderBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        checkLoginAndProceed(() => {
+            if (detailModal) detailModal.classList.remove('active');
+            if (modal) modal.classList.add('active');
 
-                const designName = detailTitle.innerText;
-                const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
+            const designName = detailTitle.innerText;
+            const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
+
+            const designInput = document.getElementById('modal-ordered-design');
+            const messageInput = modal.querySelector('textarea[name="message"]');
+
+            if (designInput) designInput.value = designName;
+            if (messageInput) {
+                messageInput.value = designDetails;
+            }
+
+            gsap.fromTo(modal.querySelector('.modal-content'),
+                { y: -50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4 }
+            );
+        });
+    });
+}
+
+// 4. Order Button Logic (GATED)
+if (aiOrderBtn) {
+    aiOrderBtn.addEventListener('click', () => {
+        checkLoginAndProceed(() => {
+            const userDetails = aiPrompt.value.trim();
+            const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
+
+            const orderModal = document.getElementById('order-modal');
+            if (orderModal) {
+                orderModal.classList.add('active');
 
                 const designInput = document.getElementById('modal-ordered-design');
-                const messageInput = modal.querySelector('textarea[name="message"]');
+                const messageInput = orderModal.querySelector('textarea[name="message"]');
 
-                if (designInput) designInput.value = designName;
+                if (designInput) designInput.value = `Bespoke AI Created Design`;
                 if (messageInput) {
-                    messageInput.value = designDetails;
+                    messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
                 }
 
-                gsap.fromTo(modal.querySelector('.modal-content'),
+                gsap.fromTo(orderModal.querySelector('.modal-content'),
                     { y: -50, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.4 }
                 );
-            });
+            }
         });
-    }
+    });
+}
 
-    // 4. Order Button Logic (GATED)
-    if (aiOrderBtn) {
-        aiOrderBtn.addEventListener('click', () => {
-            checkLoginAndProceed(() => {
-                const userDetails = aiPrompt.value.trim();
-                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
+// --- GALLERY LOGIC ---
+function addToGallery(url, prompt) {
+    const galleryContainer = document.getElementById('recent-generations-grid');
+    if (!galleryContainer) return;
 
-                const orderModal = document.getElementById('order-modal');
-                if (orderModal) {
-                    orderModal.classList.add('active');
-
-                    const designInput = document.getElementById('modal-ordered-design');
-                    const messageInput = orderModal.querySelector('textarea[name="message"]');
-
-                    if (designInput) designInput.value = `Bespoke AI Created Design`;
-                    if (messageInput) {
-                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
-                    }
-
-                    gsap.fromTo(orderModal.querySelector('.modal-content'),
-                        { y: -50, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 0.4 }
-                    );
-                }
-            });
-        });
-    }
-
-    // --- GALLERY LOGIC ---
-    function addToGallery(url, prompt) {
-        const galleryContainer = document.getElementById('recent-generations-grid');
-        if (!galleryContainer) return;
-
-        // Create item
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-        item.style.opacity = '0';
-        item.innerHTML = `
+    // Create item
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.style.opacity = '0';
+    item.innerHTML = `
             <img src="${url}" alt="AI Concept">
             <div class="gallery-overlay">
                 <button class="btn-sm btn-luxury use-this-btn">Use This</button>
             </div>
         `;
 
-        // Add to start
-        galleryContainer.prepend(item);
+    // Add to start
+    galleryContainer.prepend(item);
 
-        // Animate appearance
-        gsap.to(item, { opacity: 1, duration: 0.5 });
+    // Animate appearance
+    gsap.to(item, { opacity: 1, duration: 0.5 });
 
-        // Use this button logic
-        const useBtn = item.querySelector('.use-this-btn');
-        useBtn.addEventListener('click', () => {
-            if (aiGeneratedImage) {
-                aiGeneratedImage.src = url;
-                gsap.fromTo(aiGeneratedImage, { scale: 0.95, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.3 });
-            }
-            // Scroll back up to preview
-            document.querySelector('.snap-result-frame').scrollIntoView({ behavior: 'smooth' });
-        });
-    }
-
-    // REMOVED DUPLICATE LISTENER
-
-    // ===================================================
-    // BAKENOVATION HEADER: Wire up all buttons
-    // ===================================================
-
-    // --- SEARCH BUTTON ---
-    const searchModal = document.getElementById('search-modal');
-    const searchTriggerBtn = document.getElementById('search-trigger-btn');
-    const searchCloseButtons = document.querySelectorAll('.search-close');
-    const searchForm = document.getElementById('search-form');
-    const searchResults = document.getElementById('search-results');
-
-    if (searchTriggerBtn && searchModal) {
-        searchTriggerBtn.addEventListener('click', () => {
-            searchModal.classList.add('active');
-            setTimeout(() => {
-                const inp = document.getElementById('search-input');
-                if (inp) inp.focus();
-            }, 100);
-        });
-    }
-    searchCloseButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (searchModal) searchModal.classList.remove('active');
-        });
+    // Use this button logic
+    const useBtn = item.querySelector('.use-this-btn');
+    useBtn.addEventListener('click', () => {
+        if (aiGeneratedImage) {
+            aiGeneratedImage.src = url;
+            gsap.fromTo(aiGeneratedImage, { scale: 0.95, opacity: 0.8 }, { scale: 1, opacity: 1, duration: 0.3 });
+        }
+        // Scroll back up to preview
+        document.querySelector('.snap-result-frame').scrollIntoView({ behavior: 'smooth' });
     });
-    if (searchModal) {
-        searchModal.addEventListener('click', (e) => {
-            if (e.target === searchModal) searchModal.classList.remove('active');
-        });
-    }
-    if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const query = document.getElementById('search-input').value.toLowerCase().trim();
-            if (searchResults) {
-                searchResults.style.display = 'block';
-                // Basic keyword matching to collection items
-                const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
-                let found = 0;
-                cakes.forEach(cake => {
-                    if (cake.textContent.toLowerCase().includes(query)) found++;
-                });
-                searchResults.innerHTML = found > 0
-                    ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
-                    : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
-                // Re-bind close buttons after innerHTML update
-                document.querySelectorAll('.search-close').forEach(b => {
-                    b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
-                });
-            }
-        });
-    }
+}
 
-    // --- WISHLIST BUTTON ---
-    const wishlistModal = document.getElementById('wishlist-modal');
-    const wishlistTrigger = document.getElementById('wishlist-trigger');
-    const wishlistCloseButtons = document.querySelectorAll('.wishlist-close');
+// REMOVED DUPLICATE LISTENER
 
-    if (wishlistTrigger && wishlistModal) {
-        wishlistTrigger.addEventListener('click', () => {
-            wishlistModal.classList.add('active');
-        });
-    }
-    wishlistCloseButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (wishlistModal) wishlistModal.classList.remove('active');
-            // If "Explore Collection" is clicked, close and scroll
-            window.location.hash = '#collection';
-        });
+// ===================================================
+// BAKENOVATION HEADER: Wire up all buttons
+// ===================================================
+
+// --- SEARCH BUTTON ---
+const searchModal = document.getElementById('search-modal');
+const searchTriggerBtn = document.getElementById('search-trigger-btn');
+const searchCloseButtons = document.querySelectorAll('.search-close');
+const searchForm = document.getElementById('search-form');
+const searchResults = document.getElementById('search-results');
+
+if (searchTriggerBtn && searchModal) {
+    searchTriggerBtn.addEventListener('click', () => {
+        searchModal.classList.add('active');
+        setTimeout(() => {
+            const inp = document.getElementById('search-input');
+            if (inp) inp.focus();
+        }, 100);
     });
-    if (wishlistModal) {
-        wishlistModal.addEventListener('click', (e) => {
-            if (e.target === wishlistModal) wishlistModal.classList.remove('active');
-        });
-    }
-
-    // --- ORDER MODAL CLOSE LOGIC ---
-    const orderModal = document.getElementById('order-modal');
-    const orderCloseButtons = document.querySelectorAll('.order-close');
-    orderCloseButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (orderModal) orderModal.classList.remove('active');
-        });
+}
+searchCloseButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (searchModal) searchModal.classList.remove('active');
     });
-    if (orderModal) {
-        orderModal.addEventListener('click', (e) => {
-            if (e.target === orderModal) orderModal.classList.remove('active');
-        });
-    }
+});
+if (searchModal) {
+    searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) searchModal.classList.remove('active');
+    });
+}
+if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = document.getElementById('search-input').value.toLowerCase().trim();
+        if (searchResults) {
+            searchResults.style.display = 'block';
+            // Basic keyword matching to collection items
+            const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
+            let found = 0;
+            cakes.forEach(cake => {
+                if (cake.textContent.toLowerCase().includes(query)) found++;
+            });
+            searchResults.innerHTML = found > 0
+                ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
+                : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
+            // Re-bind close buttons after innerHTML update
+            document.querySelectorAll('.search-close').forEach(b => {
+                b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
+            });
+        }
+    });
+}
 
-    // --- AI ORDER FORM SUBMISSION ---
-    orderForm = document.getElementById('order-form');
-    if (orderForm) {
-        orderForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const orderData = {
-                title: 'Bespoke AI Design',
-                price: '4500', // Prestige tier
-                flavor: document.getElementById('modal-flavor').value,
-                weight: document.getElementById('modal-tiers').value,
-                diet: document.getElementById('modal-diet').value,
-                date: document.getElementById('modal-date').value,
-                time: document.getElementById('modal-time').value,
-                message: document.getElementById('order-message').value,
-                image: document.getElementById('modal-img').value,
-                qty: 1
-            };
-            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
-            window.location.href = 'checkout.html';
-        });
-    }
+// --- WISHLIST BUTTON ---
+const wishlistModal = document.getElementById('wishlist-modal');
+const wishlistTrigger = document.getElementById('wishlist-trigger');
+const wishlistCloseButtons = document.querySelectorAll('.wishlist-close');
 
-    // --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
-    const menuToggle = document.getElementById('menu-toggle');
-    const subNav = document.querySelector('.bake-sub-nav');
-    if (menuToggle && subNav) {
-        menuToggle.addEventListener('click', () => {
-            subNav.classList.toggle('mobile-open');
-        });
-    }
+if (wishlistTrigger && wishlistModal) {
+    wishlistTrigger.addEventListener('click', () => {
+        wishlistModal.classList.add('active');
+    });
+}
+wishlistCloseButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (wishlistModal) wishlistModal.classList.remove('active');
+        // If "Explore Collection" is clicked, close and scroll
+        window.location.hash = '#collection';
+    });
+});
+if (wishlistModal) {
+    wishlistModal.addEventListener('click', (e) => {
+        if (e.target === wishlistModal) wishlistModal.classList.remove('active');
+    });
+}
 
-    // --- RESPONSIVE: hide/show elements ---
-    function applyResponsive() {
-        const w = window.innerWidth;
-        document.querySelectorAll('.hidden-mobile').forEach(el => {
-            el.style.display = w < 768 ? 'none' : 'flex';
-        });
-        document.querySelectorAll('.mobile-only').forEach(el => {
-            el.style.display = w < 768 ? 'flex' : 'none';
-        });
-    }
-    applyResponsive();
-    window.addEventListener('resize', applyResponsive);
+// --- ORDER MODAL CLOSE LOGIC ---
+const orderModal = document.getElementById('order-modal');
+const orderCloseButtons = document.querySelectorAll('.order-close');
+orderCloseButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (orderModal) orderModal.classList.remove('active');
+    });
+});
+if (orderModal) {
+    orderModal.addEventListener('click', (e) => {
+        if (e.target === orderModal) orderModal.classList.remove('active');
+    });
+}
+
+// --- AI ORDER FORM SUBMISSION ---
+orderForm = document.getElementById('order-form');
+if (orderForm) {
+    orderForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const orderData = {
+            title: 'Bespoke AI Design',
+            price: '4500', // Prestige tier
+            flavor: document.getElementById('modal-flavor').value,
+            weight: document.getElementById('modal-tiers').value,
+            diet: document.getElementById('modal-diet').value,
+            date: document.getElementById('modal-date').value,
+            time: document.getElementById('modal-time').value,
+            message: document.getElementById('order-message').value,
+            image: document.getElementById('modal-img').value,
+            qty: 1
+        };
+        localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+        window.location.href = 'checkout.html';
+    });
+}
+
+// --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
+const menuToggle = document.getElementById('menu-toggle');
+const subNav = document.querySelector('.bake-sub-nav');
+if (menuToggle && subNav) {
+    menuToggle.addEventListener('click', () => {
+        subNav.classList.toggle('mobile-open');
+    });
+}
+
+// --- RESPONSIVE: hide/show elements ---
+function applyResponsive() {
+    const w = window.innerWidth;
+    document.querySelectorAll('.hidden-mobile').forEach(el => {
+        el.style.display = w < 768 ? 'none' : 'flex';
+    });
+    document.querySelectorAll('.mobile-only').forEach(el => {
+        el.style.display = w < 768 ? 'flex' : 'none';
+    });
+}
+applyResponsive();
+window.addEventListener('resize', applyResponsive);
 
 });
