@@ -62,7 +62,7 @@ function handleAIProxyV64(data) {
     const searchTerms = prompt.replace(/[^\w\s]/g, '').split(' ').filter(w => w.length > 3).slice(0, 3).join(',');
     
     // Retrieve the Secret Key from Properties (or use the one provided just now)
-    const POLLINATIONS_KEY = PropertiesService.getScriptProperties().getProperty('POLLINATIONS_API_KEY') || "sk_7FOZp9fGOBqPXT5BvtBAQbyWLo4qnbAp";
+    const POLLINATIONS_KEY = PropertiesService.getScriptProperties().getProperty('POLLINATIONS_API_KEY') || "sk_aEqTh5naU3MIN8APqGNsiEmfIUonhu0y";
 
     const options = {
       'method': 'get',
