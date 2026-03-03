@@ -1019,10 +1019,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN (v120 NUCLEAR STABILITY)
+                    // HYPER-RESILIENT SHIELD CHAIN (v150 KEY OF LIFE)
                     const shields = [
-                        `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
                         `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true`,
+                        `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
                         `https://source.unsplash.com/1024x1024/?bakery,pattiserie,cake,${encoded.split('%2C')[0].substring(0, 20)}`
                     ];
 

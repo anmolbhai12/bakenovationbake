@@ -36,8 +36,9 @@ function handleRequest(e) {
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
     if (action === 'ai_proxy') return handleAIProxyV64(data);
     if (action === 'debug') {
-      const key = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-      return jsonResponse({ status: 'success', version: 'v101-DIAGNOSTIC', key_linked: !!key, key_prefix: key ? key.substring(0,8)+'...' : 'NOT FOUND' });
+      const props = PropertiesService.getScriptProperties().getProperties();
+      const keys = Object.keys(props).map(k => k + " (" + props[k].substring(0,4) + "...)");
+      return jsonResponse({ status: 'success', version: 'v105-DIAGNOSTIC', active_keys: keys });
     }
 
     return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
@@ -56,31 +57,33 @@ function handleAIProxyV64(data) {
     const prompt = data.prompt;
     if (!prompt) return jsonResponse({ status: 'error', message: 'Missing prompt' });
 
-    // ─── NUCLEAR STABILITY: IDENTITY SPOOFING ───
+    // ─── STABLE-KEY ARCHITECTURE: POLLINATIONS AUTH ───
     const seed = Math.floor(Math.random() * 999999);
-    // Extract simple keywords (max 2) to prevent URL breakage
     const searchTerms = prompt.replace(/[^\w\s]/g, '').split(' ').filter(w => w.length > 3).slice(0, 3).join(',');
     
-    // Identity spoofing to bypass Cloudflare blocks
+    // Retrieve the Secret Key from Properties (or use the one provided just now)
+    const POLLINATIONS_KEY = PropertiesService.getScriptProperties().getProperty('POLLINATIONS_API_KEY') || "sk_7FOZp9fGOBqPXT5BvtBAQbyWLo4qnbAp";
+
     const options = {
       'method': 'get',
       'muteHttpExceptions': true,
       'followRedirects': true,
       'timeoutInSeconds': 28,
       'headers': {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+        'Authorization': `Bearer ${POLLINATIONS_KEY}`,
+        'User-Agent': 'BakenovationAtelier/1.0 (Professional AI Engine)',
+        'Accept': 'image/*'
       }
     };
 
     const endpoints = [
       { 
-        name: "Stability Shield (LoremFlickr)", 
-        url: `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encodeURIComponent(searchTerms)}/all` 
+        name: "Authenticated Prime (Pollinations)", 
+        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true` 
       },
       { 
-        name: "Prime Shield (Pollinations)", 
-        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true` 
+        name: "Stability Shield (LoremFlickr)", 
+        url: `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encodeURIComponent(searchTerms)}/all` 
       },
       { 
         name: "Flash Shield (Unsplash)", 
@@ -90,28 +93,29 @@ function handleAIProxyV64(data) {
 
     for (const endpoint of endpoints) {
       try {
-        diagnosticLog.push(`Hacking ${endpoint.name}...`);
-        const response = UrlFetchApp.fetch(endpoint.url, options);
+        diagnosticLog.push(`Activating ${endpoint.name}...`);
+        
+        // Only use Auth Headers for Pollinations
+        const currentOptions = endpoint.url.includes('pollinations') ? options : { 'method': 'get', 'muteHttpExceptions': true };
+        const response = UrlFetchApp.fetch(endpoint.url, currentOptions);
 
         if (response.getResponseCode() === 200) {
           const blob = response.getBlob();
           const bytes = blob.getBytes();
           const type = blob.getContentType().toLowerCase();
 
-          // HEURISTIC: Check if data is actually an image and not a tiny error file
           if (type.indexOf('image') !== -1 && bytes.length > 3000) {
             diagnosticLog.push(`${endpoint.name} SECURED! (${bytes.length} bytes)`);
             return jsonResponse({ 
               status: 'success', 
               image_base64: Utilities.base64Encode(bytes), 
-              engine: "Nuclear: " + endpoint.name,
+              engine: "Stable-Key: " + endpoint.name,
               logs: diagnosticLog 
             });
-          } else {
-            diagnosticLog.push(`${endpoint.name} gave dead payload (${bytes.length} bytes). Rotating...`);
           }
+          diagnosticLog.push(`${endpoint.name} returned non-image data. Rotating...`);
         } else {
-          diagnosticLog.push(`${endpoint.name} blocked by source (${response.getResponseCode()})`);
+          diagnosticLog.push(`${endpoint.name} failed (${response.getResponseCode()})`);
         }
       } catch (e) {
         diagnosticLog.push(`${endpoint.name} error: ${e.toString()}`);
@@ -120,12 +124,12 @@ function handleAIProxyV64(data) {
 
     return jsonResponse({ 
       status: 'error', 
-      message: 'The Bakenovation Atelier is currently under high-security lockdown. Falling back to Local Vault...',
+      message: 'Atelier Lockdown: AI servers are currently throttled. Using Masterpiece Vault...',
       diagnostics: diagnosticLog
     });
 
   } catch(e) { 
-    return jsonResponse({ status: 'error', message: 'Nuclear Failure', diagnostics: [e.toString()] }); 
+    return jsonResponse({ status: 'error', message: 'Stable Key Failure', diagnostics: [e.toString()] }); 
   }
 }
 
