@@ -1019,12 +1019,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN (v110 ROCK OF STABILITY)
+                    // HYPER-RESILIENT SHIELD CHAIN (v120 NUCLEAR STABILITY)
                     const shields = [
-                        `https://loremflickr.com/1024/1024/cake,luxury,bakery,pattiserie,${encoded.split('%2C')[0].substring(0, 30)}/all`,
-                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux`,
-                        `https://api.airforce/v1/image/generations?prompt=${encoded}&model=flux`,
-                        `https://source.unsplash.com/1024x1024/?luxury,cake,bakery,pattiserie,${encoded.split('%2C')[0].substring(0, 30)}`
+                        `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
+                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true`,
+                        `https://source.unsplash.com/1024x1024/?bakery,pattiserie,cake,${encoded.split('%2C')[0].substring(0, 20)}`
                     ];
 
                     // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
@@ -1083,21 +1082,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             addToGallery(this.src, "Bakenovation Creation");
                         };
 
-                        // 1. START WITH PROFESSIONAL GOOGLE PROXY
+                        // 1. START WITH PROFESSIONAL ATOMIC PROXY
                         const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
 
-                        fetch(primaryUrl)
+                        fetch(primaryUrl, { cache: "no-store", headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } })
                             .then(res => res.json())
                             .then(data => {
                                 if (data.status === 'success' && data.image_base64) {
                                     aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
                                 } else {
-                                    console.error("🏁 Proxy Error Output:", data);
-                                    throw new Error(data.message || "Proxy response failed");
+                                    console.error("🏁 Atomic Tunnel Warning:", data.message);
+                                    throw new Error(data.message || "Tunnel throttled");
                                 }
                             })
                             .catch(err => {
-                                console.error("🏁 Fetch/Logic Error:", err);
+                                console.warn("🏁 Falling back to Direct Browser Shields...");
                                 aiGeneratedImage.onerror();
                             });
                     }
