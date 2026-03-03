@@ -880,8 +880,11 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'wedding',
         style: 'luxury',
         color: 'white',
-        flavor: 'chocolate', // Default flavor
-        size: '1kg', // Default weight
+        size: '1kg',
+        tiers: '1',
+        fakeTier: 'no',
+        deliveryDate: '',
+        deliveryTime: 'Morning',
         currentImageUrl: 'assets/wedding_cake.png'
     };
 
@@ -901,8 +904,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update State
             if (chip.dataset.type) snapState.type = chip.dataset.type;
             if (chip.dataset.style) snapState.style = chip.dataset.style;
-            if (chip.dataset.flavor) snapState.flavor = chip.dataset.flavor;
             if (chip.dataset.size) snapState.size = chip.dataset.size;
+            if (chip.dataset.tiers) snapState.tiers = chip.dataset.tiers;
+            if (chip.dataset.fake) snapState.fakeTier = chip.dataset.fake;
+            if (chip.dataset.time) snapState.deliveryTime = chip.dataset.time;
         });
     });
 
@@ -920,6 +925,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (color.dataset.color) snapState.color = color.dataset.color;
         });
     });
+
+    // 3. Handle Date Selection
+    const aiDateInput = document.getElementById('ai-delivery-date');
+    if (aiDateInput) {
+        // Set default to 2 days from now
+        const minDate = new Date();
+        minDate.setDate(minDate.getDate() + 2);
+        const yyyy = minDate.getFullYear();
+        const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(minDate.getDate()).padStart(2, '0');
+        aiDateInput.value = `${yyyy}-${mm}-${dd}`;
+        snapState.deliveryDate = aiDateInput.value;
+
+        aiDateInput.addEventListener('change', () => {
+            snapState.deliveryDate = aiDateInput.value;
+        });
+    }
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
@@ -958,15 +980,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const expandPrompt = (input) => {
                     const style = snapState.style;
                     const occasion = snapState.type;
-                    const flavor = snapState.flavor;
                     const size = snapState.size;
+                    const tiers = snapState.tiers;
+                    const fake = snapState.fakeTier === 'yes' ? 'with a decorative fake base tier' : '';
 
                     // SD best practice: most important thing FIRST, use () for emphasis
                     if (input) {
                         const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
-                        return `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
+                        return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasion}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
                     }
-                    return `${style} ${occasion} cake, ${flavor} flavored, ${size}, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
+                    return `${style} ${occasion} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
                 };
 
                 // Expand and generate via Pollinations AI
