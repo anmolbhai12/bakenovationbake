@@ -810,6 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiBuyNowBtn = document.getElementById('ai-buy-now-btn');
     if (aiBuyNowBtn) {
         aiBuyNowBtn.addEventListener('click', () => {
+            // SHOW delivery fields only for AI orders
+            const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
+            if (aiDeliveryFields) aiDeliveryFields.style.display = 'block';
+
             if (aiPrompt) {
                 const userDetails = aiPrompt.value.trim();
                 const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
@@ -883,9 +887,10 @@ document.addEventListener('DOMContentLoaded', () => {
         size: '1kg',
         tiers: '1',
         fakeTier: 'no',
+        fakeTierDetail: 'top',
         deliveryDate: '',
         deliveryTime: 'Morning',
-        currentImageUrl: 'assets/wedding_cake.png'
+        currentImageUrl: 'assets/hero-cake.png'
     };
 
     // 1. Handle Chip Selections (Occasion, Aesthetic)
@@ -906,7 +911,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (chip.dataset.style) snapState.style = chip.dataset.style;
             if (chip.dataset.size) snapState.size = chip.dataset.size;
             if (chip.dataset.tiers) snapState.tiers = chip.dataset.tiers;
-            if (chip.dataset.fake) snapState.fakeTier = chip.dataset.fake;
+
+            if (chip.dataset.fake) {
+                snapState.fakeTier = chip.dataset.fake;
+                // Toggle sub-selection
+                const fakeTierSelection = document.getElementById('fake-tier-selection');
+                if (fakeTierSelection) {
+                    fakeTierSelection.style.display = snapState.fakeTier === 'yes' ? 'block' : 'none';
+                }
+            }
+
+            if (chip.dataset.fakeDetail) snapState.fakeTierDetail = chip.dataset.fakeDetail;
             if (chip.dataset.time) snapState.deliveryTime = chip.dataset.time;
         });
     });
@@ -1014,10 +1029,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (input) {
                 const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
                 const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
-                return `${subject}, ${tiers}-tier cake design, ${fake}, ${style} style, ${occasionStr}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
+                const fakeStr = fake === 'yes' ? `with a fake ${snapState.fakeTierDetail} tier` : 'no fake tiers';
+                return `${subject}, ${tiers}-tier cake design, ${fakeStr}, ${style} style, ${occasionStr}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
             }
             const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
-            return `${style} ${occasionStr} cake, ${tiers}-tier masterpiece, ${fake}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
+            const fakeStr = fake === 'yes' ? `with a fake ${snapState.fakeTierDetail} tier` : 'no fake tiers';
+            return `${style} ${occasionStr} cake, ${tiers}-tier masterpiece, ${fakeStr}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
         };
 
         // Expand and generate via Pollinations AI
@@ -1196,6 +1213,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (detailModal) detailModal.classList.remove('active');
                 if (modal) modal.classList.add('active');
 
+                // HIDE delivery fields for standard orders
+                const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
+                if (aiDeliveryFields) aiDeliveryFields.style.display = 'none';
+
                 const designName = detailTitle.innerText;
                 const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
 
@@ -1225,6 +1246,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const orderModal = document.getElementById('order-modal');
                 if (orderModal) {
                     orderModal.classList.add('active');
+
+                    // SHOW delivery fields (treating AI Order button as AI context)
+                    const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
+                    if (aiDeliveryFields) aiDeliveryFields.style.display = 'block';
 
                     const designInput = document.getElementById('modal-ordered-design');
                     const messageInput = orderModal.querySelector('textarea[name="message"]');

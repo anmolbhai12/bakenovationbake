@@ -1816,6 +1816,17 @@ h4 {
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
+.snap-input::placeholder,
+.luxury-input::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+    opacity: 1;
+}
+
+/* Ensure artisan text is always visible */
+.artisanal-text {
+    color: #f5e4bc !important;
+}
+
 /* Buttons */
 .btn-snap-primary {
     width: 100%;

@@ -488,7 +488,6 @@
                                 <div class="snap-chips-wrapper">
                                     <button class="snap-chip active" data-type="birthday">Birthday</button>
                                     <button class="snap-chip" data-type="anniversary">Anniversary</button>
-                                    <button class="snap-chip" data-type="wedding">Wedding</button>
                                     <button class="snap-chip" data-type="custom">Custom</button>
                                 </div>
                             </div>
@@ -523,21 +522,18 @@
                                 </div>
                             </div>
 
-                            <!-- 5. Delivery Planning -->
-                            <div class="control-group"
-                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div>
-                                    <label class="snap-label">Delivery Date</label>
-                                    <input type="date" id="ai-delivery-date" class="snap-input" style="width: 100%;">
-                                </div>
-                                <div id="ai-time-slot-wrapper">
-                                    <label class="snap-label">Preferred Time</label>
-                                    <div class="snap-chips-wrapper">
-                                        <button class="snap-chip active" data-time="Morning">AM</button>
-                                        <button class="snap-chip" data-time="Evening">PM</button>
-                                    </div>
+                            <!-- New: Which Fake Tier? (Conditional) -->
+                            <div id="fake-tier-selection" class="control-group"
+                                style="display: none; border-left: 2px solid var(--color-orchid); padding-left: 15px; margin-top: -10px;">
+                                <label class="snap-label" style="font-size: 0.8rem; opacity: 0.8;">Which Tier?</label>
+                                <div id="ai-fake-tier-detail-wrapper" class="snap-chips-wrapper">
+                                    <button class="snap-chip active" data-fake-detail="top">Top</button>
+                                    <button class="snap-chip" data-fake-detail="middle">Middle</button>
+                                    <button class="snap-chip" data-fake-detail="bottom">Bottom</button>
                                 </div>
                             </div>
+
+                            <!-- Delivery Planning MOVED TO ORDER MODAL -->
 
                             <!-- 7. Size Selection -->
                             <div class="control-group">
@@ -918,19 +914,22 @@
                     </select>
                 </div>
 
-                <div class="control-group">
-                    <label class="snap-label">Delivery Date</label>
-                    <input type="date" id="modal-date" required class="luxury-input" style="width: 100%;">
-                </div>
+                <!-- Targeted Delivery Fields for AI Designs (Conditional) -->
+                <div id="ai-order-delivery-fields" style="display: none;">
+                    <div class="control-group">
+                        <label class="snap-label">Delivery Date</label>
+                        <input type="date" id="modal-date" class="luxury-input" style="width: 100%;">
+                    </div>
 
-                <div class="control-group">
-                    <label class="snap-label">Time Slot</label>
-                    <select id="modal-time" class="luxury-input" style="width: 100%;">
-                        <option value="Morning (10AM - 1PM)">Morning (10AM - 1PM)</option>
-                        <option value="Afternoon (1PM - 4PM)">Afternoon (1PM - 4PM)</option>
-                        <option value="Evening (4PM - 7PM)">Evening (4PM - 7PM)</option>
-                        <option value="Night (7PM - 10PM)">Night (7PM - 10PM)</option>
-                    </select>
+                    <div class="control-group">
+                        <label class="snap-label">Time Slot</label>
+                        <select id="modal-time" class="luxury-input" style="width: 100%;">
+                            <option value="Morning (10AM - 1PM)">Morning (10AM - 1PM)</option>
+                            <option value="Afternoon (1PM - 4PM)">Afternoon (1PM - 4PM)</option>
+                            <option value="Evening (4PM - 7PM)">Evening (4PM - 7PM)</option>
+                            <option value="Night (7PM - 10PM)">Night (7PM - 10PM)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="control-group">
