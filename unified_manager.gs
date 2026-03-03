@@ -62,20 +62,12 @@ function handleAIProxyV64(data) {
 
     const endpoints = [
       { 
+        name: "Rock-Solid Shield (LoremFlickr)", 
+        url: `https://loremflickr.com/1024/1024/cake,luxury,bakery,pattiserie,${encodeURIComponent(searchTerms)}/all` 
+      },
+      { 
         name: "Prime Shield (Pollinations Flux)", 
         url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux` 
-      },
-      { 
-        name: "Rapid Shield (Pollinations Turbo)", 
-        url: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ", high quality, studio lighting")}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo` 
-      },
-      { 
-        name: "Mirror Shield (Airforce AI)", 
-        url: `https://api.airforce/v1/image/generations?prompt=${encodeURIComponent(prompt)}&model=flux` 
-      },
-      { 
-        name: "Stable Shield (Hercai)", 
-        url: `https://hercai.onrender.com/v3/text2image?prompt=${encodeURIComponent(prompt)}` 
       },
       { 
         name: "Ultimate Shield (Unsplash Pro)", 

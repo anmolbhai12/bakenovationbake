@@ -1019,10 +1019,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const encoded = encodeURIComponent(cleanPrompt);
                     const seed = Math.floor(Math.random() * 1000000);
 
-                    // HYPER-RESILIENT SHIELD CHAIN (v105 ZERO-KEY EDITION)
+                    // HYPER-RESILIENT SHIELD CHAIN (v110 ROCK OF STABILITY)
                     const shields = [
+                        `https://loremflickr.com/1024/1024/cake,luxury,bakery,pattiserie,${encoded.split('%2C')[0].substring(0, 30)}/all`,
                         `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k, bokeh background")}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux`,
-                        `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", high quality, professional photography")}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo`,
                         `https://api.airforce/v1/image/generations?prompt=${encoded}&model=flux`,
                         `https://source.unsplash.com/1024x1024/?luxury,cake,bakery,pattiserie,${encoded.split('%2C')[0].substring(0, 30)}`
                     ];
@@ -1033,7 +1033,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate Masterpiece
                         "https://images.unsplash.com/photo-1562231976-c4d670699bb4?q=80&w=1024", // Minimalist Art
                         "https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1024", // Orchid Aesthetic
-                        "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024"  // Classic Celebration
+                        "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024", // Classic Celebration
+                        "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1024", // Fruit Cake
+                        "https://images.unsplash.com/photo-1464349095431-e9419cf748d5?q=80&w=1024", // Colorful Cake
+                        "https://images.unsplash.com/photo-1535141192574-5d4897c825a0?q=80&w=1024", // Pink Aesthetic
+                        "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024"  // Professional Layer
                     ];
 
                     console.log("🚀 ACTIVATING SECURE PROFESSIONAL TUNNEL (v100)...");
