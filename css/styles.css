@@ -1827,23 +1827,30 @@ h4 {
 .btn-snap-primary {
     width: 100%;
     padding: 1.2rem;
-    background: linear-gradient(135deg, #d4af37, #f3d489);
-    border: none;
+    background: var(--color-orchid) !important;
+    color: #ffffff !important;
+    /* High contrast white text */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 12px;
-    color: #1a0b1f;
+    font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .btn-snap-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    background: #ffffff !important;
+    color: var(--color-orchid) !important;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
 }
 
 .btn-snap-secondary {
@@ -1972,30 +1979,7 @@ h4 {
     background: rgba(74, 10, 46, 0.05);
 }
 
-.btn-snap-primary {
-    width: 100%;
-    padding: 1.2rem;
-    background: var(--color-orchid);
-    color: #1a0b1f;
-    border: none;
-    border-radius: 12px;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-snap-primary:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3);
-}
-
-.btn-snap-primary:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
+/* REMOVED DUPLICATE BTN-SNAP-PRIMARY */
 
 /* --- THE PREVIEW FRAME --- */
 .snap-preview {
