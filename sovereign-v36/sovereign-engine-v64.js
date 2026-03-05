@@ -806,50 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // AI Buy Now Button Logic
-    const aiBuyNowBtn = document.getElementById('ai-buy-now-btn');
-    if (aiBuyNowBtn) {
-        aiBuyNowBtn.addEventListener('click', () => {
-            // SHOW delivery fields only for AI orders
-            const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
-            if (aiDeliveryFields) aiDeliveryFields.style.display = 'block';
-
-            if (aiPrompt) {
-                const userDetails = aiPrompt.value.trim();
-                const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
-
-                checkLoginAndProceed(() => {
-                    // Open the formal order modal with AI context
-                    if (modal) {
-                        const flavorInput = modal.querySelector('#modal-flavor');
-                        const weightInput = modal.querySelector('#modal-tiers');
-                        const msgInput = modal.querySelector('#order-message');
-                        const imgInput = modal.querySelector('#modal-img');
-                        const dateInput = modal.querySelector('#modal-date');
-
-                        if (flavorInput) flavorInput.value = snapState.flavor;
-                        if (weightInput) weightInput.value = snapState.size;
-                        if (msgInput) msgInput.value = userDetails; // Keep user prompt separate
-                        if (imgInput) imgInput.value = snapState.currentImageUrl;
-
-                        // Set minimum 2 days for date input
-                        if (dateInput) {
-                            const today = new Date();
-                            const minDate = new Date(today);
-                            minDate.setDate(today.getDate() + 2);
-                            const yyyy = minDate.getFullYear();
-                            const mm = String(minDate.getMonth() + 1).padStart(2, '0');
-                            const dd = String(minDate.getDate()).padStart(2, '0');
-                            dateInput.min = `${yyyy}-${mm}-${dd}`;
-                            dateInput.value = `${yyyy}-${mm}-${dd}`;
-                        }
-
-                        modal.classList.add('active');
-                    }
-                });
-            }
-        });
-    }
+    /* DUPLICATE AI BUY NOW LOGIC REMOVED (Moved to consolidated handler below) */
 
     // --- CAKE DETAIL MODAL LOGIC REMOVED FOR DEDICATED PAGES ---
     // (Legacy modal code removed as we now use product.html)
