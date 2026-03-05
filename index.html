@@ -153,8 +153,22 @@
 
     <!-- Navigation -->
     <!-- Bakenovation-style Header -->
-    <div class="bake-top-banner">
-        COD Not available
+    <div class="bake-top-banner" style="overflow:hidden; white-space:nowrap; padding: 0.8rem 0; width: 100%;">
+        <div
+            style="display:inline-block; animation: marquee 25s linear infinite; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--color-gold); font-weight: 500;">
+            TERMS &amp; CONDITIONS: CASH ON DELIVERY (COD) IS NOT AVAILABLE. ALL SALES ARE FINAL \u2014 NO REFUNDS WILL
+            BE ISSUED ONCE PAYMENT IS PROCESSED.</div>
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(100vw);
+                }
+
+                100% {
+                    transform: translateX(-100%);
+                }
+            }
+        </style>
     </div>
     <header class="bake-main-header">
         <div class="bake-header-container">
@@ -459,7 +473,7 @@
                         </div>
                         <div class="journal-content">
                             <span>February 20, 2026</span>
-                            <h3>Top Cake Trends of 2025: What’s Hot This Year</h3>
+                            <h3>Top Cake Trends of 2025: Whatâ€™s Hot This Year</h3>
                             <p>From non-fondant textures to architectural toppers, here is what is trending...</p>
                             <a href="#" class="btn-text">Read Article &rarr;</a>
                         </div>
@@ -555,7 +569,7 @@
                             <!-- Generate Button -->
                             <button id="ai-generate-btn" class="btn-snap-primary bg-orchid">
                                 <span class="btn-text">Generate Design</span>
-                                <span class="spinner" style="display: none;">✨</span>
+                                <span class="spinner" style="display: none;">âœ¨</span>
                             </button>
                         </div>
 
@@ -623,19 +637,19 @@
                 </div>
                 <div class="testimonials-grid reveal-on-scroll">
                     <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
+                        <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
                         <p>"The Art of Orchids cake was more than just a dessert; it was the centerpiece of our
                             celebration. Truly bespoke artistry!"</p>
                         <h4>- Ananya S.</h4>
                     </div>
                     <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
+                        <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
                         <p>"Chef Harneet is a visionary. The AI studio made it so easy to visualize exactly what I
                             wanted for my wedding."</p>
                         <h4>- Rahul M.</h4>
                     </div>
                     <div class="testimonial-card">
-                        <div class="stars">★★★★★</div>
+                        <div class="stars">â˜…â˜…â˜…â˜…â˜…</div>
                         <p>"Stunning aesthetics and equally divine taste. Easily the best couture bakery in Delhi."</p>
                         <h4>- Priya K.</h4>
                     </div>
@@ -773,6 +787,17 @@
                         <input type="tel" id="login-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
                     </div>
 
+                    <div class="control-group"
+                        style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="login-tc" required
+                            style="margin-top: 4px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--color-gold);">
+                        <label for="login-tc"
+                            style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4; cursor: pointer;">
+                            I accept the <span style="color: var(--color-gold);">Terms & Conditions</span>. I understand
+                            that all payments are non-refundable and COD is not available.
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Send Verification Code</button>
 
                     <div style="margin-top: 1rem; text-align: center;">
@@ -804,6 +829,17 @@
                     <div id="signup-whatsapp-group" class="control-group" style="display: none;">
                         <label>WhatsApp Number</label>
                         <input type="tel" id="signup-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
+                    </div>
+
+                    <div class="control-group"
+                        style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="signup-tc" required
+                            style="margin-top: 4px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--color-gold);">
+                        <label for="signup-tc"
+                            style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4; cursor: pointer;">
+                            I accept the <span style="color: var(--color-gold);">Terms & Conditions</span>. I understand
+                            that all payments are non-refundable and COD is not available.
+                        </label>
                     </div>
 
                     <button type="submit" class="btn-luxury w-100" id="signup-submit-btn">Send Verification
@@ -911,8 +947,8 @@
                 <div class="control-group">
                     <label class="snap-label">Dietary Preference</label>
                     <select id="modal-diet" class="luxury-input" style="width: 100%;">
-                        <option value="Eggless">Eggless (🌱)</option>
-                        <option value="With Egg">With Egg (🥚)</option>
+                        <option value="Eggless">Eggless (ðŸŒ±)</option>
+                        <option value="With Egg">With Egg (ðŸ¥š)</option>
                     </select>
                 </div>
 
@@ -952,7 +988,7 @@
     <!-- Artisanal Agreement Modal -->
     <div id="artisanal-modal" class="artisanal-modal">
         <div class="artisanal-content">
-            <span class="artisanal-icon">🎨</span>
+            <span class="artisanal-icon">ðŸŽ¨</span>
             <p class="artisanal-text">
                 "Design by AI. Handcrafted by Bakenovation. Final textures and colors may vary slightly as each cake is
                 an artisanal creation."
@@ -965,7 +1001,7 @@
     </div>
 
     <script src="js/products.js"></script>
-    <script src="sovereign-v36/sovereign-engine-v64.js?v=92.12.0"></script>
+    <script src="sovereign-v36/sovereign-engine-v64.js?v=92.15.0"></script>
 
     <script>
         // LEGACY MODAL LOGIC REMOVED

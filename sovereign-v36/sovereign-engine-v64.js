@@ -330,6 +330,12 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             window.lastSignupData = currentSignupData;
 
+            const tcCheckbox = document.getElementById('signup-tc');
+            if (tcCheckbox && !tcCheckbox.checked) {
+                showAlert("Please accept the Terms & Conditions to proceed.");
+                return;
+            }
+
             sendOTP(name, target, dob, currentSignupMethod);
         });
     }
@@ -603,6 +609,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            const tcCheckbox = document.getElementById('login-tc');
+            if (tcCheckbox && !tcCheckbox.checked) {
+                showAlert("Please accept the Terms & Conditions to proceed.");
+                return;
+            }
+
             const identifier = currentLoginMethod === 'email' ? document.getElementById('login-email').value.trim() : document.getElementById('login-whatsapp').value.trim();
 
             const user = users.find(u =>
@@ -618,6 +631,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateAuthUI();
+
+    // --- GATED FILE UPLOAD ---
+    const mainUpload = document.getElementById('main-upload');
+    if (mainUpload) {
+        mainUpload.addEventListener('click', (e) => {
+            if (!activeUser) {
+                e.preventDefault();
+                authModal.classList.add('active');
+                showAlert("Please login or sign up to upload your custom designs.");
+            }
+        });
+    }
 
 
     // --- CONSOLIDATED ORDER FORM HANDLER V35 ---
@@ -923,17 +948,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            if (artisanalModal) {
-                artisanalModal.style.display = 'flex';
-                // GSAP animation for the modal content
-                gsap.fromTo(".artisanal-content",
-                    { scale: 0.8, opacity: 0 },
-                    { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
-                );
-            } else {
-                // Fallback if modal is missing
-                initiateGeneration();
-            }
+            checkLoginAndProceed(() => {
+                if (artisanalModal) {
+                    artisanalModal.style.display = 'flex';
+                    // GSAP animation for the modal content
+                    gsap.fromTo(".artisanal-content",
+                        { scale: 0.8, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
+                    );
+                } else {
+                    // Fallback if modal is missing
+                    initiateGeneration();
+                }
+            });
         });
     }
 
@@ -1198,12 +1225,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Order Button Logic — Direct Redirect (Login handled at checkout)
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
-            // Save current AI state and image for the checkout page
-            localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
-            localStorage.setItem('atelierPreviewImg', aiGeneratedImage ? aiGeneratedImage.src : '');
+            checkLoginAndProceed(() => {
+                // Save current AI state and image for the checkout page
+                localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
+                localStorage.setItem('atelierPreviewImg', aiGeneratedImage ? aiGeneratedImage.src : '');
 
-            // Redirect to the dedicated checkout page
-            window.location.href = 'atelier-checkout.html';
+                // Redirect to the dedicated checkout page
+                window.location.href = 'atelier-checkout.html';
+            });
         });
     }
 
