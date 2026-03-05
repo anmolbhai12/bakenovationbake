@@ -1281,17 +1281,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchResults.style.display = 'block';
                 searchResults.innerHTML = ''; // Clear old
 
-                // Global 'products' array should be available from js/products.js
-                if (typeof products === 'undefined') {
-                    searchResults.innerHTML = `<p class="empty-cart-msg">Product database not loaded. Try refreshing the page.</p>`;
+                // Global 'productData' object should be available from js/products.js
+                if (typeof productData === 'undefined') {
+                    searchResults.innerHTML = `<p class="empty-cart-msg" style="color:var(--color-gold);">Product database not loaded. Try refreshing the page.</p>`;
                     return;
                 }
 
+                // Convert productData object to an array for searching
+                const productsArray = Object.keys(productData).map(key => {
+                    return { id: key, ...productData[key] };
+                });
+
                 // Filter products
-                const foundProducts = products.filter(p =>
-                    p.name.toLowerCase().includes(query) ||
-                    (p.filterType && p.filterType.toLowerCase().includes(query)) ||
-                    (p.theme && p.theme.toLowerCase().includes(query))
+                const foundProducts = productsArray.filter(p =>
+                    (p.title && p.title.toLowerCase().includes(query)) ||
+                    (p.category && p.category.toLowerCase().includes(query)) ||
+                    (p.desc && p.desc.toLowerCase().includes(query))
                 );
 
                 if (foundProducts.length > 0) {
@@ -1309,11 +1314,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         card.style.padding = '1rem';
                         card.style.border = '1px solid rgba(212,175,55,0.2)';
 
+                        const imgUrl = (product.imgs && product.imgs.length > 0) ? product.imgs[0] : 'assets/hero-cake.png';
+
+                        // Create a clean object for the addToCart function
+                        const cartItem = {
+                            id: product.id,
+                            name: product.title,
+                            price: product.price,
+                            image: imgUrl,
+                            details: product.category
+                        };
+
                         card.innerHTML = `
-                            <img src="${product.image}" alt="${product.name}" style="width:100%; height:150px; object-fit:cover; border-radius:4px; margin-bottom:1rem;">
-                            <h4 style="color:var(--color-gold); margin-bottom:0.5rem; font-size:1.1rem;">${product.name}</h4>
+                            <img src="${imgUrl}" alt="${product.title}" style="width:100%; height:150px; object-fit:cover; border-radius:4px; margin-bottom:1rem;">
+                            <h4 style="color:var(--color-gold); margin-bottom:0.5rem; font-size:1.1rem;">${product.title}</h4>
                             <p style="color:#fff; font-weight:bold; margin-bottom:1rem;">₹${product.price.toLocaleString()}</p>
-                            <button class="btn-snap-primary bg-orchid w-100" style="padding: 0.8rem; font-size: 0.9rem;" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")}); document.getElementById("search-modal").classList.remove("active");'>Add to Cart</button>
+                            <button class="btn-snap-primary bg-orchid w-100" style="padding: 0.8rem; font-size: 0.9rem;" onclick='addToCart(${JSON.stringify(cartItem).replace(/'/g, "&#39;")}); document.getElementById("search-modal").classList.remove("active");'>Add to Cart</button>
                         `;
                         wrap.appendChild(card);
                     });
