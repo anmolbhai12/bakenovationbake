@@ -811,8 +811,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CAKE DETAIL MODAL LOGIC REMOVED FOR DEDICATED PAGES ---
     // (Legacy modal code removed as we now use product.html)
 
-    // AI Add to Cart Button Logic
+
+    // --- AI DESIGN STUDIO LOGIC (SWEET SNAP REPLICA) ---
+    const aiGenerateBtn = document.getElementById('ai-generate-btn');
+    const aiPrompt = document.getElementById('ai-prompt');
+    const aiLoading = document.getElementById('ai-loading');
+    const aiGeneratedImage = document.getElementById('ai-generated-image');
+    const aiOrderBtn = document.getElementById('ai-buy-now-btn');
     const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
+
+    // AI Add to Cart Button Logic
     if (aiAddToCartBtn) {
         aiAddToCartBtn.addEventListener('click', () => {
             if (aiPrompt) {
@@ -828,14 +836,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // --- AI DESIGN STUDIO LOGIC (SWEET SNAP REPLICA) ---
-    const aiGenerateBtn = document.getElementById('ai-generate-btn');
-    const aiPrompt = document.getElementById('ai-prompt');
-    const aiLoading = document.getElementById('ai-loading');
-    const aiGeneratedImage = document.getElementById('ai-generated-image');
-    const aiOrderBtn = document.getElementById('ai-buy-now-btn');
-    const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
 
     // State Management for Sweet Snap
     const snapState = {
