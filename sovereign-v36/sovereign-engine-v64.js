@@ -1279,16 +1279,57 @@ document.addEventListener('DOMContentLoaded', () => {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             if (searchResults) {
                 searchResults.style.display = 'block';
-                // Basic keyword matching to collection items
-                const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
-                let found = 0;
-                cakes.forEach(cake => {
-                    if (cake.textContent.toLowerCase().includes(query)) found++;
-                });
-                searchResults.innerHTML = found > 0
-                    ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
-                    : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
-                // Re-bind close buttons after innerHTML update
+                searchResults.innerHTML = ''; // Clear old
+
+                // Global 'products' array should be available from js/products.js
+                if (typeof products === 'undefined') {
+                    searchResults.innerHTML = `<p class="empty-cart-msg">Product database not loaded. Try refreshing the page.</p>`;
+                    return;
+                }
+
+                // Filter products
+                const foundProducts = products.filter(p =>
+                    p.name.toLowerCase().includes(query) ||
+                    (p.filterType && p.filterType.toLowerCase().includes(query)) ||
+                    (p.theme && p.theme.toLowerCase().includes(query))
+                );
+
+                if (foundProducts.length > 0) {
+                    const wrap = document.createElement('div');
+                    wrap.style.display = 'grid';
+                    wrap.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
+                    wrap.style.gap = '1.5rem';
+                    wrap.style.marginTop = '1.5rem';
+                    wrap.style.textAlign = 'left';
+
+                    foundProducts.forEach(product => {
+                        const card = document.createElement('div');
+                        card.style.background = 'rgba(255,255,255,0.05)';
+                        card.style.borderRadius = '8px';
+                        card.style.padding = '1rem';
+                        card.style.border = '1px solid rgba(212,175,55,0.2)';
+
+                        card.innerHTML = `
+                            <img src="${product.image}" alt="${product.name}" style="width:100%; height:150px; object-fit:cover; border-radius:4px; margin-bottom:1rem;">
+                            <h4 style="color:var(--color-gold); margin-bottom:0.5rem; font-size:1.1rem;">${product.name}</h4>
+                            <p style="color:#fff; font-weight:bold; margin-bottom:1rem;">₹${product.price.toLocaleString()}</p>
+                            <button class="btn-snap-primary bg-orchid w-100" style="padding: 0.8rem; font-size: 0.9rem;" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")}); document.getElementById("search-modal").classList.remove("active");'>Add to Cart</button>
+                        `;
+                        wrap.appendChild(card);
+                    });
+
+                    const header = document.createElement('p');
+                    header.style.color = 'var(--color-orchid)';
+                    header.style.marginBottom = '1rem';
+                    header.innerHTML = `Found ${foundProducts.length} result(s) for "<strong>${query}</strong>"`;
+
+                    searchResults.appendChild(header);
+                    searchResults.appendChild(wrap);
+                } else {
+                    searchResults.innerHTML = `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="shop.html" style="color: var(--color-gold);" class="search-close">Collection</a>.</p>`;
+                }
+
+                // Re-bind close buttons if a link was clicked
                 document.querySelectorAll('.search-close').forEach(b => {
                     b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
                 });
