@@ -820,7 +820,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiOrderBtn = document.getElementById('ai-buy-now-btn');
     const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
 
-    // AI Add to Cart Button Logic
+    // State Management for Sweet Snap
+    const snapState = {
+        type: 'birthday',
+        style: 'luxury',
+        color: 'white',
+        size: '1kg',
+        tiers: '1',
+        fakeTier: 'no',
+        fakeTierDetail: 'top',
+        deliveryDate: '',
+        deliveryTime: 'Morning',
+        currentImageUrl: 'assets/hero-cake.png'
+    };
+
+    // AI Add to Cart Button Logic (after snapState is defined)
     if (aiAddToCartBtn) {
         aiAddToCartBtn.addEventListener('click', () => {
             if (aiPrompt) {
@@ -837,19 +851,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // State Management for Sweet Snap
-    const snapState = {
-        type: 'birthday',
-        style: 'luxury',
-        color: 'white',
-        size: '1kg',
-        tiers: '1',
-        fakeTier: 'no',
-        fakeTierDetail: 'top',
-        deliveryDate: '',
-        deliveryTime: 'Morning',
-        currentImageUrl: 'assets/hero-cake.png'
-    };
 
     // 1. Handle Chip Selections (Occasion, Aesthetic)
     const snapChips = document.querySelectorAll('.snap-chip');
