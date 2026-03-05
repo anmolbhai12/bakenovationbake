@@ -2931,7 +2931,7 @@ h4 {
 }
 
 /* Fix for unclosed media query and legacy styles.css?v=43 */
-@media (max-width: 768px) {
+@media (max-width: 1px) {
     .bake-sub-nav {
         top: 80px;
         /* Adjusted for header-only top */
@@ -3322,7 +3322,7 @@ h4 {
     color: var(--color-text-muted);
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1px) {
     .collection-container {
         flex-direction: column;
     }
