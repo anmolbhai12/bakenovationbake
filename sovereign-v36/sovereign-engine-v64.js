@@ -834,7 +834,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiPrompt = document.getElementById('ai-prompt');
     const aiLoading = document.getElementById('ai-loading');
     const aiGeneratedImage = document.getElementById('ai-generated-image');
-    const aiOrderBtn = document.getElementById('ai-order-btn');
+    const aiOrderBtn = document.getElementById('ai-buy-now-btn');
+    const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
 
     // State Management for Sweet Snap
     const snapState = {
@@ -1193,17 +1194,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Order Button Logic (GATED)
+    // 4. Order Button Logic — Direct Redirect (Login handled at checkout)
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
-            checkLoginAndProceed(() => {
-                // Save state for the dedicated checkout page
-                localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
-                localStorage.setItem('atelierPreviewImg', aiGeneratedImage.src);
+            // Save current AI state and image for the checkout page
+            localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
+            localStorage.setItem('atelierPreviewImg', aiGeneratedImage ? aiGeneratedImage.src : '');
 
-                // Redirect to the new specialized page
-                window.location.href = 'atelier-checkout.html';
-            });
+            // Redirect to the dedicated checkout page
+            window.location.href = 'atelier-checkout.html';
         });
     }
 
