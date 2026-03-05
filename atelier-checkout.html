@@ -196,6 +196,22 @@
                             <label class="snap-label">Requested Delivery Date</label>
                             <input type="date" id="final-date" class="luxury-input" style="width: 100%;" required>
                         </div>
+                        <script>
+                            // Set min date to 3 days from today
+                            (function () {
+                                const dateInput = document.getElementById('final-date');
+                                if (dateInput) {
+                                    const minDate = new Date();
+                                    minDate.setDate(minDate.getDate() + 3);
+                                    const yyyy = minDate.getFullYear();
+                                    const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+                                    const dd = String(minDate.getDate()).padStart(2, '0');
+                                    const minStr = `${yyyy}-${mm}-${dd}`;
+                                    dateInput.min = minStr;
+                                    dateInput.value = minStr;
+                                }
+                            })();
+                        </script>
 
                         <div class="control-group">
                             <label class="snap-label">Preferred Time Slot</label>
