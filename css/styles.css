@@ -302,8 +302,8 @@ h4 {
     height: 90px;
     background: var(--color-deep-purple);
     position: sticky;
-    top: 31px;
-    /* Offset by top banner height */
+    top: 0;
+    /* Removed top banner offset */
     z-index: 1000;
     border-bottom: 1px solid var(--color-border);
     backdrop-filter: blur(15px) !important;
@@ -394,8 +394,8 @@ h4 {
 
 .bake-sub-nav {
     position: sticky;
-    top: 121px;
-    /* 31px banner + 90px header */
+    top: 90px;
+    /* Adjusted for header-only top */
     left: 0;
     width: 100%;
     z-index: 999;
@@ -2933,8 +2933,8 @@ h4 {
 /* Fix for unclosed media query and legacy styles.css?v=43 */
 @media (max-width: 768px) {
     .bake-sub-nav {
-        top: 108px;
-        /* Adjusted for smaller mobile header */
+        top: 80px;
+        /* Adjusted for header-only top */
         position: fixed;
     }
 
