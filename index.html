@@ -870,14 +870,17 @@
     </div>
 
     <!-- Search Modal -->
-    <div id="search-modal" class="modal-overlay">
-        <div class="glass-panel modal-content" style="max-width: 600px;">
+    <div id="search-modal" class="modal-overlay search-overlay-blur">
+        <div class="glass-panel modal-content search-dropdown-panel">
             <button class="modal-close search-close">&times;</button>
-            <h2 class="text-orchid" style="margin-bottom: 1.5rem;">Search Bakenovation</h2>
-            <form id="search-form" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <h2 class="text-orchid" style="margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem;">Search
+                Bakenovation</h2>
+            <form id="search-form"
+                style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto;">
                 <input type="text" id="search-input" class="luxury-input"
-                    placeholder="Search for cakes, themes, flavors..." style="flex: 1;" required>
-                <button type="submit" class="btn-luxury">Search</button>
+                    placeholder="Search for couture cakes, themes, flavors..."
+                    style="flex: 1; font-size: 1.2rem; padding: 1.2rem;" required>
+                <button type="submit" class="btn-luxury" style="padding: 0 2.5rem; font-size: 1.1rem;">Search</button>
             </form>
             <div id="search-results" style="text-align: center; display: none;">
                 <p class="empty-cart-msg">No results found. Try browsing our <a href="#collection"

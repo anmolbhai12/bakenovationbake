@@ -1285,9 +1285,37 @@ h4 {
     max-width: 500px;
     position: relative;
     border: 1px solid var(--color-orchid);
-
     max-height: 85vh;
     overflow-y: auto;
+}
+
+/* === Top-Down Search Modal === */
+.search-overlay-blur {
+    background: rgba(10, 5, 12, 0.85);
+    /* Deep purple-black tint */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    align-items: flex-start;
+    /* Align to top instead of center */
+}
+
+.search-dropdown-panel {
+    border-radius: 0 0 16px 16px;
+    /* Flat top, rounded bottom corners */
+    border-top: none;
+    border-left: 1px solid var(--color-orchid);
+    border-right: 1px solid var(--color-orchid);
+    border-bottom: 2px solid var(--color-orchid);
+    width: 100%;
+    max-width: 1000px;
+    padding: 3rem 2rem;
+    position: relative;
+    transform: translateY(-100%);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-overlay-blur.active .search-dropdown-panel {
+    transform: translateY(0);
 }
 
 /* Cake Specifications in Detail Modal */
