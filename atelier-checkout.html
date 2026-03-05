@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalize Your Creation | Bakenovation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css?v=9.1">
+    <style>
+        .checkout-page-main {
+            padding-top: 151px;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        @media (max-width: 992px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .preview-sticky {
+            position: sticky;
+            top: 180px;
+        }
+
+        .ai-checkout-frame {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .ai-checkout-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .checkout-form-panel {
+            background: rgba(26, 11, 31, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 3rem;
+            border-radius: 16px;
+        }
+
+        .checkout-header {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding-bottom: 1.5rem;
+        }
+
+        .data-display {
+            background: rgba(74, 10, 46, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-label {
+            color: var(--color-gold-light);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .data-value {
+            color: #fff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="bg-fixed"></div>
+
+    <!-- Announcement Bar -->
+    <div class="bake-top-banner">
+        COD Not available
+    </div>
+
+    <!-- Navigation (Simplified for Checkout) -->
+    <header class="bake-main-header">
+        <div class="bake-header-container">
+            <div class="bake-logo">
+                <a href="index.html" class="brand-logo-text">
+                    <div class="royale-logo-container">
+                        <img src="assets/logo-royale-final.png" alt="Bakenovation Royale Logo">
+                    </div>
+                    <div style="display: flex; flex-direction: column; line-height: 1;">
+                        <span style="letter-spacing: 0.2em; font-size: 1.8rem; font-weight: 500;">BAKENOVATION</span>
+                        <span style="letter-spacing: 0.15em; font-size: 0.75rem; opacity: 0.9; margin-top: 5px;">BY CHEF
+                            HARMEET</span>
+                    </div>
+                </a>
+            </div>
+            <div class="bake-actions">
+                <a href="index.html#atelier" class="bake-action-btn">Back to Atelier</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-page-main">
+        <div class="container">
+            <div class="checkout-grid">
+                <!-- Left: Preview -->
+                <div class="preview-sticky">
+                    <div class="ai-checkout-frame" id="checkout-image-container">
+                        <img id="checkout-preview-img" src="assets/hero-cake.png" alt="Your AI Design">
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <span class="text-orchid" style="font-family: var(--font-heading); font-style: italic;">"A
+                            design
+                            conceptualized by you, handcrafted by our artisans."</span>
+                    </div>
+                </div>
+
+                <!-- Right: Form -->
+                <div class="checkout-form-panel">
+                    <div class="checkout-header">
+                        <h1 class="text-gold" style="font-size: 2rem; margin-bottom: 0.5rem;">Finalize Your Order</h1>
+                        <p style="color: rgba(255,255,255,0.7);">Please confirm the details to bring your vision to
+                            life.</p>
+                    </div>
+
+                    <div class="data-display">
+                        <div class="data-item">
+                            <span class="data-label">Selected Design Type</span>
+                            <span class="data-value" id="disp-type">Standard</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Aesthetic Style</span>
+                            <span class="data-value" id="disp-style">Luxury</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Proportions</span>
+                            <span class="data-value" id="disp-size">1kg</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Structure</span>
+                            <span class="data-value" id="disp-tiers">1 Tier</span>
+                        </div>
+                    </div>
+
+                    <form id="final-checkout-form" class="auth-form">
+                        <div class="control-group">
+                            <label class="snap-label">Flavor Selection</label>
+                            <select id="final-flavor" class="luxury-input" style="width: 100%;" required>
+                                <option value="Belgian Chocolate">Belgian Chocolate (Signature)</option>
+                                <option value="Red Velvet">Exotic Red Velvet</option>
+                                <option value="Vanilla Bean">Classic Vanilla Bean</option>
+                                <option value="Blueberry Burst">Blueberry Burst</option>
+                                <option value="Fresh Fruit">Seasonal Fresh Fruit</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Dietary Preference</label>
+                            <select id="final-diet" class="luxury-input" style="width: 100%;">
+                                <option value="Eggless">Eggless (🌱)</option>
+                                <option value="With Egg">With Egg (🥚)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Requested Delivery Date</label>
+                            <input type="date" id="final-date" class="luxury-input" style="width: 100%;" required>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Preferred Time Slot</label>
+                            <select id="final-time" class="luxury-input" style="width: 100%;">
+                                <option value="Morning (10AM - 1PM)">Morning (10AM - 1PM)</option>
+                                <option value="Afternoon (1PM - 4PM)">Afternoon (1PM - 4PM)</option>
+                                <option value="Evening (4PM - 7PM)">Evening (4PM - 7PM)</option>
+                                <option value="Night (7PM - 10PM)">Night (7PM - 10PM)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="snap-label">Message on Cake</label>
+                            <textarea id="final-message" class="luxury-input" rows="3"
+                                placeholder="E.g., Happy Birthday Anmoll..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-snap-primary" style="margin-top: 2rem;">
+                            Confirm & Checkout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bake-footer">
+        <div class="container">
+            <p style="text-align: center; opacity: 0.6;">&copy; 2026 Bakenovation. Handcrafted Excellence.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const state = JSON.parse(localStorage.getItem('atelierCheckoutState')) || {};
+            const imgUrl = localStorage.getItem('atelierPreviewImg');
+
+            if (imgUrl) document.getElementById('checkout-preview-img').src = imgUrl;
+
+            // Populate summary
+            if (state.type) document.getElementById('disp-type').innerText = state.type;
+            if (state.style) document.getElementById('disp-style').innerText = state.style;
+            if (state.size) document.getElementById('disp-size').innerText = state.size;
+            if (state.tiers) document.getElementById('disp-tiers').innerText = state.tiers + (state.tiers == 1 ? ' Tier' : ' Tiers');
+
+            const form = document.getElementById('final-checkout-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const orderData = {
+                    title: 'Bespoke AI Design',
+                    price: 4500,
+                    flavor: document.getElementById('final-flavor').value,
+                    diet: document.getElementById('final-diet').value,
+                    date: document.getElementById('final-date').value,
+                    time: document.getElementById('final-time').value,
+                    message: document.getElementById('final-message').value,
+                    image: imgUrl,
+                    qty: 1,
+                    isAi: true,
+                    meta: state
+                };
+
+                localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+                window.location.href = 'checkout.html';
+            });
+
+            // Entrance animation
+            gsap.from('.checkout-form-panel', { x: 50, opacity: 0, duration: 1, ease: 'power4.out' });
+            gsap.from('.preview-sticky', { x: -50, opacity: 0, duration: 1, ease: 'power4.out' });
+        });
+    </script>
+</body>
+
+</html>

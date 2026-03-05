@@ -1240,30 +1240,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
             checkLoginAndProceed(() => {
-                const userDetails = aiPrompt.value.trim();
-                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
+                // Save state for the dedicated checkout page
+                localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
+                localStorage.setItem('atelierPreviewImg', aiGeneratedImage.src);
 
-                const orderModal = document.getElementById('order-modal');
-                if (orderModal) {
-                    orderModal.classList.add('active');
-
-                    // SHOW delivery fields (treating AI Order button as AI context)
-                    const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
-                    if (aiDeliveryFields) aiDeliveryFields.style.display = 'block';
-
-                    const designInput = document.getElementById('modal-ordered-design');
-                    const messageInput = orderModal.querySelector('textarea[name="message"]');
-
-                    if (designInput) designInput.value = `Bespoke AI Created Design`;
-                    if (messageInput) {
-                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
-                    }
-
-                    gsap.fromTo(orderModal.querySelector('.modal-content'),
-                        { y: -50, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 0.4 }
-                    );
-                }
+                // Redirect to the new specialized page
+                window.location.href = 'atelier-checkout.html';
             });
         });
     }
