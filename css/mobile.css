@@ -1,421 +1,635 @@
-/* ================================================================
-   BAKENOVATION MOBILE.CSS — v110
-   EXACT match to fleurons.in mobile UX pattern.
-   Uses same 3-column header layout: [☰] [LOGO] [🛒👤]
-   ================================================================ */
+/* ================================================
+   BAKENOVATION MOBILE.CSS — v120 PREMIUM RESPONSIVE
+   Goal: Desktop look, scaled perfectly for mobile.
+   No zooming out. No overflow. Fluid & premium.
+   ================================================ */
 
-/* ========================
-   1. GLOBAL BOX + OVERFLOW
-   ======================== */
-@media (max-width: 990px) {
+/* === GLOBAL RESET & OVERFLOW GUARD === */
+html,
+body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+}
 
-    html,
-    body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-        max-width: 100vw !important;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+img,
+video,
+iframe,
+embed,
+object {
+    max-width: 100% !important;
+    height: auto;
+}
+
+
+/* === MOBILE HAMBURGER BUTTON === */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 8px;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--color-gold);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    max-width: 100%;
+}
+
+.mobile-menu-btn.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-btn.is-open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.mobile-menu-btn.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* === MOBILE DRAWER === */
+.mobile-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85vw;
+    max-width: 320px;
+    height: 100vh;
+    background: #0e0118;
+    border-right: 1px solid rgba(212, 175, 55, 0.2);
+    z-index: 10000;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 0 2rem 0;
+}
+
+.mobile-drawer.is-open {
+    transform: translateX(0);
+}
+
+.mobile-drawer-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-drawer-overlay.is-open {
+    opacity: 1;
+}
+
+/* Drawer Header */
+.drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.2rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.drawer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: var(--color-gold) !important;
+    text-decoration: none;
+}
+
+.drawer-close-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--color-gold) !important;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Drawer Nav Links */
+.drawer-nav {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+}
+
+.drawer-nav>li {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+.drawer-nav>li>a,
+.drawer-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    color: var(--color-gold) !important;
+    text-decoration: none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+    cursor: pointer;
+    width: 100%;
+    background: transparent !important;
+    border: none !important;
+    text-align: left;
+}
+
+.drawer-nav>li>a:hover,
+.drawer-nav-link:hover {
+    background: rgba(212, 175, 55, 0.07) !important;
+}
+
+/* Accordion Chevron */
+.drawer-chevron {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    stroke: var(--color-gold);
+}
+
+.drawer-nav>li.is-open .drawer-chevron {
+    transform: rotate(90deg);
+}
+
+/* Drawer Sub-menu (Accordion) */
+.drawer-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+
+.drawer-nav>li.is-open .drawer-submenu {
+    max-height: 600px;
+}
+
+.drawer-submenu li a {
+    display: block;
+    padding: 0.7rem 2rem;
+    color: rgba(212, 175, 55, 0.8) !important;
+    text-decoration: none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s, padding-left 0.2s;
+}
+
+.drawer-submenu li a:hover {
+    color: var(--color-gold) !important;
+    padding-left: 2.4rem;
+}
+
+/* Drawer Footer */
+.drawer-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    margin-top: 0.5rem;
+}
+
+
+/* ================================================
+   RESPONSIVE BREAKPOINTS — TABLET (≤ 1024px)
+   ================================================ */
+@media (max-width: 1024px) {
+    .container {
+        width: 95%;
     }
 
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
+    .hero-content-wrapper {
+        padding: 0 5%;
+        gap: 2rem;
     }
 
-    img,
-    video,
-    svg,
-    iframe {
-        max-width: 100% !important;
+    .bake-nav-links>li>a {
+        padding: 0.8rem 1rem;
+        font-size: 0.75rem;
     }
 
-    /* Kill overflow-causing fixed widths */
-    [style*="width:"],
-    [style*="min-width:"] {
-        max-width: 100% !important;
+    /* Collection layout — keep sidebar on tablet */
+    .collection-container {
+        gap: 1.5rem;
     }
+}
 
-    /* ========================
-       2. HIDE TOP PROMO BANNER
-       ======================== */
-    .bake-top-banner {
+
+/* ================================================
+   RESPONSIVE BREAKPOINTS — MOBILE (≤ 768px)
+   ================================================ */
+@media (max-width: 768px) {
+
+    /* === SHOW/HIDE HELPERS === */
+    .hidden-mobile {
         display: none !important;
     }
 
-    /* ========================
-       3. MOBILE HEADER 
-       3-column: [☰] [LOGO] [🔍🛒]
-       Matches fleurons.in mobile header
-       ======================== */
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .mobile-menu-btn {
+        display: flex !important;
+    }
+
+    .mobile-drawer,
+    .mobile-drawer-overlay {
+        display: block;
+    }
+
+    /* === HEADER === */
     .bake-main-header {
-        height: 56px !important;
-        min-height: 56px !important;
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 9990 !important;
+        height: 65px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
     .bake-header-container {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 10px !important;
-        height: 56px !important;
-        position: relative !important;
-    }
-
-    /* Move hamburger to FAR LEFT using order */
-    .menu-toggle {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 38px !important;
-        height: 38px !important;
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        cursor: pointer !important;
-        flex-shrink: 0 !important;
-        order: -1 !important;
-        color: var(--color-gold, #d4af37) !important;
-    }
-
-    /* bake-logo contains the brand text — center it absolutely */
-    .bake-logo {
-        position: absolute !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        pointer-events: auto !important;
-        z-index: 1 !important;
-    }
-
-    .brand-logo-text {
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        white-space: nowrap !important;
-        text-decoration: none !important;
+        padding: 0 1rem;
+        width: 100%;
     }
 
     .royale-logo-container {
-        width: 34px !important;
-        height: 34px !important;
-        flex-shrink: 0 !important;
+        width: 44px;
+        height: 44px;
+        border-width: 1px;
     }
 
-    .royale-logo-container img {
+    .brand-logo-text {
+        gap: 8px;
+        font-size: 1rem;
+        padding: 0.4rem 0;
+    }
+
+    .brand-logo-text span:first-of-type {
+        font-size: 1.1rem !important;
+        letter-spacing: 0.12rem !important;
+    }
+
+    .brand-logo-text span:last-of-type {
+        font-size: 0.6rem !important;
+        letter-spacing: 0.08rem !important;
+    }
+
+    .bake-actions {
+        gap: 0.2rem;
+    }
+
+    .bake-action-btn {
+        padding: 0.4rem 0.5rem;
+    }
+
+    /* === HIDE DESKTOP SUB-NAV === */
+    .bake-sub-nav {
+        display: none !important;
+    }
+
+    /* === HERO SECTION — STACK VERTICALLY === */
+    .hero-section {
+        padding-top: 70px;
+        min-height: auto;
+    }
+
+    .hero-content-wrapper {
+        flex-direction: column;
+        padding: 2rem 1.2rem;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .hero-content {
+        flex: none;
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+
+    .hero-background {
+        flex: none;
+        width: 100%;
+        min-height: 50vw;
+        max-height: 60vw;
+    }
+
+    .hero-title {
+        font-size: clamp(1.8rem, 8vw, 2.8rem) !important;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem !important;
+    }
+
+    .hero-cta-group {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+    }
+
+    /* === MAIN PADDING (accounts for sticky header) === */
+    main {
+        padding-top: 80px !important;
+    }
+
+    /* === SECTION SPACING === */
+    section,
+    .section-padded {
+        padding: 3rem 0 !important;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    /* === TYPOGRAPHY SCALING === */
+    .section-header h2 {
+        font-size: clamp(1.5rem, 7vw, 2.2rem) !important;
+    }
+
+    h1 {
+        font-size: clamp(1.6rem, 7vw, 2.4rem) !important;
+    }
+
+    h2 {
+        font-size: clamp(1.3rem, 6vw, 2rem) !important;
+    }
+
+    h3 {
+        font-size: clamp(1rem, 5vw, 1.4rem) !important;
+    }
+
+    /* === PRODUCT GRIDS — 2 COLUMNS === */
+    .products-grid,
+    .collection-grid,
+    #product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem !important;
+    }
+
+    /* Force 2-col for all view modes on mobile */
+    #product-grid.view-list,
+    #product-grid.view-2col,
+    #product-grid.view-3col,
+    #product-grid.view-4col {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* List mode overrides — keep 2-col */
+    #product-grid.view-list .product-card {
+        display: block !important;
+    }
+
+    #product-grid.view-list .product-card-image-wrap {
         width: 100% !important;
-        height: 100% !important;
-        object-fit: contain !important;
     }
 
-    /* Shrink logo text */
-    .brand-logo-text [style*="font-size: 1.8rem"],
+    /* Product card adjustments */
+    .product-card-title {
+        font-size: 0.75rem !important;
+    }
+
+    .product-card-price {
+        font-size: 0.75rem !important;
+    }
+
+    .product-card-image-wrap img {
+        border-radius: 4px;
+    }
+
+    /* === COLLECTION LAYOUT (shop/trending/gifting) === */
+    .collection-container {
+        flex-direction: column !important;
+        gap: 1rem;
+    }
+
+    .collection-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        position: static !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1) !important;
+        padding-bottom: 1rem;
+        display: none;
+        /* Hidden by default on mobile — using filter button */
+    }
+
+    .collection-sidebar.mobile-visible {
+        display: block;
+    }
+
+    /* Mobile Filter Toggle Button */
+    .mobile-filter-btn {
+        display: flex !important;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid rgba(212, 175, 55, 0.3) !important;
+        background: transparent !important;
+        color: var(--color-gold) !important;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    /* Toolbar adjustments */
+    .collection-toolbar {
+        flex-direction: column !important;
+        gap: 0.5rem;
+        align-items: flex-start !important;
+    }
+
+    .toolbar-right {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .toolbar-label {
+        font-size: 0.7rem;
+    }
+
+    .toolbar-select {
+        font-size: 0.75rem !important;
+        padding: 4px 22px 4px 8px !important;
+    }
+
+    .view-as-btns {
+        display: none;
+        /* Hide view-as btns on mobile — always 2col */
+    }
+
+    /* === COLLECTION BREADCRUMB & HEADER === */
+    .collection-header h1 {
+        font-size: clamp(1.5rem, 8vw, 2.2rem) !important;
+    }
+
+    /* === ABOUT/WHY-US SECTION === */
+    .features-grid,
+    .about-grid,
+    .why-us-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.2rem;
+    }
+
+    /* === FOOTER === */
+    .bake-footer {
+        padding: 2.5rem 0 1rem;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem;
+    }
+
+    .footer-newsletter {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer-input {
+        width: 100%;
+    }
+
+    .footer-btn {
+        width: 100%;
+    }
+
+    /* === MODALS — FULL SCREEN FRIENDLY === */
+    .modal-content,
+    .auth-container {
+        width: 95% !important;
+        max-width: 100% !important;
+        padding: 1.5rem !important;
+        margin: 0 auto;
+    }
+
+    /* === CART DRAWER === */
+    .cart-drawer-content {
+        width: 92vw !important;
+        right: 0;
+    }
+
+    /* === SNAP / AI STUDIO SECTION === */
+    .snap-chips-row {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .snap-chip {
+        font-size: 0.7rem !important;
+        padding: 0.35rem 0.7rem !important;
+    }
+
+    .snap-result-frame {
+        max-width: 100% !important;
+    }
+
+    /* === NOTIFICATION === */
+    .notification-container {
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+        max-width: calc(100vw - 1rem);
+    }
+
+    /* === TRUST/STATS SECTION === */
+    .stats-row,
+    .trust-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+
+    /* === CATEGORY TABS (if any) === */
+    .category-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* === BTN FULLWIDTH ON MOBILE === */
+    .btn-luxury.w-100-mobile {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+/* ================================================
+   EXTRA SMALL MOBILE (≤ 400px)
+   ================================================ */
+@media (max-width: 400px) {
+
     .brand-logo-text span:first-of-type {
         font-size: 0.95rem !important;
         letter-spacing: 0.08rem !important;
     }
 
-    .brand-logo-text [style*="font-size: 0.75rem"],
-    .brand-logo-text span:last-of-type {
-        font-size: 0.42rem !important;
-        letter-spacing: 0.05rem !important;
-    }
-
-    /* bake-actions = right side icons */
-    .bake-actions {
-        display: flex !important;
-        align-items: center !important;
-        gap: 2px !important;
-        margin-left: auto !important;
-    }
-
-    .bake-action-btn {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    /* Hide text labels */
-    .hidden-mobile {
-        display: none !important;
-    }
-
-    /* User nav — hide on mobile (show avatar or login icon only) */
-    .bake-user-area.hidden-mobile {
-        display: none !important;
-    }
-
-    /* ========================
-       4. SLIDE-IN NAV DRAWER
-       (matches fleurons.in halo-sidebar)
-       Hamburger LEFT → drawer slides from LEFT
-       ======================== */
-    .bake-sub-nav {
-        position: fixed !important;
-        top: 0 !important;
-        left: -100% !important;
-        width: 75vw !important;
-        max-width: 290px !important;
-        height: 100dvh !important;
-        background: #0a0010 !important;
-        border-right: 1px solid rgba(212, 175, 55, 0.2) !important;
-        z-index: 99999 !important;
-        padding-top: 56px !important;
-        padding-bottom: 30px !important;
-        transition: left 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        display: block !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    .bake-sub-nav.mobile-open {
-        left: 0 !important;
-        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.8) !important;
-    }
-
-    /* Dark semi-transparent overlay behind the drawer */
-    body.nav-open::after {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 99998;
-        pointer-events: none;
-    }
-
-    /* Nav list — stacked vertical */
-    .bake-nav-links {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-        gap: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        list-style: none !important;
-        margin: 0 !important;
-    }
-
-    .bake-nav-links>li {
-        width: 100% !important;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.07) !important;
-    }
-
-    .bake-nav-links>li>a {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        padding: 16px 20px !important;
-        font-size: 0.85rem !important;
-        letter-spacing: 0.12em !important;
-        color: #e8d5a0 !important;
-        text-transform: uppercase !important;
-        font-weight: 500 !important;
-        width: 100% !important;
-    }
-
-    .bake-nav-links>li>a::after {
-        content: '›';
-        font-size: 1.2rem;
-        opacity: 0.5;
-        margin-left: 8px;
-        flex-shrink: 0;
-    }
-
-    .bake-nav-links>li>a:hover,
-    .bake-nav-links>li>a:active {
-        background: rgba(212, 175, 55, 0.05) !important;
-        color: var(--color-gold, #d4af37) !important;
-    }
-
-    /* Dropdown accordion inside drawer */
-    .dropdown-menu {
-        position: static !important;
-        display: none !important;
-        background: rgba(255, 255, 255, 0.02) !important;
-        border: none !important;
-        border-top: 1px solid rgba(212, 175, 55, 0.05) !important;
-        box-shadow: none !important;
-        max-height: none !important;
-        overflow: visible !important;
-        padding: 4px 0 8px !important;
-        width: 100% !important;
-    }
-
-    .bake-dropdown.mobile-expanded>.dropdown-menu {
-        display: block !important;
-    }
-
-    .dropdown-menu li a {
-        padding: 11px 28px !important;
-        font-size: 0.78rem !important;
-        color: #c8b070 !important;
-        letter-spacing: 0.05em !important;
-        display: block !important;
-        width: 100% !important;
-    }
-
-    /* ========================
-       5. HERO SECTION
-       Image on top, text below
-       ======================== */
-    .hero-section {
-        padding-top: 0 !important;
-        min-height: auto !important;
-        padding-bottom: 30px !important;
-        overflow: hidden !important;
-    }
-
-    .hero-content-wrapper {
-        flex-direction: column !important;
-        padding: 20px 16px 0 !important;
-        text-align: center !important;
-        align-items: center !important;
-        gap: 0 !important;
-        width: 100% !important;
-        max-width: 100vw !important;
-    }
-
-    /* Cake image goes on top */
-    .hero-background {
-        order: 1 !important;
-        flex: none !important;
-        width: 100% !important;
-        min-height: 180px !important;
-        max-height: 260px !important;
-        overflow: hidden !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    .bg-cake-image {
-        max-width: 65% !important;
-        max-height: 250px !important;
-        height: auto !important;
-        width: auto !important;
-        display: block !important;
-        margin: 0 auto !important;
-    }
-
-    /* Text goes below image */
-    .hero-content {
-        order: 2 !important;
-        flex: none !important;
-        width: 100% !important;
-        padding: 14px 0 24px !important;
+    .royale-logo-container {
+        width: 38px;
+        height: 38px;
     }
 
     .hero-title {
-        font-size: 1.75rem !important;
-        line-height: 1.2 !important;
-        margin-bottom: 10px !important;
-        word-break: break-word !important;
+        font-size: 1.6rem !important;
     }
 
-    .hero-subtitle {
-        font-size: 0.85rem !important;
-        line-height: 1.65 !important;
-        max-width: 100% !important;
-        margin: 0 0 16px 0 !important;
-    }
-
-    .hero-actions {
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-        gap: 10px !important;
-    }
-
-    /* ========================
-       6. SECTION SPACING
-       ======================== */
-    .section,
-    section {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
-    }
-
-    .section-header {
-        margin-bottom: 1.5rem !important;
-    }
-
-    /* ========================
-       7. PRODUCT / COLLECTION GRIDS
-       2 columns like fleurons.in
-       ======================== */
-    .video-grid,
     .products-grid,
     .collection-grid,
-    [class*="product-grid"] {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-        padding: 0 !important;
+    #product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.6rem !important;
     }
 
-    .video-grid {
-        gap: 10px !important;
-    }
-
-    /* ========================
-       8. COLLECTION PAGE
-       ======================== */
-    .collection-container {
-        flex-direction: column !important;
-    }
-
-    .collection-sidebar {
-        display: none !important;
-    }
-
-    .collection-toolbar {
-        padding: 10px 0 !important;
-        flex-wrap: wrap !important;
-        gap: 6px !important;
-    }
-
-    .toolbar-label {
-        display: none !important;
-    }
-
-    /* ========================
-       9. JOURNAL GRID — 1 column
-       ======================== */
-    .journal-grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
-    }
-
-    /* ========================
-       10. MODALS & CART
-       ======================== */
-    .auth-container,
-    .modal-content {
-        width: 92vw !important;
-        max-width: 92vw !important;
-        padding: 24px 18px !important;
-        margin: 10px auto !important;
-    }
-
-    .cart-drawer {
-        width: 100vw !important;
-        max-width: 100vw !important;
-    }
-
-    /* ========================
-       11. NOTIFICATIONS
-       ======================== */
-    .notification-container {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 90vw !important;
-        max-width: 360px !important;
-        right: auto !important;
+    .product-card-title {
+        font-size: 0.7rem !important;
     }
 }

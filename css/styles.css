@@ -65,7 +65,7 @@ article,
 aside,
 header,
 footer,
-nav,
+nav:not(.mobile-drawer),
 main,
 .card,
 .panel,
@@ -76,6 +76,20 @@ main,
     -webkit-backdrop-filter: none !important;
     border: none !important;
     color: var(--color-gold) !important;
+}
+
+/* Mobile Drawer MUST keep its own background — exempt from global override */
+.mobile-drawer {
+    background: #0e0118 !important;
+    border-right: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+.mobile-drawer-overlay {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.drawer-submenu {
+    background: rgba(0, 0, 0, 0.25) !important;
 }
 
 div:not(.bg-fixed, .royale-logo-container, .hero-background, .thumbnail-list, .snap-color) {
@@ -102,7 +116,7 @@ h6 {
 input,
 textarea,
 select,
-button:not(.btn-luxury, .btn-snap-primary, .btn-pay, .footer-btn) {
+button:not(.btn-luxury, .btn-snap-primary, .btn-pay, .footer-btn, .mobile-menu-btn, .drawer-close-btn, .drawer-nav-link) {
     background: transparent !important;
     backdrop-filter: none !important;
     color: var(--color-gold) !important;
@@ -3343,6 +3357,7 @@ h4 {
         display: none;
     }
 }
+
 /* =============================================
    BAKENOVATION MOBILE OVERHAUL v108
    Modeled after fleurons.in mobile experience
@@ -3350,9 +3365,17 @@ h4 {
 
 /* === HIDE DESKTOP SUBNAV, SHOW HAMBURGER === */
 @media (max-width: 990px) {
-    .hidden-mobile { display: none !important; }
-    .mobile-only   { display: flex  !important; }
-    .menu-toggle   { display: flex  !important; }
+    .hidden-mobile {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+    }
 
     /* Compact sticky header */
     .bake-main-header {
@@ -3409,7 +3432,7 @@ h4 {
         background: #0d0415 !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        border-right: 1px solid rgba(212,175,55,0.3) !important;
+        border-right: 1px solid rgba(212, 175, 55, 0.3) !important;
         z-index: 99999 !important;
         padding: 80px 0 30px 0 !important;
         transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -3419,7 +3442,7 @@ h4 {
 
     .bake-sub-nav.mobile-open {
         left: 0 !important;
-        box-shadow: 5px 0 30px rgba(0,0,0,0.5) !important;
+        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5) !important;
     }
 
     /* Overlay backdrop when drawer is open */
@@ -3430,7 +3453,7 @@ h4 {
         left: 80vw;
         width: 100vw;
         height: 100vh;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         z-index: -1;
     }
 
@@ -3443,12 +3466,12 @@ h4 {
         width: 100% !important;
     }
 
-    .bake-nav-links > li {
+    .bake-nav-links>li {
         width: 100% !important;
-        border-bottom: 1px solid rgba(212,175,55,0.1) !important;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1) !important;
     }
 
-    .bake-nav-links > li > a {
+    .bake-nav-links>li>a {
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
@@ -3464,15 +3487,15 @@ h4 {
     .dropdown-menu {
         position: static !important;
         display: none !important;
-        background: rgba(255,255,255,0.03) !important;
+        background: rgba(255, 255, 255, 0.03) !important;
         border: none !important;
-        border-top: 1px solid rgba(212,175,55,0.1) !important;
+        border-top: 1px solid rgba(212, 175, 55, 0.1) !important;
         box-shadow: none !important;
         max-height: none !important;
         padding: 0 !important;
     }
 
-    .bake-dropdown.mobile-expanded > .dropdown-menu {
+    .bake-dropdown.mobile-expanded>.dropdown-menu {
         display: block !important;
     }
 
@@ -3569,7 +3592,9 @@ h4 {
     }
 
     /* === HIDE DESKTOP BANNER === */
-    .bake-top-banner { display: none !important; }
+    .bake-top-banner {
+        display: none !important;
+    }
 
     /* === FULL WIDTH CONTAINER ON MOBILE === */
     .container {

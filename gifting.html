@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css?v=12">
-    <link rel="stylesheet" href="css/mobile.css?v=110.0">
+    <link rel="stylesheet" href="css/mobile.css?v=120.0">
     <link rel="stylesheet" href="css/collection.css?v=1">
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -22,6 +22,51 @@
 <body>
     <!-- Background -->
     <div class="bg-fixed"></div>
+
+    <!-- Mobile Drawer Overlay -->
+    <div id="mobile-drawer-overlay" class="mobile-drawer-overlay"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation">
+        <div class="drawer-header">
+            <a href="index.html" class="drawer-logo">BAKENOVATION</a>
+            <button id="drawer-close" class="drawer-close-btn" aria-label="Close Menu">&times;</button>
+        </div>
+        <ul class="drawer-nav">
+            <li><a href="index.html">Home</a></li>
+            <li>
+                <button class="drawer-nav-link" data-accordion>
+                    Trending
+                    <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="trending.html">All Trending</a></li>
+                    <li><a href="trending.html#cookies">Cookies</a></li>
+                    <li><a href="trending.html#anniversary">Anniversary Cakes</a></li>
+                    <li><a href="trending.html#classic">Classic Cakes</a></li>
+                    <li><a href="trending.html#bento">Bento Cakes</a></li>
+                </ul>
+            </li>
+            <li>
+                <button class="drawer-nav-link" data-accordion>
+                    Gifting
+                    <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <ul class="drawer-submenu">
+                    <li><a href="gifting.html">All Gifting</a></li>
+                    <li><a href="gifting.html#hampers">Hampers</a></li>
+                    <li><a href="gifting.html#festive">Festive Gifting</a></li>
+                </ul>
+            </li>
+            <li><a href="shop.html">Shop All</a></li>
+            <li><a href="index.html#about">Why Us?</a></li>
+            <li><a href="#footer">Contact Us</a></li>
+        </ul>
+    </nav>
 
     <!-- Main Header -->
     <header class="bake-main-header">
@@ -55,6 +100,11 @@
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
                     <span id="cart-count" class="bake-cart-badge">0</span>
+                </button>
+                <button class="mobile-menu-btn" id="menu-toggle" aria-label="Open Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
             </div>
         </div>
