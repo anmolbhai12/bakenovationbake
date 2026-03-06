@@ -389,7 +389,11 @@ function logSystemEvent(event, target, status, details) {
 }
 
 function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
+  const lock = LockService.getScriptLock();
   try {
+    // Wait for up to 30 seconds for other processes to finish
+    lock.waitLock(30000);
+    
     const sheet = getSheet(sheetName, headers);
     const data = sheet.getDataRange().getValues();
     if (data.length > 1) {
@@ -402,7 +406,11 @@ function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
     }
     // New user, append them
     sheet.appendRow([new Date(), name || '', identifier || '', dob || '', type || '']);
-  } catch(e) {}
+  } catch(e) {
+    Logger.log("Atomic recording failed: " + e.toString());
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function getSheet(name, headers) {

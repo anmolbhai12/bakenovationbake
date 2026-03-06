@@ -604,7 +604,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(form);
             form.submit();
 
-            // 2. Fetch/No-CORS POST (Secondary dispatch for redundancy)
+            // 2. Redundant dispatch removed to prevent duplicate OTPs/records
+            /*
             try {
                 fetch(finalUrl, {
                     method: 'POST',
@@ -614,6 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: new URLSearchParams(data).toString()
                 }).catch(e => console.warn("Redundant fetch dispatch failed (expected in some browsers):", e));
             } catch (e) { }
+            */
 
             // Resolve after delay to allow processing
             setTimeout(() => {
