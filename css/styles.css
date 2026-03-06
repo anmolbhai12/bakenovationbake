@@ -242,6 +242,7 @@ h4 {
 .royale-logo-container {
     width: 80px;
     height: 80px;
+    flex-shrink: 0;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--color-gold);
@@ -273,8 +274,9 @@ h4 {
     font-weight: 500;
     padding: 0.8rem 0;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     transition: opacity 0.2s;
 }
 
