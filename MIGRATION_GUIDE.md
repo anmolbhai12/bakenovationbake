@@ -28,7 +28,7 @@ Follow these steps to migrate your website infrastructure from `japindersinghbha
 5.  **Who has access**: `Anyone`.
 6.  Click **Deploy**.
 7.  Click **Authorize Access** and follow the prompts (click "Advanced" and "Go to Bakenovation Unified Manager (unsafe)" if needed).
-8.  **COPY the Web App URL**. It will look like `https://script.google.com/macros/s/.../exec`.
+8.  **COPY the Web App URL**. It will look like `https://script.google.com/macros/s/AKfycbz.../exec`.
 
 ## 4. Update the Codebase
 Once you have the new URL:
