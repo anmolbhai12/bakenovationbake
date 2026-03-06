@@ -267,11 +267,17 @@ function updateOrder(data) {
 // ─── SIGNUPS / LOGINS ─────────────────────────────────────────────────────────
 
 function syncSignup(data) {
-  const method = data.method || 'email';
+  const method = (data.method || 'email').toString().toLowerCase().trim();
+  const type = data.type || 'Activity';
+  const name = data.name || 'User';
+  const id = data.identifier || 'unknown';
+
+  logSystemEvent('SYNC_REQUEST', id, 'START', `Action: ${data.action}, Type: ${type}, Method: ${method}`);
+
   if (method === 'whatsapp') {
-    recordUniqueLogin(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS, data.name, data.identifier, data.dob, data.type || 'Signup');
+    recordUniqueLogin(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS, name, id, data.dob, type);
   } else {
-    recordUniqueLogin(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS, data.name, data.identifier, data.dob, data.type || 'Signup');
+    recordUniqueLogin(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS, name, id, data.dob, type);
   }
   return jsonResponse({ status: 'success' });
 }

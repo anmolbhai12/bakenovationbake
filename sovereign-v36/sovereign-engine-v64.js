@@ -630,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     name: activeUser.name,
                     identifier: activeUser.whatsapp || activeUser.email,
                     dob: activeUser.dob || (isSignup ? "New Member" : ""),
-                    method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
+                    method: activeUser.whatsapp ? 'whatsapp' : 'email',
                     type: isSignup ? 'Signup' : 'Login',
                     action: isSignup ? 'sync_signup' : 'sync_login'
                 };
