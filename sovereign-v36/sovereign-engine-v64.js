@@ -1273,31 +1273,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const subNav = document.querySelector('.bake-sub-nav');
 
-    if (menuToggle && subNav) {
-        // Open/close drawer on hamburger click
+    function openNav() {
+        if (!subNav) return;
+        subNav.classList.add('mobile-open');
+        document.body.classList.add('nav-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeNav() {
+        if (!subNav) return;
+        subNav.classList.remove('mobile-open');
+        document.body.classList.remove('nav-open');
+        document.body.style.overflow = '';
+    }
+
+    if (menuToggle) {
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            subNav.classList.toggle('mobile-open');
-            const isOpen = subNav.classList.contains('mobile-open');
-            document.body.style.overflow = isOpen ? 'hidden' : '';
+            subNav && subNav.classList.contains('mobile-open') ? closeNav() : openNav();
         });
+    }
 
-        // Close drawer when clicking outside (on the backdrop)
-        document.addEventListener('click', (e) => {
-            if (subNav.classList.contains('mobile-open') && !subNav.contains(e.target) && e.target !== menuToggle) {
-                subNav.classList.remove('mobile-open');
-                document.body.style.overflow = '';
-            }
-        });
+    // Close when tapping outside
+    document.addEventListener('click', (e) => {
+        if (subNav && subNav.classList.contains('mobile-open') && !subNav.contains(e.target) && e.target !== menuToggle) {
+            closeNav();
+        }
+    });
 
-        // Expand dropdowns inside the mobile drawer on tap
+    // Accordion dropdowns inside drawer
+    if (subNav) {
         subNav.querySelectorAll('.bake-dropdown > a').forEach(link => {
             link.addEventListener('click', (e) => {
                 if (window.innerWidth <= 990) {
                     e.preventDefault();
                     const parent = link.closest('.bake-dropdown');
                     const isExpanded = parent.classList.contains('mobile-expanded');
-                    // Close all others
                     subNav.querySelectorAll('.bake-dropdown').forEach(d => d.classList.remove('mobile-expanded'));
                     if (!isExpanded) parent.classList.add('mobile-expanded');
                 }
@@ -1305,15 +1316,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- RESPONSIVE: CSS handles this, but JS syncs on resize ---
-    function applyResponsive() {
-        const w = window.innerWidth;
-        // Only apply if subnav is desktop mode
-        if (w > 990 && subNav) {
-            subNav.classList.remove('mobile-open');
-            document.body.style.overflow = '';
-        }
-    }
-    window.addEventListener('resize', applyResponsive);
+    // Close nav on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 990) closeNav();
+    });
 
 });
