@@ -5,51 +5,6 @@ gsap.registerPlugin(ScrollTrigger);
 document.addEventListener('DOMContentLoaded', () => {
     const notificationContainer = document.getElementById('notification-container');
 
-    // =============================================
-    // MOBILE DRAWER — Hamburger + Accordion Logic
-    // =============================================
-    const menuToggle = document.getElementById('menu-toggle');
-    const drawer = document.getElementById('mobile-drawer');
-    const drawerOverlay = document.getElementById('mobile-drawer-overlay');
-    const drawerClose = document.getElementById('drawer-close');
-
-    function openDrawer() {
-        if (!drawer) return;
-        drawer.classList.add('is-open');
-        if (drawerOverlay) drawerOverlay.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-        if (menuToggle) menuToggle.classList.add('is-open');
-    }
-
-    function closeDrawer() {
-        if (!drawer) return;
-        drawer.classList.remove('is-open');
-        if (drawerOverlay) drawerOverlay.classList.remove('is-open');
-        document.body.style.overflow = '';
-        if (menuToggle) menuToggle.classList.remove('is-open');
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            drawer && drawer.classList.contains('is-open') ? closeDrawer() : openDrawer();
-        });
-    }
-
-    if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
-    if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
-
-    // Accordion for drawer nav sub-menus
-    document.querySelectorAll('.drawer-nav-link[data-accordion]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parentLi = btn.parentElement;
-            const isOpen = parentLi.classList.contains('is-open');
-            document.querySelectorAll('.drawer-nav > li.is-open').forEach(li => li.classList.remove('is-open'));
-            if (!isOpen) parentLi.classList.add('is-open');
-        });
-    });
-
-    // Close drawer on internal link click
-    if (drawer) drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
 
 
 
