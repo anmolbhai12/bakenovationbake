@@ -267,9 +267,13 @@ h4 {
 
 .brand-logo-text {
     font-family: var(--font-heading);
-    font-size: 2rem;
-    letter-spacing: 0.2em;
+    font-size: 2.2rem;
+    letter-spacing: 0.25em;
     color: var(--color-gold);
+    background: var(--color-royal-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-decoration: none;
     font-weight: 500;
     padding: 0.8rem 0;
@@ -278,6 +282,7 @@ h4 {
     align-items: center;
     gap: 15px;
     transition: opacity 0.2s;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .brand-logo-text:hover {
@@ -324,22 +329,6 @@ h4 {
     margin: 0 auto;
 }
 
-.brand-logo-text {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    letter-spacing: 0.25em;
-    color: var(--color-gold);
-    background: var(--color-royal-gold);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.8rem 0;
-    display: block;
-    transition: opacity 0.2s;
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-}
 
 .brand-logo-text:hover {
     opacity: 0.85;
@@ -940,7 +929,7 @@ h4 {
 }
 
 /* Responsive */
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .hero-content-wrapper {
         flex-direction: column-reverse;
         padding: 0 5%;
@@ -1569,7 +1558,7 @@ h4 {
 }
 
 /* Responsive Adjustments for Features */
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .customizer-interface {
         flex-direction: column;
         gap: 2rem;
@@ -2146,7 +2135,7 @@ h4 {
 }
 
 /* Responsive */
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .sweet-snap-container {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -2364,7 +2353,7 @@ h4 {
     color: var(--color-orchid);
 }
 
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .cart-drawer-content {
         width: 100%;
     }
@@ -2607,7 +2596,7 @@ h4 {
     color: var(--color-orchid);
 }
 
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .notification-container {
         top: 1rem;
         right: 1rem;
@@ -2934,7 +2923,7 @@ h4 {
 }
 
 /* Fix for unclosed media query and legacy styles.css?v=43 */
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .bake-sub-nav {
         top: 80px;
         /* Adjusted for header-only top */
@@ -3325,7 +3314,7 @@ h4 {
     color: var(--color-text-muted);
 }
 
-@media (max-width: 1px) {
+@media (max-width: 768px) {
     .collection-container {
         flex-direction: column;
     }
