@@ -1,7 +1,7 @@
 /* ================================================
-   BAKENOVATION MOBILE.CSS — v160
-   GOAL: Exact desktop layout on mobile.
-   NO mobile-specific layouts. Just scaling/overflow.
+   BAKENOVATION MOBILE.CSS — v170
+   GOAL: Proportional scaling of desktop layout.
+   Maintain side-by-side hero and horizontal header.
    ================================================ */
 
 html,
@@ -27,19 +27,123 @@ iframe {
 
 /* Maintain side-by-side flex layouts even on small screens */
 @media (max-width: 900px) {
+
+    /* --- HEADER SCALING --- */
+    .bake-main-header {
+        height: auto !important;
+        padding: 5px 0 !important;
+    }
+
+    .brand-logo-text div span:first-of-type {
+        font-size: 1.1rem !important;
+        /* Shrunken BAKENOVATION */
+        letter-spacing: 0.1rem !important;
+    }
+
+    .brand-logo-text div span:last-of-type {
+        font-size: 0.5rem !important;
+        /* Shrunken CHEF HARMEET */
+        margin-top: 2px !important;
+    }
+
+    .royale-logo-container {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .bake-action-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .bake-action-btn {
+        padding: 5px !important;
+        font-size: 0.6rem !important;
+    }
+
+    /* --- SUB-NAV SCALING --- */
+    .bake-sub-nav {
+        padding: 5px 0 !important;
+        overflow-x: visible !important;
+    }
+
+    .bake-nav-links {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        /* PROPORTIONAL FIT */
+    }
+
+    .bake-nav-links li a {
+        font-size: 0.55rem !important;
+        padding: 2px 4px !important;
+        white-space: nowrap !important;
+        letter-spacing: 0.05rem !important;
+    }
+
+    .bake-chevron {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    /* --- HERO SECTION SCALING --- */
+    .hero-section {
+        min-height: auto !important;
+        padding: 2rem 0 !important;
+    }
+
     .hero-content-wrapper {
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
+        justify-content: space-between !important;
         flex-wrap: nowrap !important;
+        gap: 10px !important;
+        padding: 0 1rem !important;
     }
 
     .hero-content {
         flex: 1 1 50% !important;
-        padding: 1rem !important;
+        padding: 0 !important;
+        text-align: left !important;
     }
 
-    /* Keep AI Studio side-by-side */
+    .hero-title {
+        font-size: 1.1rem !important;
+        /* Exactly shrunken as screenshot */
+        line-height: 1.2 !important;
+        margin-bottom: 5px !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.55rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 10px !important;
+        opacity: 0.8;
+    }
+
+    .btn-luxury {
+        padding: 6px 10px !important;
+        font-size: 0.5rem !important;
+        letter-spacing: 1px !important;
+    }
+
+    .hero-background {
+        flex: 1 1 50% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .bg-cake-image {
+        width: 100% !important;
+        max-width: 160px !important;
+        /* Fitted sized cake image */
+        height: auto !important;
+    }
+
+    /* --- AI STUDIO (ATELIER) SCALING --- */
     .customizer-interface {
         display: flex !important;
         flex-direction: row !important;
@@ -52,7 +156,6 @@ iframe {
         flex: 1 1 50% !important;
     }
 
-    /* Keep search text hidden to save space if needed */
     .hidden-mobile {
         display: none !important;
     }
