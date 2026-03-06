@@ -431,16 +431,30 @@ function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
 }
 
 function checkUser(data) {
-  try {
-    const identifier = (data.identifier || '').toString().toLowerCase().trim();
-    if (!identifier) return jsonResponse({ status: 'error', message: 'Missing identifier' });
+  const identifier = (data.identifier || '').toString().toLowerCase().trim();
+  if (!identifier) return jsonResponse({ status: 'error', message: 'Missing identifier' });
 
+  logSystemEvent('CHECK_USER_ATTEMPT', identifier, 'PENDING', 'Verifying completed registration');
+
+  try {
     // Check Email Logins
     const emailSheet = getSheet(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS);
     const emailData = emailSheet.getDataRange().getValues();
     for (let i = 1; i < emailData.length; i++) {
-        if (emailData[i][2] && emailData[i][2].toString().toLowerCase().trim() === identifier) {
-            return jsonResponse({ status: 'success', exists: true, name: emailData[i][1], method: 'email' });
+        const rowId = (emailData[i][2] || '').toString().toLowerCase().trim();
+        const rowType = (emailData[i][4] || '').toString().toLowerCase().trim();
+        
+        // ONLY accept if the user has a COMPLETED Signup row
+        if (rowId === identifier && rowType === 'signup') {
+            logSystemEvent('CHECK_USER_SUCCESS', identifier, 'FOUND', 'Completed account found (Email)');
+            return jsonResponse({ 
+                status: 'success', 
+                exists: true, 
+                name: emailData[i][1] || 'Valued Member', 
+                method: 'email',
+                dob: emailData[i][3] || '',
+                type: 'Signup'
+            });
         }
     }
 
@@ -448,13 +462,27 @@ function checkUser(data) {
     const waSheet = getSheet(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS);
     const waData = waSheet.getDataRange().getValues();
     for (let i = 1; i < waData.length; i++) {
-        if (waData[i][2] && waData[i][2].toString().toLowerCase().trim() === identifier) {
-            return jsonResponse({ status: 'success', exists: true, name: waData[i][1], method: 'whatsapp' });
+        const rowId = (waData[i][2] || '').toString().toLowerCase().trim();
+        const rowType = (waData[i][4] || '').toString().toLowerCase().trim();
+        
+        // ONLY accept if the user has a COMPLETED Signup row
+        if (rowId === identifier && rowType === 'signup') {
+            logSystemEvent('CHECK_USER_SUCCESS', identifier, 'FOUND', 'Completed account found (WhatsApp)');
+            return jsonResponse({ 
+                status: 'success', 
+                exists: true, 
+                name: waData[i][1] || 'Valued Member', 
+                method: 'whatsapp',
+                dob: waData[i][3] || '',
+                type: 'Signup'
+            });
         }
     }
 
+    logSystemEvent('CHECK_USER_RESULT', identifier, 'NOT_FOUND', 'No completed Signup found for this identifier');
     return jsonResponse({ status: 'success', exists: false });
   } catch (e) {
+    logSystemEvent('CHECK_USER_ERROR', identifier, 'ERROR', e.toString());
     return jsonResponse({ status: 'error', message: e.toString() });
   }
 }
