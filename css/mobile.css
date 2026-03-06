@@ -1,9 +1,9 @@
 /* ================================================
-   BAKENOVATION MOBILE.CSS — v200
-   GOAL: High-End Horizontal Fitting (Side-by-Side).
-   - Horizontal layout for Hero and AI Studio.
+   BAKENOVATION MOBILE.CSS — v200.2
+   GOAL: Total Horizontal Fitting (Side-by-Side).
+   - ALL major grids forced into row/horizontal layout.
    - Perfectly shrunken to fit 100vw (Zero Swiping).
-   - Elegant proportional scaling.
+   - Elegant proportional scaling for all text/images.
    ================================================ */
 
 :root {
@@ -60,7 +60,6 @@ iframe {
 
     .brand-logo-text {
         font-size: 1.1rem !important;
-        /* Shrunken Logo */
         gap: 5px !important;
         padding: 0 !important;
     }
@@ -97,20 +96,18 @@ iframe {
     .bake-nav-links {
         display: flex !important;
         flex-wrap: wrap !important;
-        /* Keep in one row as much as possible, then wrap */
         justify-content: center !important;
         gap: 4px 8px !important;
     }
 
     .bake-nav-links li a {
         font-size: 0.65rem !important;
-        /* Readable but small enough to fit well */
         padding: 2px 4px !important;
         white-space: nowrap !important;
         letter-spacing: 0.05em !important;
     }
 
-    /* --- HERO: HORIZONTAL FITTING (Strict side-by-side) --- */
+    /* --- HERO: HORIZONTAL FITTING --- */
     .hero-section {
         padding: 1.5rem 0 !important;
         min-height: auto !important;
@@ -119,25 +116,21 @@ iframe {
     .hero-content-wrapper {
         display: flex !important;
         flex-direction: row !important;
-        /* FORCE HORIZONTAL */
         align-items: center !important;
         justify-content: space-between !important;
         flex-wrap: nowrap !important;
-        /* NO WRAP */
         gap: 15px !important;
         padding: 0 1rem !important;
     }
 
     .hero-content {
         flex: 1 1 55% !important;
-        /* Text takes 55% */
         padding: 0 !important;
         text-align: left !important;
     }
 
     .hero-title {
         font-size: 1.2rem !important;
-        /* Shrunken for horizontal fit */
         line-height: 1.15 !important;
         margin-bottom: 0.5rem !important;
     }
@@ -156,7 +149,6 @@ iframe {
 
     .hero-background {
         flex: 1 1 45% !important;
-        /* Image takes 45% */
         display: flex !important;
         justify-content: center !important;
         margin: 0 !important;
@@ -165,16 +157,102 @@ iframe {
     .bg-cake-image {
         width: 100% !important;
         max-width: 180px !important;
-        /* Controlled size for horizontal fit */
         height: auto !important;
         filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+    }
+
+    /* --- VIDEO GRID (WATCH AND BUY) HORIZONTAL --- */
+    .video-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .video-card {
+        flex: 1 1 50% !important;
+        margin: 0 !important;
+    }
+
+    .video-card h3 {
+        font-size: 0.7rem !important;
+    }
+
+    /* --- JOURNAL GRID HORIZONTAL --- */
+    .journal-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .journal-card {
+        flex: 1 1 50% !important;
+        margin: 0 !important;
+    }
+
+    .journal-content {
+        padding: 0.5rem !important;
+    }
+
+    .journal-content h3 {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .journal-content p {
+        display: none !important;
+        /* Save space for horizontal fit */
+    }
+
+    .journal-content span {
+        font-size: 0.5rem !important;
+    }
+
+    /* --- TESTIMONIALS HORIZONTAL --- */
+    .testimonials-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .testimonial-card {
+        flex: 1 1 33.33% !important;
+        padding: 0.5rem !important;
+        margin: 0 !important;
+    }
+
+    .testimonial-card p {
+        font-size: 0.55rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .testimonial-card h4 {
+        font-size: 0.6rem !important;
+    }
+
+    /* --- STATS GRID (OUR JOURNEY) --- */
+    .stats-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0.5rem !important;
+        justify-content: space-around !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .stats-grid div h3 {
+        font-size: 1.5rem !important;
+    }
+
+    .stats-grid div p {
+        font-size: 0.5rem !important;
     }
 
     /* --- AI STUDIO (ATELIER): HORIZONTAL FITTING --- */
     .customizer-interface {
         display: flex !important;
         flex-direction: row !important;
-        /* FORCE HORIZONTAL */
         gap: 10px !important;
         align-items: flex-start !important;
         padding: 0 !important;
@@ -187,23 +265,16 @@ iframe {
 
     .snap-result-area {
         flex: 1 1 55% !important;
-        min-height: 200px !important;
+        min-height: 180px !important;
     }
 
-    /* Scale controls internal items */
     .snap-chip {
-        font-size: 0.55rem !important;
-        padding: 3px 6px !important;
-    }
-
-    .selection-row {
-        gap: 4px !important;
-        margin-bottom: 0.8rem !important;
+        font-size: 0.5rem !important;
+        padding: 2px 4px !important;
     }
 
     .control-group label {
-        font-size: 0.65rem !important;
-        margin-bottom: 4px !important;
+        font-size: 0.6rem !important;
     }
 
     /* --- COMPONENT RESIZING --- */
@@ -215,10 +286,6 @@ iframe {
 
     .product-info h3 {
         font-size: 0.75rem !important;
-    }
-
-    .product-price {
-        font-size: 0.7rem !important;
     }
 
     /* Utilities */
