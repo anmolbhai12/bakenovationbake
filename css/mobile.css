@@ -88,23 +88,27 @@ iframe {
         height: 16px !important;
     }
 
-    /* --- NAVIGATION: WRAPPING (No Swipe) --- */
+    /* --- NAVIGATION: SINGLE ROW (NO WRAP, NO SWIPE) --- */
     .bake-sub-nav {
-        padding: 0.5rem 0.2rem !important;
+        padding: 0.5rem 0.1rem !important;
+        overflow-x: hidden !important;
     }
 
     .bake-nav-links {
         display: flex !important;
-        flex-wrap: wrap !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        /* STRICT HORIZONTAL */
         justify-content: center !important;
-        gap: 4px 8px !important;
+        gap: 2px 4px !important;
     }
 
     .bake-nav-links li a {
-        font-size: 0.65rem !important;
-        padding: 2px 4px !important;
+        font-size: 0.45rem !important;
+        /* Shrunken to fit one line */
+        padding: 1px 2px !important;
         white-space: nowrap !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0.02rem !important;
     }
 
     /* --- HERO: HORIZONTAL FITTING --- */
