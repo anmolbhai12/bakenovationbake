@@ -1,25 +1,22 @@
 /* ================================================
-   BAKENOVATION MOBILE.CSS — v190
-   GOAL: High-End Responsive Mobile Experience.
-   - Perfectly fitted to 100vw (No side-scrolling).
-   - Readable typography (No tiny text).
-   - Elegant stacking (No awkward side-by-side).
-   - Consistent "Computer-Look" aesthetics.
+   BAKENOVATION MOBILE.CSS — v200
+   GOAL: High-End Horizontal Fitting (Side-by-Side).
+   - Horizontal layout for Hero and AI Studio.
+   - Perfectly shrunken to fit 100vw (Zero Swiping).
+   - Elegant proportional scaling.
    ================================================ */
 
 :root {
-    --mobile-padding: 1rem;
-    --font-size-base-mobile: 14px;
+    --mobile-padding: 0.8rem;
 }
 
 html,
 body {
     overflow-x: hidden !important;
     max-width: 100vw !important;
-    font-size: var(--font-size-base-mobile);
     background-color: var(--color-deep-purple);
-    -webkit-text-size-adjust: 100% !important;
-    text-size-adjust: 100% !important;
+    -webkit-text-size-adjust: none !important;
+    text-size-adjust: none !important;
 }
 
 *,
@@ -36,7 +33,7 @@ iframe {
     height: auto;
 }
 
-/* Background Coverage Fix */
+/* Background Coverage */
 .bg-fixed {
     position: fixed !important;
     top: 0;
@@ -50,159 +47,178 @@ iframe {
 
 @media (max-width: 900px) {
 
-    /* --- HEADER: COMPACT & BALANCED --- */
+    /* --- HEADER: COMPACT --- */
     .bake-main-header {
         height: auto !important;
-        padding: 0.8rem 0 !important;
-        position: sticky !important;
-        top: 0;
-        z-index: 1000;
-        background: rgba(43, 8, 43, 0.95) !important;
-        backdrop-filter: blur(10px);
+        padding: 0.5rem 0 !important;
     }
 
     .bake-header-container {
-        flex-direction: column !important;
-        /* Stack logo over actions for readability */
-        align-items: center !important;
-        gap: 0.5rem !important;
+        width: 96% !important;
+        gap: 5px !important;
     }
 
     .brand-logo-text {
-        font-size: 1.4rem !important;
-        /* Elegant readable logo */
-        letter-spacing: 0.15em !important;
+        font-size: 1.1rem !important;
+        /* Shrunken Logo */
+        gap: 5px !important;
         padding: 0 !important;
-        justify-content: center !important;
+    }
+
+    .brand-logo-text div span:first-of-type {
+        font-size: 0.9rem !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    .brand-logo-text div span:last-of-type {
+        font-size: 0.45rem !important;
+        margin-top: 1px !important;
     }
 
     .royale-logo-container {
-        width: 45px !important;
-        height: 45px !important;
-        border-width: 1px !important;
+        width: 35px !important;
+        height: 35px !important;
     }
 
-    /* Actions in a neat row */
     .bake-actions {
-        display: flex !important;
-        gap: 1.2rem !important;
-        justify-content: center !important;
-        width: 100% !important;
-        border-top: 1px solid rgba(212, 175, 55, 0.1);
-        padding-top: 0.5rem !important;
+        gap: 8px !important;
     }
 
     .bake-action-btn svg {
-        width: 18px !important;
-        height: 18px !important;
+        width: 16px !important;
+        height: 16px !important;
     }
 
-    /* --- NAVIGATION: WRAPPING GRID (No Swipe) --- */
+    /* --- NAVIGATION: WRAPPING (No Swipe) --- */
     .bake-sub-nav {
-        padding: 0.8rem 0.5rem !important;
-        background: rgba(0, 0, 0, 0.2);
+        padding: 0.5rem 0.2rem !important;
     }
 
     .bake-nav-links {
         display: flex !important;
         flex-wrap: wrap !important;
-        /* WRAP instead of SMALL/SWIPE */
+        /* Keep in one row as much as possible, then wrap */
         justify-content: center !important;
-        gap: 0.5rem 0.8rem !important;
+        gap: 4px 8px !important;
     }
 
     .bake-nav-links li a {
-        font-size: 0.8rem !important;
-        /* Readable text */
-        text-transform: uppercase !important;
-        letter-spacing: 0.1em !important;
-        opacity: 0.9 !important;
+        font-size: 0.65rem !important;
+        /* Readable but small enough to fit well */
+        padding: 2px 4px !important;
+        white-space: nowrap !important;
+        letter-spacing: 0.05em !important;
     }
 
-    /* --- HERO: ELEGANT STACKING --- */
+    /* --- HERO: HORIZONTAL FITTING (Strict side-by-side) --- */
     .hero-section {
-        padding: 2rem 0 !important;
+        padding: 1.5rem 0 !important;
         min-height: auto !important;
-        text-align: center !important;
     }
 
     .hero-content-wrapper {
-        flex-direction: column !important;
-        /* RE-STACK FOR PERFECTION */
-        gap: 2rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        /* FORCE HORIZONTAL */
         align-items: center !important;
-    }
-
-    .hero-content {
-        width: 100% !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        /* NO WRAP */
+        gap: 15px !important;
         padding: 0 1rem !important;
     }
 
+    .hero-content {
+        flex: 1 1 55% !important;
+        /* Text takes 55% */
+        padding: 0 !important;
+        text-align: left !important;
+    }
+
     .hero-title {
-        font-size: 1.8rem !important;
-        /* Bold, readable heading */
-        line-height: 1.2 !important;
-        margin-bottom: 1rem !important;
-        text-align: center !important;
+        font-size: 1.2rem !important;
+        /* Shrunken for horizontal fit */
+        line-height: 1.15 !important;
+        margin-bottom: 0.5rem !important;
     }
 
     .hero-subtitle {
-        font-size: 1rem !important;
-        line-height: 1.5 !important;
-        margin-bottom: 1.5rem !important;
-        text-align: center !important;
+        font-size: 0.6rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 1rem !important;
+        opacity: 0.8 !important;
     }
 
     .btn-luxury {
-        padding: 0.8rem 2rem !important;
-        font-size: 0.9rem !important;
+        padding: 6px 14px !important;
+        font-size: 0.6rem !important;
     }
 
     .hero-background {
-        width: 80% !important;
-        margin: 0 auto !important;
+        flex: 1 1 45% !important;
+        /* Image takes 45% */
         display: flex !important;
         justify-content: center !important;
+        margin: 0 !important;
     }
 
     .bg-cake-image {
         width: 100% !important;
-        max-width: 300px !important;
-        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+        max-width: 180px !important;
+        /* Controlled size for horizontal fit */
+        height: auto !important;
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
     }
 
-    /* --- THE ATELIER (AI BOX) --- */
+    /* --- AI STUDIO (ATELIER): HORIZONTAL FITTING --- */
     .customizer-interface {
-        flex-direction: column !important;
-        /* VERTICAL STACK */
-        gap: 1.5rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        /* FORCE HORIZONTAL */
+        gap: 10px !important;
+        align-items: flex-start !important;
+        padding: 0 !important;
     }
 
-    .snap-controls,
-    .snap-result-area {
-        width: 100% !important;
+    .snap-controls {
+        flex: 1 1 45% !important;
+        padding: 0 !important;
     }
 
     .snap-result-area {
-        min-height: 300px !important;
+        flex: 1 1 55% !important;
+        min-height: 200px !important;
+    }
+
+    /* Scale controls internal items */
+    .snap-chip {
+        font-size: 0.55rem !important;
+        padding: 3px 6px !important;
+    }
+
+    .selection-row {
+        gap: 4px !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .control-group label {
+        font-size: 0.65rem !important;
+        margin-bottom: 4px !important;
     }
 
     /* --- COMPONENT RESIZING --- */
-    /* Product grid (2 cols standard premium) */
     .product-grid {
-        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        padding: 0 10px !important;
+        gap: 8px !important;
+        padding: 0 8px !important;
     }
 
-    .product-card {
-        margin: 0 !important;
+    .product-info h3 {
+        font-size: 0.75rem !important;
     }
 
-    .product-image-container {
-        height: auto !important;
-        aspect-ratio: 1/1 !important;
+    .product-price {
+        font-size: 0.7rem !important;
     }
 
     /* Utilities */
