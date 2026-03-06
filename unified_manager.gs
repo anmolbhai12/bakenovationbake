@@ -404,16 +404,24 @@ function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
     const sheet = getSheet(sheetName, headers);
     const data = sheet.getDataRange().getValues();
     
-    // If it's a Signup, we MUST enforce uniqueness (The Registry)
-    if (type === 'Signup' && data.length > 1) {
+    // ANTI-CLUTTER: Check for uniqueness based on IDENTIFIER and TYPE
+    if (data.length > 1) {
+      const searchId = identifier.toString().toLowerCase().trim();
+      const searchType = type.toString().toLowerCase().trim();
+      
       for (let i = 1; i < data.length; i++) {
-        if (data[i][2] && data[i][2].toString().toLowerCase().trim() === identifier.toString().toLowerCase().trim()) {
-          return; // Already registered
+        const rowId = data[i][2] ? data[i][2].toString().toLowerCase().trim() : '';
+        const rowType = data[i][4] ? data[i][4].toString().toLowerCase().trim() : '';
+        
+        if (rowId === searchId && rowType === searchType) {
+          // This specific activity for this user is already recorded
+          console.log(`Skipping duplicate recording for ${searchId} type ${searchType}`);
+          return; 
         }
       }
     }
     
-    // For 'Login', 'OTP Sent', etc., we ALWAYS append to track activity
+    // If not found, append the new record
     sheet.appendRow([new Date(), name || '', identifier || '', dob || '', type || '']);
   } catch(e) {
     Logger.log("Atomic recording failed: " + e.toString());
