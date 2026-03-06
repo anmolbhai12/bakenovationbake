@@ -33,7 +33,7 @@ function handleRequest(e) {
     if (action === 'list_orders') return listOrders();
     if (action === 'update_order') return updateOrder(data);
     if (action === 'get_order') return getOrder(data);
-    if (action === 'sync_signup') return syncSignup(data);
+    if (action === 'sync_signup' || action === 'sync_login') return syncSignup(data);
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
     if (action === 'check_user') return checkUser(data);
@@ -397,15 +397,17 @@ function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
     
     const sheet = getSheet(sheetName, headers);
     const data = sheet.getDataRange().getValues();
-    if (data.length > 1) {
+    
+    // If it's a Signup, we MUST enforce uniqueness (The Registry)
+    if (type === 'Signup' && data.length > 1) {
       for (let i = 1; i < data.length; i++) {
-        // Identifier (Email/Phone) is always the 3rd column (index 2)
         if (data[i][2] && data[i][2].toString().toLowerCase().trim() === identifier.toString().toLowerCase().trim()) {
-          return; // User already exists! Do not record a duplicate.
+          return; // Already registered
         }
       }
     }
-    // New user, append them
+    
+    // For 'Login', 'OTP Sent', etc., we ALWAYS append to track activity
     sheet.appendRow([new Date(), name || '', identifier || '', dob || '', type || '']);
   } catch(e) {
     Logger.log("Atomic recording failed: " + e.toString());

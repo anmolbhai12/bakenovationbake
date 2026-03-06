@@ -624,37 +624,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
 
-                // ONLY SYNC TO SHEETS IF NEW SIGNUP
-                if (isSignup) {
-                    const syncUrl = activeUser.whatsapp ? WHATSAPP_SIGNUP_SHEET_URL : EMAIL_SIGNUP_SHEET_URL;
+                // SYNC TO SHEETS (Signup or Login)
+                const syncUrl = activeUser.whatsapp ? WHATSAPP_SIGNUP_SHEET_URL : EMAIL_SIGNUP_SHEET_URL;
+                const syncData = {
+                    name: activeUser.name,
+                    identifier: activeUser.whatsapp || activeUser.email,
+                    dob: activeUser.dob || (isSignup ? "New Member" : ""),
+                    method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
+                    type: isSignup ? 'Signup' : 'Login',
+                    action: isSignup ? 'sync_signup' : 'sync_login'
+                };
 
-                    syncToGoogleSheet({
-                        name: activeUser.name,
-                        identifier: activeUser.whatsapp || activeUser.email,
-                        dob: activeUser.dob || "New Member",
-                        method: activeUser.whatsapp ? 'WhatsApp' : 'Email',
-                        type: 'Signup',
-                        action: 'sync_signup'
-                    }, syncUrl)
-                        .then(() => {
-                            currentSignupData = null; // Clear now
-                            authModal.classList.remove('active');
-                            updateAuthUI();
-                            showAlert(`Verified! Welcome to the Atelier, ${activeUser.name}!`, 'success');
-                        })
-                        .catch(err => {
-                            console.error("Signup sync error:", err);
-                            currentSignupData = null;
-                            authModal.classList.remove('active');
-                            updateAuthUI();
-                            showAlert(`Welcome, ${activeUser.name}!`, 'success');
-                        });
-                } else {
-                    // Just login, no spreadsheet sync
-                    authModal.classList.remove('active');
-                    updateAuthUI();
-                    showAlert(`Welcome back, ${activeUser.name}!`, 'success');
-                }
+                syncToGoogleSheet(syncData, syncUrl)
+                    .then(() => {
+                        currentSignupData = null;
+                        authModal.classList.remove('active');
+                        document.body.style.overflow = 'auto'; // Restore scroll
+                        updateAuthUI();
+                        showAlert(isSignup ? `Verified! Welcome to the Atelier, ${activeUser.name}!` : `Welcome back, ${activeUser.name}!`, 'success');
+                    })
+                    .catch(err => {
+                        console.warn("Spreadsheet sync delayed/failed:", err);
+                        currentSignupData = null;
+                        authModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        updateAuthUI();
+                        showAlert(`Welcome, ${activeUser.name}!`, 'success');
+                    });
             } else {
                 showAlert("Invalid verification code. Please try again.");
             }
