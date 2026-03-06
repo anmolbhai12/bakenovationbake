@@ -39,7 +39,16 @@ iframe {
         padding: 1rem !important;
     }
 
-    .hero-background {
+    /* Keep AI Studio side-by-side */
+    .customizer-interface {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 1rem !important;
+        align-items: flex-start !important;
+    }
+
+    .snap-controls,
+    .snap-result-area {
         flex: 1 1 50% !important;
     }
 
