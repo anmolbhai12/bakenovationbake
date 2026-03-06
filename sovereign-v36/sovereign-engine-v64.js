@@ -1269,26 +1269,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MOBILE MENU TOGGLE (opens/closes sub-nav on small screens) ---
+    // --- MOBILE MENU (Fleurons-style slide-in drawer) ---
     const menuToggle = document.getElementById('menu-toggle');
     const subNav = document.querySelector('.bake-sub-nav');
+
     if (menuToggle && subNav) {
-        menuToggle.addEventListener('click', () => {
+        // Open/close drawer on hamburger click
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             subNav.classList.toggle('mobile-open');
+            const isOpen = subNav.classList.contains('mobile-open');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+
+        // Close drawer when clicking outside (on the backdrop)
+        document.addEventListener('click', (e) => {
+            if (subNav.classList.contains('mobile-open') && !subNav.contains(e.target) && e.target !== menuToggle) {
+                subNav.classList.remove('mobile-open');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Expand dropdowns inside the mobile drawer on tap
+        subNav.querySelectorAll('.bake-dropdown > a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (window.innerWidth <= 990) {
+                    e.preventDefault();
+                    const parent = link.closest('.bake-dropdown');
+                    const isExpanded = parent.classList.contains('mobile-expanded');
+                    // Close all others
+                    subNav.querySelectorAll('.bake-dropdown').forEach(d => d.classList.remove('mobile-expanded'));
+                    if (!isExpanded) parent.classList.add('mobile-expanded');
+                }
+            });
         });
     }
 
-    // --- RESPONSIVE: hide/show elements ---
+    // --- RESPONSIVE: CSS handles this, but JS syncs on resize ---
     function applyResponsive() {
         const w = window.innerWidth;
-        document.querySelectorAll('.hidden-mobile').forEach(el => {
-            el.style.display = w < 768 ? 'none' : 'flex';
-        });
-        document.querySelectorAll('.mobile-only').forEach(el => {
-            el.style.display = w < 768 ? 'flex' : 'none';
-        });
+        // Only apply if subnav is desktop mode
+        if (w > 990 && subNav) {
+            subNav.classList.remove('mobile-open');
+            document.body.style.overflow = '';
+        }
     }
-    applyResponsive();
     window.addEventListener('resize', applyResponsive);
 
 });

@@ -3343,3 +3343,237 @@ h4 {
         display: none;
     }
 }
+/* =============================================
+   BAKENOVATION MOBILE OVERHAUL v108
+   Modeled after fleurons.in mobile experience
+   ============================================= */
+
+/* === HIDE DESKTOP SUBNAV, SHOW HAMBURGER === */
+@media (max-width: 990px) {
+    .hidden-mobile { display: none !important; }
+    .mobile-only   { display: flex  !important; }
+    .menu-toggle   { display: flex  !important; }
+
+    /* Compact sticky header */
+    .bake-main-header {
+        height: 60px !important;
+        padding: 0 !important;
+    }
+
+    .bake-header-container {
+        width: 100% !important;
+        padding: 0 15px !important;
+    }
+
+    /* Shrink logo for mobile */
+    .royale-logo-container {
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+    .brand-logo-text {
+        gap: 8px !important;
+        padding: 0 !important;
+    }
+
+    .brand-logo-text div span:first-child {
+        font-size: 1.1rem !important;
+        letter-spacing: 0.15rem !important;
+    }
+
+    .brand-logo-text div span:last-child {
+        font-size: 0.55rem !important;
+        letter-spacing: 0.1rem !important;
+        margin-top: 2px !important;
+    }
+
+    /* Hamburger icon button appearance */
+    .menu-toggle {
+        background: transparent !important;
+        border: none !important;
+        color: var(--color-gold) !important;
+        padding: 8px !important;
+        cursor: pointer !important;
+        order: -1 !important;
+    }
+
+    /* === SLIDE-IN MOBILE NAVIGATION DRAWER === */
+    /* Mimics fleurons.in slide-from-left drawer */
+    .bake-sub-nav {
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 80vw !important;
+        max-width: 320px !important;
+        height: 100vh !important;
+        background: #0d0415 !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-right: 1px solid rgba(212,175,55,0.3) !important;
+        z-index: 99999 !important;
+        padding: 80px 0 30px 0 !important;
+        transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow-y: auto !important;
+        display: block !important;
+    }
+
+    .bake-sub-nav.mobile-open {
+        left: 0 !important;
+        box-shadow: 5px 0 30px rgba(0,0,0,0.5) !important;
+    }
+
+    /* Overlay backdrop when drawer is open */
+    .bake-sub-nav.mobile-open::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 80vw;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        z-index: -1;
+    }
+
+    /* Nav links in drawer */
+    .bake-nav-links {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .bake-nav-links > li {
+        width: 100% !important;
+        border-bottom: 1px solid rgba(212,175,55,0.1) !important;
+    }
+
+    .bake-nav-links > li > a {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 16px 25px !important;
+        font-size: 1rem !important;
+        letter-spacing: 0.08em !important;
+        color: var(--color-gold) !important;
+        text-transform: uppercase !important;
+        font-family: var(--font-body) !important;
+    }
+
+    /* Sub-dropdown inside drawer */
+    .dropdown-menu {
+        position: static !important;
+        display: none !important;
+        background: rgba(255,255,255,0.03) !important;
+        border: none !important;
+        border-top: 1px solid rgba(212,175,55,0.1) !important;
+        box-shadow: none !important;
+        max-height: none !important;
+        padding: 0 !important;
+    }
+
+    .bake-dropdown.mobile-expanded > .dropdown-menu {
+        display: block !important;
+    }
+
+    .dropdown-menu li a {
+        padding: 12px 35px !important;
+        font-size: 0.85rem !important;
+        color: var(--color-gold-light) !important;
+    }
+
+    /* Close button inside drawer */
+    .bake-sub-nav::before {
+        content: '\00D7';
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 2rem;
+        color: var(--color-gold);
+        cursor: pointer;
+        line-height: 1;
+        font-weight: 300;
+    }
+
+    /* === HERO SECTION MOBILE === */
+    .hero-section {
+        padding-top: 60px !important;
+        min-height: 100svh !important;
+    }
+
+    .hero-content-wrapper {
+        flex-direction: column !important;
+        padding: 20px 20px 0 !important;
+        text-align: center !important;
+        align-items: center !important;
+        gap: 0 !important;
+        min-height: calc(100svh - 60px) !important;
+        justify-content: center !important;
+    }
+
+    .hero-content {
+        flex: none !important;
+        width: 100% !important;
+        padding: 20px 0 10px !important;
+        order: 2 !important;
+    }
+
+    .hero-background {
+        flex: none !important;
+        width: 100% !important;
+        min-height: 220px !important;
+        order: 1 !important;
+    }
+
+    .bg-cake-image {
+        max-width: 70% !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
+    .hero-title {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+        max-width: 90% !important;
+        margin: 0 auto 1.5rem !important;
+    }
+
+    .hero-actions {
+        justify-content: center !important;
+    }
+
+    /* === SECTION PADDING === */
+    .section {
+        padding: 4rem 20px !important;
+    }
+
+    .section-header {
+        margin-bottom: 2.5rem !important;
+    }
+
+    /* === GRIDS === */
+    .video-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .journal-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* === HIDE DESKTOP BANNER === */
+    .bake-top-banner { display: none !important; }
+
+    /* === FULL WIDTH CONTAINER ON MOBILE === */
+    .container {
+        width: 100% !important;
+        padding: 0 15px !important;
+    }
+}
