@@ -1254,10 +1254,14 @@ h4 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    /* Start from top for scrolling */
+    padding: 2rem 0;
+    overflow-y: auto;
+    /* Enable scrolling on the overlay */
     z-index: 2000;
     opacity: 0;
     pointer-events: none;
@@ -1267,18 +1271,24 @@ h4 {
 .modal-overlay.active {
     opacity: 1;
     pointer-events: auto;
+    display: flex;
+    /* Ensure it stays flex */
 }
 
 .modal-content {
     background: #1a0b1f;
     padding: 2.5rem;
     border-radius: 12px;
-    width: 90%;
+    width: 95%;
     max-width: 500px;
     position: relative;
-    border: 1px solid var(--color-orchid);
-    max-height: 85vh;
-    overflow-y: auto;
+    border: 1px solid var(--color-gold);
+    margin: 2rem auto;
+    /* Allow natural top/bottom spacing */
+    max-height: none;
+    /* Let its content define height */
+    overflow-y: visible;
+    /* Let the overlay handle scrolling */
 }
 
 /* === Top-Down Search Modal === */

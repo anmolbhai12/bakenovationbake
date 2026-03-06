@@ -720,30 +720,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const tcCheckbox = document.getElementById('login-tc');
-            if (tcCheckbox && !tcCheckbox.checked) {
-                showAlert("Please accept the Terms & Conditions to proceed.");
-                return;
-            }
-
-            const identifier = currentLoginMethod === 'email' ? document.getElementById('login-email').value.trim() : document.getElementById('login-whatsapp').value.trim();
-
-            const user = users.find(u =>
-                currentLoginMethod === 'email' ? u.email === identifier : u.whatsapp === identifier
-            );
-
-            if (user) {
-                sendOTP(user.name, identifier, null, currentLoginMethod);
-            } else {
-                showAlert(`No account found with this ${currentLoginMethod === 'email' ? 'email' : 'WhatsApp number'}. Please sign up first.`);
-            }
-        });
-    }
-
     updateAuthUI();
 
     // --- GATED FILE UPLOAD ---
@@ -1400,6 +1376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchTriggerBtn && searchModal) {
         searchTriggerBtn.addEventListener('click', () => {
             searchModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
             setTimeout(() => {
                 const inp = document.getElementById('search-input');
                 if (inp) inp.focus();
@@ -1408,7 +1385,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     searchCloseButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            if (searchModal) searchModal.classList.remove('active');
+            if (searchModal) {
+                searchModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
         });
     });
     if (searchModal) {
