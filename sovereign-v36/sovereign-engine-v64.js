@@ -150,28 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Storage corruption detected, resetting session.");
         localStorage.removeItem('bakenovation_activeUser');
     }
-
-    // --- INITIAL REGISTRY SYNC (NEW) ---
-    async function syncUserRegistry() {
-        try {
-            // We can reuse check_user with a special flag or just rely on signups to update the sheet.
-            // For now, let's just make sure activeUser is consistent if it exists.
-            if (activeUser) {
-                const identifier = activeUser.email || activeUser.whatsapp;
-                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(identifier)}`);
-                const result = await response.json();
-                if (result.status === 'success' && !result.exists) {
-                    console.warn("Session expired or user deleted from backend.");
-                    activeUser = null;
-                    localStorage.removeItem('bakenovation_activeUser');
-                    updateAuthUI();
-                }
-            }
-        } catch (e) {
-            console.warn("Registry sync delayed.");
-        }
-    }
-    syncUserRegistry();
     let currentSignupData = null;
     let generatedOTP = null;
     let currentLoginMethod = 'email'; // 'email' or 'whatsapp'
@@ -283,11 +261,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             userNavArea.innerHTML = `<button id="login-trigger" class="btn-text" style="color: var(--color-orchid);">Login</button>`;
             const newLoginTrigger = document.getElementById('login-trigger');
-            if (newLoginTrigger) {
-                newLoginTrigger.addEventListener('click', () => {
-                    authModal.classList.add('active');
-                });
-            }
+            newLoginTrigger.addEventListener('click', () => {
+                authModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
         }
     }
 
@@ -312,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authClose) {
         authClose.addEventListener('click', () => {
             authModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
             // Reset to default state after transition
             setTimeout(() => {
                 if (otpView) otpView.style.display = 'none';
@@ -323,60 +301,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const identifier = currentLoginMethod === 'email' ?
-                document.getElementById('login-email').value.trim() :
-                document.getElementById('login-whatsapp').value.trim();
-
-            if (!identifier) {
-                showAlert("Please enter your " + (currentLoginMethod === 'email' ? "email" : "WhatsApp number") + ".");
-                return;
-            }
-
-            const submitBtn = document.getElementById('login-submit-btn');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Verifying Account...";
-            submitBtn.disabled = true;
-
-            try {
-                // Step 1: Check if user exists on backend
-                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(identifier)}`);
-                const result = await response.json();
-
-                if (result.status === 'success' && result.exists) {
-                    // Step 2: User exists, send OTP
-                    sendOTP(result.name || 'User', identifier, null, currentLoginMethod);
-                } else {
-                    // Step 3: User NOT found
-                    showAlert("Account not found. Please create a new account to proceed.", "warning");
-                    // Optionally switch to signup view automatically
-                    setTimeout(() => {
-                        loginView.style.display = 'none';
-                        signupView.style.display = 'block';
-                        const signupInput = currentLoginMethod === 'email' ?
-                            document.getElementById('signup-email') :
-                            document.getElementById('signup-whatsapp');
-                        if (signupInput) signupInput.value = identifier;
-                    }, 1500);
-                }
-            } catch (err) {
-                console.error("Login verification failed:", err);
-                // Fallback: If backend check fails, we might want to allow sending OTP anyway as a fail-safe, 
-                // but the user asked to FIX IT PROPERLY, so we stick to strict mode.
-                showAlert("System authentication service is temporarily delayed. Please try again in a moment.", "error");
-            } finally {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-    }
-
     if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
+        signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('signup-name').value;
+            const name = document.getElementById('signup-name').value.trim();
             const dob = document.getElementById('signup-dob').value;
             let target = '';
 
@@ -386,50 +314,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 target = document.getElementById('signup-whatsapp').value.trim();
             }
 
-            if (!target) {
-                showAlert("Please enter your email or WhatsApp number.");
-                return;
-            }
+            if (!target) return showAlert("Please enter your email or phone.");
 
-            const submitBtn = document.getElementById('signup-submit-btn');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Checking Registry...";
-            submitBtn.disabled = true;
+            signupSubmitBtn.innerText = "Checking...";
+            signupSubmitBtn.disabled = true;
 
-            try {
-                // Step 1: Check if user ALREADY exists
-                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(target)}`);
-                const result = await response.json();
-
-                if (result.status === 'success' && result.exists) {
-                    showAlert("An account with this " + (currentSignupMethod === 'email' ? "email" : "WhatsApp number") + " already exists. Please login instead.", "info");
-                    setTimeout(() => {
-                        signupView.style.display = 'none';
-                        loginView.style.display = 'block';
-                    }, 1500);
-                    return;
-                }
-            } catch (err) {
-                console.warn("Signup pre-check failed:", err);
-            }
-
-            currentSignupData = {
-                name,
-                email: currentSignupMethod === 'email' ? target : '',
-                whatsapp: currentSignupMethod === 'whatsapp' ? target : '',
-                dob
-            };
-            window.lastSignupData = currentSignupData;
-
-            const tcCheckbox = document.getElementById('signup-tc');
-            if (tcCheckbox && !tcCheckbox.checked) {
-                showAlert("Please accept the Terms & Conditions to proceed.");
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-
-            sendOTP(name, target, dob, currentSignupMethod);
+            // BACKEND VERIFICATION FIRST
+            fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(target)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.exists) {
+                        showAlert('An account already exists with this information. Please login instead.');
+                    } else {
+                        currentSignupData = {
+                            name,
+                            email: currentSignupMethod === 'email' ? target : '',
+                            whatsapp: currentSignupMethod === 'whatsapp' ? target : '',
+                            dob
+                        };
+                        window.lastSignupData = currentSignupData;
+                        sendOTP(name, target, dob, currentSignupMethod);
+                    }
+                })
+                .catch(() => {
+                    showAlert("Authentication service temporary unavailable. Please try again.");
+                })
+                .finally(() => {
+                    signupSubmitBtn.innerText = "Send Verification Code";
+                    signupSubmitBtn.disabled = false;
+                });
         });
     }
 
@@ -455,20 +368,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 to_email: target
             };
 
-            console.log("--- Bakenovation OTP Gate ---");
-            console.log("Target:", target);
-            console.log("OTP Code:", generatedOTP);
-            console.log("Method: Email");
-
             syncToGoogleSheet(Object.assign(templateParams, { action: 'send_email_otp' }), EMAIL_PROXY_URL)
                 .then(() => {
-                    console.log("✅ OTP Dispatch Signal Sent to GAS");
-                    showOTPView("Verify Email", `We've sent a code to <strong>${target}</strong>.<br><br><span style="font-size: 0.8rem; opacity: 0.8;">Check your <strong>Spam</strong> folder if it doesn't arrive in 60 seconds.</span>`, true);
+                    showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
                 .catch(err => {
-                    console.error("❌ Email Proxy Error:", err);
-                    showAlert(`Communication delay. For your convenience, your code is: ${generatedOTP}`, 'warning');
-                    showOTPView("Verify Email", `We've sent a code to ${target}. <br><small>(Manual Help: ${generatedOTP})</small>`, true);
+                    console.error("Email Proxy Error:", err);
+                    showAlert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
+                    showOTPView("Verify Email", `We've sent a code to ${target}`);
                 })
                 .finally(() => {
                     if (submitBtn) {
@@ -616,16 +523,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     users.push(currentSignupData);
                     localStorage.setItem('bakenovation_users', JSON.stringify(users));
                     activeUser = currentSignupData;
-                    // Note: currentSignupData is kept until sync starts to ensure we have the context
                 } else {
                     const identifier = currentLoginMethod === 'email' ? document.getElementById('login-email').value.trim() : document.getElementById('login-whatsapp').value.trim();
                     activeUser = users.find(u => u.email === identifier || u.whatsapp === identifier);
+                    if (!activeUser) {
+                        // Fallback in case local storage was cleared
+                        activeUser = { name: "Valued Member", email: currentLoginMethod === 'email' ? identifier : '', whatsapp: currentLoginMethod === 'whatsapp' ? identifier : '' };
+                    }
                 }
 
                 localStorage.setItem('bakenovation_activeUser', JSON.stringify(activeUser));
 
                 // SYNC TO SHEETS (Signup or Login)
-                const syncUrl = activeUser.whatsapp ? WHATSAPP_SIGNUP_SHEET_URL : EMAIL_SIGNUP_SHEET_URL;
                 const syncData = {
                     name: activeUser.name,
                     identifier: activeUser.whatsapp || activeUser.email,
@@ -635,21 +544,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     action: isSignup ? 'sync_signup' : 'sync_login'
                 };
 
-                syncToGoogleSheet(syncData, syncUrl)
+                syncToGoogleSheet(syncData)
                     .then(() => {
-                        currentSignupData = null;
-                        authModal.classList.remove('active');
-                        document.body.style.overflow = 'auto'; // Restore scroll
-                        updateAuthUI();
-                        showAlert(isSignup ? `Verified! Welcome to the Atelier, ${activeUser.name}!` : `Welcome back, ${activeUser.name}!`, 'success');
-                    })
-                    .catch(err => {
-                        console.warn("Spreadsheet sync delayed/failed:", err);
-                        currentSignupData = null;
+                        currentSignupData = null; // Clear now
                         authModal.classList.remove('active');
                         document.body.style.overflow = 'auto';
                         updateAuthUI();
-                        showAlert(`Welcome, ${activeUser.name}!`, 'success');
+                        showAlert(`Verified! Welcome, ${activeUser.name}!`, 'success');
+                    })
+                    .catch(() => {
+                        currentSignupData = null;
+                        authModal.classList.remove('active');
+                        updateAuthUI();
                     });
             } else {
                 showAlert("Invalid verification code. Please try again.");
@@ -657,78 +563,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GOOGLE SHEETS SYNC FUNCTION (POWER-SYNC V3.1 - ROBUST HYBRID) ---
+    // --- GOOGLE SHEETS SYNC FUNCTION (FETCH-SYNC V4) ---
     function syncToGoogleSheet(data, targetUrl = null) {
-        const finalUrl = targetUrl || EMAIL_SIGNUP_SHEET_URL;
-        if (!finalUrl) return Promise.resolve();
+        const urlRequest = targetUrl || UNIFIED_GAS_URL;
+        if (!urlRequest) return Promise.resolve();
 
-        return new Promise((resolve) => {
-            console.log("--- POWER-SYNC DISPATCHING (HYBRID) ---");
-            console.log("Target URL:", finalUrl);
+        // Ensure method casing for backend compatibility
+        if (data.method) data.method = data.method.toLowerCase();
 
-            // 1. Iframe/Form POST (Bypasses most CORS, most reliable for GAS login sessions)
-            const iframeName = 'sync_frame_' + Date.now();
-            const iframe = document.createElement('iframe');
-            iframe.name = iframeName;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
+        return fetch(urlRequest, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(err => console.warn("Sync fetch error:", err));
+    }
 
-            const form = document.createElement('form');
-            form.target = iframeName;
-            form.action = finalUrl;
-            form.method = 'POST';
-            form.style.display = 'none';
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const identifier = currentLoginMethod === 'email' ? document.getElementById('login-email').value.trim() : document.getElementById('login-whatsapp').value.trim();
 
-            data.timestamp = new Date().toISOString();
-            for (const key in data) {
-                if (typeof data[key] === 'string' || typeof data[key] === 'number') {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = data[key];
-                    form.appendChild(input);
-                }
-            }
+            if (!identifier) return showAlert("Please enter your identifier.");
 
-            document.body.appendChild(form);
-            form.submit();
+            loginSubmitBtn.innerText = "Verifying...";
+            loginSubmitBtn.disabled = true;
 
-            // 2. Redundant dispatch removed to prevent duplicate OTPs/records
-            /*
-            try {
-                fetch(finalUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(data).toString()
-                }).catch(e => console.warn("Redundant fetch dispatch failed (expected in some browsers):", e));
-            } catch (e) { }
-            */
-
-            // Resolve after delay to allow processing
-            setTimeout(() => {
-                if (document.body.contains(form)) document.body.removeChild(form);
-                if (document.body.contains(iframe)) document.body.removeChild(iframe);
-                console.log("--- POWER-SYNC DISPATCHED ---");
-                resolve();
-            }, 2500);
+            // BACKEND VERIFICATION FIRST
+            fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(identifier)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.exists) {
+                        // User exists in registry, proceed to OTP
+                        sendOTP(data.name || 'User', identifier, null, currentLoginMethod);
+                        // Also sync local storage if not already there
+                        if (!users.find(u => u.email === identifier || u.whatsapp === identifier)) {
+                            users.push({ name: data.name, email: data.method === 'email' ? identifier : '', whatsapp: data.method === 'whatsapp' ? identifier : '', dob: data.dob });
+                            localStorage.setItem('bakenovation_users', JSON.stringify(users));
+                        }
+                    } else {
+                        showAlert(`No account found. Please sign up first.`);
+                    }
+                })
+                .catch(() => {
+                    showAlert("Authentication service unavailable.");
+                })
+                .finally(() => {
+                    loginSubmitBtn.innerText = "Send Login Code";
+                    loginSubmitBtn.disabled = false;
+                });
         });
     }
 
     updateAuthUI();
-
-    // --- GATED FILE UPLOAD ---
-    const mainUpload = document.getElementById('main-upload');
-    if (mainUpload) {
-        mainUpload.addEventListener('click', (e) => {
-            if (!activeUser) {
-                e.preventDefault();
-                authModal.classList.add('active');
-                showAlert("Please login or sign up to upload your custom designs.");
-            }
-        });
-    }
 
 
     // --- CONSOLIDATED ORDER FORM HANDLER V35 ---
@@ -917,35 +804,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* DUPLICATE AI BUY NOW LOGIC REMOVED (Moved to consolidated handler below) */
+    // AI Buy Now Button Logic
+    const aiBuyNowBtn = document.getElementById('ai-buy-now-btn');
+    if (aiBuyNowBtn) {
+        aiBuyNowBtn.addEventListener('click', () => {
+            if (aiPrompt) {
+                const userDetails = aiPrompt.value.trim();
+                const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
+
+                checkLoginAndProceed(() => {
+                    // Open the formal order modal with AI context
+                    if (modal) {
+                        const flavorInput = modal.querySelector('#modal-flavor');
+                        const weightInput = modal.querySelector('#modal-tiers');
+                        const msgInput = modal.querySelector('#order-message');
+                        const imgInput = modal.querySelector('#modal-img');
+                        const dateInput = modal.querySelector('#modal-date');
+
+                        if (flavorInput) flavorInput.value = snapState.flavor;
+                        if (weightInput) weightInput.value = snapState.size;
+                        if (msgInput) msgInput.value = userDetails; // Keep user prompt separate
+                        if (imgInput) imgInput.value = snapState.currentImageUrl;
+
+                        // Set minimum 2 days for date input
+                        if (dateInput) {
+                            const today = new Date();
+                            const minDate = new Date(today);
+                            minDate.setDate(today.getDate() + 2);
+                            const yyyy = minDate.getFullYear();
+                            const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+                            const dd = String(minDate.getDate()).padStart(2, '0');
+                            dateInput.min = `${yyyy}-${mm}-${dd}`;
+                            dateInput.value = `${yyyy}-${mm}-${dd}`;
+                        }
+
+                        modal.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
 
     // --- CAKE DETAIL MODAL LOGIC REMOVED FOR DEDICATED PAGES ---
     // (Legacy modal code removed as we now use product.html)
 
-
-    // --- AI DESIGN STUDIO LOGIC (SWEET SNAP REPLICA) ---
-    const aiGenerateBtn = document.getElementById('ai-generate-btn');
-    const aiPrompt = document.getElementById('ai-prompt');
-    const aiLoading = document.getElementById('ai-loading');
-    const aiGeneratedImage = document.getElementById('ai-generated-image');
-    const aiOrderBtn = document.getElementById('ai-buy-now-btn');
+    // AI Add to Cart Button Logic
     const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
-
-    // State Management for Sweet Snap
-    const snapState = {
-        type: 'birthday',
-        style: 'luxury',
-        color: 'white',
-        size: '1kg',
-        tiers: '1',
-        fakeTier: 'no',
-        fakeTierDetail: 'top',
-        deliveryDate: '',
-        deliveryTime: 'Morning',
-        currentImageUrl: 'assets/hero-cake.png'
-    };
-
-    // AI Add to Cart Button Logic (after snapState is defined)
     if (aiAddToCartBtn) {
         aiAddToCartBtn.addEventListener('click', () => {
             if (aiPrompt) {
@@ -962,6 +866,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- AI DESIGN STUDIO LOGIC (SWEET SNAP REPLICA) ---
+    const aiGenerateBtn = document.getElementById('ai-generate-btn');
+    const aiPrompt = document.getElementById('ai-prompt');
+    const aiLoading = document.getElementById('ai-loading');
+    const aiGeneratedImage = document.getElementById('ai-generated-image');
+    const aiOrderBtn = document.getElementById('ai-order-btn');
+
+    // State Management for Sweet Snap
+    const snapState = {
+        type: 'wedding',
+        style: 'luxury',
+        color: 'white',
+        flavor: 'chocolate', // Default flavor
+        size: '1kg', // Default weight
+        currentImageUrl: 'assets/wedding_cake.png'
+    };
 
     // 1. Handle Chip Selections (Occasion, Aesthetic)
     const snapChips = document.querySelectorAll('.snap-chip');
@@ -979,20 +899,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update State
             if (chip.dataset.type) snapState.type = chip.dataset.type;
             if (chip.dataset.style) snapState.style = chip.dataset.style;
+            if (chip.dataset.flavor) snapState.flavor = chip.dataset.flavor;
             if (chip.dataset.size) snapState.size = chip.dataset.size;
-            if (chip.dataset.tiers) snapState.tiers = chip.dataset.tiers;
-
-            if (chip.dataset.fake) {
-                snapState.fakeTier = chip.dataset.fake;
-                // Toggle sub-selection
-                const fakeTierSelection = document.getElementById('fake-tier-selection');
-                if (fakeTierSelection) {
-                    fakeTierSelection.style.display = snapState.fakeTier === 'yes' ? 'block' : 'none';
-                }
-            }
-
-            if (chip.dataset.fakeDetail) snapState.fakeTierDetail = chip.dataset.fakeDetail;
-            if (chip.dataset.time) snapState.deliveryTime = chip.dataset.time;
         });
     });
 
@@ -1011,254 +919,136 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Handle Date Selection
-    const aiDateInput = document.getElementById('ai-delivery-date');
-    if (aiDateInput) {
-        // Set default to 2 days from now
-        const minDate = new Date();
-        minDate.setDate(minDate.getDate() + 2);
-        const yyyy = minDate.getFullYear();
-        const mm = String(minDate.getMonth() + 1).padStart(2, '0');
-        const dd = String(minDate.getDate()).padStart(2, '0');
-        aiDateInput.value = `${yyyy}-${mm}-${dd}`;
-        snapState.deliveryDate = aiDateInput.value;
-
-        aiDateInput.addEventListener('change', () => {
-            snapState.deliveryDate = aiDateInput.value;
-        });
-    }
-
-    const artisanalModal = document.getElementById('artisanal-modal');
-    const btnAgree = document.getElementById('btn-artisanal-agree');
-    const btnCancelModal = document.getElementById('btn-artisanal-cancel');
-
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            checkLoginAndProceed(() => {
-                if (artisanalModal) {
-                    artisanalModal.style.display = 'flex';
-                    // GSAP animation for the modal content
-                    gsap.fromTo(".artisanal-content",
-                        { scale: 0.8, opacity: 0 },
-                        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
-                    );
-                } else {
-                    // Fallback if modal is missing
-                    initiateGeneration();
+            const btnText = aiGenerateBtn.querySelector('.btn-text');
+            const spinner = aiGenerateBtn.querySelector('.spinner');
+            const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+            const originalLoadingMsg = "Chef is sketching your masterpiece...";
+
+            const startSovereignEngineV38 = async () => {
+                const btnText = aiGenerateBtn.querySelector('.btn-text');
+                const spinner = aiGenerateBtn.querySelector('.spinner');
+                const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
+
+                if (!aiPrompt) {
+                    console.error("AI Prompt input field missing from DOM.");
+                    return;
                 }
-            });
-        });
-    }
 
-    if (btnAgree) {
-        btnAgree.addEventListener('click', () => {
-            if (artisanalModal) artisanalModal.style.display = 'none';
-            initiateGeneration();
-        });
-    }
+                const rawUserText = aiPrompt.value.trim();
+                const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
 
-    if (btnCancelModal) {
-        btnCancelModal.addEventListener('click', () => {
-            if (artisanalModal) artisanalModal.style.display = 'none';
-        });
-    }
+                if (btnText) btnText.style.display = 'none';
+                if (spinner) spinner.style.display = 'block';
+                aiGenerateBtn.disabled = true;
+                if (aiLoading) aiLoading.style.display = 'flex';
+                if (loadingMsg) loadingMsg.innerText = loadingText;
 
-    const initiateGeneration = async () => {
-        if (!aiPrompt) {
-            console.error("AI Prompt input field missing from DOM.");
-            return;
-        }
-
-        const btnText = aiGenerateBtn.querySelector('.btn-text');
-        const spinner = aiGenerateBtn.querySelector('.spinner');
-        const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
-
-        const rawUserText = aiPrompt.value.trim();
-        const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
-
-        if (btnText) btnText.style.display = 'none';
-        if (spinner) spinner.style.display = 'block';
-        aiGenerateBtn.disabled = true;
-        if (aiLoading) aiLoading.style.display = 'flex';
-        if (loadingMsg) loadingMsg.innerText = loadingText;
-
-        if (aiGeneratedImage) {
-            aiGeneratedImage.classList.add('sketching');
-        }
-
-        // === POLLINATIONS AI ENGINE V9 (TURBO) ===
-        // Pollinations is our primary engine for fast, reliable cake design.
-        const imageSeed = Math.floor(Math.random() * 9999999);
-
-        const expandPrompt = (input) => {
-            const style = snapState.style;
-            const occasion = snapState.type;
-            const size = snapState.size;
-            const tiers = snapState.tiers;
-            const fake = snapState.fakeTier === 'yes' ? 'with a decorative fake base tier' : '';
-
-            // SD best practice: most important thing FIRST, use () for emphasis
-            if (input) {
-                const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
-                const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
-                const fakeStr = fake === 'yes' ? `with a fake ${snapState.fakeTierDetail} tier` : 'no fake tiers';
-                return `${subject}, ${tiers}-tier cake design, ${fakeStr}, ${style} style, ${occasionStr}, ${size} proportions, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
-            }
-            const occasionStr = occasion === 'custom' ? 'unique celebration' : occasion;
-            const fakeStr = fake === 'yes' ? `with a fake ${snapState.fakeTierDetail} tier` : 'no fake tiers';
-            return `${style} ${occasionStr} cake, ${tiers}-tier masterpiece, ${fakeStr}, ${size} scale, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
-        };
-
-        // Expand and generate via Pollinations AI
-
-        const renderFinalImage = (srcData) => {
-            if (aiGeneratedImage) {
-                snapState.currentImageUrl = srcData;
-                // Avoid infinite loop: only set src if it's different
-                if (aiGeneratedImage.src !== srcData) {
-                    aiGeneratedImage.src = srcData;
+                if (aiGeneratedImage) {
+                    aiGeneratedImage.classList.add('sketching');
                 }
-                aiGeneratedImage.classList.remove('sketching');
-                addToGallery(srcData, "AI Generated Masterpiece");
-                gsap.fromTo(aiGeneratedImage,
-                    { opacity: 0, scale: 0.98, filter: "blur(15px)" },
-                    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
-                );
-                resetLoadingState();
-            }
-        };
 
-        const resetLoadingState = () => {
-            if (aiLoading) aiLoading.style.display = 'none';
-            if (aiGenerateBtn) aiGenerateBtn.disabled = false;
-            if (btnText) btnText.style.display = 'block';
-            if (spinner) spinner.style.display = 'none';
-        };
+                // === POLLINATIONS AI ENGINE V9 (TURBO) ===
+                // Pollinations is our primary engine for fast, reliable cake design.
+                const imageSeed = Math.floor(Math.random() * 9999999);
 
-        // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
-        // Pollinations provides high-speed, direct image generation.
-        // We expand the prompt and append it to the Pollinations URL.
-        const finalPrompt = expandPrompt(rawUserText);
-        const encodedPrompt = encodeURIComponent(finalPrompt);
-        // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
-        const tryGeneration = () => {
-            const finalPrompt = expandPrompt(rawUserText);
-            console.log(`%c🚀 GENERATING WITH DEFINITIVE UNBREAKABLE TUNNEL (v64)`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
-            console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
+                const expandPrompt = (input) => {
+                    const style = snapState.style;
+                    const occasion = snapState.type;
+                    const flavor = snapState.flavor;
+                    const size = snapState.size;
 
-            tryGasProxy(finalPrompt);
-        };
-
-        const tryGasProxy = async (prompt) => {
-            const GAS_URLS = [
-                'https://script.google.com/macros/s/AKfycbwGLgjOLNQffkrbM9-RmLk4fnGAceD1rXjYOkHxESoWzomNcWCvbaCeJWfPkLkXjrGC/exec'
-            ];
-
-            // Clean prompt for reliability
-            const cleanPrompt = prompt.replace(/[^\w\s,]/gi, '').substring(0, 1000);
-            const encoded = encodeURIComponent(cleanPrompt);
-            const seed = Math.floor(Math.random() * 1000000);
-
-            // HYPER-RESILIENT SHIELD CHAIN (v150 KEY OF LIFE)
-            const shields = [
-                `https://image.pollinations.ai/prompt/${encoded}${encodeURIComponent(", photorealistic, masterpiece, 8k")}?width=1024&height=1024&seed=${seed}&nologo=true`,
-                `https://loremflickr.com/1024/1024/cake,bakery,luxury,${encoded.split('%2C')[0].substring(0, 20)}/all`,
-                `https://source.unsplash.com/1024x1024/?bakery,pattiserie,cake,${encoded.split('%2C')[0].substring(0, 20)}`
-            ];
-
-            // SHIELD 5: THE BAKENOVATION MASTERPIECE VAULT (Absolute Root Failover)
-            const vault = [
-                "https://images.unsplash.com/photo-1535254973040-607b474cb8c2?q=80&w=1024", // Wedding Luxury
-                "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1024", // Chocolate Masterpiece
-                "https://images.unsplash.com/photo-1562231976-c4d670699bb4?q=80&w=1024", // Minimalist Art
-                "https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1024", // Orchid Aesthetic
-                "https://images.unsplash.com/photo-1516054966891-fb815802ef90?q=80&w=1024", // Classic Celebration
-                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1024", // Fruit Cake
-                "https://images.unsplash.com/photo-1464349095431-e9419cf748d5?q=80&w=1024", // Colorful Cake
-                "https://images.unsplash.com/photo-1535141192574-5d4897c825a0?q=80&w=1024", // Pink Aesthetic
-                "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1024"  // Professional Layer
-            ];
-
-            console.log("🚀 ACTIVATING SECURE PROFESSIONAL TUNNEL (v100)...");
-
-            if (aiGeneratedImage) {
-                let attempt = 0;
-                let usingProxy = true;
-
-                aiGeneratedImage.onerror = function () {
-                    if (usingProxy) {
-                        usingProxy = false;
-                        console.warn("🛡️ Shield 0 (Google) revoking or busy. Falling back to Community Shields...");
-                        this.src = shields[0];
-                        return;
+                    // SD best practice: most important thing FIRST, use () for emphasis
+                    if (input) {
+                        const subject = input.toLowerCase().includes('cake') ? input : `${input} shaped cake`;
+                        return `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
                     }
+                    return `${style} ${occasion} cake, ${flavor} flavored, ${size}, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
+                };
 
-                    attempt++;
-                    if (attempt < shields.length) {
-                        console.warn(`🛡️ Shield ${attempt} failed. Switching to Shield ${attempt + 1}...`);
-                        this.src = shields[attempt];
-                    } else if (attempt === shields.length) {
-                        console.warn("🔮 ALL AI PROVIDERS DOWN. FETCHING FROM MASTERPIECE VAULT...");
-                        const randomMasterpiece = vault[Math.floor(Math.random() * vault.length)];
-                        this.src = randomMasterpiece;
-                        showAlert("Atelier is extra busy. Serving a Curated Masterpiece! ✨", "success");
-                    } else {
-                        console.error("❌ Root Failover Complete.");
+                // Expand and generate via Pollinations AI
+
+                const renderFinalImage = (srcData) => {
+                    if (aiGeneratedImage) {
+                        snapState.currentImageUrl = srcData;
+                        // Avoid infinite loop: only set src if it's different
+                        if (aiGeneratedImage.src !== srcData) {
+                            aiGeneratedImage.src = srcData;
+                        }
+                        aiGeneratedImage.classList.remove('sketching');
+                        addToGallery(srcData, "AI Generated Masterpiece");
+                        gsap.fromTo(aiGeneratedImage,
+                            { opacity: 0, scale: 0.98, filter: "blur(15px)" },
+                            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
+                        );
                         resetLoadingState();
                     }
                 };
 
-                aiGeneratedImage.onload = function () {
-                    let source = "Atelier Mega-Tunnel";
-                    if (!usingProxy) {
-                        source = attempt < shields.length ? `Community Shield ${attempt + 1}` : "Masterpiece Vault";
-                    }
-                    console.log(`%c✨ Result Displayed via ${source}`, 'color:#d4af37; font-weight:bold;');
-                    this.classList.remove('sketching');
-                    resetLoadingState();
-
-                    const resultActions = document.getElementById('ai-result-actions');
-                    if (resultActions) resultActions.style.display = 'flex';
-                    addToGallery(this.src, "Bakenovation Creation");
+                const resetLoadingState = () => {
+                    if (aiLoading) aiLoading.style.display = 'none';
+                    if (aiGenerateBtn) aiGenerateBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'block';
+                    if (spinner) spinner.style.display = 'none';
                 };
 
-                // 1. START WITH PROFESSIONAL ATOMIC PROXY (v90 - Convergence Edition)
-                const primaryUrl = `${GAS_URLS[0]}?action=ai_proxy&prompt=${encoded}`;
+                // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
+                // Pollinations provides high-speed, direct image generation.
+                // We expand the prompt and append it to the Pollinations URL.
+                const finalPrompt = expandPrompt(rawUserText);
+                const encodedPrompt = encodeURIComponent(finalPrompt);
+                // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
+                const tryGeneration = () => {
+                    const finalPrompt = expandPrompt(rawUserText);
+                    console.log(`%c🚀 GENERATING WITH UNIVERSAL UNBREAKABLE TUNNEL`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
+                    console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
-                console.log("🛡️ ACTIVATING AUTHENTICATED CONVERGENCE TUNNEL...");
+                    tryGasProxy(finalPrompt);
+                };
 
-                // CRITICAL: NO CUSTOM HEADERS! This makes it a "Simple Request" to bypass CORS Preflight (OPTIONS)
-                fetch(primaryUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === 'success' && data.image_base64) {
-                            aiGeneratedImage.src = `data:image/png;base64,${data.image_base64}`;
-                            // Update gallery
-                            aiGeneratedImage.onload = function () {
-                                console.log("%c✨ Result Displayed via Authenticated Convergence Tunnel", 'color:#d4af37; font-weight:bold;');
-                                this.classList.remove('sketching');
-                                resetLoadingState();
-                                const resultActions = document.getElementById('ai-result-actions');
-                                if (resultActions) resultActions.style.display = 'flex';
-                                addToGallery(this.src, "Bakenovation Creation");
-                            };
-                        } else {
-                            console.error("🏁 Convergence Tunnel Warning:", data.message);
-                            throw new Error(data.message || "Tunnel throttled");
-                        }
-                    })
-                    .catch(err => {
-                        console.warn("🏁 Convergence Tunnel Failed. Falling back to Community Shields...");
-                        usingProxy = false;
-                        aiGeneratedImage.onerror();
-                    });
-            }
+                const tryGasProxy = (prompt) => {
+                    const proxyUrl = UNIFIED_GAS_URL;
 
-            showAlert("Chef Harmeet is sculpting your vision... 🎂", "success");
-        };
+                    console.log(`%c📡 Establishing Secure Google AI Tunnel...`, 'color:#9b59b6;');
 
-        tryGasProxy(finalPrompt);
-    };
+                    fetch(`${proxyUrl}?action=ai_proxy&prompt=${encodeURIComponent(prompt)}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success' && data.image_base64) {
+                                console.log(`%c✅ Universal Tunnel Success!`, 'color:#2ecc71; font-weight:bold;');
+                                const base64Url = `data:image/jpeg;base64,${data.image_base64}`;
+                                renderFinalImage(base64Url);
+                            } else {
+                                const errorMsg = data.message || data.error || 'Google Engine Timeout';
+                                throw new Error(errorMsg);
+                            }
+                        })
+                        .catch(err => {
+                            console.error('❌ Google AI Tunnel Failure:', err);
+                            resetLoadingState();
+
+                            let userError = 'AI Studio is currently experiencing high demand.';
+                            if (err.message.includes('Unexpected token')) {
+                                userError = 'Your Google Proxy script needs to be re-deployed. Please check your Apps Script!';
+                            } else if (err.message.includes('Refused')) {
+                                userError = 'Google AI refused the prompt. Please try a simpler description! 🎂';
+                            }
+
+                            showAlert(`${userError}`, 'warning');
+                        });
+                };
+
+                tryGeneration();
+            };
+
+            startSovereignEngineV38();
+        });
+    }
+
 
     // Studio Add to Cart Logic (GATED)
     const detailAddToCartBtn = document.getElementById('detail-add-to-cart-btn');
@@ -1285,10 +1075,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (detailModal) detailModal.classList.remove('active');
                 if (modal) modal.classList.add('active');
 
-                // HIDE delivery fields for standard orders
-                const aiDeliveryFields = document.getElementById('ai-order-delivery-fields');
-                if (aiDeliveryFields) aiDeliveryFields.style.display = 'none';
-
                 const designName = detailTitle.innerText;
                 const designDetails = `[DIRECT ORDER] ${designName}\nIngredients: ${detailIngredients.innerText}\nWeight: ${detailWeight.innerText}\nServings: ${detailServings.innerText}`;
 
@@ -1308,16 +1094,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Order Button Logic — Direct Redirect (Login handled at checkout)
+    // 4. Order Button Logic (GATED)
     if (aiOrderBtn) {
         aiOrderBtn.addEventListener('click', () => {
             checkLoginAndProceed(() => {
-                // Save current AI state and image for the checkout page
-                localStorage.setItem('atelierCheckoutState', JSON.stringify(snapState));
-                localStorage.setItem('atelierPreviewImg', aiGeneratedImage ? aiGeneratedImage.src : '');
+                const userDetails = aiPrompt.value.trim();
+                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
-                // Redirect to the dedicated checkout page
-                window.location.href = 'atelier-checkout.html';
+                const orderModal = document.getElementById('order-modal');
+                if (orderModal) {
+                    orderModal.classList.add('active');
+
+                    const designInput = document.getElementById('modal-ordered-design');
+                    const messageInput = orderModal.querySelector('textarea[name="message"]');
+
+                    if (designInput) designInput.value = `Bespoke AI Created Design`;
+                    if (messageInput) {
+                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
+                    }
+
+                    gsap.fromTo(orderModal.querySelector('.modal-content'),
+                        { y: -50, opacity: 0 },
+                        { y: 0, opacity: 1, duration: 0.4 }
+                    );
+                }
             });
         });
     }
@@ -1372,7 +1172,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchTriggerBtn && searchModal) {
         searchTriggerBtn.addEventListener('click', () => {
             searchModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
             setTimeout(() => {
                 const inp = document.getElementById('search-input');
                 if (inp) inp.focus();
@@ -1381,10 +1180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     searchCloseButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            if (searchModal) {
-                searchModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+            if (searchModal) searchModal.classList.remove('active');
         });
     });
     if (searchModal) {
@@ -1398,73 +1194,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             if (searchResults) {
                 searchResults.style.display = 'block';
-                searchResults.innerHTML = ''; // Clear old
-
-                // Global 'productData' object should be available from js/products.js
-                if (typeof productData === 'undefined') {
-                    searchResults.innerHTML = `<p class="empty-cart-msg" style="color:var(--color-gold);">Product database not loaded. Try refreshing the page.</p>`;
-                    return;
-                }
-
-                // Convert productData object to an array for searching
-                const productsArray = Object.keys(productData).map(key => {
-                    return { id: key, ...productData[key] };
+                // Basic keyword matching to collection items
+                const cakes = document.querySelectorAll('.collection-item, .cake-detail-card');
+                let found = 0;
+                cakes.forEach(cake => {
+                    if (cake.textContent.toLowerCase().includes(query)) found++;
                 });
-
-                // Filter products
-                const foundProducts = productsArray.filter(p =>
-                    (p.title && p.title.toLowerCase().includes(query)) ||
-                    (p.category && p.category.toLowerCase().includes(query)) ||
-                    (p.desc && p.desc.toLowerCase().includes(query))
-                );
-
-                if (foundProducts.length > 0) {
-                    const wrap = document.createElement('div');
-                    wrap.style.display = 'grid';
-                    wrap.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
-                    wrap.style.gap = '1.5rem';
-                    wrap.style.marginTop = '1.5rem';
-                    wrap.style.textAlign = 'left';
-
-                    foundProducts.forEach(product => {
-                        const card = document.createElement('div');
-                        card.style.background = 'rgba(255,255,255,0.05)';
-                        card.style.borderRadius = '8px';
-                        card.style.padding = '1rem';
-                        card.style.border = '1px solid rgba(212,175,55,0.2)';
-
-                        const imgUrl = (product.imgs && product.imgs.length > 0) ? product.imgs[0] : 'assets/hero-cake.png';
-
-                        // Create a clean object for the addToCart function
-                        const cartItem = {
-                            id: product.id,
-                            name: product.title,
-                            price: product.price,
-                            image: imgUrl,
-                            details: product.category
-                        };
-
-                        card.innerHTML = `
-                            <img src="${imgUrl}" alt="${product.title}" style="width:100%; height:150px; object-fit:cover; border-radius:4px; margin-bottom:1rem;">
-                            <h4 style="color:var(--color-gold); margin-bottom:0.5rem; font-size:1.1rem;">${product.title}</h4>
-                            <p style="color:#fff; font-weight:bold; margin-bottom:1rem;">₹${product.price.toLocaleString()}</p>
-                            <button class="btn-snap-primary bg-orchid w-100" style="padding: 0.8rem; font-size: 0.9rem;" onclick='addToCart(${JSON.stringify(cartItem).replace(/'/g, "&#39;")}); document.getElementById("search-modal").classList.remove("active");'>Add to Cart</button>
-                        `;
-                        wrap.appendChild(card);
-                    });
-
-                    const header = document.createElement('p');
-                    header.style.color = 'var(--color-orchid)';
-                    header.style.marginBottom = '1rem';
-                    header.innerHTML = `Found ${foundProducts.length} result(s) for "<strong>${query}</strong>"`;
-
-                    searchResults.appendChild(header);
-                    searchResults.appendChild(wrap);
-                } else {
-                    searchResults.innerHTML = `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="shop.html" style="color: var(--color-gold);" class="search-close">Collection</a>.</p>`;
-                }
-
-                // Re-bind close buttons if a link was clicked
+                searchResults.innerHTML = found > 0
+                    ? `<p style="color: var(--color-orchid);">${found} result(s) found. <a href="#collection" style="color: var(--color-orchid); text-decoration:underline;" class="search-close">View Collection</a></p>`
+                    : `<p class="empty-cart-msg">No results for "<strong>${query}</strong>". Try browsing our <a href="#collection" style="color: var(--color-orchid);" class="search-close">Collection</a>.</p>`;
+                // Re-bind close buttons after innerHTML update
                 document.querySelectorAll('.search-close').forEach(b => {
                     b.addEventListener('click', () => { if (searchModal) searchModal.classList.remove('active'); });
                 });
