@@ -150,6 +150,28 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Storage corruption detected, resetting session.");
         localStorage.removeItem('bakenovation_activeUser');
     }
+
+    // --- INITIAL REGISTRY SYNC (NEW) ---
+    async function syncUserRegistry() {
+        try {
+            // We can reuse check_user with a special flag or just rely on signups to update the sheet.
+            // For now, let's just make sure activeUser is consistent if it exists.
+            if (activeUser) {
+                const identifier = activeUser.email || activeUser.whatsapp;
+                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(identifier)}`);
+                const result = await response.json();
+                if (result.status === 'success' && !result.exists) {
+                    console.warn("Session expired or user deleted from backend.");
+                    activeUser = null;
+                    localStorage.removeItem('bakenovation_activeUser');
+                    updateAuthUI();
+                }
+            }
+        } catch (e) {
+            console.warn("Registry sync delayed.");
+        }
+    }
+    syncUserRegistry();
     let currentSignupData = null;
     let generatedOTP = null;
     let currentLoginMethod = 'email'; // 'email' or 'whatsapp'
@@ -301,8 +323,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const identifier = currentLoginMethod === 'email' ?
+                document.getElementById('login-email').value.trim() :
+                document.getElementById('login-whatsapp').value.trim();
+
+            if (!identifier) {
+                showAlert("Please enter your " + (currentLoginMethod === 'email' ? "email" : "WhatsApp number") + ".");
+                return;
+            }
+
+            const submitBtn = document.getElementById('login-submit-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Verifying Account...";
+            submitBtn.disabled = true;
+
+            try {
+                // Step 1: Check if user exists on backend
+                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(identifier)}`);
+                const result = await response.json();
+
+                if (result.status === 'success' && result.exists) {
+                    // Step 2: User exists, send OTP
+                    sendOTP(result.name || 'User', identifier, null, currentLoginMethod);
+                } else {
+                    // Step 3: User NOT found
+                    showAlert("Account not found. Please create a new account to proceed.", "warning");
+                    // Optionally switch to signup view automatically
+                    setTimeout(() => {
+                        loginView.style.display = 'none';
+                        signupView.style.display = 'block';
+                        const signupInput = currentLoginMethod === 'email' ?
+                            document.getElementById('signup-email') :
+                            document.getElementById('signup-whatsapp');
+                        if (signupInput) signupInput.value = identifier;
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error("Login verification failed:", err);
+                // Fallback: If backend check fails, we might want to allow sending OTP anyway as a fail-safe, 
+                // but the user asked to FIX IT PROPERLY, so we stick to strict mode.
+                showAlert("System authentication service is temporarily delayed. Please try again in a moment.", "error");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
     if (signupForm) {
-        signupForm.addEventListener('submit', (e) => {
+        signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const dob = document.getElementById('signup-dob').value;
@@ -310,16 +382,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentSignupMethod === 'email') {
                 target = document.getElementById('signup-email').value.trim();
-                if (users.find(u => u.email === target)) {
-                    showAlert('Account already exists with this email.');
-                    return;
-                }
             } else {
                 target = document.getElementById('signup-whatsapp').value.trim();
-                if (users.find(u => u.whatsapp === target)) {
-                    showAlert('Account already exists with this WhatsApp number.');
+            }
+
+            if (!target) {
+                showAlert("Please enter your email or WhatsApp number.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('signup-submit-btn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Checking Registry...";
+            submitBtn.disabled = true;
+
+            try {
+                // Step 1: Check if user ALREADY exists
+                const response = await fetch(`${UNIFIED_GAS_URL}?action=check_user&identifier=${encodeURIComponent(target)}`);
+                const result = await response.json();
+
+                if (result.status === 'success' && result.exists) {
+                    showAlert("An account with this " + (currentSignupMethod === 'email' ? "email" : "WhatsApp number") + " already exists. Please login instead.", "info");
+                    setTimeout(() => {
+                        signupView.style.display = 'none';
+                        loginView.style.display = 'block';
+                    }, 1500);
                     return;
                 }
+            } catch (err) {
+                console.warn("Signup pre-check failed:", err);
             }
 
             currentSignupData = {
@@ -333,6 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const tcCheckbox = document.getElementById('signup-tc');
             if (tcCheckbox && !tcCheckbox.checked) {
                 showAlert("Please accept the Terms & Conditions to proceed.");
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
                 return;
             }
 

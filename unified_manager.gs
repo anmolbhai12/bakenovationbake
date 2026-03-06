@@ -36,6 +36,7 @@ function handleRequest(e) {
     if (action === 'sync_signup') return syncSignup(data);
     if (action === 'send_email_otp') return sendEmailOTP(data);
     if (action === 'send_whatsapp_otp') return sendWhatsAppOTP(data);
+    if (action === 'check_user') return checkUser(data);
     if (action === 'ai_proxy') return handleAIProxyV64(data);
     if (action === 'debug') {
       const props = PropertiesService.getScriptProperties().getProperties();
@@ -410,6 +411,35 @@ function recordUniqueLogin(sheetName, headers, name, identifier, dob, type) {
     Logger.log("Atomic recording failed: " + e.toString());
   } finally {
     lock.releaseLock();
+  }
+}
+
+function checkUser(data) {
+  try {
+    const identifier = (data.identifier || '').toString().toLowerCase().trim();
+    if (!identifier) return jsonResponse({ status: 'error', message: 'Missing identifier' });
+
+    // Check Email Logins
+    const emailSheet = getSheet(EMAIL_LOGIN_SHEET_NAME, EMAIL_LOGIN_HEADERS);
+    const emailData = emailSheet.getDataRange().getValues();
+    for (let i = 1; i < emailData.length; i++) {
+        if (emailData[i][2] && emailData[i][2].toString().toLowerCase().trim() === identifier) {
+            return jsonResponse({ status: 'success', exists: true, name: emailData[i][1], method: 'email' });
+        }
+    }
+
+    // Check WhatsApp Logins
+    const waSheet = getSheet(WHATSAPP_LOGIN_SHEET_NAME, WHATSAPP_LOGIN_HEADERS);
+    const waData = waSheet.getDataRange().getValues();
+    for (let i = 1; i < waData.length; i++) {
+        if (waData[i][2] && waData[i][2].toString().toLowerCase().trim() === identifier) {
+            return jsonResponse({ status: 'success', exists: true, name: waData[i][1], method: 'whatsapp' });
+        }
+    }
+
+    return jsonResponse({ status: 'success', exists: false });
+  } catch (e) {
+    return jsonResponse({ status: 'error', message: e.toString() });
   }
 }
 
