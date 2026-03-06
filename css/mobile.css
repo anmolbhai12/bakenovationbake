@@ -1,15 +1,25 @@
 /* ================================================
-   BAKENOVATION MOBILE.CSS — v180
-   GOAL: Exact Desktop Layout Proportionally Shrunken.
-   NO Swiping. NO Wrapping. Tiny text is accepted.
+   BAKENOVATION MOBILE.CSS — v190
+   GOAL: High-End Responsive Mobile Experience.
+   - Perfectly fitted to 100vw (No side-scrolling).
+   - Readable typography (No tiny text).
+   - Elegant stacking (No awkward side-by-side).
+   - Consistent "Computer-Look" aesthetics.
    ================================================ */
+
+:root {
+    --mobile-padding: 1rem;
+    --font-size-base-mobile: 14px;
+}
 
 html,
 body {
     overflow-x: hidden !important;
     max-width: 100vw !important;
-    -webkit-text-size-adjust: none !important;
-    text-size-adjust: none !important;
+    font-size: var(--font-size-base-mobile);
+    background-color: var(--color-deep-purple);
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
 }
 
 *,
@@ -26,156 +36,173 @@ iframe {
     height: auto;
 }
 
+/* Background Coverage Fix */
+.bg-fixed {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover !important;
+    background-position: center !important;
+    z-index: -10;
+}
+
 @media (max-width: 900px) {
 
-    /* --- HEADER COMPRESSION (Very Tiny) --- */
+    /* --- HEADER: COMPACT & BALANCED --- */
     .bake-main-header {
-        height: 60px !important;
-        padding: 0 !important;
+        height: auto !important;
+        padding: 0.8rem 0 !important;
+        position: sticky !important;
+        top: 0;
+        z-index: 1000;
+        background: rgba(43, 8, 43, 0.95) !important;
+        backdrop-filter: blur(10px);
     }
 
     .bake-header-container {
-        width: 96% !important;
-        gap: 5px !important;
+        flex-direction: column !important;
+        /* Stack logo over actions for readability */
+        align-items: center !important;
+        gap: 0.5rem !important;
     }
 
     .brand-logo-text {
-        font-size: 0.9rem !important;
-        /* Shrunken Logo */
-        gap: 5px !important;
-    }
-
-    .brand-logo-text div span:first-of-type {
-        font-size: 0.8rem !important;
-        letter-spacing: 0.1rem !important;
-    }
-
-    .brand-logo-text div span:last-of-type {
-        font-size: 0.4rem !important;
-        margin-top: 1px !important;
+        font-size: 1.4rem !important;
+        /* Elegant readable logo */
+        letter-spacing: 0.15em !important;
+        padding: 0 !important;
+        justify-content: center !important;
     }
 
     .royale-logo-container {
-        width: 30px !important;
-        height: 30px !important;
+        width: 45px !important;
+        height: 45px !important;
+        border-width: 1px !important;
     }
 
+    /* Actions in a neat row */
     .bake-actions {
-        gap: 4px !important;
-    }
-
-    .bake-action-btn {
-        padding: 2px !important;
-        font-size: 0.5rem !important;
+        display: flex !important;
+        gap: 1.2rem !important;
+        justify-content: center !important;
+        width: 100% !important;
+        border-top: 1px solid rgba(212, 175, 55, 0.1);
+        padding-top: 0.5rem !important;
     }
 
     .bake-action-btn svg {
-        width: 12px !important;
-        height: 12px !important;
+        width: 18px !important;
+        height: 18px !important;
     }
 
-    /* --- NAVIGATION: FORCE SINGLE ROW (No Swipe) --- */
+    /* --- NAVIGATION: WRAPPING GRID (No Swipe) --- */
     .bake-sub-nav {
-        padding: 3px 0 !important;
-        overflow-x: hidden !important;
-        /* No Swipe */
+        padding: 0.8rem 0.5rem !important;
+        background: rgba(0, 0, 0, 0.2);
     }
 
     .bake-nav-links {
         display: flex !important;
-        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        /* WRAP instead of SMALL/SWIPE */
         justify-content: center !important;
-        gap: 4px !important;
-        flex-wrap: nowrap !important;
-        /* Force One Line */
+        gap: 0.5rem 0.8rem !important;
     }
 
     .bake-nav-links li a {
-        font-size: 0.45rem !important;
-        /* Tiny Text to Fit */
-        padding: 1px 2px !important;
-        white-space: nowrap !important;
-        letter-spacing: 0.02rem !important;
+        font-size: 0.8rem !important;
+        /* Readable text */
+        text-transform: uppercase !important;
+        letter-spacing: 0.1em !important;
+        opacity: 0.9 !important;
     }
 
-    .bake-chevron {
-        width: 6px !important;
-        height: 6px !important;
-    }
-
-    /* --- HERO SECTION: SIDE-BY-SIDE (Shrunken) --- */
+    /* --- HERO: ELEGANT STACKING --- */
     .hero-section {
-        padding: 1.5rem 0 !important;
+        padding: 2rem 0 !important;
         min-height: auto !important;
+        text-align: center !important;
     }
 
     .hero-content-wrapper {
-        display: flex !important;
-        flex-direction: row !important;
-        /* Desktop Layout */
+        flex-direction: column !important;
+        /* RE-STACK FOR PERFECTION */
+        gap: 2rem !important;
         align-items: center !important;
-        justify-content: space-between !important;
-        flex-wrap: nowrap !important;
-        gap: 10px !important;
-        padding: 0 10px !important;
     }
 
     .hero-content {
-        flex: 1 1 60% !important;
-        padding: 0 !important;
-        text-align: left !important;
+        width: 100% !important;
+        padding: 0 1rem !important;
     }
 
     .hero-title {
-        font-size: 0.9rem !important;
-        /* Shrunken Heading */
-        margin-bottom: 4px !important;
-        line-height: 1.1 !important;
+        font-size: 1.8rem !important;
+        /* Bold, readable heading */
+        line-height: 1.2 !important;
+        margin-bottom: 1rem !important;
+        text-align: center !important;
     }
 
     .hero-subtitle {
-        font-size: 0.5rem !important;
-        margin-bottom: 8px !important;
-        line-height: 1.3 !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 1.5rem !important;
+        text-align: center !important;
     }
 
     .btn-luxury {
-        padding: 4px 8px !important;
-        font-size: 0.45rem !important;
+        padding: 0.8rem 2rem !important;
+        font-size: 0.9rem !important;
     }
 
     .hero-background {
-        flex: 1 1 40% !important;
+        width: 80% !important;
+        margin: 0 auto !important;
         display: flex !important;
         justify-content: center !important;
     }
 
     .bg-cake-image {
         width: 100% !important;
-        max-width: 130px !important;
-        /* Fitted Sized Image */
+        max-width: 300px !important;
+        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
     }
 
-    /* --- AI STUDIO (ATELIER) SIDE-BY-SIDE --- */
+    /* --- THE ATELIER (AI BOX) --- */
     .customizer-interface {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 0.6rem !important;
-        align-items: flex-start !important;
+        flex-direction: column !important;
+        /* VERTICAL STACK */
+        gap: 1.5rem !important;
     }
 
     .snap-controls,
     .snap-result-area {
-        flex: 1 1 50% !important;
+        width: 100% !important;
     }
 
-    .snap-chip {
-        font-size: 0.5rem !important;
-        padding: 2px 4px !important;
+    .snap-result-area {
+        min-height: 300px !important;
     }
 
-    .control-group label {
-        font-size: 0.6rem !important;
+    /* --- COMPONENT RESIZING --- */
+    /* Product grid (2 cols standard premium) */
+    .product-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        padding: 0 10px !important;
+    }
+
+    .product-card {
+        margin: 0 !important;
+    }
+
+    .product-image-container {
+        height: auto !important;
+        aspect-ratio: 1/1 !important;
     }
 
     /* Utilities */
