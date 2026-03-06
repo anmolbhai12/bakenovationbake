@@ -338,17 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(() => {
                     showAlert("Authentication service temporary unavailable. Please try again.");
-                })
-                .finally(() => {
                     signupSubmitBtn.innerText = "Send Verification Code";
                     signupSubmitBtn.disabled = false;
                 });
+            // REMOVED finally re-enable to prevent double-click during OTP generation
         });
     }
 
     // --- REUSABLE OTP SENDING FUNCTION ---
     function sendOTP(name, target, extra, method = 'email') {
         generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`%c[AUTH] Secure Code Generated: ${generatedOTP}`, 'color: #d4af37; font-weight: bold;');
         const otpTitle = document.getElementById('otp-title');
         const otpMessage = document.getElementById('otp-message');
 
@@ -607,11 +607,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(() => {
                     showAlert("Authentication service unavailable.");
-                })
-                .finally(() => {
                     loginSubmitBtn.innerText = "Send Login Code";
                     loginSubmitBtn.disabled = false;
-                });
+                })
+            // REMOVED finally re-enable to prevent double-click during OTP generation
         });
     }
 
