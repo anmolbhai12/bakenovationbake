@@ -13,6 +13,9 @@
         rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css?v=12">
     <link rel="stylesheet" href="css/collection.css?v=1">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 
 <body>
@@ -489,11 +492,180 @@
     </footer>
 
     <!-- Modals for Full Parity -->
-    <div id="auth-modal" class="modal-overlay"></div>
-    <div id="search-modal" class="modal-overlay"></div>
-    <div id="cart-drawer" class="cart-drawer"></div>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="glass-panel modal-content auth-container">
+            <button class="modal-close auth-close">&times;</button>
+            <div id="login-view">
+                <div class="customizer-header">
+                    <h2 class="text-orchid">Welcome Back</h2>
+                    <p id="login-method-text">Login via Email OTP</p>
+                </div>
+                <form id="login-form" class="auth-form">
+                    <div id="login-email-group" class="control-group">
+                        <label>Email Address</label>
+                        <input type="email" id="login-email" class="luxury-input" placeholder="name@example.com">
+                    </div>
+                    <div id="login-whatsapp-group" class="control-group" style="display: none;">
+                        <label>WhatsApp Number</label>
+                        <input type="tel" id="login-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
+                    </div>
+
+                    <div class="control-group"
+                        style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="login-tc" required
+                            style="margin-top: 4px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--color-gold);">
+                        <label for="login-tc"
+                            style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4; cursor: pointer;">
+                            I accept the <span style="color: var(--color-gold);">Terms & Conditions</span>. I understand
+                            that all payments are non-refundable and COD is not available.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Send Verification Code</button>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button type="button" id="toggle-login-method" class="btn-text"
+                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            Login with WhatsApp instead
+                        </button>
+                    </div>
+
+                    <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up here</a></p>
+                </form>
+            </div>
+
+            <div id="signup-view" style="display: none;">
+                <div class="customizer-header">
+                    <h2 class="text-orchid">Join the Atelier</h2>
+                    <p id="signup-method-text">Sign up via Email OTP</p>
+                </div>
+                <form id="signup-form" class="auth-form">
+                    <div class="control-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signup-name" required class="luxury-input" placeholder="Your Name">
+                    </div>
+
+                    <div id="signup-email-group" class="control-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signup-email" class="luxury-input" placeholder="name@example.com">
+                    </div>
+                    <div id="signup-whatsapp-group" class="control-group" style="display: none;">
+                        <label>WhatsApp Number</label>
+                        <input type="tel" id="signup-whatsapp" class="luxury-input" placeholder="+91 00000 00000">
+                    </div>
+
+                    <div class="control-group"
+                        style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="signup-tc" required
+                            style="margin-top: 4px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--color-gold);">
+                        <label for="signup-tc"
+                            style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4; cursor: pointer;">
+                            I accept the <a href="terms.html" target="_blank"
+                                style="color: var(--color-gold); text-decoration: underline;">Terms &amp;
+                                Conditions</a>.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-luxury w-100" id="signup-submit-btn">Send Verification
+                        Code</button>
+                    <div class="control-group">
+                        <label>Birth Date</label>
+                        <input type="date" id="signup-dob" required class="luxury-input">
+                    </div>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button type="button" id="toggle-signup-method" class="btn-text"
+                            style="color: var(--color-gold); font-size: 0.85rem;">
+                            Sign up with WhatsApp instead
+                        </button>
+                    </div>
+
+                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login here</a></p>
+                </form>
+            </div>
+
+            <div id="otp-view" style="display: none;">
+                <div class="customizer-header">
+                    <h2 class="text-orchid" id="otp-title">Verify Email</h2>
+                    <p id="otp-message">We've sent a code to your Gmail</p>
+                </div>
+                <form id="otp-form" class="auth-form">
+                    <div class="control-group text-center">
+                        <label class="otp-hint-text">Enter 6-Digit Code</label>
+                        <input type="text" id="otp-input" required class="otp-luxury-input" placeholder="000 000"
+                            maxlength="6">
+                        <p class="otp-hint-text">Expires in 1:59</p>
+                    </div>
+                    <button type="submit" class="btn-luxury w-100">Verify & Create Account</button>
+                    <p class="auth-switch text-center">Didn't get it? <a href="#" id="resend-otp"
+                            style="color: var(--color-gold);">Resend Code</a></p>
+                    <p class="auth-switch text-center" style="margin-top: 1rem;">
+                        <a href="#" id="back-to-auth"
+                            style="color: var(--color-text-muted); font-size: 0.8rem; text-decoration: underline;">Change
+                            email or method</a>
+                    </p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal-overlay search-overlay-blur">
+        <div class="glass-panel modal-content search-dropdown-panel">
+            <button class="modal-close search-close">&times;</button>
+            <h2 class="text-orchid" style="margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem;">Search
+                Bakenovation</h2>
+            <form id="search-form"
+                style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <input type="text" id="search-input" class="luxury-input"
+                    placeholder="Search for couture cakes, themes, flavors..."
+                    style="flex: 1; font-size: 1.2rem; padding: 1.2rem;" required>
+                <button type="submit" class="btn-luxury" style="padding: 0 2.5rem; font-size: 1.1rem;">Search</button>
+            </form>
+            <div id="search-results" style="text-align: center; display: none;">
+                <p class="empty-cart-msg">No results found. Try browsing our <a href="shop.html"
+                        style="color: var(--color-gold);" class="search-close">Collection</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-drawer-content glass-panel">
+            <button class="cart-close" id="cart-close">&times;</button>
+            <h2 class="text-orchid" style="margin-bottom: 2rem;">Your Atelier Cart</h2>
+
+            <div id="cart-items" class="cart-items-list">
+                <!-- Items populated by JS -->
+                <p class="empty-cart-msg">Your cart is currently empty.</p>
+            </div>
+
+            <button id="checkout-btn" class="btn-luxury w-100" style="margin-top: 1rem;">Proceed to
+                Checkout</button>
+        </div>
+    </div>
+
+    <!-- Custom Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Artisanal Agreement Modal -->
+    <div id="artisanal-modal" class="artisanal-modal">
+        <div class="artisanal-content">
+            <span class="artisanal-icon">🎨</span>
+            <p class="artisanal-text">
+                "Design by AI. Handcrafted by Bakenovation. Final textures and colors may vary slightly as each cake is
+                an artisanal creation."
+            </p>
+            <div class="artisanal-actions">
+                <button id="btn-artisanal-cancel" class="btn-artisanal-cancel">Go Back</button>
+                <button id="btn-artisanal-agree" class="btn-artisanal-agree">I Understand & Agree</button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/products.js"></script>
+    <script src="sovereign-v36/sovereign-engine-v64.js?v=92.15.0"></script>
     <script>
         // ===== SIDEBAR COLLAPSE =====
         function toggleSection(header) {

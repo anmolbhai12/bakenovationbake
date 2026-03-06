@@ -362,14 +362,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 to_email: target
             };
 
+            console.log("--- Bakenovation OTP Gate ---");
+            console.log("Target:", target);
+            console.log("OTP Code:", generatedOTP);
+            console.log("Method: Email");
+
             syncToGoogleSheet(Object.assign(templateParams, { action: 'send_email_otp' }), EMAIL_PROXY_URL)
                 .then(() => {
-                    showOTPView("Verify Email", `We've sent a code to ${target}`);
+                    console.log("✅ OTP Dispatch Signal Sent to GAS");
+                    showOTPView("Verify Email", `We've sent a code to <strong>${target}</strong>.<br><br><span style="font-size: 0.8rem; opacity: 0.8;">Check your <strong>Spam</strong> folder if it doesn't arrive in 60 seconds.</span>`, true);
                 })
                 .catch(err => {
-                    console.error("Email Proxy Error:", err);
-                    showAlert(`Failed to send email. For demo, OTP is: ${generatedOTP}`);
-                    showOTPView("Verify Email", `We've sent a code to ${target}`);
+                    console.error("❌ Email Proxy Error:", err);
+                    showAlert(`Communication delay. For your convenience, your code is: ${generatedOTP}`, 'warning');
+                    showOTPView("Verify Email", `We've sent a code to ${target}. <br><small>(Manual Help: ${generatedOTP})</small>`, true);
                 })
                 .finally(() => {
                     if (submitBtn) {
@@ -562,15 +568,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GOOGLE SHEETS SYNC FUNCTION (POWER-SYNC V3) ---
+    // --- GOOGLE SHEETS SYNC FUNCTION (POWER-SYNC V3.1 - ROBUST HYBRID) ---
     function syncToGoogleSheet(data, targetUrl = null) {
         const finalUrl = targetUrl || EMAIL_SIGNUP_SHEET_URL;
         if (!finalUrl) return Promise.resolve();
 
         return new Promise((resolve) => {
-            console.log("--- POWER-SYNC DISPATCHING ---");
+            console.log("--- POWER-SYNC DISPATCHING (HYBRID) ---");
             console.log("Target URL:", finalUrl);
-            console.log("Data:", data);
+
+            // 1. Iframe/Form POST (Bypasses most CORS, most reliable for GAS login sessions)
             const iframeName = 'sync_frame_' + Date.now();
             const iframe = document.createElement('iframe');
             iframe.name = iframeName;
@@ -597,6 +604,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(form);
             form.submit();
 
+            // 2. Fetch/No-CORS POST (Secondary dispatch for redundancy)
+            try {
+                fetch(finalUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(data).toString()
+                }).catch(e => console.warn("Redundant fetch dispatch failed (expected in some browsers):", e));
+            } catch (e) { }
+
+            // Resolve after delay to allow processing
             setTimeout(() => {
                 if (document.body.contains(form)) document.body.removeChild(form);
                 if (document.body.contains(iframe)) document.body.removeChild(iframe);

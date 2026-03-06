@@ -34,7 +34,7 @@
     </div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxc2EYUsCqjcHKLuvLlG5QCnKx5iKVvcIEaWwUDjrSvnmf1maKzr8rH6Cc7YCUckDHs/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycb_2YlFZxcguMTtBTTfrD9CN6M1HhXRaXvuGe83N2yM5FmGXYh2qornjVPJ_Bb5LmxD/exec';
 
         async function loadOrders() {
             const container = document.getElementById('orders-container');
@@ -221,7 +221,7 @@
                 const res = await fetch(`${GAS_URL}?action=diagnostic`);
                 const data = await res.json();
                 if (data.status === 'success') {
-                    alert(`CONSOLE HEALTH REPORT\n\n- Spreadsheet: ${data.spreadsheetName}\n- Tabs: ${data.tabsFound.join(', ')}\n- Active Trace: ${data.activeTabUsed}\n- Headers: ${data.headers.join(' | ')}`);
+                    alert(`CONSOLE HEALTH REPORT\n\n- Spreadsheet: ${data.spreadsheetName}\n- Sheets Found: ${data.sheets.join(', ')}`);
                 } else alert('Health Check Failed: ' + data.message);
             } catch (e) { alert('Critical Fault: ' + e.message); }
         }
