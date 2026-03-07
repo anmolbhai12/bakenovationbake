@@ -923,15 +923,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
-            // Popup Disclaimer
-            showAlert("*Note: AI designs are for visual inspiration. Actual taste, texture and final design may vary slightly as each cake is uniquely handcrafted.", 'info');
-
-            const btnText = aiGenerateBtn.querySelector('.btn-text');
-            const spinner = aiGenerateBtn.querySelector('.spinner');
-            const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
             const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
-            const startSovereignEngineV38 = async () => {
+            // Gatekeeping generation behind Artisanal Agreement Modal
+            const artisanalModal = document.getElementById('artisanal-modal');
+            if (artisanalModal) {
+                artisanalModal.style.display = 'flex';
+                // Store the generation action to be triggered upon agreement
+                window.pendingGeneration = startSovereignEngineV38;
+                return; // Wait for user interaction with the modal
+            }
+
+            // Fallback if modal is missing
+            startSovereignEngineV38();
+
+            async function startSovereignEngineV38() {
                 const btnText = aiGenerateBtn.querySelector('.btn-text');
                 const spinner = aiGenerateBtn.querySelector('.spinner');
                 const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
@@ -965,7 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Pollinations is our primary engine for fast, reliable cake design.
                 const imageSeed = Math.floor(Math.random() * 9999999);
 
-                const expandPrompt = (input) => {
+                function expandPrompt(input) {
                     const style = snapState.style;
                     const occasion = snapState.type;
                     const flavor = snapState.flavor;
@@ -977,11 +983,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         return `${subject}, ${style} style, ${occasion}, ${flavor} flavored, ${size} cake, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, sharp focus, clean white background`;
                     }
                     return `${style} ${occasion} cake, ${flavor} flavored, ${size}, luxury couture bakery, hyperrealistic food photography, studio lighting, 8k, bokeh, sharp focus`;
-                };
+                }
 
                 // Expand and generate via Pollinations AI
 
-                const renderFinalImage = (srcData) => {
+                function renderFinalImage(srcData) {
                     if (aiGeneratedImage) {
                         snapState.currentImageUrl = srcData;
                         // Avoid infinite loop: only set src if it's different
@@ -996,22 +1002,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         );
                         resetLoadingState();
                     }
-                };
+                }
 
-                const resetLoadingState = () => {
-                    // Show Artisanal Agreement Modal after generation
-                    const artisanalModal = document.getElementById('artisanal-modal');
-                    if (artisanalModal) {
-                        artisanalModal.style.display = 'flex';
-                    }
-
-                    // Persistent Buffering until "Agree" is clicked
+                function resetLoadingState() {
+                    // Hide the buffering overlay
                     if (aiLoading) {
-                        const loadingMsgText = aiLoading.querySelector('p');
-                        if (loadingMsgText) loadingMsgText.style.display = 'none';
-                        aiLoading.style.background = 'transparent';
-                        aiLoading.style.backdropFilter = 'none';
-                        aiLoading.style.pointerEvents = 'none';
+                        aiLoading.style.display = 'none';
                     }
 
                     if (aiGenerateBtn) aiGenerateBtn.disabled = false;
@@ -1023,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (resultActions) {
                         resultActions.style.display = 'flex';
                     }
-                };
+                }
 
                 // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
                 // Pollinations provides high-speed, direct image generation.
@@ -1031,15 +1027,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const finalPrompt = expandPrompt(rawUserText);
                 const encodedPrompt = encodeURIComponent(finalPrompt);
                 // === GOOGLE IMAGEN 3 ENGINE — PROFESSIONAL V60 ===
-                const tryGeneration = () => {
+                function tryGeneration() {
                     const finalPrompt = expandPrompt(rawUserText);
                     console.log(`%c🚀 GENERATING WITH UNIVERSAL UNBREAKABLE TUNNEL`, 'color:#4285F4; font-weight:bold; font-size: 1.2em;');
                     console.log('%cFinal Prompt:', 'color:#f5e4bc;', finalPrompt);
 
                     tryGasProxy(finalPrompt);
-                };
+                }
 
-                const tryGasProxy = (prompt) => {
+                function tryGasProxy(prompt) {
                     const proxyUrl = UNIFIED_GAS_URL;
 
                     console.log(`%c📡 Establishing Secure Google AI Tunnel...`, 'color:#9b59b6;');
@@ -1072,10 +1068,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             showAlert(`${userError}`, 'warning');
                         });
-                };
+                }
 
                 tryGeneration();
-            };
+            }
 
             startSovereignEngineV38();
         });
@@ -1310,18 +1306,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnArtisanalAgree) {
         btnArtisanalAgree.addEventListener('click', () => {
             if (artisanalModal) artisanalModal.style.display = 'none';
-            // Hide the buffering overlay finally
-            const aiLoading = document.getElementById('ai-loading');
-            if (aiLoading) aiLoading.style.display = 'none';
+            // Start generation if it was pending
+            if (typeof window.pendingGeneration === 'function') {
+                window.pendingGeneration();
+                window.pendingGeneration = null;
+            }
         });
     }
 
     if (btnArtisanalCancel) {
         btnArtisanalCancel.addEventListener('click', () => {
             if (artisanalModal) artisanalModal.style.display = 'none';
-            // Also hide overlay for usability if they cancel
-            const aiLoading = document.getElementById('ai-loading');
-            if (aiLoading) aiLoading.style.display = 'none';
+            // Clear pending action if they cancel
+            window.pendingGeneration = null;
         });
     }
 
