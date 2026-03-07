@@ -45,7 +45,7 @@ iframe {
     z-index: -10;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
 
     /* --- HEADER: COMPACT --- */
     .bake-main-header {
