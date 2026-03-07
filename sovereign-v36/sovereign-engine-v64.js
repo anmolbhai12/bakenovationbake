@@ -993,6 +993,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (aiGenerateBtn) aiGenerateBtn.disabled = false;
                     if (btnText) btnText.style.display = 'block';
                     if (spinner) spinner.style.display = 'none';
+
+                    // Show result actions (Add to Cart / Buy Now)
+                    const resultActions = document.getElementById('ai-result-actions');
+                    if (resultActions) {
+                        resultActions.style.display = 'flex';
+                    }
                 };
 
                 // === POLLINATIONS AI ENGINE — DIRECT FLUX V9 ===
