@@ -293,6 +293,13 @@ iframe {
         max-width: 100% !important;
         aspect-ratio: 1/1 !important;
         margin: 0 auto !important;
+        overflow: hidden !important;
+    }
+
+    .snap-result-frame img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
     }
 
     .snap-chip {
@@ -329,8 +336,7 @@ iframe {
 
     /* Fix Loading Overlay for Mobile (Vertical) */
     .ai-loading-overlay {
-        display: flex !important;
-        /* Force visibility when triggered */
+        display: none;
         flex-direction: column !important;
         padding: 20px !important;
         text-align: center !important;
