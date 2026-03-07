@@ -701,6 +701,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (cartCountBadge) cartCountBadge.innerText = cart.length;
+        const mobileCartBadge = document.getElementById('mobile-cart-count');
+        if (mobileCartBadge) mobileCartBadge.innerText = cart.length;
 
         // Add remove listeners
         document.querySelectorAll('.remove-item').forEach(btn => {
@@ -934,7 +936,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rawUserText = aiPrompt.value.trim();
                 const loadingText = rawUserText ? "⚡ Sculpting your custom vision..." : "Chef is sketching a masterpiece...";
 
-                if (btnText) btnText.style.display = 'none';
+                if (btnText) {
+                    btnText.innerText = "Buffering...";
+                    btnText.style.display = 'block';
+                }
                 if (spinner) spinner.style.display = 'block';
                 aiGenerateBtn.disabled = true;
                 if (aiLoading) {
@@ -995,7 +1000,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if (aiGenerateBtn) aiGenerateBtn.disabled = false;
-                    if (btnText) btnText.style.display = 'block';
+                    if (btnText) {
+                        btnText.innerText = "Generate My Masterpiece";
+                        btnText.style.display = 'block';
+                    }
                     if (spinner) spinner.style.display = 'none';
 
                     // Show result actions (Add to Cart / Buy Now)
@@ -1295,6 +1303,40 @@ document.addEventListener('DOMContentLoaded', () => {
             if (artisanalModal) artisanalModal.style.display = 'none';
             // Clear pending action if they cancel
             window.pendingGeneration = null;
+        });
+    }
+
+    // --- MOBILE BOTTOM NAVIGATION TRIGGERS ---
+    const mobileSearchBtn = document.getElementById('mobile-search-btn');
+    if (mobileSearchBtn) {
+        mobileSearchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('search-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    const mobileCartBtn = document.getElementById('mobile-cart-btn');
+    if (mobileCartBtn) {
+        mobileCartBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cartDrawer = document.getElementById('cart-drawer');
+            if (cartDrawer) {
+                cartDrawer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    const mobileAccountBtn = document.getElementById('mobile-account-btn');
+    if (mobileAccountBtn) {
+        mobileAccountBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const authModal = document.getElementById('auth-modal');
+            if (authModal) {
+                authModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         });
     }
 
