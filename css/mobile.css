@@ -257,39 +257,74 @@ iframe {
     .sweet-snap-container {
         display: flex !important;
         flex-direction: row !important;
-        gap: 10px !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
         align-items: flex-start !important;
-        padding: 0 !important;
+        padding: 0.5rem !important;
+        width: 100% !important;
+        overflow: hidden !important;
     }
 
     .snap-controls {
-        flex: 1 1 45% !important;
+        flex: 0 0 42% !important;
         padding: 0 !important;
+        overflow: hidden !important;
     }
 
-    .snap-preview-column {
-        flex: 1 1 55% !important;
-        min-height: 180px !important;
+    .snap-preview-column,
+    .snap-preview {
+        flex: 0 0 58% !important;
+        min-height: 150px !important;
+        width: 100% !important;
     }
 
     .snap-chip {
-        font-size: 0.5rem !important;
-        padding: 2px 4px !important;
+        font-size: 0.45rem !important;
+        padding: 1px 3px !important;
+        margin: 1px !important;
     }
 
-    .control-group label {
+    .control-group label,
+    .snap-label {
+        font-size: 0.45rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .btn-snap-primary {
         font-size: 0.6rem !important;
+        padding: 8px !important;
+        border-radius: 4px !important;
     }
 
-    /* --- COMPONENT RESIZING --- */
-    .product-grid {
+    /* --- CAKE IMAGE GRIDS: UNIVERSAL 2-COLUMN --- */
+    .collection-grid,
+    #product-grid,
+    .product-grid,
+    .recent-generations-grid {
+        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 8px !important;
-        padding: 0 8px !important;
+        padding: 0.5rem !important;
+        width: 100% !important;
     }
 
-    .product-info h3 {
-        font-size: 0.75rem !important;
+    .collection-item,
+    .product-card,
+    .gallery-item {
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    .product-info h3,
+    .item-overlay h3,
+    .product-card-title {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .product-card-price,
+    .item-overlay p {
+        font-size: 0.6rem !important;
     }
 
     /* Utilities */

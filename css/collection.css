@@ -760,7 +760,7 @@
     #product-grid.view-2col,
     #product-grid.view-3col,
     #product-grid.view-4col {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 
