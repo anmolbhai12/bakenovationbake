@@ -452,15 +452,19 @@ iframe {
 
     .mobile-nav-badge {
         position: absolute;
-        top: -5px;
-        right: 15px;
-        background: #ff4d4d;
+        top: -2px;
+        right: 20%;
+        background: #1a1a1a;
         color: white;
-        font-size: 0.6rem;
-        padding: 1px 5px;
-        border-radius: 10px;
+        font-size: 0.55rem;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
         font-weight: bold;
-        border: 1px solid var(--color-deep-purple);
+        border: 1px solid rgba(212, 175, 55, 0.5);
     }
 
     /* Ensure body has space for bottom nav */
