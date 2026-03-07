@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <link rel="stylesheet" href="css/styles.css?v=9.1">
-    <link rel="stylesheet" href="css/mobile.css?v=1008.0">
+    <link rel="stylesheet" href="css/mobile.css?v=1009.0">
     <style>
         .checkout-page-main {
             padding-top: 110px;
@@ -182,6 +182,21 @@
                             </select>
                         </div>
 
+                        <div class="control-group" id="fake-tier-group">
+                            <label class="snap-label">Which Tier is Fake/Dummy?</label>
+                            <select id="final-fake-tier" class="luxury-input" style="width: 100%;">
+                                <option value="None">None (All Tiers Real)</option>
+                                <option value="Top Tier">Top Tier</option>
+                                <option value="Middle Tier">Middle Tier</option>
+                                <option value="Bottom Tier">Bottom Tier</option>
+                                <option value="All Fake">All Tiers Fake (Display Only)</option>
+                            </select>
+                            <p
+                                style="font-size: 0.75rem; color: var(--color-gold-light); margin-top: 5px; opacity: 0.8;">
+                                Select if you want any specific tier to be a dummy/fake for display.
+                            </p>
+                        </div>
+
                         <div class="control-group">
                             <label class="snap-label">Dietary Preference</label>
                             <select id="final-diet" class="luxury-input" style="width: 100%;">
@@ -195,18 +210,24 @@
                             <input type="date" id="final-date" class="luxury-input" style="width: 100%;" required>
                         </div>
                         <script>
-                            // Set min date to 3 days from today
+                            // Set min date to strictly 3 days from today
                             (function () {
                                 const dateInput = document.getElementById('final-date');
                                 if (dateInput) {
+                                    const now = new Date();
                                     const minDate = new Date();
-                                    minDate.setDate(minDate.getDate() + 3);
+                                    minDate.setDate(now.getDate() + 3);
+
                                     const yyyy = minDate.getFullYear();
                                     const mm = String(minDate.getMonth() + 1).padStart(2, '0');
                                     const dd = String(minDate.getDate()).padStart(2, '0');
                                     const minStr = `${yyyy}-${mm}-${dd}`;
+
                                     dateInput.min = minStr;
                                     dateInput.value = minStr;
+
+                                    // Visual feedback
+                                    console.log("Lead time enforced: Min date set to " + minStr);
                                 }
                             })();
                         </script>
@@ -395,7 +416,10 @@
                     image: imgUrl,
                     qty: 1,
                     isAi: true,
-                    meta: state
+                    meta: {
+                        ...state,
+                        fakeTier: document.getElementById('final-fake-tier').value
+                    }
                 };
 
                 localStorage.setItem('pendingOrder', JSON.stringify(orderData));

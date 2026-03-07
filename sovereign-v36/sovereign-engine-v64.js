@@ -815,33 +815,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
 
                 checkLoginAndProceed(() => {
-                    // Open the formal order modal with AI context
-                    if (modal) {
-                        const flavorInput = modal.querySelector('#modal-flavor');
-                        const weightInput = modal.querySelector('#modal-tiers');
-                        const msgInput = modal.querySelector('#order-message');
-                        const imgInput = modal.querySelector('#modal-img');
-                        const dateInput = modal.querySelector('#modal-date');
-
-                        if (flavorInput) flavorInput.value = snapState.flavor;
-                        if (weightInput) weightInput.value = snapState.size;
-                        if (msgInput) msgInput.value = userDetails; // Keep user prompt separate
-                        if (imgInput) imgInput.value = snapState.currentImageUrl;
-
-                        // Set minimum 2 days for date input
-                        if (dateInput) {
-                            const today = new Date();
-                            const minDate = new Date(today);
-                            minDate.setDate(today.getDate() + 2);
-                            const yyyy = minDate.getFullYear();
-                            const mm = String(minDate.getMonth() + 1).padStart(2, '0');
-                            const dd = String(minDate.getDate()).padStart(2, '0');
-                            dateInput.min = `${yyyy}-${mm}-${dd}`;
-                            dateInput.value = `${yyyy}-${mm}-${dd}`;
-                        }
-
-                        modal.classList.add('active');
-                    }
+                    const state = {
+                        type: snapState.type,
+                        style: snapState.style,
+                        color: snapState.color,
+                        flavor: snapState.flavor,
+                        size: snapState.size,
+                        prompt: userDetails
+                    };
+                    localStorage.setItem('atelierCheckoutState', JSON.stringify(state));
+                    localStorage.setItem('atelierPreviewImg', aiGeneratedImage.src);
+                    window.location.href = 'atelier-checkout.html';
                 });
             }
         });
@@ -1127,25 +1111,17 @@ document.addEventListener('DOMContentLoaded', () => {
         aiOrderBtn.addEventListener('click', () => {
             checkLoginAndProceed(() => {
                 const userDetails = aiPrompt.value.trim();
-                const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
-
-                const orderModal = document.getElementById('order-modal');
-                if (orderModal) {
-                    orderModal.classList.add('active');
-
-                    const designInput = document.getElementById('modal-ordered-design');
-                    const messageInput = orderModal.querySelector('textarea[name="message"]');
-
-                    if (designInput) designInput.value = `Bespoke AI Created Design`;
-                    if (messageInput) {
-                        messageInput.value = `[AI CONFIGURATION]\n${smartPrompt}\n(Refer to the design generated in the Atelier)`;
-                    }
-
-                    gsap.fromTo(orderModal.querySelector('.modal-content'),
-                        { y: -50, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 0.4 }
-                    );
-                }
+                const state = {
+                    type: snapState.type,
+                    style: snapState.style,
+                    color: snapState.color,
+                    flavor: snapState.flavor,
+                    size: snapState.size,
+                    prompt: userDetails
+                };
+                localStorage.setItem('atelierCheckoutState', JSON.stringify(state));
+                localStorage.setItem('atelierPreviewImg', aiGeneratedImage.src);
+                window.location.href = 'atelier-checkout.html';
             });
         });
     }
