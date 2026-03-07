@@ -145,7 +145,7 @@
             transition: all 0.8s ease;
         }
     </style>
-    <link rel="stylesheet" href="css/mobile.css?v=110.0">
+    <link rel="stylesheet" href="css/mobile.css?v=111.0">
 </head>
 
 <body>
@@ -191,6 +191,18 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Prominent Search Trigger -->
+    <div class="mobile-search-bar-trigger">
+        <button id="mobile-top-search-trigger" class="mobile-immersive-search-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search Bakenovation Couture Cakes...</span>
+        </button>
+    </div>
+
     <nav class="bake-sub-nav">
         <div class="bake-header-container">
             <ul class="bake-nav-links">
@@ -891,17 +903,22 @@
 
     <!-- Search Modal -->
     <div id="search-modal" class="modal-overlay search-overlay-blur">
-        <div class="glass-panel modal-content search-dropdown-panel">
+        <div class="search-fullscreen-container">
             <button class="modal-close search-close">&times;</button>
-            <h2 class="text-orchid" style="margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem;">Search
-                Bakenovation</h2>
-            <form id="search-form"
-                style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-                <input type="text" id="search-input" class="luxury-input"
-                    placeholder="Search for couture cakes, themes, flavors..."
-                    style="flex: 1; font-size: 1.2rem; padding: 1.2rem;" required>
-                <button type="submit" class="btn-luxury" style="padding: 0 2.5rem; font-size: 1.1rem;">Search</button>
+            <div class="search-design-header">
+                <span class="search-text-line">Search</span>
+                <span class="search-text-line">Bakenovation</span>
+                <span class="search-text-line-main">Trending</span>
+                <span class="search-text-line">Now</span>
+            </div>
+            <form id="search-form" class="search-immersive-form">
+                <div class="search-input-wrapper">
+                    <input type="text" id="search-input" class="search-luxury-input"
+                        placeholder="Search for couture cakes..." required>
+                    <button type="submit" class="search-submit-box">SEARCH</button>
+                </div>
             </form>
+            <div class="search-hint-text">THE BENTO PICKS & SEASONAL FAVORITES</div>
             <div id="search-results" style="text-align: center; display: none;">
                 <p class="empty-cart-msg">No results found. Try browsing our <a href="#collection"
                         style="color: var(--color-gold);" class="search-close">Collection</a>.</p>
@@ -994,6 +1011,25 @@
             </svg>
             <span>Home</span>
         </a>
+        <a href="trending.html" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+            <span>Trending</span>
+        </a>
+        <a href="gifting.html" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            <span>Gifting</span>
+        </a>
         <a href="#" id="mobile-search-btn" class="mobile-nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -1060,9 +1096,10 @@
         }
 
         // Close logic
-        document.querySelectorAll('.detail-close, .modal-close, .order-close').forEach(btn => {
+        document.querySelectorAll('.detail-close, .modal-close, .order-close, .auth-close, .search-close').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                document.querySelectorAll('.modal-overlay, .cart-drawer').forEach(m => m.classList.remove('active'));
+                document.body.classList.remove('modal-open');
                 document.body.style.overflow = 'auto';
             });
         });
@@ -1070,6 +1107,7 @@
         window.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay')) {
                 e.target.classList.remove('active');
+                document.body.classList.remove('modal-open');
                 document.body.style.overflow = 'auto';
             }
         });

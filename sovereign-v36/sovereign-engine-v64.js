@@ -1307,12 +1307,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- MOBILE BOTTOM NAVIGATION TRIGGERS ---
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
+
+            // GSAP entrance if applicable
+            const content = modal.querySelector('.modal-content, .search-fullscreen-container');
+            if (content) {
+                gsap.fromTo(content,
+                    { opacity: 0, scale: 0.95, y: 20 },
+                    { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "power3.out" }
+                );
+            }
+        }
+    }
+
     const mobileSearchBtn = document.getElementById('mobile-search-btn');
+    const mobileTopSearchBtn = document.getElementById('mobile-top-search-trigger');
+
     if (mobileSearchBtn) {
         mobileSearchBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('search-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            openModal('search-modal');
+        });
+    }
+
+    if (mobileTopSearchBtn) {
+        mobileTopSearchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('search-modal');
         });
     }
 
@@ -1323,6 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cartDrawer = document.getElementById('cart-drawer');
             if (cartDrawer) {
                 cartDrawer.classList.add('active');
+                document.body.classList.add('modal-open');
                 document.body.style.overflow = 'hidden';
             }
         });
@@ -1332,11 +1359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileAccountBtn) {
         mobileAccountBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const authModal = document.getElementById('auth-modal');
-            if (authModal) {
-                authModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            openModal('auth-modal');
         });
     }
 
