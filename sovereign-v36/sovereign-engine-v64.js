@@ -999,7 +999,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 const resetLoadingState = () => {
-                    // Persistent Buffering: Keep loader but hide full overlay background and text
+                    // Show Artisanal Agreement Modal after generation
+                    const artisanalModal = document.getElementById('artisanal-modal');
+                    if (artisanalModal) {
+                        artisanalModal.style.display = 'flex';
+                    }
+
+                    // Persistent Buffering until "Agree" is clicked
                     if (aiLoading) {
                         const loadingMsgText = aiLoading.querySelector('p');
                         if (loadingMsgText) loadingMsgText.style.display = 'none';
@@ -1296,5 +1302,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- ARTISANAL AGREEMENT MODAL LOGIC ---
+    const artisanalModal = document.getElementById('artisanal-modal');
+    const btnArtisanalAgree = document.getElementById('btn-artisanal-agree');
+    const btnArtisanalCancel = document.getElementById('btn-artisanal-cancel');
+
+    if (btnArtisanalAgree) {
+        btnArtisanalAgree.addEventListener('click', () => {
+            if (artisanalModal) artisanalModal.style.display = 'none';
+            // Hide the buffering overlay finally
+            const aiLoading = document.getElementById('ai-loading');
+            if (aiLoading) aiLoading.style.display = 'none';
+        });
+    }
+
+    if (btnArtisanalCancel) {
+        btnArtisanalCancel.addEventListener('click', () => {
+            if (artisanalModal) artisanalModal.style.display = 'none';
+            // Also hide overlay for usability if they cancel
+            const aiLoading = document.getElementById('ai-loading');
+            if (aiLoading) aiLoading.style.display = 'none';
+        });
+    }
 
 });
