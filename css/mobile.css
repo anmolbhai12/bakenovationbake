@@ -319,15 +319,25 @@ iframe {
 
     /* Fix Loading Overlay for Mobile (Vertical) */
     .ai-loading-overlay {
+        display: flex !important;
+        /* Force visibility when triggered */
         flex-direction: column !important;
         padding: 20px !important;
         text-align: center !important;
+        z-index: 100 !important;
+        /* Ensure it's above the image and grid */
+        background: rgba(26, 11, 31, 0.95) !important;
     }
 
     .ai-loading-overlay p {
-        font-size: 0.85rem !important;
-        margin-top: 1rem !important;
-        max-width: 200px !important;
+        display: block !important;
+        visibility: visible !important;
+        color: var(--color-gold) !important;
+        /* Explicitly force gold color */
+        font-size: 0.9rem !important;
+        margin-top: 1.5rem !important;
+        max-width: 250px !important;
+        line-height: 1.4 !important;
     }
 
     .loader-snap {
