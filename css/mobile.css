@@ -340,6 +340,18 @@ iframe {
         line-height: 1.4 !important;
     }
 
+    .premium-disclaimer {
+        display: block !important;
+        visibility: visible !important;
+        margin-top: 1.5rem !important;
+        font-size: 0.75rem !important;
+        color: var(--color-gold-light) !important;
+        text-align: center !important;
+        opacity: 0.8 !important;
+        padding: 0 15px !important;
+        line-height: 1.4 !important;
+    }
+
     .loader-snap {
         width: 60px !important;
         height: 60px !important;
