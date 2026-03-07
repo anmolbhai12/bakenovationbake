@@ -923,6 +923,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
+            // Popup Disclaimer
+            showAlert("*Note: AI designs are for visual inspiration. Actual taste, texture and final design may vary slightly as each cake is uniquely handcrafted.", 'info');
+
             const btnText = aiGenerateBtn.querySelector('.btn-text');
             const spinner = aiGenerateBtn.querySelector('.spinner');
             const loadingMsg = aiLoading ? aiLoading.querySelector('p') : null;
@@ -944,7 +947,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (btnText) btnText.style.display = 'none';
                 if (spinner) spinner.style.display = 'block';
                 aiGenerateBtn.disabled = true;
-                if (aiLoading) aiLoading.style.display = 'flex';
+                if (aiLoading) {
+                    aiLoading.style.display = 'flex';
+                    aiLoading.style.background = 'rgba(26, 11, 31, 0.95)';
+                    aiLoading.style.backdropFilter = 'blur(5px)';
+                    aiLoading.style.pointerEvents = 'auto';
+                    const loadingMsgText = aiLoading.querySelector('p');
+                    if (loadingMsgText) loadingMsgText.style.display = 'block';
+                }
                 if (loadingMsg) loadingMsg.innerText = loadingText;
 
                 if (aiGeneratedImage) {
@@ -989,7 +999,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 const resetLoadingState = () => {
-                    if (aiLoading) aiLoading.style.display = 'none';
+                    // Persistent Buffering: Keep loader but hide full overlay background and text
+                    if (aiLoading) {
+                        const loadingMsgText = aiLoading.querySelector('p');
+                        if (loadingMsgText) loadingMsgText.style.display = 'none';
+                        aiLoading.style.background = 'transparent';
+                        aiLoading.style.backdropFilter = 'none';
+                        aiLoading.style.pointerEvents = 'none';
+                    }
+
                     if (aiGenerateBtn) aiGenerateBtn.disabled = false;
                     if (btnText) btnText.style.display = 'block';
                     if (spinner) spinner.style.display = 'none';
