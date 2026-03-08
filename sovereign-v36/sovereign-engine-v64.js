@@ -720,8 +720,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
         updateCartUI();
 
-        // Open drawer to show success
-        if (cartDrawer) cartDrawer.classList.add('active');
+        // Show added to cart popup
+        showAlert(`✨ ${item.name} added to cart!`, 'success');
     }
 
     if (cartToggle) {
