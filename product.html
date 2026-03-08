@@ -613,15 +613,36 @@
                 date: document.getElementById('delivery-date').value,
                 time: document.querySelector('#time-slot-options .weight-chip.active')?.innerText,
                 message: document.getElementById('cake-message').value,
-                diet: document.querySelector('.diet-btn.active')?.innerText.trim(),
+                diet: document.querySelector('.diet-btn.active')?.innerText?.trim(),
                 img: currentProduct.imgs[0],
                 tiers: currentProduct.category === 'cakes' ? document.querySelector('#detail-tiers-options .weight-chip.active')?.innerText : null,
                 fakeTier: currentProduct.category === 'cakes' ? document.querySelector('#detail-fake-tier-options .weight-chip.active')?.innerText : null,
                 whichFake: document.getElementById('which-fake-tier-group').style.display === 'block' ? document.querySelector('#detail-which-fake-options .weight-chip.active')?.innerText : null
             };
 
-            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
-            window.location.href = 'checkout.html';
+            const cartItem = {
+                name: orderData.title,
+                image: orderData.img,
+                details: `Weight: ${orderData.weight} | Qty: ${orderData.qty}`,
+                price: parseInt(orderData.price)
+            };
+
+            if (isBuyNow) {
+                localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+                window.location.href = 'checkout.html';
+            } else {
+                if (typeof addToCart === 'function') {
+                    addToCart(cartItem);
+                } else {
+                    // Fallback if sovereign engine not fully loaded
+                    let cart = JSON.parse(localStorage.getItem('bakenovation_cart')) || [];
+                    cart.push(cartItem);
+                    localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
+                    if (typeof showAlert === 'function') {
+                        showAlert(`✨ ${cartItem.name} added to cart!`, 'success');
+                    }
+                }
+            }
         }
 
         function changeMainImage(url, thumbEl) {
