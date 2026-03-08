@@ -989,13 +989,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addToCart(item) {
         // === LOGIN GUARD ===
-        if (!activeUser) {
+        const currentUser = JSON.parse(localStorage.getItem('bakenovation_activeUser'));
+        if (!currentUser) {
             requireLogin('Please sign in to add items to your cart.');
             return;
         }
         cart.push(item);
         localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
         updateCartUI();
+
+        // Open cart drawer for feedback
+        if (cartDrawer) cartDrawer.classList.add('active');
 
         // Show added to cart popup
         showAlert(`✨ ${item.name} added to cart!`, 'success');
@@ -1020,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Checkout button logic (GATED)
+    // Checkout button logic (REDIRECT TO DEDICATED PAGE)
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) {
@@ -1029,21 +1033,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             checkLoginAndProceed(() => {
-                if (cartDrawer) cartDrawer.classList.remove('active');
-                if (modal) modal.classList.add('active');
-
-                const cartSummary = cart.map(item => `- ${item.name} (${item.details})`).join('\n');
-                const imageRefs = cart.map(item => `${item.name}:\n${item.image}`).join('\n\n');
-
-                const messageInput = modal.querySelector('textarea[name="message"]');
-                const imageRefsInput = document.getElementById('modal-image-references');
-
-                if (messageInput) {
-                    messageInput.value = `[SHOPPING CART ORDER]\n${cartSummary}\n\n[IMAGE REFERENCES]\n${imageRefs}\n\nClient Name: ${activeUser?.name || 'User'}`;
-                }
-                if (imageRefsInput) {
-                    imageRefsInput.value = imageRefs;
-                }
+                // Redirect to specialized checkout page
+                window.location.href = 'checkout.html';
             });
         });
     }
@@ -1089,8 +1080,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiBuyNowBtn = document.getElementById('ai-buy-now-btn');
     if (aiBuyNowBtn) {
         aiBuyNowBtn.addEventListener('click', () => {
-            if (aiPrompt) {
-                const userDetails = aiPrompt.value.trim();
+            const aiPromptEl = document.getElementById('ai-prompt');
+            if (aiPromptEl) {
+                const userDetails = aiPromptEl.value.trim();
                 const smartDetails = `Flavor: ${snapState.flavor}, Size: ${snapState.size}. Prompt: ${userDetails}`;
 
                 checkLoginAndProceed(() => {
@@ -1117,13 +1109,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiAddToCartBtn = document.getElementById('ai-add-to-cart-btn');
     if (aiAddToCartBtn) {
         aiAddToCartBtn.addEventListener('click', () => {
-            if (aiPrompt) {
-                const userDetails = aiPrompt.value.trim();
+            const aiPromptEl = document.getElementById('ai-prompt');
+            if (aiPromptEl) {
+                const userDetails = aiPromptEl.value.trim();
                 const smartPrompt = `${snapState.type} cake, ${snapState.style} style, ${snapState.color} color palette. ${userDetails}`;
 
                 addToCart({
                     name: 'Bespoke AI Design',
-                    image: snapState.currentImageUrl,
+                    image: snapState.currentImageUrl || aiGeneratedImage?.src,
                     details: smartPrompt,
                     price: 4500 // Prestige tier for AI designs
                 });

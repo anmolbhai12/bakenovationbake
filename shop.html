@@ -1042,8 +1042,163 @@
             filterProducts(hash);
         });
     </script>
+    <!-- Shared Atelier Components -->
+    <div id="search-modal" class="modal-overlay search-overlay-blur">
+        <div class="glass-panel modal-content search-dropdown-panel">
+            <button class="modal-close search-close">&times;</button>
+            <h2 class="text-orchid" style="text-align: center; font-size: 1.8rem; margin-bottom: 1.5rem;">Search
+                Bakenovation</h2>
+            <form id="search-form"
+                style="display: flex; gap: 1rem; justify-content: center; max-width: 800px; margin: 0 auto 2rem;">
+                <input type="text" id="search-input" class="luxury-input" placeholder="Search for couture cakes..."
+                    style="flex: 1; font-size: 1.2rem; padding: 1.2rem;" required>
+                <button type="submit" class="btn-luxury" style="padding: 0 2.5rem;">Search</button>
+            </form>
+            <div id="search-results" style="text-align: center; display: none;"></div>
+        </div>
+    </div>
+
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-drawer-content">
+            <button class="cart-close" id="cart-close">&times;</button>
+            <h2 class="text-orchid" style="margin-bottom: 2rem;">Your Atelier Cart</h2>
+            <div id="cart-items" class="cart-items-list">
+                <p class="empty-cart-msg">Your cart is currently empty.</p>
+            </div>
+            <button id="checkout-btn" class="btn-luxury w-100" style="margin-top: 1rem;">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="glass-panel modal-content auth-container">
+            <button class="modal-close auth-close">&times;</button>
+            <div id="login-view">
+                <div class="customizer-header">
+                    <h2 class="text-orchid">Welcome Back</h2>
+                    <p id="login-method-text">Login via Email OTP</p>
+                </div>
+                <form id="login-form" class="auth-form">
+                    <div id="login-email-group" class="control-group"><label>Email Address</label><input type="email"
+                            id="login-email" class="luxury-input" placeholder="name@example.com"></div>
+                    <div id="login-whatsapp-group" class="control-group" style="display: none;"><label>WhatsApp
+                            Number</label><input type="tel" id="login-whatsapp" class="luxury-input"
+                            placeholder="+91 00000 00000"></div>
+                    <div class="control-group"
+                        style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                        <input type="checkbox" id="login-tc" required
+                            style="margin-top: 4px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--color-gold);">
+                        <label for="login-tc"
+                            style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4; cursor: pointer;">I
+                            accept the Terms & Conditions.</label>
+                    </div>
+                    <button type="submit" class="btn-luxury w-100" id="login-submit-btn">Send Verification Code</button>
+                    <div style="margin-top: 1rem; text-align: center;"><button type="button" id="toggle-login-method"
+                            class="btn-text" style="color: var(--color-gold); font-size: 0.85rem;">Login with WhatsApp
+                            instead</button></div>
+                    <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up here</a></p>
+                </form>
+            </div>
+            <div id="signup-view" style="display: none;">
+                <div class="customizer-header">
+                    <h2 class="text-orchid">Join the Atelier</h2>
+                    <p id="signup-method-text">Sign up via Email OTP</p>
+                </div>
+                <form id="signup-form" class="auth-form">
+                    <div class="control-group"><label>Full Name</label><input type="text" id="signup-name" required
+                            class="luxury-input" placeholder="Your Name"></div>
+                    <div id="signup-email-group" class="control-group"><label>Email Address</label><input type="email"
+                            id="signup-email" class="luxury-input" placeholder="name@example.com"></div>
+                    <div id="signup-whatsapp-group" class="control-group" style="display: none;"><label>WhatsApp
+                            Number</label><input type="tel" id="signup-whatsapp" class="luxury-input"
+                            placeholder="+91 00000 00000"></div>
+                    <button type="submit" class="btn-luxury w-100" id="signup-submit-btn">Send Verification
+                        Code</button>
+                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login here</a></p>
+                </form>
+            </div>
+            <div id="otp-view" style="display: none;">
+                <div class="customizer-header">
+                    <h2 class="text-orchid" id="otp-title">Verify Email</h2>
+                    <p id="otp-message">Enter the 6-digit code sent to your email.</p>
+                </div>
+                <form id="otp-form" class="auth-form">
+                    <div class="control-group text-center"><input type="text" id="otp-input" required
+                            class="otp-luxury-input" placeholder="000 000" maxlength="6"></div>
+                    <button type="submit" class="btn-luxury w-100">Verify & Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container" class="notification-container"></div>
+
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Home</span>
+        </a>
+        <a href="trending.html" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+            <span>Trending</span>
+        </a>
+        <a href="gifting.html" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            <span>Gifting</span>
+        </a>
+        <a href="#" id="mobile-search-btn" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search</span>
+        </a>
+        <a href="shop.html" class="mobile-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Shop</span>
+        </a>
+        <a href="#" id="mobile-account-btn" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Account</span>
+        </a>
+        <a href="#" id="mobile-cart-btn" class="mobile-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span id="mobile-cart-count" class="mobile-nav-badge">0</span>
+            <span>Cart</span>
+        </a>
+    </nav>
+
+    <script src="sovereign-v36/sovereign-engine-v64.js?v=113.1"></script>
 </body>
 
 </html>
-
-

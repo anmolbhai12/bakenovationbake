@@ -221,6 +221,22 @@
                         <label>Pincode</label>
                         <input type="text" id="pincode" class="checkout-input" required>
                     </div>
+                    <div id="extra-date-time"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                        <div class="form-group">
+                            <label>Delivery Date</label>
+                            <input type="date" id="delivery-date" class="checkout-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Time</label>
+                            <select id="delivery-time" class="checkout-input" required>
+                                <option value="11 AM - 2 PM">11 AM - 2 PM</option>
+                                <option value="2 PM - 5 PM">2 PM - 5 PM</option>
+                                <option value="5 PM - 8 PM">5 PM - 8 PM</option>
+                                <option value="8 PM - 11 PM">8 PM - 11 PM</option>
+                            </select>
+                        </div>
+                    </div>
                 </form>
 
                 <div id="qr-section" class="payment-qr-container">
@@ -265,28 +281,66 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
-            if (!orderData) {
+            const pendingOrder = JSON.parse(localStorage.getItem('pendingOrder'));
+            let cart = JSON.parse(localStorage.getItem('bakenovation_cart')) || [];
+
+            let finalOrder;
+            if (pendingOrder) {
+                finalOrder = pendingOrder;
+                if (finalOrder.date) document.getElementById('delivery-date').value = finalOrder.date;
+                if (finalOrder.time) document.getElementById('delivery-time').value = finalOrder.time;
+            } else if (cart.length > 0) {
+                const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+                finalOrder = {
+                    title: cart.length === 1 ? cart[0].name : `Cart Order (${cart.length} items)`,
+                    price: total,
+                    qty: 1,
+                    items: cart,
+                    img: cart[0].image
+                };
+            } else {
                 alert('No order found. Redirecting to home.');
                 window.location.href = 'index.html';
                 return;
             }
 
+            // Setup Date Constraints (Min = Today + 2 days)
+            const dateInput = document.getElementById('delivery-date');
+            const minDate = new Date();
+            minDate.setDate(minDate.getDate() + 2);
+            dateInput.setAttribute('min', minDate.toISOString().split('T')[0]);
+            if (!dateInput.value) dateInput.value = minDate.toISOString().split('T')[0];
+
             const summaryWrap = document.getElementById('order-summary-content');
-            let summaryHTML = `
-                <div class="order-summary-item"><strong>${orderData.title}</strong><span>x ${orderData.qty}</span></div>
-                <div class="order-summary-item"><span>Options</span><span>${orderData.weight}, ${orderData.diet}</span></div>
-                <div class="order-summary-item"><span>Delivery</span><span>${orderData.date} | ${orderData.time}</span></div>
-            `;
-            if (orderData.tiers) summaryHTML += `<div class="order-summary-item"><span>Structure</span><span>${orderData.tiers}${orderData.fakeTier === 'Yes' ? ' (+Fake Tier)' : ''}</span></div>`;
-            if (orderData.message) summaryHTML += `<div class="order-summary-item"><span>Message</span><span>"${orderData.message}"</span></div>`;
+            let summaryHTML = '';
+
+            if (pendingOrder) {
+                summaryHTML = `
+                    <div class="order-summary-item"><strong>${finalOrder.title}</strong><span>x ${finalOrder.qty}</span></div>
+                    <div class="order-summary-item"><span>Options</span><span>${finalOrder.weight || 'N/A'}, ${finalOrder.diet || 'N/A'}</span></div>
+                `;
+                if (finalOrder.tiers) summaryHTML += `<div class="order-summary-item"><span>Structure</span><span>${finalOrder.tiers}${finalOrder.fakeTier === 'Yes' ? ' (+Fake Tier)' : ''}</span></div>`;
+                if (finalOrder.message) summaryHTML += `<div class="order-summary-item"><span>Note</span><span>"${finalOrder.message}"</span></div>`;
+            } else {
+                cart.forEach(item => {
+                    summaryHTML += `
+                        <div class="order-summary-item" style="border-bottom:none; padding-bottom:0; margin-bottom:5px;">
+                            <strong>${item.name}</strong>
+                            <span>Rs. ${item.price}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; margin-bottom: 12px; opacity: 0.7; color: var(--color-text-muted); padding-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                            ${item.details}
+                        </div>
+                    `;
+                });
+            }
 
             summaryWrap.innerHTML = summaryHTML;
-            document.getElementById('final-total').innerText = 'Rs. ' + orderData.price;
-            document.getElementById('qr-amount').innerText = 'Rs. ' + orderData.price;
+            document.getElementById('final-total').innerText = 'Rs. ' + finalOrder.price;
+            document.getElementById('qr-amount').innerText = 'Rs. ' + finalOrder.price;
 
             // Generate UPI QR (Dynamic Amount)
-            const upiUrl = `upi://pay?pa=anmolsharma331@axl&pn=Bakenovation&am=${orderData.price}&cu=INR`;
+            const upiUrl = `upi://pay?pa=anmolsharma331@axl&pn=Bakenovation&am=${finalOrder.price}&cu=INR`;
             document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
 
             document.getElementById('btn-proceed-pay').onclick = () => {
@@ -311,32 +365,37 @@
 
                 const finalData = {
                     action: 'create_order',
-                    ...orderData,
+                    ...finalOrder,
                     name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
                     phone: cleanPhone,
                     address: document.getElementById('address').value,
                     pincode: document.getElementById('pincode').value,
+                    date: document.getElementById('delivery-date').value,
+                    time: document.getElementById('delivery-time').value,
                     status: 'Paid (Awaiting Verification)'
                 };
 
-                try {
-                    // We put 'action' in URL to ensure GAS always identifies it even if body parsing lags
-                    const submissionUrl = `${GAS_URL}?action=create_order`;
+                // Consolidate details if cart
+                if (!pendingOrder && cart.length > 0) {
+                    finalData.title = `Website Order (${cart.length} items)`;
+                    finalData.message = cart.map(item => `${item.name} | ${item.details}`).join('\n');
+                }
 
-                    // Standard fetch with fallback
+                try {
+                    const submissionUrl = `${GAS_URL}?action=create_order`;
                     await fetch(submissionUrl, {
                         method: 'POST',
                         body: JSON.stringify(finalData)
                     });
-
-                    console.log('Order Data Sent:', finalData);
 
                     if (window.showAlert) {
                         window.showAlert('Order Submitted! Redirecting...', 'success');
                         await new Promise(r => setTimeout(r, 1500));
                     }
 
+                    // Success: Clear cart and pending order
                     localStorage.removeItem('pendingOrder');
+                    localStorage.removeItem('bakenovation_cart');
                     window.location.href = 'success.html';
                 } catch (e) {
                     console.error('Submission error:', e);
@@ -347,6 +406,8 @@
                             mode: 'no-cors',
                             body: JSON.stringify(finalData)
                         });
+                        localStorage.removeItem('pendingOrder');
+                        localStorage.removeItem('bakenovation_cart');
                         window.location.href = 'success.html';
                     } catch (err2) {
                         if (window.showAlert) {
