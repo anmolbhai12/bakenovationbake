@@ -1363,4 +1363,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Expose functions to global scope for product.html access
+    window.addToCart = addToCart;
+    window.showAlert = showAlert;
+    window.updateCartUI = updateCartUI;
+
 });
