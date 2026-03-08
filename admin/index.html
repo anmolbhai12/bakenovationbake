@@ -102,128 +102,13 @@
                         </div>
 
                         <div class="action-panel">
-                            ${isPending ? `
-                                <div class="action-form">
-                                    <div class="input-row">
-                                        <input type="number" id="amt-${o.OrderID}" placeholder="Amount (₹)">
-                                        <input type="date" id="date-${o.OrderID}">
-                                        <input type="time" id="time-${o.OrderID}">
-                                    </div>
-                                    <button class="btn" onclick="sendToNegotiator(event, '${o.OrderID}')">Start WhatsApp Negotiation</button>
-                                </div>
-                            ` : isQuoted ? `
-                                <div style="display:grid; gap:10px">
-                                    <span style="color:#d4af37; font-size:0.8rem">Waiting for customer confirmation...</span>
-                                    <button class="btn" onclick="updateStatus(event, '${o.OrderID}', 'Paid')">Confirm Receipt of Payment</button>
-                                </div>
-                            ` : o.Status === 'Negotiating' ? `
-                                <div style="display:grid; gap:10px">
-                                    <span style="color:#00e676; font-size:0.8rem">Bot is interacting with client...</span>
-                                    <button class="btn" onclick="loadOrders()">Refresh Status</button>
-                                </div>
-                            ` : '<p style="text-align:center; opacity:0.5; font-size:0.8rem">Order Finalised</p>'}
+                            <p style="text-align:center; opacity:0.5; font-size:0.8rem">Order Received</p>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // --- UNIVERSAL NO-CORS SENDER ---
-        async function sendToScript(payload) {
-            // "no-cors" mode means we can't read the response, but the browser allows the send.
-            // We blindly assume success if no network error occurs.
-            await fetch(GAS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        }
-
-        async function sendToNegotiator(event, id) {
-            const btn = event.currentTarget;
-            const amount = document.getElementById(`amt-${id}`).value;
-            const date = document.getElementById(`date-${id}`).value;
-            const time = document.getElementById(`time-${id}`).value;
-
-            if (!amount || !date || !time) {
-                alert('⚠️ Please enter Amount, Date, and Time.');
-                return;
-            }
-
-            const card = btn.closest('.card');
-            const phone = card.querySelector('p').innerText.replace('📞 ', '');
-
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '🚀 Handing to Bot...';
-            btn.disabled = true;
-
-            try {
-                // 1. Update Sheet with Quote Data & move to "Negotiating"
-                await sendToScript({
-                    action: 'update_order',
-                    orderId: id,
-                    amount: amount,
-                    deliveryDate: date,
-                    deliveryTime: time,
-                    status: 'Negotiating',
-                    botState: 'AWAITING_CONFIRMATION'
-                });
-
-                // 2. Trigger Bot to send the details for verification
-                // We call our server.js endpoint which then talks to the client
-                const botRes = await fetch('https://bakenovation-bot.alwaysdata.net/send-negotiation-start', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        phone: phone,
-                        orderId: id,
-                        amount: amount,
-                        date: date,
-                        time: time
-                    })
-                });
-
-                alert('✅ Verification Request Sent!\n\nThe bot will now confirm details with the client.');
-                setTimeout(() => loadOrders(), 2000);
-
-            } catch (e) {
-                alert('❌ Fault: ' + e.message);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        async function updateStatus(event, id, status) {
-            const btn = event.currentTarget;
-            const card = btn.closest('.card');
-            const name = card.querySelector('h3').innerText;
-            const phone = card.querySelector('p').innerText.replace('📞 ', '');
-
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '🚀 Updating...';
-            btn.disabled = true;
-
-            try {
-                await sendToScript({
-                    action: 'update_order',
-                    orderId: id,
-                    status: status,
-                    name: name,
-                    phone: phone
-                });
-
-                alert('✅ Status Updated!\n\nRefreshing...');
-                setTimeout(() => loadOrders(), 2000);
-
-            } catch (e) {
-                alert('❌ Network Error: ' + e.message);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
 
         async function runDiagnostic() {
             try {
