@@ -973,7 +973,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
             // === LOGIN GUARD for AI Studio ===
-            if (!activeUser) {
+            // Always check fresh localStorage, not a stale snapshot
+            const currentUser = JSON.parse(localStorage.getItem('bakenovation_activeUser'));
+            if (!currentUser) {
                 requireLogin('Please sign in to use the AI Design Studio.');
                 return;
             }
@@ -1358,6 +1360,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnArtisanalAgree) {
         btnArtisanalAgree.addEventListener('click', () => {
+            // === LOGIN GUARD — double-check before firing generation ===
+            const currentUser = JSON.parse(localStorage.getItem('bakenovation_activeUser'));
+            if (!currentUser) {
+                if (artisanalModal) artisanalModal.style.display = 'none';
+                window.pendingGeneration = null;
+                requireLogin('Please sign in to use the AI Design Studio.');
+                return;
+            }
             if (artisanalModal) artisanalModal.style.display = 'none';
             // Start generation if it was pending
             if (typeof window.pendingGeneration === 'function') {
