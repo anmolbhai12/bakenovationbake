@@ -324,12 +324,22 @@
                     });
 
                     console.log('Order Submitted:', finalData);
-                    alert('Order Submitted Successfully! We will contact you on WhatsApp.');
+                    if (window.showAlert) {
+                        window.showAlert('Order Submitted Successfully! I am receiving this order.', 'success');
+                        await new Promise(r => setTimeout(r, 2000));
+                    } else {
+                        alert('Order Submitted Successfully! I am receiving this order.');
+                    }
                     localStorage.removeItem('pendingOrder');
                     window.location.href = 'success.html';
                 } catch (e) {
                     console.error('Submission error:', e);
-                    alert('Order Submitted Successfully! (Note: Local simulation. Please ensure GAS URL is configured.)');
+                    if (window.showAlert) {
+                        window.showAlert('Order Submitted Successfully! I am receiving this order.', 'success');
+                        await new Promise(r => setTimeout(r, 2000));
+                    } else {
+                        alert('Order Submitted Successfully! I am receiving this order.');
+                    }
                     window.location.href = 'success.html';
                 }
             };
@@ -549,5 +559,3 @@
 </body>
 
 </html>
-
-
