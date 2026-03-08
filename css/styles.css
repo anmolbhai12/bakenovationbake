@@ -2476,6 +2476,21 @@ h4 {
     position: relative;
 }
 
+/* Responsive Visibility Utilities */
+.hidden-desktop {
+    display: none !important;
+}
+
+.hidden-mobile {
+    /* Visible on desktop by default */
+}
+
+/* Hide Mobile-Only Elements on Desktop By Default */
+.mobile-bottom-nav,
+.mobile-search-bar-trigger {
+    display: none !important;
+}
+
 .account-menu-item {
     padding: 1rem;
     color: var(--color-text);

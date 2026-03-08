@@ -430,8 +430,18 @@ iframe {
         display: none !important;
     }
 
+    .hidden-desktop {
+        display: block !important;
+    }
+
+    /* Hide Desktop Specific Navigation */
+    .bake-sub-nav {
+        display: none !important;
+    }
+
     /* --- MOBILE BOTTOM NAVIGATION --- */
     .mobile-bottom-nav {
+        display: flex !important;
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
