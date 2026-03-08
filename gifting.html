@@ -297,6 +297,7 @@
                                     <option value="price-desc">Price, high to low</option>
                                     <option value="az">Alphabetically, A-Z</option>
                                     <option value="za">Alphabetically, Z-A</option>
+                                    <option value="newest">Date, new to old</option>
                                 </select>
                             </div>
                         </div>
@@ -927,10 +928,13 @@
                 const priceB = parseInt(b.getAttribute('data-price')) || 0;
                 const nameA = a.querySelector('.product-card-title')?.innerText || '';
                 const nameB = b.querySelector('.product-card-title')?.innerText || '';
+                const newA = a.getAttribute('data-new') === 'true' ? 1 : 0;
+                const newB = b.getAttribute('data-new') === 'true' ? 1 : 0;
                 if (sortBy === 'price-asc') return priceA - priceB;
                 if (sortBy === 'price-desc') return priceB - priceA;
                 if (sortBy === 'az') return nameA.localeCompare(nameB);
                 if (sortBy === 'za') return nameB.localeCompare(nameA);
+                if (sortBy === 'newest') return newB - newA;
                 return 0;
             });
 

@@ -822,26 +822,67 @@
 }
 
 @media (max-width: 768px) {
+
+    /* Hide desktop sidebar */
     .collection-sidebar {
         display: none !important;
     }
 
+    /* Show floating filter trigger */
     .mobile-filter-trigger {
         display: flex;
     }
 
-    .collection-toolbar {
-        /* On mobile, simplify toolbar or hide it if drawer covers it */
+    /* Fix main container on mobile — full-width single column */
+    .collection-container {
+        grid-template-columns: 1fr !important;
     }
 
+    /* Default grid: 2 columns on mobile */
+    #product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+
+    /* Override view classes on mobile */
+    #product-grid.view-3col,
+    #product-grid.view-4col {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    #product-grid.view-list {
+        grid-template-columns: 1fr !important;
+    }
+
+    #product-grid.view-2col {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Toolbar: hide sort/items-per-page, keep view buttons */
     .toolbar-right {
         display: none !important;
-        /* Move to drawer */
     }
 
     .toolbar-left {
         justify-content: center;
         width: 100%;
+    }
+
+    /* Scrollable categories list in the mobile filter drawer */
+    #mobile-category-filter {
+        max-height: 200px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Scrollable body of each section in drawer */
+    .filter-drawer-body .sidebar-section-body {
+        max-height: none;
+    }
+
+    /* Fix page padding to avoid header overlap */
+    main {
+        padding-top: 110px !important;
     }
 }
 
