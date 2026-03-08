@@ -2254,7 +2254,7 @@ h4 {
     width: 450px;
     height: 100%;
     max-width: 100%;
-    background: rgba(26, 8, 34, 0.7) !important;
+    background: transparent;
     padding: 3rem 2rem;
     transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
@@ -2270,6 +2270,7 @@ h4 {
     right: 0;
     bottom: 0;
     z-index: -1;
+    background: rgba(26, 8, 34, 0.7) !important;
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
 }
