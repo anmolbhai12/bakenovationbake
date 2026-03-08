@@ -156,6 +156,7 @@ function createOrder(data) {
     tiers: data.tiers || null,
     fakeTier: data.fakeTier || null,
     whichFake: data.whichFake || null,
+    flavor: data.flavor || 'N/A',
     img: data.img || ''
   };
 

@@ -90,12 +90,15 @@
                         </div>
 
                         <div class="details-panel">
-                            <div><strong>Flavor:</strong> ${details.flavor || 'N/A'}</div>
-                            <div><strong>Structure:</strong> ${details.tiers || 'N/A'} Tiers</div>
-                            ${details.message ? `<div><strong>Dedication:</strong> "${details.message}"</div>` : ''}
-                            ${o.DeliveryDate ? `<div><strong>Date:</strong> ${o.DeliveryDate}</div>` : ''}
-                            ${o.DeliveryTime ? `<div><strong>Time:</strong> ${o.DeliveryTime}</div>` : ''}
-                            ${o.Amount ? `<div><strong>Total:</strong> ₹${o.Amount}</div>` : ''}
+                            <div><strong>🎂 Item:</strong> ${details.product || 'Custom Order'}</div>
+                            <div><strong>🍓 Flavor:</strong> ${details.flavor || 'N/A'}</div>
+                            <div><strong>📏 Structure:</strong> ${details.tiers || 'N/A'} Tiers</div>
+                            ${details.message ? `<div><strong>✍️ Message:</strong> "${details.message}"</div>` : ''}
+                            <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(212,175,55,0.1);">
+                                <div><strong>📅 Requested Date:</strong> ${o.DeliveryDate || 'Not specified'}</div>
+                                <div><strong>⏰ Requested Time:</strong> ${o.DeliveryTime || 'Not specified'}</div>
+                                <div><strong>💰 Price:</strong> ₹${o.Amount || 'Pending'}</div>
+                            </div>
                         </div>
 
                         <div class="action-panel">
