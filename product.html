@@ -631,16 +631,30 @@
                 localStorage.setItem('pendingOrder', JSON.stringify(orderData));
                 window.location.href = 'checkout.html';
             } else {
-                if (typeof addToCart === 'function') {
-                    addToCart(cartItem);
-                } else {
-                    // Fallback if sovereign engine not fully loaded
-                    let cart = JSON.parse(localStorage.getItem('bakenovation_cart')) || [];
-                    cart.push(cartItem);
-                    localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
-                    if (typeof showAlert === 'function') {
-                        showAlert(`✨ ${cartItem.name} added to cart!`, 'success');
+                const processCartAddition = () => {
+                    if (window.addToCart && typeof window.addToCart === 'function') {
+                        window.addToCart(cartItem);
+                    } else {
+                        // Fallback
+                        let cart = JSON.parse(localStorage.getItem('bakenovation_cart')) || [];
+                        cart.push(cartItem);
+                        localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
+                        if (window.updateCartUI) window.updateCartUI();
+                        if (window.showAlert) {
+                            window.showAlert(`✨ ${cartItem.name} added to cart!`, 'success');
+                        } else {
+                            alert(`✨ ${cartItem.name} added to cart!`);
+                        }
                     }
+                };
+
+                // Execute immediately if ready, otherwise wait for signal
+                if (window.addToCart) {
+                    processCartAddition();
+                } else {
+                    document.addEventListener('sovereignEngineReady', processCartAddition, { once: true });
+                    // Failsafe execution after 500ms if event never fires
+                    setTimeout(() => { if (!window.addToCart) processCartAddition(); }, 500);
                 }
             }
         }

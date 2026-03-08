@@ -1368,4 +1368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.showAlert = showAlert;
     window.updateCartUI = updateCartUI;
 
+    // Dispatch a custom event to let other scripts know Sovereigen Engine is ready
+    document.dispatchEvent(new Event('sovereignEngineReady'));
+
 });
