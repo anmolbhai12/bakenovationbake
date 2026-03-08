@@ -569,6 +569,85 @@
         </div>
     </div>
 
+    <!-- Mobile Filter Trigger -->
+    <button class="mobile-filter-trigger" id="mobile-filter-trigger">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        Filter & Sort
+    </button>
+
+    <!-- Mobile Filter Drawer -->
+    <div class="filter-drawer" id="mobile-filter-drawer">
+        <div class="filter-drawer-header">
+            <span class="filter-drawer-title">Filter & Sort</span>
+            <button class="filter-drawer-close" id="filter-drawer-close">&times;</button>
+        </div>
+        <div class="filter-drawer-body">
+            <!-- Mobile Sort By -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <span class="sidebar-section-title">SORT BY</span>
+                </div>
+                <div class="sidebar-section-body">
+                    <select id="mobile-sort-by" class="toolbar-select"
+                        style="width: 100%; border-bottom: 1px solid var(--color-gold);">
+                        <option value="best">Best selling</option>
+                        <option value="price-asc">Price, low to high</option>
+                        <option value="price-desc">Price, high to low</option>
+                        <option value="az">Alphabetically, A-Z</option>
+                        <option value="za">Alphabetically, Z-A</option>
+                        <option value="newest">Date, new to old</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" onclick="toggleSection(this)">
+                    <span class="sidebar-section-title">CATEGORIES</span>
+                    <span class="sidebar-section-toggle">&#8743;</span>
+                </div>
+                <div class="sidebar-section-body">
+                    <ul class="filter-list" id="mobile-category-filter">
+                        <li class="filter-item"><a href="#" data-filter="all" class="active">Show All</a></li>
+                        <li class="filter-item"><a href="#hampers" data-filter="hampers">Hampers</a></li>
+                        <li class="filter-item"><a href="#festive" data-filter="festive">Festive Gifting</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" onclick="toggleSection(this)">
+                    <span class="sidebar-section-title">PRICE RANGE</span>
+                    <span class="sidebar-section-toggle">&#8743;</span>
+                </div>
+                <div class="sidebar-section-body">
+                    <div class="price-inputs" style="margin-top: 15px;">
+                        <span class="price-input-group">&#8377; <input type="number" id="mobile-price-min"
+                                value="0"></span>
+                        <span class="price-sep">to</span>
+                        <span class="price-input-group">&#8377; <input type="number" id="mobile-price-max"
+                                value="5000"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-drawer-footer">
+            <button class="filter-drawer-btn btn-reset" id="mobile-filter-reset">Reset</button>
+            <button class="filter-drawer-btn btn-apply-filters" id="mobile-filter-apply">Apply Filters</button>
+        </div>
+    </div>
+
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav">
         <a href="index.html" class="mobile-nav-item">
@@ -756,6 +835,71 @@
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + mode).classList.add('active');
         }
+
+        // ===== MOBILE FILTER DRAWER =====
+        const mobileFilterDrawer = document.getElementById('mobile-filter-drawer');
+        const mobileFilterTrigger = document.getElementById('mobile-filter-trigger');
+        const mobileFilterClose = document.getElementById('filter-drawer-close');
+        const mobileApplyBtn = document.getElementById('mobile-filter-apply');
+        const mobileResetBtn = document.getElementById('mobile-filter-reset');
+
+        mobileFilterTrigger?.addEventListener('click', () => {
+            mobileFilterDrawer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Sync mobile inputs with current desktop state
+            document.getElementById('mobile-sort-by').value = document.getElementById('sort-by') ? document.getElementById('sort-by').value : 'best';
+            document.getElementById('mobile-price-min').value = document.getElementById('price-min-val').value;
+            document.getElementById('mobile-price-max').value = document.getElementById('price-max-val').value;
+        });
+
+        mobileFilterClose?.addEventListener('click', () => {
+            mobileFilterDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        mobileApplyBtn?.addEventListener('click', () => {
+            // Sync mobile inputs back to desktop inputs
+            if (document.getElementById('sort-by')) document.getElementById('sort-by').value = document.getElementById('mobile-sort-by').value;
+            document.getElementById('price-min-val').value = document.getElementById('mobile-price-min').value;
+            document.getElementById('price-max-val').value = document.getElementById('mobile-price-max').value;
+
+            // Re-sync sliders if they exist
+            syncPriceSliders();
+
+            // Close drawer and apply
+            mobileFilterDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+            applyFilters();
+        });
+
+        mobileResetBtn?.addEventListener('click', () => {
+            document.getElementById('mobile-price-min').value = 0;
+            document.getElementById('mobile-price-max').value = 5000;
+            document.getElementById('mobile-sort-by').value = 'best';
+
+            // Also reset filters for real
+            document.getElementById('price-min-val').value = 0;
+            document.getElementById('price-max-val').value = 5000;
+            if (document.getElementById('sort-by')) document.getElementById('sort-by').value = 'best';
+            currentCategory = 'all';
+
+            syncPriceSliders();
+            applyFilters();
+            mobileFilterDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Mobile category clicks
+        document.querySelectorAll('#mobile-category-filter a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentCategory = link.getAttribute('data-filter');
+
+                // Highlight active
+                document.querySelectorAll('#mobile-category-filter a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
 
         // ===== MAIN FILTER + SORT + PAGINATION =====
         let currentCategory = 'all';
