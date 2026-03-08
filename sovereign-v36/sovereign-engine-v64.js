@@ -1438,7 +1438,85 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileAccountBtn) {
         mobileAccountBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            openModal('auth-modal');
+            // Read fresh from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('bakenovation_activeUser'));
+
+            if (currentUser) {
+                // === LOGGED IN: Show mobile profile sheet ===
+                // Remove any existing sheet first
+                const existing = document.getElementById('mobile-profile-sheet');
+                if (existing) existing.remove();
+
+                const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Member';
+                const initial = firstName.charAt(0).toUpperCase();
+                const email = currentUser.email || currentUser.whatsapp || '';
+
+                const sheet = document.createElement('div');
+                sheet.id = 'mobile-profile-sheet';
+                sheet.style.cssText = `
+                    position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
+                    background: linear-gradient(160deg, #1a0b2e, #2d0f4d);
+                    border: 1px solid rgba(212,175,55,0.3);
+                    border-radius: 20px 20px 0 0;
+                    padding: 28px 24px 48px;
+                    box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
+                    animation: slideUpSheet 0.3s cubic-bezier(.4,0,.2,1);
+                    font-family: Raleway, sans-serif;
+                `;
+
+                sheet.innerHTML = `
+                    <style>
+                        @keyframes slideUpSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
+                    </style>
+                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 24px;"></div>
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#c5a059,#8B6914);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;">
+                            ${initial}
+                        </div>
+                        <div>
+                            <div style="color:#d4af37;font-weight:700;font-size:1.05rem;line-height:1.2;">${currentUser.name}</div>
+                            <div style="color:rgba(255,255,255,0.55);font-size:0.78rem;margin-top:2px;">${email}</div>
+                        </div>
+                    </div>
+                    <button id="mobile-sheet-logout" style="width:100%;padding:14px;background:rgba(197,98,98,0.15);border:1px solid rgba(220,80,80,0.35);border-radius:10px;color:#ff8a8a;font-family:Raleway,sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;cursor:pointer;">
+                        🚪 Logout
+                    </button>
+                `;
+
+                // Backdrop
+                const backdrop = document.createElement('div');
+                backdrop.id = 'mobile-profile-backdrop';
+                backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99998;backdrop-filter:blur(3px);';
+
+                document.body.appendChild(backdrop);
+                document.body.appendChild(sheet);
+                document.body.style.overflow = 'hidden';
+
+                const closeSheet = () => {
+                    sheet.remove();
+                    backdrop.remove();
+                    document.body.style.overflow = '';
+                };
+
+                backdrop.addEventListener('click', closeSheet);
+
+                document.getElementById('mobile-sheet-logout').addEventListener('click', () => {
+                    localStorage.removeItem('bakenovation_activeUser');
+                    closeSheet();
+                    updateAuthUI();
+                    showAlert('You have been logged out. See you soon!', 'info');
+                });
+
+            } else {
+                // === NOT LOGGED IN: Open login modal ===
+                if (loginView) loginView.style.display = 'block';
+                if (signupView) signupView.style.display = 'none';
+                if (otpView) otpView.style.display = 'none';
+                if (authModal) {
+                    authModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
         });
     }
 
