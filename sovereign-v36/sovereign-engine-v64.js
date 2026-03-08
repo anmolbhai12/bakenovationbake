@@ -271,6 +271,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ==========================================
+    // === LOGIN GUARD HELPERS ==================
+    // requireLogin(msg): shows toast + opens login if user is not authenticated
+    // checkLoginAndProceed(action): runs action if logged in, else shows login prompt
+    // ==========================================
+
+    function requireLogin(message) {
+        const msg = message || 'Please sign in to continue.';
+        // Show premium notification
+        const notifContainer = document.getElementById('notification-container');
+        if (notifContainer) {
+            const notif = document.createElement('div');
+            notif.className = 'bake-notification';
+            notif.style.cssText = `
+                background: rgba(26,8,34,0.97);
+                border: 1px solid var(--color-gold, #d4af37);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                color: #fff;
+                padding: 16px 22px;
+                border-radius: 10px;
+                margin-bottom: 12px;
+                font-family: Raleway, sans-serif;
+                font-size: 0.9rem;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                max-width: 380px;
+                animation: slideInRight 0.3s ease;
+            `;
+            notif.innerHTML = `<span style="font-size:1.4rem;">🔐</span><span>${msg}</span>`;
+            notifContainer.appendChild(notif);
+            setTimeout(() => { notif.style.opacity = '0'; notif.style.transition = 'opacity 0.4s'; setTimeout(() => notif.remove(), 400); }, 3500);
+        }
+        // Open the auth modal on login tab
+        if (authModal) {
+            if (loginView) loginView.style.display = 'block';
+            if (signupView) signupView.style.display = 'none';
+            if (otpView) otpView.style.display = 'none';
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function checkLoginAndProceed(action) {
+        if (!activeUser) {
+            window.pendingAction = action;
+            requireLogin('Please sign in to continue.');
+        } else {
+            action();
+        }
+    }
+
+    // Expose globally so product.html inline scripts can call it
+    window.requireLogin = requireLogin;
+    window.checkLoginAndProceed = checkLoginAndProceed;
+
     if (showSignup) {
         showSignup.addEventListener('click', (e) => {
             e.preventDefault();
@@ -716,6 +774,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addToCart(item) {
+        // === LOGIN GUARD ===
+        if (!activeUser) {
+            requireLogin('Please sign in to add items to your cart.');
+            return;
+        }
         cart.push(item);
         localStorage.setItem('bakenovation_cart', JSON.stringify(cart));
         updateCartUI();
@@ -909,6 +972,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (aiGenerateBtn) {
         aiGenerateBtn.addEventListener('click', () => {
+            // === LOGIN GUARD for AI Studio ===
+            if (!activeUser) {
+                requireLogin('Please sign in to use the AI Design Studio.');
+                return;
+            }
+
             const originalLoadingMsg = "Chef is sketching your masterpiece...";
 
             // Gatekeeping generation behind Artisanal Agreement Modal

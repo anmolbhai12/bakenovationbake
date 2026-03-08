@@ -706,6 +706,11 @@
             };
 
             if (isBuyNow) {
+                // === LOGIN GUARD for Buy Now ===
+                if (window.requireLogin && !JSON.parse(localStorage.getItem('bakenovation_activeUser'))) {
+                    window.requireLogin('Please sign in to place your order.');
+                    return;
+                }
                 localStorage.setItem('pendingOrder', JSON.stringify(orderData));
                 window.location.href = 'checkout.html';
             } else {
