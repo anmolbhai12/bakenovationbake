@@ -303,44 +303,49 @@
                 btn.innerText = 'Submitting...';
                 btn.disabled = true;
 
-                // PRODUCTION GOOGLE APPS SCRIPT URL for Orders
                 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzuXeiqdyIo3wFT-H7I5VJCUJjhI6PPdng71SxF-Xan_OIGMtZDjZofJZWSBV1BNis6/exec';
 
+                // Ensure phone number doesn't cause Excel/Sheets formula errors
+                let cleanPhone = document.getElementById('phone').value.trim();
+                if (cleanPhone.startsWith('+')) cleanPhone = "'" + cleanPhone;
+
                 const finalData = {
+                    action: 'create_order',
                     ...orderData,
                     name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
-                    phone: document.getElementById('phone').value,
+                    phone: cleanPhone,
                     address: document.getElementById('address').value,
                     pincode: document.getElementById('pincode').value,
                     status: 'Paid (Awaiting Verification)'
                 };
 
                 try {
-                    const response = await fetch(GAS_URL, {
+                    // Send to Google Sheets
+                    await fetch(GAS_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // Common for GAS
+                        mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(finalData)
                     });
 
                     console.log('Order Submitted:', finalData);
+
                     if (window.showAlert) {
                         window.showAlert('Order Submitted Successfully! I am receiving this order.', 'success');
                         await new Promise(r => setTimeout(r, 2000));
-                    } else {
-                        alert('Order Submitted Successfully! I am receiving this order.');
                     }
+
                     localStorage.removeItem('pendingOrder');
                     window.location.href = 'success.html';
                 } catch (e) {
                     console.error('Submission error:', e);
                     if (window.showAlert) {
-                        window.showAlert('Order Submitted Successfully! I am receiving this order.', 'success');
-                        await new Promise(r => setTimeout(r, 2000));
+                        window.showAlert('Failed to connect to server. Please try again.', 'error');
                     } else {
-                        alert('Order Submitted Successfully! I am receiving this order.');
+                        alert('Error submitting order. Please check your connection.');
                     }
-                    window.location.href = 'success.html';
+                    btn.innerText = 'I Have Paid - Submit Order';
+                    btn.disabled = false;
                 }
             };
         });
