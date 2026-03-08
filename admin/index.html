@@ -78,6 +78,12 @@
                             <span class="badge ${statusClass}">${o.Status || 'Pending'}</span>
                         </div>
                         
+                        ${details.img ? `
+                            <div class="order-image-container">
+                                <img src="${details.img}" class="order-product-img" alt="Product Image">
+                            </div>
+                        ` : ''}
+
                         <div class="customer-info">
                             <h3>${o.Name || 'Anonymous Client'}</h3>
                             <p>📞 ${o.Phone || 'No Contact'}</p>
@@ -231,5 +237,3 @@
 </body>
 
 </html>
-
-
