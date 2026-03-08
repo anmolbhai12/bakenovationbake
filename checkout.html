@@ -305,7 +305,7 @@
 
                 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzuXeiqdyIo3wFT-H7I5VJCUJjhI6PPdng71SxF-Xan_OIGMtZDjZofJZWSBV1BNis6/exec';
 
-                // Ensure phone number doesn't cause Excel/Sheets formula errors
+                // Ensure phone number doesn't cause Sheets formula errors
                 let cleanPhone = document.getElementById('phone').value.trim();
                 if (cleanPhone.startsWith('+')) cleanPhone = "'" + cleanPhone;
 
@@ -320,32 +320,41 @@
                 };
 
                 try {
-                    // Send to Google Sheets
-                    await fetch(GAS_URL, {
+                    // We put 'action' in URL to ensure GAS always identifies it even if body parsing lags
+                    const submissionUrl = `${GAS_URL}?action=create_order`;
+
+                    // Standard fetch with fallback
+                    await fetch(submissionUrl, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(finalData)
                     });
 
-                    console.log('Order Submitted:', finalData);
+                    console.log('Order Data Sent:', finalData);
 
                     if (window.showAlert) {
-                        window.showAlert('Order Submitted Successfully! I am receiving this order.', 'success');
-                        await new Promise(r => setTimeout(r, 2000));
+                        window.showAlert('Order Submitted! Redirecting...', 'success');
+                        await new Promise(r => setTimeout(r, 1500));
                     }
 
                     localStorage.removeItem('pendingOrder');
                     window.location.href = 'success.html';
                 } catch (e) {
                     console.error('Submission error:', e);
-                    if (window.showAlert) {
-                        window.showAlert('Failed to connect to server. Please try again.', 'error');
-                    } else {
-                        alert('Error submitting order. Please check your connection.');
+                    // Final attempt with no-cors if standard CORS fails
+                    try {
+                        await fetch(`${GAS_URL}?action=create_order`, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            body: JSON.stringify(finalData)
+                        });
+                        window.location.href = 'success.html';
+                    } catch (err2) {
+                        if (window.showAlert) {
+                            window.showAlert('Network failure. Please try again.', 'error');
+                        }
+                        btn.innerText = 'I Have Paid - Submit Order';
+                        btn.disabled = false;
                     }
-                    btn.innerText = 'I Have Paid - Submit Order';
-                    btn.disabled = false;
                 }
             };
         });
