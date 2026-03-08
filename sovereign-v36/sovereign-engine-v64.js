@@ -222,7 +222,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="user-name-abbr">${firstName}</span>
                     </div>
                     <div class="account-menu-dropdown" id="account-menu">
-                        <div class="account-menu-item" id="logout-btn">Logout</div>
+                        <div class="account-menu-header">
+                            <div class="account-menu-avatar">${initial}</div>
+                            <div>
+                                <div class="account-menu-name">${activeUser.name}</div>
+                                <div class="account-menu-email">${activeUser.email || activeUser.whatsapp || ''}</div>
+                            </div>
+                        </div>
+                        <div class="account-menu-divider"></div>
+                        <div class="account-menu-item" id="menu-orders">
+                            <span class="account-menu-icon">📦</span> My Orders
+                        </div>
+                        <div class="account-menu-item" id="menu-edit-profile">
+                            <span class="account-menu-icon">✏️</span> Edit Profile
+                        </div>
+                        <div class="account-menu-item" id="menu-support">
+                            <span class="account-menu-icon">💬</span> Contact Support
+                        </div>
+                        <div class="account-menu-divider"></div>
+                        <div class="account-menu-item account-menu-logout" id="logout-btn">
+                            <span class="account-menu-icon">🚪</span> Logout
+                        </div>
                     </div>
                 </div>
             `;
@@ -243,8 +263,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     activeUser = null;
                     localStorage.removeItem('bakenovation_activeUser');
                     updateAuthUI();
+                    showAlert('You have been logged out. See you soon!', 'info');
                 });
             }
+
+            const menuOrders = document.getElementById('menu-orders');
+            if (menuOrders) menuOrders.addEventListener('click', () => { accountMenu.style.display = 'none'; showOrderHistory(); });
+
+            const menuEdit = document.getElementById('menu-edit-profile');
+            if (menuEdit) menuEdit.addEventListener('click', () => { accountMenu.style.display = 'none'; showEditProfile(); });
+
+            const menuSupport = document.getElementById('menu-support');
+            if (menuSupport) menuSupport.addEventListener('click', () => {
+                accountMenu.style.display = 'none';
+                window.open('https://wa.me/917888892399?text=Hi%20Bakenovation%2C%20I%20need%20help%20with%20my%20order.', '_blank');
+            });
 
             // Auto-fill order details
             const orderNameInput = document.querySelector('input[name="name"]');
@@ -328,6 +361,187 @@ document.addEventListener('DOMContentLoaded', () => {
     // Expose globally so product.html inline scripts can call it
     window.requireLogin = requireLogin;
     window.checkLoginAndProceed = checkLoginAndProceed;
+
+    // =====================================================
+    // === ACCOUNT MODAL HELPERS ===========================
+    // showOrderHistory(): displays user's order history
+    // showEditProfile(): shows editable profile form
+    // =====================================================
+
+    // Inject account dropdown CSS if not already present
+    if (!document.getElementById('account-menu-styles')) {
+        const style = document.createElement('style');
+        style.id = 'account-menu-styles';
+        style.textContent = `
+            .account-menu-dropdown {
+                position: absolute; top: calc(100% + 10px); right: 0;
+                min-width: 240px; background: linear-gradient(160deg, #1a0b2e, #2a1040);
+                border: 1px solid rgba(212,175,55,0.25); border-radius: 12px;
+                box-shadow: 0 12px 40px rgba(0,0,0,0.55); display: none;
+                z-index: 9999; overflow: hidden; backdrop-filter: blur(16px);
+                font-family: Raleway, sans-serif;
+            }
+            .account-menu-header {
+                display: flex; align-items: center; gap: 12px;
+                padding: 16px 16px 12px; background: rgba(212,175,55,0.06);
+            }
+            .account-menu-avatar {
+                width: 38px; height: 38px; border-radius: 50%;
+                background: linear-gradient(135deg, #c5a059, #8B6914);
+                display: flex; align-items: center; justify-content: center;
+                font-weight: 700; font-size: 1rem; color: #fff; flex-shrink: 0;
+            }
+            .account-menu-name { color: #d4af37; font-weight: 700; font-size: 0.88rem; line-height: 1.2; }
+            .account-menu-email { color: rgba(255,255,255,0.45); font-size: 0.72rem; margin-top: 2px; }
+            .account-menu-divider { height: 1px; background: rgba(212,175,55,0.12); margin: 2px 0; }
+            .account-menu-item {
+                display: flex; align-items: center; gap: 10px;
+                padding: 11px 16px; color: rgba(255,255,255,0.82);
+                font-size: 0.85rem; cursor: pointer; transition: background 0.18s, color 0.18s;
+            }
+            .account-menu-item:hover { background: rgba(212,175,55,0.1); color: #d4af37; }
+            .account-menu-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+            .account-menu-logout { color: rgba(255,140,140,0.85); }
+            .account-menu-logout:hover { background: rgba(220,80,80,0.12); color: #ff8a8a; }
+            /* Account overlay modal */
+            .acct-modal-overlay {
+                position: fixed; inset: 0; z-index: 100000;
+                background: rgba(5,2,12,0.92); backdrop-filter: blur(8px);
+                display: flex; align-items: center; justify-content: center; padding: 20px;
+            }
+            .acct-modal-box {
+                background: linear-gradient(160deg, #1a0b2e, #2d0f4d);
+                border: 1px solid rgba(212,175,55,0.25); border-radius: 16px;
+                width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.7); font-family: Raleway, sans-serif;
+            }
+            .acct-modal-header {
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 20px 24px; border-bottom: 1px solid rgba(212,175,55,0.12);
+            }
+            .acct-modal-title { color: #d4af37; font-size: 1rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+            .acct-modal-close {
+                background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.4rem;
+                cursor: pointer; padding: 0 4px; transition: color 0.2s;
+            }
+            .acct-modal-close:hover { color: #fff; }
+            .acct-modal-body { padding: 24px; }
+            .acct-field-label { color: rgba(212,175,55,0.7); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+            .acct-field-input {
+                width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.2);
+                border-radius: 8px; color: #fff; padding: 11px 14px; font-size: 0.88rem;
+                font-family: Raleway, sans-serif; outline: none; transition: border-color 0.2s;
+                box-sizing: border-box; margin-bottom: 16px;
+            }
+            .acct-field-input:focus { border-color: rgba(212,175,55,0.6); }
+            .acct-save-btn {
+                width: 100%; padding: 13px; background: linear-gradient(135deg, #c5a059, #8B6914);
+                border: none; border-radius: 8px; color: #fff; font-family: Raleway, sans-serif;
+                font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; cursor: pointer;
+                transition: opacity 0.2s;
+            }
+            .acct-save-btn:hover { opacity: 0.88; }
+            .order-card {
+                background: rgba(255,255,255,0.04); border: 1px solid rgba(212,175,55,0.12);
+                border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+            }
+            .order-card-title { color: #d4af37; font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
+            .order-card-detail { color: rgba(255,255,255,0.55); font-size: 0.78rem; line-height: 1.5; }
+            .order-empty { text-align: center; color: rgba(255,255,255,0.35); padding: 32px 0; font-size: 0.9rem; }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function openAccountModal(title, bodyHtml, onDone) {
+        const overlay = document.createElement('div');
+        overlay.className = 'acct-modal-overlay';
+        overlay.innerHTML = `
+            <div class="acct-modal-box">
+                <div class="acct-modal-header">
+                    <span class="acct-modal-title">${title}</span>
+                    <button class="acct-modal-close" id="acct-close-btn">&times;</button>
+                </div>
+                <div class="acct-modal-body" id="acct-modal-body-inner">
+                    ${bodyHtml}
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+        const closeModal = () => { overlay.remove(); document.body.style.overflow = ''; };
+        overlay.querySelector('#acct-close-btn').addEventListener('click', closeModal);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+        if (onDone) onDone(overlay, closeModal);
+    }
+
+    function showOrderHistory() {
+        const orders = JSON.parse(localStorage.getItem('bakenovation_orders') || '[]');
+        const pendingOrder = JSON.parse(localStorage.getItem('pendingOrder') || 'null');
+        let ordersHtml = '';
+
+        if (orders.length === 0 && !pendingOrder) {
+            ordersHtml = `<div class="order-empty">📦 No orders yet.<br><br>Your order history will appear here after you place an order.</div>`;
+        } else {
+            if (pendingOrder) {
+                ordersHtml += `
+                    <div class="order-card">
+                        <div class="order-card-title">🎂 ${pendingOrder.title || 'Custom Order'}</div>
+                        <div class="order-card-detail">
+                            Weight: ${pendingOrder.weight || '—'} | Qty: ${pendingOrder.qty || 1}<br>
+                            Delivery: ${pendingOrder.date || 'Not set'} | ${pendingOrder.time || ''}<br>
+                            Price: Rs. ${pendingOrder.price || '—'}
+                        </div>
+                    </div>
+                `;
+            }
+            orders.forEach(order => {
+                ordersHtml += `
+                    <div class="order-card">
+                        <div class="order-card-title">🎂 ${order.title || 'Order'}</div>
+                        <div class="order-card-detail">${order.details || ''}</div>
+                    </div>
+                `;
+            });
+        }
+
+        openAccountModal('📦 My Orders', ordersHtml);
+    }
+
+    function showEditProfile() {
+        const user = JSON.parse(localStorage.getItem('bakenovation_activeUser')) || {};
+        const bodyHtml = `
+            <label class="acct-field-label">Full Name</label>
+            <input class="acct-field-input" id="edit-name" type="text" value="${user.name || ''}" placeholder="Your full name">
+            <label class="acct-field-label">Email Address</label>
+            <input class="acct-field-input" id="edit-email" type="email" value="${user.email || ''}" placeholder="your@email.com">
+            <label class="acct-field-label">WhatsApp Number</label>
+            <input class="acct-field-input" id="edit-whatsapp" type="tel" value="${user.whatsapp || ''}" placeholder="+91 98765 43210">
+            <label class="acct-field-label">Date of Birth <span style="color:rgba(212,175,55,0.4);">(for birthday surprises 🎂)</span></label>
+            <input class="acct-field-input" id="edit-dob" type="date" value="${user.dob || ''}">
+            <button class="acct-save-btn" id="edit-save-btn">✨ Save Changes</button>
+        `;
+
+        openAccountModal('✏️ Edit Profile', bodyHtml, (overlay, closeModal) => {
+            overlay.querySelector('#edit-save-btn').addEventListener('click', () => {
+                const updatedUser = {
+                    ...user,
+                    name: overlay.querySelector('#edit-name').value.trim() || user.name,
+                    email: overlay.querySelector('#edit-email').value.trim() || user.email,
+                    whatsapp: overlay.querySelector('#edit-whatsapp').value.trim() || user.whatsapp,
+                    dob: overlay.querySelector('#edit-dob').value || user.dob
+                };
+                localStorage.setItem('bakenovation_activeUser', JSON.stringify(updatedUser));
+                activeUser = updatedUser;
+                updateAuthUI();
+                closeModal();
+                showAlert('✅ Profile updated successfully!', 'success');
+            });
+        });
+    }
+
+    // Expose for use outside engine
+    window.showOrderHistory = showOrderHistory;
+    window.showEditProfile = showEditProfile;
 
     if (showSignup) {
         showSignup.addEventListener('click', (e) => {
@@ -1467,20 +1681,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 sheet.innerHTML = `
                     <style>
                         @keyframes slideUpSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
+                        .mob-sheet-item {
+                            display: flex; align-items: center; gap: 14px;
+                            padding: 15px 4px; border-bottom: 1px solid rgba(212,175,55,0.08);
+                            color: rgba(255,255,255,0.85); font-size: 0.92rem;
+                            font-family: Raleway, sans-serif; cursor: pointer;
+                            transition: color 0.18s;
+                        }
+                        .mob-sheet-item:hover, .mob-sheet-item:active { color: #d4af37; }
+                        .mob-sheet-item-icon { font-size: 1.2rem; width: 28px; text-align: center; flex-shrink: 0; }
+                        .mob-sheet-logout { color: rgba(255,130,130,0.85); border-bottom: none; }
+                        .mob-sheet-logout:hover, .mob-sheet-logout:active { color: #ff8a8a; }
                     </style>
-                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 24px;"></div>
-                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 20px;"></div>
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(212,175,55,0.12);">
                         <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#c5a059,#8B6914);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;">
                             ${initial}
                         </div>
                         <div>
                             <div style="color:#d4af37;font-weight:700;font-size:1.05rem;line-height:1.2;">${currentUser.name}</div>
-                            <div style="color:rgba(255,255,255,0.55);font-size:0.78rem;margin-top:2px;">${email}</div>
+                            <div style="color:rgba(255,255,255,0.45);font-size:0.75rem;margin-top:3px;">${email}</div>
                         </div>
                     </div>
-                    <button id="mobile-sheet-logout" style="width:100%;padding:14px;background:rgba(197,98,98,0.15);border:1px solid rgba(220,80,80,0.35);border-radius:10px;color:#ff8a8a;font-family:Raleway,sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;cursor:pointer;">
-                        🚪 Logout
-                    </button>
+                    <div class="mob-sheet-item" id="mob-sheet-orders">
+                        <span class="mob-sheet-item-icon">📦</span>
+                        <span>My Orders</span>
+                        <span style="margin-left:auto;color:rgba(255,255,255,0.25);font-size:0.8rem;">›</span>
+                    </div>
+                    <div class="mob-sheet-item" id="mob-sheet-edit">
+                        <span class="mob-sheet-item-icon">✏️</span>
+                        <span>Edit Profile</span>
+                        <span style="margin-left:auto;color:rgba(255,255,255,0.25);font-size:0.8rem;">›</span>
+                    </div>
+                    <div class="mob-sheet-item" id="mob-sheet-support">
+                        <span class="mob-sheet-item-icon">💬</span>
+                        <span>Contact Support</span>
+                        <span style="margin-left:auto;color:rgba(255,255,255,0.25);font-size:0.8rem;">›</span>
+                    </div>
+                    <div class="mob-sheet-item mob-sheet-logout" id="mob-sheet-logout">
+                        <span class="mob-sheet-item-icon">🚪</span>
+                        <span>Logout</span>
+                    </div>
                 `;
 
                 // Backdrop
@@ -1500,7 +1741,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 backdrop.addEventListener('click', closeSheet);
 
-                document.getElementById('mobile-sheet-logout').addEventListener('click', () => {
+                document.getElementById('mob-sheet-orders').addEventListener('click', () => { closeSheet(); showOrderHistory(); });
+                document.getElementById('mob-sheet-edit').addEventListener('click', () => { closeSheet(); showEditProfile(); });
+                document.getElementById('mob-sheet-support').addEventListener('click', () => {
+                    closeSheet();
+                    window.open('https://wa.me/917888892399?text=Hi%20Bakenovation%2C%20I%20need%20help%20with%20my%20order.', '_blank');
+                });
+                document.getElementById('mob-sheet-logout').addEventListener('click', () => {
                     localStorage.removeItem('bakenovation_activeUser');
                     closeSheet();
                     updateAuthUI();
